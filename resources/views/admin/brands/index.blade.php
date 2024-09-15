@@ -28,6 +28,10 @@
                                 <a href="{{ route('brands.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm thương hiệu
                                 </a>
+                                <a href="{{ route('brands.trash') }}"
+                                    class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
+                                    <i class="bi bi-trash me-2"></i> Thùng Rác
+                                </a>
                             </div>
                         </div>
 
