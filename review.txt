@@ -25,3 +25,5 @@ php artisan db:seed --class=ProductVariantAttributesTableSeeder
 php artisan db:seed --class=OrderItemTableSeeder
 
 php artisan migrate:refresh
+
+sdlzgvsdxzgvb
