@@ -9,7 +9,7 @@ chạy lệnh php artisan key:generate
 đổi tên name database
 
 chạy migrate
-
+helooo
 php artisan db:seed --class=RolesTableSeeder
 php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=PaymentMethodsTableSeeder
