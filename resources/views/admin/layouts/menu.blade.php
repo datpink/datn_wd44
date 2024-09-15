@@ -1,7 +1,7 @@
 <nav class="sidebar-wrapper">
     <div class="sidebar-brand">
         <a href="{{ route('admin.index') }}" class="logo">
-            <img src="{{ asset('theme/admin/assets/images/images.png') }}" alt="Admin Dashboards" width="150px">
+            <img src="{{ asset('theme/admin/assets/images/logozaia.png') }}" alt="Admin Dashboards" width="150px">
         </a>
     </div>
 
