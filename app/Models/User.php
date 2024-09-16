@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -27,21 +26,33 @@ class User extends Authenticatable
         'role_id'
     ];
 
+    /**
+     * Mối quan hệ với model Role.
+     */
     public function role()
     {
         return $this->belongsTo(Role::class);
     }
 
+    /**
+     * Mối quan hệ với model Order.
+     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * Mối quan hệ với model Post.
+     */
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Mối quan hệ với model Comment.
+     */
     public function comments()
     {
         return $this->hasMany(Comment::class);
@@ -66,4 +77,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Kiểm tra vai trò của người dùng.
+     *
+     * @param mixed $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->role->id == $role; // Kiểm tra vai trò dựa trên id
+    }
 }

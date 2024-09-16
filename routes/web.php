@@ -20,9 +20,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+// Route đăng nhập
+// Route đăng nhập
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+// Route đăng xuất
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+// Routes dành cho quản trị viên
+Route::prefix('admin')->middleware('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index'); // Bảo vệ route này
+
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
 
     //Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -30,8 +40,12 @@ Route::prefix('admin')->group(function () {
     Route::post('catalogues/{id}/restore', [CatalogueController::class, 'restore'])->name('catalogues.restore');
     Route::delete('catalogues/{id}/force-delete', [CatalogueController::class, 'forceDelete'])->name('catalogues.forceDelete');
 
-    //Route Brands
+    // Route Brand
     Route::resource('brands', BrandController::class);
+    Route::get('brands-trash', [BrandController::class, 'trash'])->name('brands.trash');
+    Route::post('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
+    Route::delete('brands/{id}/force-delete', [BrandController::class, 'forceDelete'])->name('brands.forceDelete');
+
 
     //Route Order
     Route::resource('orders', OrderController::class);
