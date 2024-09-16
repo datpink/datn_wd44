@@ -26,7 +26,7 @@
                             <div class="card-title">Danh Sách Thương Hiệu</div>
                             <div>
                                 <a href="{{ route('brands.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
-                                    <i class="bi bi-plus-circle me-2"></i> Thêm thương hiệu
+                                    <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
                                 <a href="{{ route('brands.trash') }}"
                                     class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
