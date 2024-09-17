@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -52,4 +54,13 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
     Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
+
+    // Posts and categories posts
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('posts', PostController::class);
+    Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
+    Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+    Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
 });

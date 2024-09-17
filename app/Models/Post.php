@@ -4,15 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
-        'content',
-        'image',
+        'summary',
         'category_id',
         'user_id'
     ];
@@ -30,5 +30,24 @@ class Post extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+    public function parts()
+    {
+        return $this->hasMany(PostPart::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            if ($post->isForceDeleting()) {
+                $post->parts()->forceDelete();
+            } else {
+                $post->parts()->delete();
+            }
+        });
+
+        static::restoring(function ($post) {
+            $post->parts()->withTrashed()->restore();
+        });
     }
 }
