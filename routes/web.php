@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -69,6 +70,27 @@ Route::get('/', function () {
 // Route đăng nhập
 >>>>>>> ea8c1e1 (Fix route)
 // Route đăng nhập
+=======
+
+// Route cho trang chưa đăng nhập
+// Route::prefix('shop')->group(function () {
+//     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+//     Route::post('/login', [LoginController::class, 'login']);
+//     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+//     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+//     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+//     // Các route không yêu cầu đăng nhập
+//     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
+//     Route::get('/blog', [PostController::class, 'index'])->name('client.posts.index');
+//     Route::get('/contact', [ContactController::class, 'index'])->name('client.contact.index');
+// });
+
+// // Route cho trang home không yêu cầu xác thực
+// Route::get('/', [ClientController::class, 'index'])->name('client.index');
+
+// Route đăng nhập admin
+>>>>>>> cbe318c (oai-commit-route-full)
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -78,10 +100,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
 =======
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
 >>>>>>> ea8c1e1 (Fix route)
+=======
+
+    //route trang profile
+    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+>>>>>>> cbe318c (oai-commit-route-full)
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -111,7 +139,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 <<<<<<< HEAD
 
 });
+<<<<<<< HEAD
 >>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
 =======
 });
 >>>>>>> ea8c1e1 (Fix route)
+=======
+
+>>>>>>> cbe318c (oai-commit-route-full)
