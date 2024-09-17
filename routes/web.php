@@ -45,17 +45,16 @@ use Illuminate\Support\Facades\Route;
 // // Route cho trang home không yêu cầu xác thực
 // Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
-// Route đăng nhập
+// Route đăng nhập admin
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
-
-// Route đăng xuất
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 // Routes dành cho quản trị viên
 Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::get('/', [AdminController::class, 'index'])->name('admin.index'); // Bảo vệ route này
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
+    //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
 
     // Route Catalogue
@@ -76,8 +75,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
 
-    // Posts and categories posts
-
+    // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
     Route::resource('posts', PostController::class);
     Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
@@ -85,3 +83,4 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
 
 });
+
