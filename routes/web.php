@@ -4,12 +4,17 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
+<<<<<<< HEAD
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
+=======
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\CategoryController;
+>>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -67,7 +72,23 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Route Order
     Route::resource('orders', OrderController::class);
+<<<<<<< HEAD
     Route::get('orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
     Route::post('orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
 });
+=======
+    Route::get('/orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
+    Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
+    Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
+
+    // Posts and categories posts
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('posts', PostController::class);
+    Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
+    Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+    Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+});
+>>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
