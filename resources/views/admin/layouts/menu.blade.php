@@ -58,6 +58,19 @@
                         </ul>
                     </div>
                 </li>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-newspaper"></i>
+                        <span class="menu-text">Quản lý tin tức</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('posts.index') }}">Danh sách tin</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 {{-- <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-window-split"></i>
