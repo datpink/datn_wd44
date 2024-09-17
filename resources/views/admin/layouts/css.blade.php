@@ -1,4 +1,4 @@
-<link rel="shortcut icon" href="{{ asset('theme/admin/assets/images/favicon.svg') }}" >
+<link rel="shortcut icon" href="{{ asset('theme/admin/assets/images/images.png') }}" >
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/animate.css') }}">
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/fonts/bootstrap/bootstrap-icons.css') }}">
 <link rel="stylesheet" href="{{ asset('theme/admin/assets/css/main.min.css') }}">
