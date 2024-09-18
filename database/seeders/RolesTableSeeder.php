@@ -14,9 +14,12 @@ class RolesTableSeeder extends Seeder
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 'id'          => 1,
                 'name'        => 'Admin',
 =======
+=======
+>>>>>>> 600b967 (oai-commit-update-users)
                 'id' => 1,
                 'name' => 'Admin',
 >>>>>>> fc47897 (oai-commit-update)
@@ -30,6 +33,20 @@ class RolesTableSeeder extends Seeder
             [
                 'id' => 3,
                 'name' => 'Staff',
+=======
+                'id'          => 1,
+                'name'        => 'Admin',
+                'description' => 'Quản Trị Viên',
+            ],
+            [
+                'id'          => 2,
+                'name'        => 'User',
+                'description' => 'Người Dùng',
+            ],
+            [
+                'id'          => 3,
+                'name'        => 'Staff',
+>>>>>>> 48b050e (oai-commit-update-users)
                 'description' => 'Nhân Viên',
 =======
                 'id'            => 1,
