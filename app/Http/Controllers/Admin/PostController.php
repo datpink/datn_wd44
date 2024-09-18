@@ -44,18 +44,18 @@ class PostController extends Controller
         try {
             $user_id = Auth::user()->id;
             $post = Post::create([
-                'category_id' => $request->category_id,
-                'title' => $request->title,
-                'summary' => $request->summary,
-                'user_id' => $user_id,
-                'created_at' => now(),
+                'category_id'   => $request->category_id,
+                'title'         => $request->title,
+                'summary'       => $request->summary,
+                'user_id'       => $user_id,
+                'created_at'    => now(),
             ]);
             foreach ($request->post_parts as $part) {
                 $data = [
-                    'post_id' => $post->id,
-                    'type' => $part['type'],
-                    'content' => $part['content'] ?? null,
-                    'order' => $part['order'],
+                    'post_id'   => $post->id,
+                    'type'      => $part['type'],
+                    'content'   => $part['content'] ?? null,
+                    'order'     => $part['order'],
                 ];
 
                 if ($part['type'] === 'image' && isset($part['image'])) {
@@ -68,7 +68,8 @@ class PostController extends Controller
 
             DB::commit();
 
-            return redirect()->route('posts.index')->with('success', 'Thêm mới tin hành công!');
+            return redirect()->route('posts.index')
+                             ->with('success', 'Thêm mới tin hành công!');
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Error creating article: ' . $e->getMessage());

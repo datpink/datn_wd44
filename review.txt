@@ -9,7 +9,7 @@ chạy lệnh php artisan key:generate
 đổi tên name database
 
 chạy migrate
-heloooưertyuioiuytrewr
+
 php artisan db:seed --class=RolesTableSeeder
 php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=PaymentMethodsTableSeeder
@@ -26,11 +26,9 @@ php artisan db:seed --class=OrderItemTableSeeder
 
 php artisan migrate:refresh
 
-sdlzgvsdxzgvb
 
 Zaia Enterprise
 
-hihi
 
 Đăng nhập admin
 + mail: john.doe@example.com  pass: password123

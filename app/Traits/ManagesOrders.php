@@ -20,7 +20,8 @@ trait ManagesOrders
         $order->status = $request->input('status');
         $order->save();
 
-        return redirect()->route('orders.index')->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
+        return redirect()->route('orders.index')
+                         ->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
     }
 
 }

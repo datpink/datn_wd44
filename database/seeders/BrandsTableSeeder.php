@@ -11,23 +11,23 @@ class BrandsTableSeeder extends Seeder
     {
         DB::table('brands')->insert([
             [
-                'name' => 'Apple',
+                'name'        => 'Apple',
                 'description' => 'Company known for iPhones, iPads, and MacBooks.',
             ],
             [
-                'name' => 'Samsung',
+                'name'        => 'Samsung',
                 'description' => 'Leading manufacturer of smartphones and electronics.',
             ],
             [
-                'name' => 'Sony',
+                'name'        => 'Sony',
                 'description' => 'Known for electronics, gaming, and entertainment.',
             ],
             [
-                'name' => 'Dell',
+                'name'        => 'Dell',
                 'description' => 'Manufacturer of personal computers and laptops.',
             ],
             [
-                'name' => 'HP',
+                'name'        => 'HP',
                 'description' => 'Provider of computing and printing solutions.',
             ],
         ]);
