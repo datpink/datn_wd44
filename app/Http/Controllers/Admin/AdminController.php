@@ -34,13 +34,17 @@ class AdminController extends Controller
                 return redirect()->route('admin.index');
             } else {
                 Auth::logout();
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
+                return redirect()->back()
+                                 ->with('error', 'Bạn không có quyền truy cập.');
             }
         }
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         info('Login failed for: ' . $request->email);
+=======
+>>>>>>> fc47897 (oai-commit-update)
         return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
 =======
         return redirect()->back()
@@ -55,15 +59,17 @@ class AdminController extends Controller
     public function logout()
     {
         Auth::logout();
+
         return redirect()->route('admin.login');
     }
 
     public function index()
     {
-        $title = '';
+        $title          = '';
 
         $catalogueCount = Catalogue::count();
-        $orderCount = Order::count();
+
+        $orderCount     = Order::count();
 
         return view('admin.index', compact('title', 'catalogueCount', 'orderCount'));
     }
