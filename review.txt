@@ -34,3 +34,17 @@ hihi
 
 Đăng nhập admin
 + mail: john.doe@example.com  pass: password123
+
+
+
+#git
+git branch -a
+git checkout tên
+git pull
+git pull origin main
+git add .
+git status
+git commit -m "nd"
+git pull
+git pull origin main
+git push

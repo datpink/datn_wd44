@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active')->change();
-            $table->unsignedBigInteger('parent_id');
+            $table->enum('status', ['active', 'inactive'])->default('active'); // Không cần dùng change() ở đây
+            $table->unsignedBigInteger('parent_id')->nullable(); // Chắc chắn parent_id có thể null nếu không có parent
             $table->softDeletes();
             $table->timestamps();
         });
