@@ -68,174 +68,47 @@
                 </div><!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
+
                         <li id="menu-item-230"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index')}}">Home</a>
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
                             <span class="toggle-submenu"></span>
                         </li>
+
                         <li id="menu-item-228"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Product</a>
+                            <a class="kobolg-menu-item-title" title="Shop"
+                                href="{{ route('client.products.index') }}">Shop</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">Shop Layouts </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="shop.html" target="_self">Shop Grid </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="shop-list.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-new.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Shop List
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="shop.html" target="_self">No Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="shop-leftsidebar.html" target="_self">Left
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="shop-rightsidebar.html" target="_self">Right
-                                                            Sidebar </a>
-                                                    </li>
-                                                </ul>
+                                    @foreach ($menuCategories as $category)
+                                        @if ($category->status === 'active')
+                                            <!-- Kiểm tra trạng thái active -->
+                                            <div class="col-md-4">
+                                                <div class="kobolg-listitem style-01">
+                                                    <div class="listitem-inner">
+                                                        <h4 class="title">{{ $category->name }}</h4>
+                                                        <ul class="listitem-list mb-3">
+                                                            @foreach ($category->children as $child)
+                                                                @if ($child->status === 'active')
+                                                                    <!-- Kiểm tra trạng thái cho child -->
+                                                                    <li>
+                                                                        <a
+                                                                            href="{{ route('client.products.index', ['category' => $child->id]) }}">{{ $child->name }}</a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">Product Layouts </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="single-product.html" target="_self">Vertical
-                                                            Thumbnails </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-policy.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-new.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Extra Sidebar
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-rightsidebar.html" target="_self">
-                                                            Right Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-leftsidebar.html" target="_self">
-                                                            Left Sidebar </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Product Extends </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="single-product-bundle.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-new.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Product Bundle
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-360deg.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-hot.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Product 360 Deg </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-video.html" target="_self">
-                                                            Video </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Other Pages </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="cart.html">Cart </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="wishlist.html" target="_self">Wishlist </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="checkout.html" target="_self">Checkout </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="order-tracking.html" target="_self">Order
-                                                            Tracking </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="my-account.html" target="_self">My Account
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Product Types </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="single-product-simple.html" target="_self">
-                                                            Simple </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product.html" target="_self">
-                                                            <span class="image"><img
-                                                                    src="{{ asset('theme/client/assets/images/label-hot.jpg') }}"
-                                                                    class="attachment-full size-full"
-                                                                    alt="img"></span>
-                                                            Variable </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-external.html" target="_self">
-                                                            External / Affiliate </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-group.html" target="_self">
-                                                            Grouped </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-outofstock.html" target="_self">
-                                                            Out Of Stock </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-product-onsale.html" target="_self">
-                                                            On Sale </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             </div>
                         </li>
+
                         <li id="menu-item-229"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
@@ -321,9 +194,12 @@
                                 </div>
                             </div>
                         </li>
+
+
                         <li id="menu-item-996"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-996 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Blog" href="{{ route('client.posts.index') }}">Tin Tức</a>
+                            <a class="kobolg-menu-item-title" title="Blog"
+                                href="{{ route('client.posts.index') }}">Blog</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-blog">
                                 <div class="row">
@@ -423,6 +299,8 @@
                                 </div>
                             </div>
                         </li>
+
+
                         <li id="menu-item-237"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-237 parent">
                             <a class="kobolg-menu-item-title" title="Pages" href="#">Pages</a>
@@ -434,7 +312,8 @@
                                 </li>
                                 <li id="menu-item-988"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-988">
-                                    <a class="kobolg-menu-item-title" title="Contact" href="{{ route('client.contact.index')}}">Contact</a>
+                                    <a class="kobolg-menu-item-title" title="Contact"
+                                        href="{{ route('client.contact.index') }}">Contact</a>
                                 </li>
                                 <li id="menu-item-990"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-990">

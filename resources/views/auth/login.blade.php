@@ -50,14 +50,15 @@
                                         <p class="form-row">
                                             <button type="submit" class="kobolg-Button button" name="login"
                                                 value="Log in">Đăng Nhập</button>
-                                            <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
-                                                <input class="kobolg-form__input kobolg-form__input-checkbox"
-                                                    name="rememberme" type="checkbox" id="rememberme" value="forever">
-                                                <span>Nhớ tôi</span>
-                                            </label>
+                                                <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
+                                                    <input class="kobolg-form__input kobolg-form__input-checkbox"
+                                                           name="rememberme" type="checkbox" id="rememberme" value="forever">
+                                                    <span>Remember me</span>
+                                                </label>
                                         </p>
                                         <p class="kobolg-LostPassword lost_password">
-                                            {{-- <a href="{{ route('password.request') }}">Quên mật khẩu?</a> --}}
+                                            <a href="my-account.htmllost-password/index.html">Lost your
+                                                password?</a>
                                         </p>
                                     </form>
                                 </div>
