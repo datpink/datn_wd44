@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\Admin\UserControler;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,6 +58,4 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
     Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
-
-    
 });
