@@ -27,8 +27,8 @@ class LoginController extends Controller
             // Lấy thông tin người dùng
             $user = Auth::user();
 
-            // Kiểm tra vai trò
-            if ($user->role && $user->role->name === 'admin') {
+            // Kiểm tra vai trò của người dùng
+            if ($user->hasRole('admin')) {
                 Auth::logout(); // Đăng xuất người dùng admin
                 return back()->withErrors([
                     'username' => 'Tài khoản của bạn không thể đăng nhập vào client vì là admin.',

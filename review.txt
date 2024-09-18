@@ -11,6 +11,7 @@ chạy lệnh php artisan key:generate
 chạy migrate
 
 php artisan db:seed --class=RolesTableSeeder
+php artisan db:seed --class=UserRolesTableSeeder
 php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=PaymentMethodsTableSeeder
 php artisan db:seed --class=PromotionsTableSeeder

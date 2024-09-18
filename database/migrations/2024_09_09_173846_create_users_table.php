@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('image')->nullable();
-            $table->foreignId('role_id')->default(2)->constrained('roles')->onDelete('cascade'); // Thêm giá trị mặc định
             $table->softDeletes();
             $table->timestamps();
         });

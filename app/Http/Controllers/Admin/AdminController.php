@@ -17,37 +17,43 @@ class AdminController extends Controller
 
     public function login(Request $request)
     {
+        // Validate input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
+        // Attempt login
         if (Auth::attempt($credentials)) {
-            // Kiểm tra nếu đã đăng nhập thành công
-            if (Auth::user()->role_id == 1) { // Thay đổi từ hasRole thành kiểm tra role_id
+            $user = Auth::user();
+            info('User logged in: ' . $user->email);
+
+            if ($user->hasRole(1)) {
                 return redirect()->route('admin.index');
             } else {
                 Auth::logout();
-                return redirect()->back()
-                                 ->with('error', 'Bạn không có quyền truy cập.');
+                return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
             }
         }
 
-        return redirect()->back()
-                         ->with('error', 'Email hoặc mật khẩu không hợp lệ.');
+        info('Login failed for: ' . $request->email);
+        return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
     }
 
     public function logout()
     {
         Auth::logout();
-
         return redirect()->route('admin.login');
     }
 
     public function index()
     {
-        $title          = '';
+        $title = '';
 
         $catalogueCount = Catalogue::count();
-
-        $orderCount     = Order::count();
+        $orderCount = Order::count();
 
         return view('admin.index', compact('title', 'catalogueCount', 'orderCount'));
     }
@@ -55,7 +61,6 @@ class AdminController extends Controller
     public function profile()
     {
         $title = 'Profile';
-
         return view('admin.profile', compact('title'));
     }
 }
