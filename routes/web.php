@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\UserControler;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-// Route đăng nhập
+
 // Route đăng nhập
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
@@ -33,6 +34,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index'); // Bảo vệ route này
 
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+
+     // users routes
+     Route::resource('catalogues', UserControler::class);
+    Route::get('catalogues-trash', [UserControler::class, 'trash'])->name('catalogues.trash');
+    Route::post('catalogues/{id}/restore', [UserControler::class, 'restore'])->name('catalogues.restore');
+    Route::delete('catalogues/{id}/force-delete', [UserControler::class, 'forceDelete'])->name('catalogues.forceDelete');
 
     //Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -52,4 +59,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
     Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
+
+    
 });
