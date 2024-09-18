@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="header-position">
     <div class="header-nav">
         <div class="container">
@@ -331,3 +332,5 @@
         </div>
     </div>
 </div>
+=======
+>>>>>>> d02c207 (oai-commit-catalog-client)
