@@ -1,6 +1,5 @@
 <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/client/assets/images/logo.png') }}" />
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;display=swap"
-    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/animate.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/bootstrap.min.css') }}" />

@@ -23,13 +23,13 @@ class OrderController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('id', 'like', '%' . $search . '%')
-                    ->orWhereHas('user', function ($userQuery) use ($search) {
-                        $userQuery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('paymentMethod', function ($paymentMethodQuery) use ($search) {
-                        $paymentMethodQuery->where('name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhere('status', 'like', '%' . $search . '%');
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                     $userQuery->where('name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhereHas('paymentMethod', function ($paymentMethodQuery) use ($search) {
+                     $paymentMethodQuery->where('name', 'like', '%' . $search . '%');
+                  })
+                  ->orWhere('status', 'like', '%' . $search . '%');
             });
         }
 
@@ -53,12 +53,13 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
         $order->delete();
 
-        return redirect()->route('orders.index')->with('success', 'Đơn hàng đã được xóa thành công!');
+        return redirect()->route('orders.index')
+                         ->with('success', 'Đơn hàng đã được xóa thành công!');
     }
 
     public function trash()
     {
-        $title = 'Thùng Rác';
+        $title  = 'Thùng Rác';
         $orders = Order::onlyTrashed()->get();
         return view('admin.orders.trash', compact('orders', 'title'));
     }
@@ -67,13 +68,15 @@ class OrderController extends Controller
     {
         $order = Order::withTrashed()->findOrFail($id);
         $order->restore();
-        return redirect()->route('orders.trash')->with('success', 'Đơn hàng đã được khôi phục thành công!');
+        return redirect()->route('orders.trash')
+                         ->with('success', 'Đơn hàng đã được khôi phục thành công!');
     }
 
     public function forceDelete($id)
     {
         $order = Order::withTrashed()->findOrFail($id);
         $order->forceDelete();
-        return redirect()->route('orders.trash')->with('success', 'Đơn hàng đã được xóa cứng!');
+        return redirect()->route('orders.trash')
+                         ->with('success', 'Đơn hàng đã được xóa cứng!');
     }
 }

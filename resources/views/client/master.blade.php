@@ -35,6 +35,10 @@
            @include('client.layouts.menumain')
 
         </div>
+
+        <div class="header-mobile">
+            @include('client.layouts.mobile')
+        </div>
     </header>
     {{-- <div class="fullwidth-template">
         <div class="slide-home-01">

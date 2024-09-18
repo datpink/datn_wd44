@@ -12,8 +12,7 @@
                 </div>
                 <div class="newsletter-form-wrap">
                     <div class="newsletter-form-inner">
-                        <input class="email email-newsletter" name="email" placeholder="Enter your email ..."
-                            type="email">
+                        <input class="email email-newsletter" name="email" placeholder="Enter your email ..." type="email">
                         <a href="#" class="button btn-submit submit-newsletter">
                             <span class="text">Subscribe</span>
                         </a>

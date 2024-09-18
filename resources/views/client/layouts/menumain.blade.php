@@ -14,71 +14,48 @@
                     </div>
                     <div class="block-content verticalmenu-content">
                         <ul id="menu-vertical-menu" class="azeroth-nav vertical-menu default">
-                            <li id="menu-item-886"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
-                                <a class="azeroth-menu-item-title" title="Camera" href="#"><span
-                                        class="icon flaticon-technology"></span>Camera</a>
+                            <li id="menu-item-886" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
+                                <a class="azeroth-menu-item-title" title="Camera" href="#"><span class="icon flaticon-technology"></span>Camera</a>
                             </li>
-                            <li id="menu-item-895"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-895">
-                                <a class="azeroth-menu-item-title" title="Game & Consoles" href="#"><span
-                                        class="icon flaticon-console"></span>Game & Consoles</a>
+                            <li id="menu-item-895" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-895">
+                                <a class="azeroth-menu-item-title" title="Game & Consoles" href="#"><span class="icon flaticon-console"></span>Game & Consoles</a>
                             </li>
-                            <li id="menu-item-888"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-888">
-                                <a class="azeroth-menu-item-title" title="Printers & Ink" href="#"><span
-                                        class="icon flaticon-print-button"></span>Printers & Ink</a>
+                            <li id="menu-item-888" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-888">
+                                <a class="azeroth-menu-item-title" title="Printers & Ink" href="#"><span class="icon flaticon-print-button"></span>Printers & Ink</a>
                             </li>
-                            <li id="menu-item-889"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-889">
-                                <a class="azeroth-menu-item-title" title="Speaker" href="#"><span
-                                        class="icon flaticon-technology-1"></span>Speaker</a>
+                            <li id="menu-item-889" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-889">
+                                <a class="azeroth-menu-item-title" title="Speaker" href="#"><span class="icon flaticon-technology-1"></span>Speaker</a>
                             </li>
-                            <li id="menu-item-890"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-890">
-                                <a class="azeroth-menu-item-title" title="Smartphone" href="#"><span
-                                        class="icon flaticon-smartphone"></span>Smartphone</a>
+                            <li id="menu-item-890" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-890">
+                                <a class="azeroth-menu-item-title" title="Smartphone" href="#"><span class="icon flaticon-smartphone"></span>Smartphone</a>
                             </li>
-                            <li id="menu-item-891"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-891">
-                                <a class="azeroth-menu-item-title" title="Accessories" href="#"><span
-                                        class="icon flaticon-mouse"></span>Accessories</a>
+                            <li id="menu-item-891" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-891">
+                                <a class="azeroth-menu-item-title" title="Accessories" href="#"><span class="icon flaticon-mouse"></span>Accessories</a>
                             </li>
-                            <li id="menu-item-892"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-892">
-                                <a class="azeroth-menu-item-title" title="Essentials" href="#"><span
-                                        class="icon flaticon-layers"></span>Essentials</a>
+                            <li id="menu-item-892" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-892">
+                                <a class="azeroth-menu-item-title" title="Essentials" href="#"><span class="icon flaticon-layers"></span>Essentials</a>
                             </li>
-                            <li id="menu-item-893"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-893">
-                                <a class="azeroth-menu-item-title" title="Featured" href="#"><span
-                                        class="icon flaticon-shapes"></span>Featured</a>
+                            <li id="menu-item-893" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-893">
+                                <a class="azeroth-menu-item-title" title="Featured" href="#"><span class="icon flaticon-shapes"></span>Featured</a>
                             </li>
-                            <li id="menu-item-894"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-894 link-other">
-                                <a class="azeroth-menu-item-title" title="Best Seller" href="#"><span
-                                        class="icon flaticon-shiny-diamond"></span> Seller</a>
+                            <li id="menu-item-894" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-894 link-other">
+                                <a class="azeroth-menu-item-title" title="Best Seller" href="#"><span class="icon flaticon-shiny-diamond"></span> Seller</a>
                             </li>
                         </ul>
                         <div class="view-all-category">
-                            <a href="#" data-closetext="Close" data-alltext="All Categories"
-                                class="btn-view-all open-cate">All Categories</a>
+                            <a href="#" data-closetext="Close" data-alltext="All Categories" class="btn-view-all open-cate">All Categories</a>
                         </div>
                     </div>
                 </div><!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
 
-                        <li id="menu-item-230"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
+                        <li id="menu-item-238" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
-                            <span class="toggle-submenu"></span>
                         </li>
 
-                        <li id="menu-item-228"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Shop"
-                                href="{{ route('client.products.index') }}">Shop</a>
+                        <li id="menu-item-228" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Shop</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
@@ -109,8 +86,7 @@
                             </div>
                         </li>
 
-                        <li id="menu-item-229"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+                        <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-elements">
@@ -121,19 +97,24 @@
                                                 <h4 class="title">Element 1 </h4>
                                                 <ul class="listitem-list">
                                                     <li>
-                                                        <a href="banner.html" target="_self">Banner </a>
+                                                        <a href="banner.html" target="_self">
+                                                            Banner
+                                                        </a>
                                                     </li>
                                                     <li>
-                                                        <a href="blog-element.html" target="_self">Blog
-                                                            Element </a>
+                                                        <a href="blog-element.html" target="_self">
+                                                            Blog Element
+                                                        </a>
                                                     </li>
                                                     <li>
                                                         <a href="categories-element.html" target="_self">
-                                                            Categories Element </a>
+                                                            Categories Element
+                                                        </a>
                                                     </li>
                                                     <li>
                                                         <a href="product-element.html" target="_self">
-                                                            Product Element </a>
+                                                            Product Element
+                                                        </a>
                                                     </li>
                                                 </ul>
                                             </div>

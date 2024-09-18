@@ -1,6 +1,6 @@
 <div class="wapper">
     <div class="footer-device-mobile-item device-home">
-        <a href="index.html">
+        <a href="{{ route('client.index') }}">
             <span class="icon">
                 <i class="fa fa-home" aria-hidden="true"></i>
             </span>

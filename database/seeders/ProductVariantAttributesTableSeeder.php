@@ -16,7 +16,7 @@ class ProductVariantAttributesTableSeeder extends Seeder
             ],
             [
                 'product_variant_id' => 1,
-                'attribute_value_id' =>3,
+                'attribute_value_id' => 3,
             ],
             [
                 'product_variant_id' => 2,
