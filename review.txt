@@ -7,7 +7,7 @@ tạo file .env mới
 chạy lệnh php artisan key:generate
 
 đổi tên name database
-
+dung test
 chạy migrate
 
 php artisan db:seed --class=RolesTableSeeder
