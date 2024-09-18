@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
 =======
@@ -40,6 +41,9 @@ Route::prefix('shop')->group(function () {
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('/blog', [PostController::class, 'index'])->name('client.posts.index');
     Route::get('/contact', [ContactController::class, 'index'])->name('client.contact.index');
+
+    // Route để lấy danh mục cho menu
+    Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
 });
 
 // Route cho trang home không yêu cầu xác thực
