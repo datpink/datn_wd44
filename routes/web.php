@@ -5,10 +5,17 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\CategoryController;
+
+>>>>>>> ea8c1e1 (Fix route)
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ContactController;
+<<<<<<< HEAD
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
@@ -16,6 +23,11 @@ use App\Http\Controllers\Client\ProductController; // Thêm controller cho clien
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\CategoryController;
 >>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
+=======
+// use App\Http\Controllers\Client\PostController;
+use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
+
+>>>>>>> ea8c1e1 (Fix route)
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +41,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+<<<<<<< HEAD
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -49,6 +62,12 @@ Route::prefix('shop')->group(function () {
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
+=======
+Route::get('/', function () {
+    return view('welcome');
+});
+// Route đăng nhập
+>>>>>>> ea8c1e1 (Fix route)
 // Route đăng nhập
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
@@ -58,7 +77,11 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
+<<<<<<< HEAD
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+=======
+    Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+>>>>>>> ea8c1e1 (Fix route)
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -85,6 +108,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+<<<<<<< HEAD
 
 });
 >>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
+=======
+});
+>>>>>>> ea8c1e1 (Fix route)
