@@ -9,6 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
@@ -16,6 +17,8 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('variant_name');
             $table->decimal('price', 10, 2);
+            $table->decimal('weight', 8, 2)->nullable();
+            $table->string('dimension')->nullable();
             $table->integer('stock');
             $table->string('sku')->unique();
             $table->string('image_url')->nullable();
