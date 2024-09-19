@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\ClientController;
@@ -53,6 +55,19 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 // Routes dành cho quản trị viên
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+
+    // route users
+    Route::resource('users', UserController::class);
+    Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
+    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+
+
+    // Route cho vai trò
+    Route::resource('roles', RoleController::class);
+    Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');
+    Route::post('roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::delete('roles/{id}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
 
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');

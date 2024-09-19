@@ -71,6 +71,22 @@
                         </ul>
                     </div>
                 </li>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-window-split"></i>
+                        <span class="menu-text">Quản lý Users</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('users.index') }}">Danh sách Người Dùng</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('roles.index') }}">Danh sách Vai Trò</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 {{-- <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-window-split"></i>
