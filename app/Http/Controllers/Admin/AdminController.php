@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -54,8 +54,9 @@ class AdminController extends Controller
 
         $catalogueCount = Catalogue::count();
         $orderCount = Order::count();
+        $userCount = User::count();
 
-        return view('admin.index', compact('title', 'catalogueCount', 'orderCount'));
+        return view('admin.index', compact('title', 'catalogueCount', 'orderCount', 'userCount'));
     }
 
     public function profile()

@@ -88,7 +88,7 @@
                                                 <td>{{ $order->phone_number }}</td>
                                                 <td>{{ $order->shipping_address }}</td>
                                                 <td>
-                                                    <strong class="badge rounded-pill bg-secondary">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
+                                                    <strong class="badge rounded-pill bg-warning">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
                                                 </td>
                                                 <td>
                                                     <div class="actions">

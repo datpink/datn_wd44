@@ -66,7 +66,7 @@
                             <small class="form-text text-muted">Giữ Ctrl để chọn nhiều vai trò (nếu có).</small>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Cập Nhật Người Dùng</button>
+                        <button type="submit" class="btn rounded-pill btn-primary">Cập Nhật Người Dùng</button>
                     </form>
                 </div>
             </div>

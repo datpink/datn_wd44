@@ -38,8 +38,8 @@
                             <i class="bi bi-box-seam"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-yellow">15k</h3>
-                            <p>Tài Khoản</p>
+                            <h3 class="text-yellow">{{ $userCount }}</h3>
+                            <a href="{{ route('users.index') }}">Tài Khoản</a>
                         </div>
                     </div>
                 </div>
