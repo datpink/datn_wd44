@@ -27,6 +27,7 @@ php artisan db:seed --class=OrderItemTableSeeder
 
 php artisan migrate:refresh
 
+hehe
 
 Zaia Enterprise
 
