@@ -67,7 +67,7 @@
                                                 <td>
                                                     @if($user->roles->isNotEmpty())
                                                         @foreach($user->roles as $role)
-                                                            <span class="badge bg-secondary">{{ $role->name }}</span>
+                                                            <span class="badge bg-success rounded-pill mt-1 mb-1">{{ $role->name }}</span> <br>
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">Không có vai trò</span>

@@ -18,7 +18,10 @@
 
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header">
-                    <h5 class="mb-0">Thêm Mới Người Dùng</h5>
+                    <div class="card-title mb-3">Thêm Mới Người Dùng</div>
+                    <a href="{{ route('users.index') }}" class="btn rounded-pill btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i> Trở về
+                    </a>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('users.store') }}" method="POST">
@@ -55,7 +58,7 @@
                             <small class="form-text text-muted">Giữ Ctrl để chọn nhiều vai trò (nếu có).</small>
                         </div> --}}
 
-                        <button type="submit" class="btn btn-primary">Thêm Người Dùng</button>
+                        <button type="submit" class="btn btn-primary rounded-pill">Thêm Người Dùng</button>
                     </form>
                 </div>
             </div>

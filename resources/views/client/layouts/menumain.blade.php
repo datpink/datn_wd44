@@ -55,13 +55,6 @@
                             <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index')}}">Home</a>
                             <span class="toggle-submenu"></span>
                         </li>
-                        <li id="menu-item-228"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Product</a>
-
-                        <li id="menu-item-238" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
-                        </li>
 
                         <li id="menu-item-228" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Shop</a>
@@ -94,8 +87,6 @@
                                 </div>
                             </div>
                         </li>
-                        <li id="menu-item-229"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
                         <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
 
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
