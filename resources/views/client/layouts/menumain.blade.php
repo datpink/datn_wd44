@@ -1,3 +1,4 @@
+
 <div class="header-position">
     <div class="header-nav">
         <div class="container">
@@ -49,6 +50,14 @@
                 </div><!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
+                        <li id="menu-item-230"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index')}}">Home</a>
+                            <span class="toggle-submenu"></span>
+                        </li>
+                        <li id="menu-item-228"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Product</a>
 
                         <li id="menu-item-238" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
@@ -85,8 +94,10 @@
                                 </div>
                             </div>
                         </li>
-
+                        <li id="menu-item-229"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
                         <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-elements">

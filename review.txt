@@ -32,6 +32,7 @@ php artisan db:seed
 
 php artisan migrate:refresh
 
+hehe
 
 Zaia Enterprise
 

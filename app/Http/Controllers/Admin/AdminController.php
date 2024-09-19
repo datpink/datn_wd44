@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -38,7 +39,6 @@ class AdminController extends Controller
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
             }
         }
-
         info('Login failed for: ' . $request->email);
         return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
     }

@@ -13,7 +13,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
-use App\Http\Controllers\Admin\PostController as AdminPostController; 
+use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
