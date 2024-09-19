@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comment_replies', function (Blueprint $table) {
+        Schema::create('post_coment_replies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_comment_id')->constrained('product_comments')->onDelete('cascade');
+            $table->foreignId('post_comment_id')->constrained('post_comments')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('reply');
             $table->softDeletes();
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comment_replies');
+        Schema::dropIfExists('post_coment_replies');
     }
 };
