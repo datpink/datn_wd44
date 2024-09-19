@@ -80,83 +80,63 @@ class PostController extends Controller
      * Display the specified resource.
      */
 
-    public function show(Post $post)
+    // public function show(Post $post)
+    // {
+    //     $post->load('parts'); // Eager load parts
+    //     return view('admin.posts.index', compact('article'));
+    // }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Post $post)
     {
-        $post->load('parts'); // Eager load parts
-        return view('admin.posts.index', compact('article'));
+        $categories = Category::all();
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  */
-    // public function edit(Article $article)
-    // {
-    //     $categories = Category::all();
-    //     return view('articles.edit', compact('article', 'categories'));
-    // }
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $post = Post::findOrFail($id);
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  */
-    // public function update(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'category_id' => 'required|exists:categories,id',
-    //         'content' => 'required|string',
-    //         'article_parts.*.type' => 'required|in:text,image',
-    //         'article_parts.*.content' => 'nullable|string',
-    //         'article_parts.*.order' => 'required|integer',
-    //         'article_parts.*.image_path' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
-    //     $article = Post::findOrFail($id);
+        $request->validate([
+            'title' => 'required',
+            'summary' => 'required',
+            'category_id' => 'required',
+            'post_parts.*.type' => 'required',
+            'post_parts.*.order' => 'nullable|integer',
+            'post_parts.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    //     $article->update([
-    //         'title' => $request->input('title'),
-    //         'category_id' => $request->input('category_id'),
-    //         'content' => $request->input('content'),
-    //     ]);
+        $post->update([
+            'title' => $request->input('title'),
+            'summary' => $request->input('summary'),
+            'category_id' => $request->input('category_id'),
+            'user_id' => auth()->user()->id,
+        ]);
 
-    //     $existingPartIds = $request->input('article_parts.*.id', []);
-    //     PostPart::where('article_id', $article->id)
-    //         ->whereNotIn('id', $existingPartIds)
-    //         ->delete();
+        foreach ($request->post_parts as $index => $partData) {
+            $postPart = $post->parts()->updateOrCreate(
+                ['id' => $partData['id'] ?? null],
+                [
+                    'type' => $partData['type'],
+                    'content' => $partData['content'] ?? null,
+                    'order' => $partData['order'],
+                ]
+            );
 
-    //     $parts = $request->input('article_parts', []);
+            if ($request->file("post_parts.$index.image")) {
+                $imagePath = $request->file("post_parts.$index.image")->store('post_images', 'public');
+                $postPart->update(['image' => $imagePath]);
+            }
+        }
 
-    //     foreach ($parts as $index => $part) {
-    //         $articlePart = ArticlePart::where('article_id', $article->id)
-    //             ->where('id', $part['id'] ?? null)
-    //             ->first();
+        return redirect()->route('posts.index')->with('success', 'Cập nhật bài viết thành công!');
+    }
 
-    //         if ($part['type'] === 'image') {
-    //             $imagePath = $request->hasFile('article_parts.' . $index . '.image_path')
-    //                 ? $request->file('article_parts.' . $index . '.image_path')->store('images', 'public')
-    //                 : ($articlePart ? $articlePart->image_path : null);
-    //         } else {
-    //             $imagePath = null;
-    //         }
-
-    //         if ($articlePart) {
-    //             $articlePart->update([
-    //                 'type' => $part['type'],
-    //                 'content' => $part['content'] ?? null,
-    //                 'order' => $part['order'],
-    //                 'image_path' => $imagePath,
-    //             ]);
-    //         } else {
-    //             ArticlePart::create([
-    //                 'article_id' => $article->id,
-    //                 'type' => $part['type'],
-    //                 'content' => $part['content'] ?? null,
-    //                 'order' => $part['order'],
-    //                 'image_path' => $imagePath,
-    //             ]);
-    //         }
-    //     }
-
-    //     return redirect()->route('articles.index')->with('success', 'Article updated successfully!');
-    // }
 
 
 
