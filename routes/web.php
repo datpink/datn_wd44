@@ -4,32 +4,24 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\OrderController;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-
->>>>>>> d02c207 (oai-commit-catalog-client)
 use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\CategoryController;
-
->>>>>>> ea8c1e1 (Fix route)
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\ClientController;
 use App\Http\Controllers\Client\ContactController;
-<<<<<<< HEAD
+use App\Http\Controllers\Client\MenuController;
+use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\CategoryController;
+
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Client\ContactController;
+
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
-use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
-=======
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\CategoryController;
->>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
-=======
-// use App\Http\Controllers\Client\PostController;
-use App\Http\Controllers\Client\ProductController; // Thêm controller cho client
+use App\Http\Controllers\Client\ProductController; 
+
 
 >>>>>>> ea8c1e1 (Fix route)
 use Illuminate\Support\Facades\Route;
@@ -45,14 +37,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::post('/register', [RegisterController::class, 'register'])->name('register');
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
 
     // Các route không yêu cầu đăng nhập
@@ -67,12 +56,7 @@ Route::prefix('shop')->group(function () {
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
-=======
-Route::get('/', function () {
-    return view('welcome');
-});
-// Route đăng nhập
->>>>>>> ea8c1e1 (Fix route)
+
 // Route đăng nhập
 =======
 
@@ -98,6 +82,14 @@ Route::prefix('shop')->group(function () {
 
 // Route đăng nhập admin
 >>>>>>> cbe318c (oai-commit-route-full)
+=======
+});
+
+// Route cho trang home không yêu cầu xác thực
+Route::get('/', [ClientController::class, 'index'])->name('client.index');
+
+// Route đăng nhập admin
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -106,6 +98,7 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
@@ -118,6 +111,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
 >>>>>>> cbe318c (oai-commit-route-full)
 
+=======
+    //route trang profile
+    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
     Route::get('catalogues-trash', [CatalogueController::class, 'trash'])->name('catalogues.trash');
@@ -136,9 +134,9 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
     Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
 
-    // Posts and categories posts
-
+    // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
+<<<<<<< HEAD
     Route::resource('posts', PostController::class);
     Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
@@ -154,3 +152,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 =======
 
 >>>>>>> cbe318c (oai-commit-route-full)
+=======
+    Route::resource('posts', AdminPostController::class);
+    Route::get('posts-trash', [AdminPostController::class, 'trash'])->name('posts.trash');
+    Route::post('posts/{id}/restore', [AdminPostController::class, 'restore'])->name('posts.restore');
+    Route::delete('posts/{id}/force-delete', [AdminPostController::class, 'forceDelete'])->name('posts.forceDelete');
+});
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709

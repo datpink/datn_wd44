@@ -19,10 +19,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('image')->nullable();
-<<<<<<< HEAD
-=======
             $table->foreignId('role_id')->default(2)->constrained('roles')->onDelete('cascade'); // Thêm giá trị mặc định
->>>>>>> 48b050e (oai-commit-update-users)
             $table->softDeletes();
             $table->timestamps();
         });
