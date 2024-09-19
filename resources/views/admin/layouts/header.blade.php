@@ -64,7 +64,7 @@
                 </div>
             </li>
             <li class="dropdown">
-                <a href="{{ route('admin.profile') }}" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
+                <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
                     <span href="#" class="user-name d-none d-md-block">{{ Auth::user()->name }}</span>
                     <span class="avatar">
                         <img src="{{ asset('theme/admin/assets/images/user.png') }}" alt="Admin Templates">
@@ -73,11 +73,11 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userSettings">
                     <div class="header-profile-actions">
-                        {{-- <a href="{{ route('admin.profile') }}">Profile</a> --}}
-                        {{-- <a href="">Settings</a> --}}
-                        <form action="{{ route('admin.logout') }}" method="POST" style="display:inline;">
+                        <a href="{{ route('admin.profile') }}">Profile</a>
+                        <a href="">Settings</a>
+                        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
                             @csrf
-                            <button type="submit" class="btn btn-outline-success btn-rounded" onclick="return confirm('Bạn có chắc chắn muốn Đăng Xuất?');">Đăng Xuất</button>
+                            <a href="#" onclick="event.preventDefault(); if (confirm('Bạn có chắc chắn muốn Đăng Xuất?')) { this.closest('form').submit(); }">Đăng Xuất</a>
                         </form>
                     </div>
                 </div>
