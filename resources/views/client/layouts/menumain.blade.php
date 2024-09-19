@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> fc47897 (oai-commit-update)
+=======
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
 <div class="header-position">
     <div class="header-nav">
         <div class="container">
@@ -49,6 +57,22 @@
                 </div><!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        <li id="menu-item-230"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index')}}">Home</a>
+                            <span class="toggle-submenu"></span>
+                        </li>
+                        <li id="menu-item-228"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Product</a>
+=======
+=======
+>>>>>>> fc47897 (oai-commit-update)
+=======
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
 
                         <li id="menu-item-238" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
@@ -56,6 +80,13 @@
 
                         <li id="menu-item-228" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Shop" href="{{ route('client.products.index') }}">Shop</a>
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 3235956 (oai-commit-update)
+=======
+>>>>>>> fc47897 (oai-commit-update)
+=======
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
@@ -85,8 +116,23 @@
                                 </div>
                             </div>
                         </li>
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        <li id="menu-item-229"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+=======
 
                         <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+>>>>>>> 3235956 (oai-commit-update)
+=======
+
+                        <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+>>>>>>> fc47897 (oai-commit-update)
+=======
+
+                        <li id="menu-item-229" class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-elements">
@@ -315,3 +361,12 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d02c207 (oai-commit-catalog-client)
+=======
+>>>>>>> 4d03f89 (oai-commit-update)
+>>>>>>> fc47897 (oai-commit-update)
+=======
+>>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
