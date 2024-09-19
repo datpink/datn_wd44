@@ -11,8 +11,8 @@ class RolesTableSeeder extends Seeder
     {
         DB::table('roles')->insert([
             [
-                'id'          => 1,
-                'name'        => 'Admin',
+                'id' => 1,
+                'name' => 'Admin',
                 'description' => 'Quản Trị Viên',
             ],
             [
@@ -21,8 +21,8 @@ class RolesTableSeeder extends Seeder
                 'description' => 'Người Dùng',
             ],
             [
-                'id'          => 3,
-                'name'        => 'Staff',
+                'id' => 3,
+                'name' => 'Staff',
                 'description' => 'Nhân Viên',
             ],
         ]);
