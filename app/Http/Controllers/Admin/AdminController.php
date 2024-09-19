@@ -37,31 +37,8 @@ class AdminController extends Controller
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
             }
         }
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        info('Login failed for: ' . $request->email);
-=======
->>>>>>> fc47897 (oai-commit-update)
-=======
-        info('Login failed for: ' . $request->email);
->>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
-        return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
-=======
-        return redirect()->back()
-                         ->with('error', 'Email hoặc mật khẩu không hợp lệ.');
->>>>>>> 3235956 (oai-commit-update)
-=======
         info('Login failed for: ' . $request->email);
         return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
->>>>>>> 718cb74 (oai-commit-update-users)
-=======
-        return redirect()->back()
-                         ->with('error', 'Email hoặc mật khẩu không hợp lệ.');
->>>>>>> 600b967 (oai-commit-update-users)
     }
 
     public function logout()

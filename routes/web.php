@@ -13,17 +13,7 @@ use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\CategoryController;
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Client\ClientController;
-use App\Http\Controllers\Client\ContactController;
 
-use App\Http\Controllers\Client\MenuController;
-use App\Http\Controllers\Client\PostController;
-use App\Http\Controllers\Client\ProductController; 
-
-
->>>>>>> ea8c1e1 (Fix route)
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,7 +48,6 @@ Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
 
 // Route đăng nhập
-=======
 
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
@@ -81,15 +70,12 @@ Route::prefix('shop')->group(function () {
 // Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
 // Route đăng nhập admin
->>>>>>> cbe318c (oai-commit-route-full)
-=======
-});
+
 
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
 // Route đăng nhập admin
->>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -98,24 +84,15 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
-=======
+
+
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
->>>>>>> ea8c1e1 (Fix route)
-=======
 
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
->>>>>>> cbe318c (oai-commit-route-full)
-
-=======
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
 
->>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
     Route::get('catalogues-trash', [CatalogueController::class, 'trash'])->name('catalogues.trash');
@@ -136,26 +113,9 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
-<<<<<<< HEAD
     Route::resource('posts', PostController::class);
     Route::get('posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
-    Route::delete('posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
-<<<<<<< HEAD
+
 
 });
-<<<<<<< HEAD
->>>>>>> e840986137bb2adabdab216a1304e4d98cf45182
-=======
-});
->>>>>>> ea8c1e1 (Fix route)
-=======
-
->>>>>>> cbe318c (oai-commit-route-full)
-=======
-    Route::resource('posts', AdminPostController::class);
-    Route::get('posts-trash', [AdminPostController::class, 'trash'])->name('posts.trash');
-    Route::post('posts/{id}/restore', [AdminPostController::class, 'restore'])->name('posts.restore');
-    Route::delete('posts/{id}/force-delete', [AdminPostController::class, 'forceDelete'])->name('posts.forceDelete');
-});
->>>>>>> a94ac8bdcd9f323d15acd8a274fbb7b2f6285709
