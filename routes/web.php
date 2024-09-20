@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -14,7 +15,7 @@ use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
-use App\Http\Controllers\CategoryController;
+// use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -92,6 +93,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
+    Route::get('categories-trash', [CategoryController::class, 'trash'])->name('categories.trash');
+    Route::post('categories/{id}/restore', [CategoryController::class, 'restore'])->name('categories.restore');
+    Route::delete('categories/{id}/force-delete', [CategoryController::class, 'forceDelete'])->name('categories.forceDelete');
+
     Route::resource('posts', AdminPostController::class);
     Route::get('posts-trash', [AdminPostController::class, 'trash'])->name('posts.trash');
     Route::post('posts/{id}/restore', [AdminPostController::class, 'restore'])->name('posts.restore');
