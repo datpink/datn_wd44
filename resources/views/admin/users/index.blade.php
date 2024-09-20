@@ -55,28 +55,41 @@
                                         <tr>
                                             <th>Stt</th>
                                             <th>Tên</th>
-                                            <th>Mật khẩu</th>
-                                            <th>Địa chỉ</th>
-                                            <th>Số điện thoại</th>
-                                            <th>Vai trò</th>
-                                            <th>Ảnh</th>
-                                            <th>Thao tác</th>
+                                            <th>Email</th>
+                                            <th>Vai Trò</th>
+                                            <th>Hành Động</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($users as $index => $brand)
+                                        @forelse($users as $index => $user)
                                             <tr>
                                                 <td>{{ $users->firstItem() + $index }}</td>
-                                                <td>{{ $brand->name }}</td>
-                                                <td>{{ $brand->description }}</td>
+                                                <td>{{ $user->name }}</td>
+                                                <td>{{ $user->email }}</td>
                                                 <td>
-                                                    <a href="{{ route('users.edit', $brand) }}" class="btn rounded-pill btn-warning btn-sm">Sửa</a>
-                                                    <form action="{{ route('users.destroy', $brand) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger rounded-pill btn-sm"
-                                                                onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
-                                                    </form>
+                                                    @if($user->roles->isNotEmpty())
+                                                        @foreach($user->roles as $role)
+                                                            <span class="badge bg-success rounded-pill mt-1 mb-1">{{ $role->name }}</span> <br>
+                                                        @endforeach
+                                                    @else
+                                                        <span class="text-muted">Không có vai trò</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($user->deleted_at)
+                                                        <span class="text-muted">Đã xóa</span>
+                                                    @else
+                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn rounded-pill btn-warning btn-sm">
+                                                            <i class="fas fa-edit"></i> Sửa
+                                                        </a>
+                                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger rounded-pill btn-sm" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?');">
+                                                                <i class="fas fa-trash"></i> Xóa
+                                                            </button>
+                                                        </form>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @empty
@@ -87,8 +100,9 @@
                                     </tbody>
                                 </table>
                             </div>
+
                             <div class="pagination justify-content-center mt-3">
-                                {{ $user->links() }}
+                                {{ $users->links() }} <!-- Hiển thị phân trang -->
                             </div>
                         </div>
                     </div>

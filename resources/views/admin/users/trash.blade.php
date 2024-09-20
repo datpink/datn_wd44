@@ -35,26 +35,26 @@
                                 <tr>
                                     <th>Stt</th>
                                     <th>Tên</th>
-                                    <th>Mô tả</th>
+                                    <th>Email</th>
                                     <th>Ngày xóa</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($brands as $index => $brand)
+                                @forelse($users as $index => $user)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $brand->name }}</td>
-                                        <td>{{ $brand->description }}</td>
-                                        <td>{{ $brand->deleted_at ? $brand->deleted_at->format('d-m-Y') : 'Chưa xóa' }}</td>
+                                        <td>{{ $user->name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>{{ $user->deleted_at ? $user->deleted_at->format('d-m-Y') : 'Chưa xóa' }}</td>
                                         <td>
-                                            <form action="{{ route('brands.restore', $brand->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('users.restore', $user->id) }}" method="POST" style="display:inline;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-outline-success rounded-pill btn-sm" onclick="return confirm('Khôi phục rại người dùng?')">
+                                                <button type="submit" class="btn btn-outline-success rounded-pill btn-sm" onclick="return confirm('Khôi phục lại người dùng?')">
                                                     <i class="fas fa-undo"></i> Khôi phục
                                                 </button>
                                             </form>
-                                            <form action="{{ route('brands.forceDelete', $brand->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('users.forceDelete', $user->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?');">

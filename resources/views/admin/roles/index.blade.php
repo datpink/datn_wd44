@@ -1,6 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Danh Sách Thương Hiệu')
+@section('title', 'Danh Sách Vai Trò')
 
 @section('content')
     <div class="content-wrapper-scroll">
@@ -23,12 +23,12 @@
                 <div class="col-sm-12 col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">Danh Sách Thương Hiệu</div>
+                            <div class="card-title">Danh Sách Vai Trò</div>
                             <div>
-                                <a href="{{ route('brands.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
+                                <a href="{{ route('roles.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
-                                <a href="{{ route('brands.trash') }}"
+                                <a href="{{ route('roles.trash') }}"
                                     class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
                                     <i class="bi bi-trash me-2"></i> Thùng Rác
                                 </a>
@@ -36,11 +36,11 @@
                         </div>
 
                         <div class="card-body">
-                            <form method="GET" action="{{ route('brands.index') }}" class="mb-3">
+                            <form method="GET" action="{{ route('roles.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
                                         <input type="text" id="search" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm thương hiệu"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm vai trò"
                                             value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
@@ -54,20 +54,20 @@
                                     <thead>
                                         <tr>
                                             <th>Stt</th>
-                                            <th>Tên</th>
-                                            <th>Mô tả</th>
+                                            <th>Tên Vai Trò</th>
+                                            <th>Mô Tả</th>
                                             <th>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse($brands as $index => $brand)
+                                        @forelse($roles as $index => $role)
                                             <tr>
-                                                <td>{{ $brands->firstItem() + $index }}</td>
-                                                <td>{{ $brand->name }}</td>
-                                                <td>{{ $brand->description }}</td>
+                                                <td>{{ $roles->firstItem() + $index }}</td>
+                                                <td>{{ $role->name }}</td>
+                                                <td>{{ $role->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('brands.edit', $brand) }}" class="btn rounded-pill btn-warning btn-sm">Sửa</a>
-                                                    <form action="{{ route('brands.destroy', $brand) }}" method="POST" style="display:inline;">
+                                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn rounded-pill btn-warning btn-sm">Sửa</a>
+                                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger rounded-pill btn-sm"
@@ -77,14 +77,14 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center">Không có thương hiệu nào được tìm thấy.</td>
+                                                <td colspan="3" class="text-center">Không có vai trò nào được tìm thấy.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
                             </div>
                             <div class="pagination justify-content-center mt-3">
-                                {{ $brands->links() }}
+                                {{ $roles->links() }}
                             </div>
                         </div>
                     </div>

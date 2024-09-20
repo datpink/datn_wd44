@@ -66,7 +66,46 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
+                                <a href="{{ route('categories.index') }}">Danh sách danh mục</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
                                 <a href="{{ route('posts.index') }}">Danh sách tin</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-newspaper"></i>
+                        <span class="menu-text">Quản lý bình luận tin tức</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('comments.index') }}">Danh sách bình luận tin tức</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-window-split"></i>
+                        <span class="menu-text">Quản lý Users</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('users.index') }}">Danh sách Người Dùng</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('roles.index') }}">Danh sách Vai Trò</a>
                             </li>
                         </ul>
                     </div>

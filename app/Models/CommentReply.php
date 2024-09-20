@@ -9,15 +9,17 @@ class CommentReply extends Model
 {
     use HasFactory;
 
+    protected $table = 'post_coment_replies';
     protected $fillable = [
-        'comment_id',
+        'post_comment_id',
         'user_id',
         'reply'
     ];
 
+    // Quan hệ với bảng comments
     public function comment()
     {
-        return $this->belongsTo(ProductComment::class);
+        return $this->belongsTo(Comment::class, 'post_comment_id');
     }
 
     public function user()

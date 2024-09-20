@@ -25,6 +25,7 @@ return new class extends Migration {
             ])->default('processing');
             $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
             $table->string('shipping_address')->nullable();
+            $table->integer('points_redeemed')->nullable();
             $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
             $table->string('phone_number')->nullable();
             $table->softDeletes();

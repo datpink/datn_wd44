@@ -16,8 +16,8 @@ class RolesTableSeeder extends Seeder
                 'description' => 'Quản Trị Viên',
             ],
             [
-                'id' => 2,
-                'name' => 'User',
+                'id'          => 2,
+                'name'        => 'User',
                 'description' => 'Người Dùng',
             ],
             [
