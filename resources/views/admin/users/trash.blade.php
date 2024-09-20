@@ -1,6 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Thùng Rác Người Dùng')
+@section('title', 'Thùng rác người dùng')
 
 @section('content')
     <div class="content-wrapper-scroll">
@@ -13,10 +13,17 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title mb-3">Thùng Rác Người Dùng</div>
-                    <a href="{{ route('users.index') }}" class="btn btn-sm rounded-pill btn-secondary">
+                    <div class="card-title mb-3">Thùng rác người dùng</div>
+                    <a href="{{ route('brands.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>

@@ -30,7 +30,8 @@
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
-                <div class="card-body">
+
+                <div class="card-body mt-4">
                     <form action="{{ route('users.update', $user->id) }}" method="POST">
                         @csrf
                         @method('PUT')
