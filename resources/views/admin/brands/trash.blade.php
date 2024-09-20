@@ -1,28 +1,18 @@
+<!-- resources/views/admin/brands/trash.blade.php -->
+
 @extends('admin.master')
 
-@section('title', 'Thùng Rác Thương Hiệu')
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
+@endsection
 
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper p-4">
 
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title mb-3">Thùng Rác Thương Hiệu</div>
+                    <div class="card-title mb-3">Thùng rác thương hiệu</div>
                     <a href="{{ route('brands.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
@@ -34,40 +24,36 @@
                             <thead>
                                 <tr>
                                     <th>Stt</th>
-                                    <th>Tên</th>
+                                    <th>Tên thương hiệu</th>
                                     <th>Mô tả</th>
-                                    <th>Ngày xóa</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($brands as $index => $brand)
+                                @foreach ($brands as $brand)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $loop->index + 1 }}</td>
                                         <td>{{ $brand->name }}</td>
                                         <td>{{ $brand->description }}</td>
-                                        <td>{{ $brand->deleted_at ? $brand->deleted_at->format('d-m-Y') : 'Chưa xóa' }}</td>
                                         <td>
-                                            <form action="{{ route('brands.restore', $brand->id) }}" method="POST" style="display:inline;">
+                                            <!-- Khôi phục -->
+                                            <form action="{{ route('brands.restore', $brand->id) }}" method="POST"
+                                                style="display:inline-block;">
                                                 @csrf
-                                                <button type="submit" class="btn btn-outline-success rounded-pill btn-sm" onclick="return confirm('Khôi phục lại thương hiệu?')">
-                                                    <i class="fas fa-undo"></i> Khôi phục
-                                                </button>
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-success">Khôi phục</button>
                                             </form>
-                                            <form action="{{ route('brands.forceDelete', $brand->id) }}" method="POST" style="display:inline;">
+                                            <!-- Xóa vĩnh viễn -->
+                                            <form action="{{ route('brands.delete-permanently', $brand->id) }}"
+                                                method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?');">
-                                                    <i class="fas fa-trash"></i> Xóa cứng
-                                                </button>
+                                                <button type="submit" class="btn btn-danger delete-btn">Xóa vĩnh
+                                                    viễn</button>
                                             </form>
                                         </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">Không có thương hiệu nào trong thùng rác.</td>
-                                    </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -75,4 +61,61 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        // Xác nhận khi xóa brand
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc muốn xóa',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timerProgressBar: true, // Hiển thị thanh thời gian
+                    timer: 3500
+
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.closest('form').submit();
+                    }
+                });
+            });
+        });
+    </script>
+
+    @if (session('restore'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "Khôi phục thành công",
+                showConfirmButton: false,
+                timerProgressBar: true, // Hiển thị thanh thời gian
+                timer: 1500
+            });
+        </script>
+    @endif
+
+
+    @if (session('deletePermanently'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "Đã xóa vĩnh viễn",
+                showConfirmButton: false,
+                timerProgressBar: true, // Hiển thị thanh thời gian
+                timer: 1500
+            });
+        </script>
+    @endif
 @endsection
