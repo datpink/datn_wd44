@@ -66,6 +66,14 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
+                                <a href="{{ route('categories.index') }}">Danh sách danh mục</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
                                 <a href="{{ route('posts.index') }}">Danh sách tin</a>
                             </li>
                         </ul>
