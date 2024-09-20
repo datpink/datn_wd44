@@ -48,15 +48,13 @@
                                 class="form-control" required>
                         </div>
 
-                        {{-- <div class="form-group mb-3">
-                            <label for="roles">Chọn Vai Trò:</label>
-                            <select name="roles[]" id="roles" class="form-control" multiple required>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                @endforeach
+                        <div class="form-group mb-3">
+                            <label for="status">Trạng Thái:</label>
+                            <select name="status" id="status" class="form-control" required>
+                                <option value="unlocked">Mở Khóa</option>
+                                <option value="locked">Bị Khóa</option>
                             </select>
-                            <small class="form-text text-muted">Giữ Ctrl để chọn nhiều vai trò (nếu có).</small>
-                        </div> --}}
+                        </div>
 
                         <button type="submit" class="btn btn-primary rounded-pill">Thêm Người Dùng</button>
                     </form>

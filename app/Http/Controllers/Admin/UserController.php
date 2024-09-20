@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role; // Import model Role
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -29,13 +30,11 @@ class UserController extends Controller
     // Xử lý lưu thông tin người dùng mới
     public function store(Request $request)
     {
-        // Debugging: xem dữ liệu gửi lên
-        // dd($request->all());
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
         ]);
 
         // Tạo người dùng
@@ -43,10 +42,11 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'status' => $request->status, // Lưu trạng thái
         ]);
 
         // Gán vai trò cho người dùng mới
-        $user->roles()->attach(2); // Giả sử ID của vai trò "user" là 1
+        $user->roles()->attach(2); // Giả sử ID của vai trò "user" là 2
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được thêm thành công!');
     }
@@ -63,22 +63,40 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'roles' => 'required|array', // Xác nhận có chọn vai trò
+            'email' => 'required|email',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:255',
+            'image' => 'nullable|image|max:2048',
+            'roles' => 'required|array',
+            'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
         ]);
 
         $user = User::findOrFail($id);
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->status = $request->status; // Cập nhật trạng thái
+
+        // Cập nhật hình ảnh
+        if ($request->hasFile('image')) {
+            // Xóa hình ảnh cũ nếu có
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+            // Lưu hình ảnh mới
+            $user->image = $request->file('image')->store('user_images', 'public');
+        }
 
         // Lưu thay đổi
         $user->save();
 
         // Cập nhật vai trò
-        $user->roles()->sync($request->roles); // Đồng bộ vai trò
+        $user->roles()->sync($request->roles);
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được cập nhật thành công!');
     }
+
 
     public function destroy($id)
     {

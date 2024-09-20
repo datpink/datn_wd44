@@ -26,12 +26,14 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title mb-3">Danh Sách Người Dùng</div>
                             <div>
-                                <a href="{{ route('users.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
+                                <a href="{{ route('users.create') }}"
+                                    class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
-                                <a href="{{ route('users.trash') }}" class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
+                                {{-- <a href="{{ route('users.trash') }}"
+                                    class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
                                     <i class="bi bi-trash me-2"></i> Thùng Rác
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                         <div class="card-body">
@@ -39,7 +41,9 @@
                             <form method="GET" action="{{ route('users.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm người dùng" value="{{ request()->search }}">
+                                        <input type="text" id="search" name="search"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm người dùng"
+                                            value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -54,7 +58,11 @@
                                             <th>Stt</th>
                                             <th>Tên</th>
                                             <th>Email</th>
+                                            <th>Số Điện Thoại</th>
+                                            <th>Địa Chỉ</th>
+                                            <th>Hình Ảnh</th>
                                             <th>Vai Trò</th>
+                                            <th>Trạng Thái</th>
                                             <th>Hành Động</th>
                                         </tr>
                                     </thead>
@@ -64,35 +72,58 @@
                                                 <td>{{ $users->firstItem() + $index }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
+                                                <td>{{ $user->phone }}</td> <!-- Số điện thoại -->
+                                                <td>{{ $user->address }}</td> <!-- Địa chỉ -->
                                                 <td>
-                                                    @if($user->roles->isNotEmpty())
-                                                        @foreach($user->roles as $role)
-                                                            <span class="badge bg-success rounded-pill mt-1 mb-1">{{ $role->name }}</span> <br>
+                                                    @if ($user->image)
+                                                        <img src="{{ asset('storage/' . $user->image) }}" alt="User Image"
+                                                            style="width: 50px; height: 50px; border-radius: 50%;">
+                                                    @else
+                                                        <span class="text-muted">Không có hình ảnh</span>
+                                                    @endif
+                                                </td> <!-- Hình ảnh -->
+                                                <td>
+                                                    @if ($user->roles->isNotEmpty())
+                                                        @foreach ($user->roles as $role)
+                                                            <span
+                                                                class="badge bg-success rounded-pill mt-1 mb-1">{{ $role->name }}</span>
+                                                            <br>
                                                         @endforeach
                                                     @else
                                                         <span class="text-muted">Không có vai trò</span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    @if($user->deleted_at)
-                                                        <span class="text-muted">Đã xóa</span>
+                                                    @if ($user->status === 'locked')
+                                                        <span class="badge bg-danger">Bị Khóa</span>
                                                     @else
-                                                        <a href="{{ route('users.edit', $user->id) }}" class="btn rounded-pill btn-warning btn-sm">
+                                                        <span class="badge bg-success">Mở Khóa</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    {{-- @if ($user->deleted_at)
+                                                        <span class="text-muted">Đã xóa</span>
+                                                    @else --}}
+                                                        <a href="{{ route('users.edit', $user->id) }}"
+                                                            class="btn rounded-pill btn-warning btn-sm">
                                                             <i class="fas fa-edit"></i> Sửa
                                                         </a>
-                                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                                        {{-- <form action="{{ route('users.destroy', $user->id) }}"
+                                                            method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger rounded-pill btn-sm" onclick="return confirm('Bạn có chắc muốn xóa người dùng này?');">
+                                                            <button type="submit"
+                                                                class="btn btn-danger rounded-pill btn-sm"
+                                                                onclick="return confirm('Bạn có chắc muốn xóa người dùng này?');">
                                                                 <i class="fas fa-trash"></i> Xóa
                                                             </button>
-                                                        </form>
-                                                    @endif
+                                                        </form> --}}
+                                                    {{-- @endif --}}
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center">Không có người dùng nào.</td>
+                                                <td colspan="8" class="text-center">Không có người dùng nào.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
