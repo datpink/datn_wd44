@@ -29,27 +29,27 @@ class UserController extends Controller
 
     // Xử lý lưu thông tin người dùng mới
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-        'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
+        ]);
 
-    // Tạo người dùng
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'status' => $request->status, // Lưu trạng thái
-    ]);
+        // Tạo người dùng
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'status' => $request->status, // Lưu trạng thái
+        ]);
 
-    // Gán vai trò cho người dùng mới (ID của vai trò "user")
-    $user->roles()->attach(2); // Giả sử ID của vai trò "user" là 2
+        // Gán vai trò cho người dùng mới (ID của vai trò "user")
+        $user->roles()->attach(2); // Giả sử ID của vai trò "user" là 2
 
-    return redirect()->route('users.index')->with('success', 'Người dùng đã được thêm thành công!');
-}
+        return redirect()->route('users.index')->with('success', 'Người dùng đã được thêm thành công!');
+    }
 
     public function edit($id)
     {
