@@ -79,6 +79,21 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-newspaper"></i>
+                        <span class="menu-text">Quản lý bình luận tin tức</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('comments.index') }}">Danh sách bình luận tin tức</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-window-split"></i>

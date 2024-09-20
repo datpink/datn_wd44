@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
+use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -81,9 +83,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Route Brand
     Route::resource('brands', BrandController::class);
+    // 
     Route::get('brands-trash', [BrandController::class, 'trash'])->name('brands.trash');
-    Route::post('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
-    Route::delete('brands/{id}/force-delete', [BrandController::class, 'forceDelete'])->name('brands.forceDelete');
+    Route::patch('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
+    Route::delete('brands/{id}/delete-permanently', [BrandController::class, 'deletePermanently'])->name('brands.delete-permanently');
+
+    // routes/web.php
+    Route::post('comments/respond/{id}', [PostCommentController::class, 'respond'])->name('comments.respond');
+    Route::resource('comments',  PostCommentController::class);
 
     // Route Order
     Route::resource('orders', OrderController::class);
