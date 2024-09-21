@@ -25,7 +25,8 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Danh Sách Vai Trò</div>
                             <div>
-                                <a href="{{ route('roles.create') }}" class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
+                                <a href="{{ route('roles.create') }}"
+                                    class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
                                 <a href="{{ route('roles.trash') }}"
@@ -66,18 +67,21 @@
                                                 <td>{{ $role->name }}</td>
                                                 <td>{{ $role->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn rounded-pill btn-warning btn-sm">Sửa</a>
-                                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline;">
+                                                    <a href="{{ route('roles.edit', $role->id) }}"
+                                                        class="btn rounded-pill btn-warning btn-sm">Sửa</a>
+                                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                                        style="display:inline;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="btn btn-danger rounded-pill btn-sm"
-                                                                onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                                            onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
                                                     </form>
                                                 </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="3" class="text-center">Không có vai trò nào được tìm thấy.</td>
+                                                <td colspan="3" class="text-center">Không có vai trò nào được tìm thấy.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>

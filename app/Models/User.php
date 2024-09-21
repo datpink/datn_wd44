@@ -20,7 +20,8 @@ class User extends Authenticatable
         'password',
         'address',
         'phone',
-        'image'
+        'image',
+        'status'
     ];
 
     public function roles()
