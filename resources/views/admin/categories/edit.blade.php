@@ -35,7 +35,11 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
+                        
+                        <div class="form-group mb-3">
+                            <label for="description">Mô tả:</label>
+                            <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $category->description) }}</textarea>
+                        </div>
                         
 
                         <div class="form-group">

@@ -39,6 +39,12 @@
                         <div class="form-group">
                             <label for="description">Mô tả:</label>
                             <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
+
+                            @if ($errors->has('description'))
+                                <ul>
+                                    <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
+                                </ul>
+                                 @endif
                         </div>
 
                         <div class="form-group">

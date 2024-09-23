@@ -46,11 +46,14 @@ class CategoryController extends Controller
         ]);
 
         $category = new Category();
+
+
         $category->name = $request->name;
 
         $category->parent_id = $request->parent_id;
         $category->description = $request->description;
         $category->status = $request->status;
+
 
         $category->save();
 
@@ -67,13 +70,14 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'max:255',
             // 'slug' => 'required|string|max:255|unique:catalogues,slug,' . $catalogue->id,
             'status' => 'required|in:active,inactive',
             // 'image' => 'nullable|image|max:2048',
         ]);
 
         $category->name = $request->name;
-        // $category->slug = $request->slug;
+        $category->description = $request->description;
         $category->status = $request->status;
 
 
