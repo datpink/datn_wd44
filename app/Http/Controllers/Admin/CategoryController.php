@@ -60,6 +60,7 @@ class CategoryController extends Controller
         return redirect()->route('categories.index')
             ->with('success', 'Danh mục đã được thêm mới.');
     }
+
     public function edit(Category $category)
     {
         $title = 'Cập Nhật Danh Mục';

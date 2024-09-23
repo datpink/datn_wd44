@@ -1,16 +1,14 @@
 @extends('admin.master')
 
-@section('title', 'Thêm mới danh mục tin tức')
+@section('title', 'Thêm mới bài viết')
 
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-
-
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title">Thêm Mới Danh Mục</div>
-                    <a href="{{ route('catalogues.index') }}" class="btn btn-sm btn-secondary">
+                    <div class="card-title">Thêm Mới Bài Viết</div>
+                    <a href="{{ route('posts.index') }}" class="btn btn-sm btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -19,27 +17,42 @@
                     @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    @if (session('errors'))
-                        <div class="alert alert-errors">{{ session('errors') }}</div>
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
                     @endif
 
                     <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" class="form-control @error('user_id') is-invalid @enderror" name="user_id"
-                            id="user_id" value="1">
+                        <input type="hidden" class="form-control" name="user_id" id="user_id" value="1">
+
                         <div class="form-group">
                             <label for="title">Tiêu đề:</label>
                             <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"
-                                id="title" value="{{ old('title') }}">
+                                id="title" value="{{ old('title') }}" onkeyup="generateSlug()">
                             @error('title')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="form-group">
-                            <label for="summary">Tóm tắt:</label>
-                            <textarea class="form-control @error('summary') is-invalid @enderror" name="summary" id="summary">{{ old('summary') }}</textarea>
-                            @error('summary')
+                            <label for="slug">Slug:</label>
+                            <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug"
+                                name='slug' value="{{ old('slug') }}" readonly>
+                            @error('slug')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tomtat">Tóm tắt:</label>
+                            <textarea class="form-control @error('tomtat') is-invalid @enderror" name="tomtat" id="tomtat">{{ old('tomtat') }}</textarea>
+                            @error('tomtat')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -60,50 +73,28 @@
                             @enderror
                         </div>
 
-                        <div id="post_parts">
-                            <h3>Các phần của bài viết</h3>
-                            <div class="post_part border p-3 mb-3">
-                                <div class="form-group">
-                                    <label for="type">Loại:</label>
-                                    <select name="post_parts[0][type]"
-                                        class="form-control type_select @error('post_parts.0.type') is-invalid @enderror">
-                                        <option value="text">Văn bản</option>
-                                        <option value="image">Hình ảnh</option>
-                                    </select>
-                                    @error('post_parts.0.type')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group content_field">
-                                    <label for="content">Nội dung:</label>
-                                    <textarea class="form-control" name="post_parts[0][content]">{{ old('post_parts.0.content') }}</textarea>
-                                    @error('post_parts.0.content')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group image_field" style="display:none;">
-                                    <label for="image">Đường dẫn hình ảnh:</label>
-                                    <input type="file"
-                                        class="form-control-file @error('post_parts.0.image') is-invalid @enderror"
-                                        name="post_parts[0][image]">
-                                    @error('post_parts.0.image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="order">Thứ tự:</label>
-                                    <input type="number"
-                                        class="form-control @error('post_parts.0.order') is-invalid @enderror"
-                                        name="post_parts[0][order]" value="{{ old('post_parts.0.order') }}">
-                                    @error('post_parts.0.order')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <button type="button" class="btn btn-danger remove_part">Xóa</button>
-                            </div>
+                        <div class="form-group">
+                            <label for="image">Hình ảnh:</label>
+                            <input type="file" class="form-control-file @error('image') is-invalid @enderror"
+                                name="image" id="image">
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
-                        <button type="button" id="add_part" class="btn btn-secondary mb-3">Thêm phần</button>
+                        <div class="form-group">
+                            <label for="editor">Nội dung:</label>
+                            <textarea name="content" id="editor" class="form-control @error('content') is-invalid @enderror">{{ old('content', $post->content ?? '') }}</textarea>
+                            @error('content')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="is_featured">Bài viết nổi bật:</label>
+                            <input type="checkbox" name="is_featured" id="is_featured" value="1"
+                                {{ old('is_featured') ? 'checked' : '' }}>
+                        </div>
 
                         <div>
                             <button type="submit" class="btn btn-primary">Gửi</button>
@@ -114,64 +105,27 @@
         </div>
     </div>
 
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
-        let partIndex = 1;
+        CKEDITOR.replace('editor');
+    </script>
 
-        function updateFields(part) {
-            const typeSelect = part.find('.type_select');
-            const contentField = part.find('.content_field');
-            const imageField = part.find('.image_field');
-
-            typeSelect.change(function() {
-                if ($(this).val() === 'text') {
-                    contentField.show();
-                    imageField.hide();
-                } else if ($(this).val() === 'image') {
-                    contentField.hide();
-                    imageField.show();
-                }
-            });
-
-            typeSelect.trigger('change');
+    <script>
+        function generateSlug() {
+            const title = document.getElementById("title").value;
+            let slug = title.toLowerCase()
+                .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
+                .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
+                .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
+                .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+                .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+                .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+                .replace(/đ/gi, 'd')
+                .replace(/[^a-z0-9\s]/g, '') // Xóa các ký tự đặc biệt
+                .trim() // Xóa khoảng trắng ở đầu và cuối
+                .replace(/\s+/g, '-') // Thay thế khoảng trắng thành dấu gạch ngang
+                .replace(/-+/g, '-'); // Thay thế nhiều dấu gạch ngang thành một
+            document.getElementById('slug').value = slug;
         }
-
-        $('#add_part').click(function() {
-            const newPart = $(`
-        <div class="post_part border p-3 mb-3">
-            <div class="form-group">
-                <label for="type">Loại:</label>
-                <select name="post_parts[${partIndex}][type]" class="form-control type_select">
-                    <option value="text">Văn bản</option>
-                    <option value="image">Hình ảnh</option>
-                </select>
-            </div>
-            <div class="form-group content_field">
-                <label for="content">Nội dung:</label>
-                <textarea class="form-control" name="post_parts[${partIndex}][content]"></textarea>
-            </div>
-            <div class="form-group image_field" style="display:none;">
-                <label for="image">Đường dẫn hình ảnh:</label>
-                <input type="file" class="form-control-file" name="post_parts[${partIndex}][image]">
-            </div>
-            <div class="form-group">
-                <label for="order">Thứ tự:</label>
-                <input type="number" class="form-control" name="post_parts[${partIndex}][order]">
-            </div>
-            <button type="button" class="btn btn-danger remove_part">Xóa</button>
-        </div>
-    `);
-
-            $('#post_parts').append(newPart);
-            updateFields(newPart);
-            partIndex++;
-        });
-
-        $(document).on('click', '.remove_part', function() {
-            $(this).closest('.post_part').remove();
-        });
-
-        $(document).ready(function() {
-            updateFields($('.post_part'));
-        });
     </script>
 @endsection
