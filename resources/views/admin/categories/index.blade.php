@@ -57,7 +57,7 @@
                                             <th>Stt</th>
                                             <th>Tên</th>
                                             <th>Danh mục cha</th>
-                                            {{-- <th>Slug</th> --}}
+                                            <th>Mô tả</th>
                                             <th>Trạng thái</th>
                                             {{-- <th>Hình ảnh</th> --}}
                                             <th>Ngày tạo</th>
@@ -69,7 +69,9 @@
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $category->name }}</td>
+                                                {{-- <td>{{ $category->description }}</td> --}}
                                                 <td>{{ $category->parent ? $category->parent->name : 'None' }}</td>
+                                                <td>{{ $category->description }}</td>
                                                 <td>
                                                     @if ($category->status === 'active')
                                                         <span class="badge rounded-pill bg-success">Kích hoạt</span>
