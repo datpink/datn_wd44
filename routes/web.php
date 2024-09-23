@@ -16,6 +16,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -83,7 +84,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Route Brand
     Route::resource('brands', BrandController::class);
-    // 
+    //
     Route::get('brands-trash', [BrandController::class, 'trash'])->name('brands.trash');
     Route::patch('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
     Route::delete('brands/{id}/delete-permanently', [BrandController::class, 'deletePermanently'])->name('brands.delete-permanently');
@@ -108,4 +109,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('posts-trash', [AdminPostController::class, 'trash'])->name('posts.trash');
     Route::post('posts/{id}/restore', [AdminPostController::class, 'restore'])->name('posts.restore');
     Route::delete('posts/{id}/force-delete', [AdminPostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+
+    // Routes Cho Product
+    Route::resource('products', AdminProductController::class);
+    Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
+    Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
+    Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
 });
