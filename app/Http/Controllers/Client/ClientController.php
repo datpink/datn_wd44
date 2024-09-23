@@ -9,7 +9,8 @@ class ClientController extends Controller
 {
     public function index()
     {
+        $menuCatalogues = (new MenuController())->getCataloguesForMenu(); // Gọi phương thức từ MenuController
         $menuCategories = (new MenuController())->getCategoriesForMenu(); // Gọi phương thức từ MenuController
-        return view('client.index', compact('menuCategories'));
+        return view('client.index', compact('menuCatalogues', 'menuCategories'));
     }
 }

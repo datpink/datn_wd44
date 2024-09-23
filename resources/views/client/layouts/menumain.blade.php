@@ -61,20 +61,20 @@
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
-                                    @foreach ($menuCategories as $category)
-                                        @if ($category->status === 'active')
+                                    @foreach ($menuCatalogues as $catalogues)
+                                        @if ($catalogues->status === 'active')
                                             <!-- Kiểm tra trạng thái active -->
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
                                                     <div class="listitem-inner">
-                                                        <h4 class="title">{{ $category->name }}</h4>
+                                                        <h4 class="title">{{ $catalogues->name }}</h4>
                                                         <ul class="listitem-list mb-3">
-                                                            @foreach ($category->children as $child)
+                                                            @foreach ($catalogues->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <!-- Kiểm tra trạng thái cho child -->
                                                                     <li>
                                                                         <a
-                                                                            href="{{ route('client.products.index', ['category' => $child->id]) }}">{{ $child->name }}</a>
+                                                                            href="{{ route('client.products.index', ['catalogues' => $child->id]) }}">{{ $child->name }}</a>
                                                                     </li>
                                                                 @endif
                                                             @endforeach
@@ -186,99 +186,28 @@
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-blog">
                                 <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Blog Layout </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="blog.html" target="_self">No Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="blog-leftsidebar.html" target="_self">Left
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="blog-rightsidebar.html" target="_self">Right
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="blog.html" target="_self">Blog Standard
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="blog-grid.html" target="_self">Blog Grid
-                                                        </a>
-                                                    </li>
-                                                </ul>
+                                    @foreach ($menuCategories as $categories)
+                                        @if ($categories->status === 'active')
+                                            <div class="col-md-4">
+                                                <div class="kobolg-listitem style-01">
+                                                    <div class="listitem-inner">
+                                                        <h4 class="title">{{ $categories->name }}</h4>
+                                                        <ul class="listitem-list mb-3">
+                                                            @foreach ($categories->children as $child)
+                                                                @if ($child->status === 'active')
+                                                                    <li>
+                                                                        <a href="{{ route('client.products.index', ['categories' => $child->id]) }}">
+                                                                            {{ $child->name }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Post Layout </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="single-post.html" target="_self">No
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-leftsidebar.html" target="_self">Left
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-rightsidebar.html" target="_self">Right
-                                                            Sidebar </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-instagram.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-hot.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Instagram In Post
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-product.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-new.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Product In Post
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class="kobolg-listitem style-01">
-                                            <div class="listitem-inner">
-                                                <h4 class="title">
-                                                    Post Format </h4>
-                                                <ul class="listitem-list">
-                                                    <li>
-                                                        <a href="single-post.html" target="_self">Standard
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-gallery.html" target="_self">Gallery </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="single-post-video.html" target="_self">
-                                                            <span class="image">
-                                                                <img src="{{ asset('theme/client/assets/images/label-hot.jpg') }}"
-                                                                    class="attachment-full size-full" alt="img">
-                                                            </span>
-                                                            Video
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             </div>
                         </li>
