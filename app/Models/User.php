@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->roles()->where('role_id', $roleId)->exists();
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->roles()->where('name', 'admin')->exists(); // Kiểm tra xem người dùng có vai trò admin không
+    }
 }

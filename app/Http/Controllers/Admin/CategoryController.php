@@ -18,10 +18,9 @@ class CategoryController extends Controller
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('name', 'like', '%' . $search . '%')
-                  ->orWhereHas('parent', function ($q) use ($search) 
-                  {
+                ->orWhereHas('parent', function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%');
-                  });
+                });
         }
 
         $categories = $query->paginate(10);
@@ -33,29 +32,33 @@ class CategoryController extends Controller
     {
         // Assuming you want to get all categories that could be parents
         $parentCategories = Category::whereNull('parent_id')->with('children')->get();
-    
+
         return view('admin.categories.create', compact('parentCategories'));
     }
-    
+
 
     public function store(Request $request)
     {
         $request->validate([
-            'name'          => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'status'        => 'required|in:active,inactive',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $category = new Category();
-        $category->name            = $request->name;
-      
-        $category->parent_id       = $request->parent_id;
-        $category->description     = $request->description;
-        $category->status          = $request->status;
+
+
+        $category->name = $request->name;
+
+        $category->parent_id = $request->parent_id;
+        $category->description = $request->description;
+        $category->status = $request->status;
+
+
         $category->save();
 
         return redirect()->route('categories.index')
-                         ->with('success', 'Danh mục đã được thêm mới.');
+            ->with('success', 'Danh mục đã được thêm mới.');
     }
     public function edit(Category $category)
     {
@@ -77,7 +80,7 @@ class CategoryController extends Controller
         $category->description = $request->description;
         $category->status = $request->status;
 
-        
+
 
         $category->save();
 
@@ -90,7 +93,7 @@ class CategoryController extends Controller
 
         if (Category::where('parent_id', $category->id)->exists()) {
             return redirect()->route('categories.index')
-                             ->with('error', 'Không thể xóa danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
+                ->with('error', 'Không thể xóa danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
         }
 
         $category->delete();
@@ -111,7 +114,7 @@ class CategoryController extends Controller
         $category->restore();
 
         return redirect()->route('categories.trash')
-                         ->with('success', 'Danh mục đã được khôi phục thành công!');
+            ->with('success', 'Danh mục đã được khôi phục thành công!');
     }
 
     public function forceDelete($id)
@@ -120,12 +123,12 @@ class CategoryController extends Controller
 
         if (Category::where('parent_id', $category->id)->exists()) {
             return redirect()->route('categories.trash')
-                             ->with('error', 'Không thể xóa cứng danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
+                ->with('error', 'Không thể xóa cứng danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
         }
 
         $category->forceDelete();
 
         return redirect()->route('categories.trash')
-                         ->with('success', 'Danh mục đã được xóa cứng thành công!');
+            ->with('success', 'Danh mục đã được xóa cứng thành công!');
     }
 }
