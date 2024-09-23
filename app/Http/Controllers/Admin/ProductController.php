@@ -86,11 +86,11 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $product)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:products,slug,' . $id,
+            'slug' => 'required|string|max:255|unique:products,slug,' . $product,
             'sku' => 'nullable|string|max:255',
             'price' => 'required|numeric',
             'weight' => 'nullable|numeric',
@@ -99,7 +99,7 @@ class ProductController extends Controller
             // Các validate khác
         ]);
 
-        $product = Product::findOrFail($id);
+        $product = Product::findOrFail($product);
         $product->update([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -112,6 +112,11 @@ class ProductController extends Controller
             'description' => $request->description,
             'catalogue_id' => $request->catalogue_id,
         ]);
+
+        if ($request->file("image_url")) {
+            $imagePath = $request->file("image_url")->store('products_images', 'public');
+            $product->update(['image_url' => $imagePath]);
+        }
 
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
     }

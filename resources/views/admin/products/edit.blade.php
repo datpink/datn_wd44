@@ -19,7 +19,7 @@
                             <div class="card-title">Sửa sản phẩm</div>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                            <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
