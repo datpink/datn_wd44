@@ -27,6 +27,14 @@ class LoginController extends Controller
             // Lấy thông tin người dùng
             $user = Auth::user();
 
+            // Kiểm tra trạng thái
+            if ($user->status === 'locked') {
+                Auth::logout(); // Đăng xuất nếu tài khoản bị khóa
+                return back()->withErrors([
+                    'username' => 'Tài khoản của bạn đã bị khóa.',
+                ]);
+            }
+
             // Kiểm tra vai trò của người dùng
             if ($user->hasRole('admin')) {
                 Auth::logout(); // Đăng xuất người dùng admin
@@ -44,6 +52,7 @@ class LoginController extends Controller
             'username' => 'Thông tin đăng nhập không chính xác.',
         ]);
     }
+
 
     public function logout(Request $request)
     {

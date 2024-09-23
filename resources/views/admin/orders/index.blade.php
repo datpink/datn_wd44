@@ -17,9 +17,9 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Danh Sách Đơn Hàng</div>
-                            <a href="{{ route('orders.trash') }}" class="btn rounded-pill btn-primary d-flex align-items-center">
+                            {{-- <a href="{{ route('orders.trash') }}" class="btn rounded-pill btn-primary d-flex align-items-center">
                                 <i class="bi bi-trash me-2"></i> Thùng Rác
-                            </a>
+                            </a> --}}
                         </div>
 
                         <div class="card-body">
@@ -154,7 +154,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <form action="{{ route('orders.destroy', $order->id) }}"
+                                                        {{-- <form action="{{ route('orders.destroy', $order->id) }}"
                                                             method="POST" style="display:inline-block;">
                                                             @csrf
                                                             @method('DELETE')
@@ -162,7 +162,7 @@
                                                                 onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
                                                                 <i class="bi bi-trash text-red"></i>
                                                             </button>
-                                                        </form>
+                                                        </form> --}}
                                                     </div>
                                                 </td>
                                             </tr>

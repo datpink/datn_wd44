@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
             $table->string('image')->nullable();
+            $table->enum('status', ['locked', 'unlocked'])->default('unlocked');
             $table->softDeletes();
             $table->timestamps();
         });

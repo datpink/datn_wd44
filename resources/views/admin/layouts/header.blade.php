@@ -65,9 +65,11 @@
             </li>
             <li class="dropdown">
                 <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
-                    <span href="#" class="user-name d-none d-md-block">{{ Auth::user()->name }}</span>
+                    <span class="user-name d-none d-md-block">{{ Auth::user()->name }}</span>
                     <span class="avatar">
-                        <img src="{{ asset('theme/admin/assets/images/user.png') }}" alt="Admin Templates">
+                        @if (Auth::user()->image)
+                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="Admin Avatar" class="img-thumbnail">
+                        @endif
                         <span class="status online"></span>
                     </span>
                 </a>
