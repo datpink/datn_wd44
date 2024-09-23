@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('stock');
             $table->string('sku')->unique();
             $table->string('image_url')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+
             $table->softDeletes();
             $table->timestamps();
         });

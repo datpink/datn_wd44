@@ -31,6 +31,13 @@ class AdminController extends Controller
             $user = Auth::user();
             info('User logged in: ' . $user->email);
 
+            // Kiểm tra trạng thái
+            if ($user->status === 'locked') {
+                Auth::logout(); // Đăng xuất nếu tài khoản bị khóa
+                return redirect()->back()->with('error', 'Tài khoản của bạn đã bị khóa.');
+            }
+
+            // Kiểm tra vai trò
             if ($user->hasRole(1)) {
                 return redirect()->route('admin.index');
             } else {
@@ -38,9 +45,11 @@ class AdminController extends Controller
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
             }
         }
+
         info('Login failed for: ' . $request->email);
         return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
     }
+
 
     public function logout()
     {

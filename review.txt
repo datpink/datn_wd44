@@ -24,6 +24,7 @@ php artisan db:seed --class=AttributeValueTableSeeder
 php artisan db:seed --class=ProductVariantsTableSeeder
 php artisan db:seed --class=ProductVariantAttributesTableSeeder
 php artisan db:seed --class=OrderItemTableSeeder
+php artisan db:seed --class=CategoriesTableSeeder
 
 
 chạy full seeder

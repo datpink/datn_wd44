@@ -22,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         view()->composer('*', function ($view) {
+            $menuCatalogues = (new MenuController())->getCataloguesForMenu();
+            $view->with('menuCatalogues', $menuCatalogues);
+        });
+
+        view()->composer('*', function ($view) {
             $menuCategories = (new MenuController())->getCategoriesForMenu();
             $view->with('menuCategories', $menuCategories);
         });
