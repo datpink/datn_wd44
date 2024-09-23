@@ -1,20 +1,21 @@
 @extends('admin.master')
 
-@section('title', 'Thêm mới danh mục tin tức')
+@section('title', 'Danh sách bài viết')
 
 @section('content')
-    <style>
-        th {
-            margin: 1px
-        }
-    </style>
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
-            @if (session('errors'))
-                <div class="alert alert-errors">{{ session('errors') }}</div>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
 
             <div class="row">
@@ -34,15 +35,14 @@
                             </div>
                         </div>
                         <div class="card-body">
-
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Ảnh</th>
                                         <th>Tiêu đề</th>
                                         <th>Tóm tắt</th>
                                         <th>Danh mục</th>
+                                        <th>Hình Ảnh</th>
                                         <th>Ngày tạo</th>
                                         <th>Hành động</th>
                                     </tr>
@@ -51,39 +51,30 @@
                                     @foreach ($posts as $post)
                                         <tr>
                                             <td>{{ $post->id }}</td>
-                                            <td>
-                                                @php
-                                                    $partWithImage = $post->parts->where('type', 'image')->first();
-                                                @endphp
-
-                                                @if ($partWithImage && $partWithImage->image && \Storage::exists($partWithImage->image))
-                                                    @php
-                                                        $image = $partWithImage->image;
-                                                    @endphp
-                                                    <img src="{{ \Storage::url($image) }}" alt="{{ $post->title }}"
-                                                        height="150"
-                                                        style="width: auto; max-width: 100px; height: auto; max-height: 150px">
-                                                @else
-                                                    Không có ảnh
-                                                @endif
-
-                                            </td>
-                                            <td class="title-column" class="title-column" style="width: 18%;">
-                                                {{ $post->title }}</td>
-                                            <td class="title-column" class="title-column" style="width: 18%;">
-                                                {{ $post->summary }}</td>
+                                            <td class="title-column" style="width: 18%;">{{ $post->title }}</td>
+                                            <td class="title-column" style="width: 18%;">{{ $post->tomtat }}</td>
                                             <td>{{ $post->category->name }}</td>
-
+                                            <td>
+                                                @if ($post->image)
+                                                    <img src="{{ asset('images/' . $post->image) }}"
+                                                        alt="{{ $post->title }}" style="width: 100px">
+                                                @endif
+                                            </td>
                                             <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
+
+
                                             <td class="title-column" style="width: 20%;">
-                                                <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-warning">
-                                                    Sửa</a>
+                                                <!-- Nút sửa bài viết -->
+                                                <a href="{{ route('posts.edit', $post->id) }}"
+                                                    class="btn btn-warning">Sửa</a>
+
+                                                <!-- Form để xóa bài viết -->
                                                 <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
                                                     class="d-inline-block"
-                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?');">
+                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa mềm bài viết này?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Xóa</button>
+                                                    <button type="submit" class="btn btn-warning">Xóa</button>
                                                 </form>
                                             </td>
                                         </tr>

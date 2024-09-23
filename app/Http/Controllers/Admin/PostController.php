@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
-use App\Models\PostPart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,164 +14,121 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $posts = Post::with('category', 'parts')->orderBy('id', 'desc')->get();
+        $posts = Post::with('category')->latest()->get();
         return view('admin.posts.index', compact('posts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $categories = Category::all();
+        $categories = Category::all(); // Lấy tất cả danh mục
         return view('admin.posts.create', compact('categories'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        // dd($request->all());
-        DB::beginTransaction();
+        // Xác thực dữ liệu
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:posts',
+            'tomtat' => 'nullable|string',
+            'content' => 'required|string', // Kiểm tra trường này
+            'category_id' => 'required|exists:categories,id',
+            'user_id' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_featured' => 'nullable|boolean',
+        ]);
 
-        try {
-            $user_id = Auth::user()->id;
-            $post = Post::create([
-                'category_id'   => $request->category_id,
-                'title'         => $request->title,
-                'summary'       => $request->summary,
-                'user_id'       => $user_id,
-                'created_at'    => now(),
-            ]);
-            foreach ($request->post_parts as $part) {
-                $data = [
-                    'post_id'   => $post->id,
-                    'type'      => $part['type'],
-                    'content'   => $part['content'] ?? null,
-                    'order'     => $part['order'],
-                ];
+        // Tạo bài viết mới
+        $post = new Post($request->all());
 
-                if ($part['type'] === 'image' && isset($part['image'])) {
-                    $path = Storage::put('images', $part['image']);
-                    $data['image'] = $path;
-                }
-
-                PostPart::create($data);
-            }
-
-            DB::commit();
-
-            return redirect()->route('posts.index')
-                             ->with('success', 'Thêm mới tin hành công!');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error('Error creating article: ' . $e->getMessage());
-            return back()->withErrors('Error creating article: ' . $e->getMessage());
+        // Xử lý hình ảnh
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $post->image = $imageName;
         }
+
+        $post->is_featured = $request->has('is_featured');
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Bài viết đã được thêm thành công.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-
-    // public function show(Post $post)
-    // {
-    //     $post->load('parts'); // Eager load parts
-    //     return view('admin.posts.index', compact('article'));
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Post $post)
+    public function edit($id)
     {
+        $post = Post::findOrFail($id);
         $categories = Category::all();
         return view('admin.posts.edit', compact('post', 'categories'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
-        $post = Post::findOrFail($id);
-
+        // Xác thực dữ liệu
         $request->validate([
-            'title' => 'required',
-            'summary' => 'required',
-            'category_id' => 'required',
-            'post_parts.*.type' => 'required',
-            'post_parts.*.order' => 'nullable|integer',
-            'post_parts.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:posts,slug,' . $id,
+            'tomtat' => 'nullable|string',
+            'content' => 'required|string', // Đảm bảo có trường này
+            'category_id' => 'required|exists:categories,id',
+            'user_id' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'is_featured' => 'nullable|boolean',
         ]);
 
-        $post->update([
-            'title' => $request->input('title'),
-            'summary' => $request->input('summary'),
-            'category_id' => $request->input('category_id'),
-            'user_id' => auth()->user()->id,
-        ]);
+        // Cập nhật bài viết
+        $post = Post::findOrFail($id);
+        $post->fill($request->all());
 
-        foreach ($request->post_parts as $index => $partData) {
-            $postPart = $post->parts()->updateOrCreate(
-                ['id' => $partData['id'] ?? null],
-                [
-                    'type' => $partData['type'],
-                    'content' => $partData['content'] ?? null,
-                    'order' => $partData['order'],
-                ]
-            );
-
-            if ($request->file("post_parts.$index.image")) {
-                $imagePath = $request->file("post_parts.$index.image")->store('post_images', 'public');
-                $postPart->update(['image' => $imagePath]);
+        // Xử lý hình ảnh
+        if ($request->hasFile('image')) {
+            // Xóa hình ảnh cũ nếu có
+            if ($post->image) {
+                \File::delete(public_path('images/' . $post->image));
             }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imageName);
+            $post->image = $imageName;
         }
 
-        return redirect()->route('posts.index')->with('success', 'Cập nhật bài viết thành công!');
+        $post->is_featured = $request->has('is_featured');
+
+        $post->save();
+
+        return redirect()->route('posts.index')->with('success', 'Bài viết đã được cập nhật thành công.');
     }
 
-
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function restore($id)
-    {
-        $post = Post::onlyTrashed()->findOrFail($id);
-        $post->restore();
-
-        return redirect()->route('posts.trash')->with('success', 'Bài viết đã được khôi phục.');
-    }
-
+    // Xóa mềm bài viết
     public function destroy($id)
     {
-        $post = Post::find($id);
-        $post->delete();
-
-        return redirect()->route('posts.index')->with('success', 'Bài viết đã được xóa.');
+        $post = Post::findOrFail($id);
+        $post->delete(); // Thực hiện xóa mềm
+        return redirect()->route('posts.index')->with('success', 'Bài viết đã được xóa mềm thành công.');
     }
+
+    // Hiển thị thùng rác
     public function trash()
     {
-        $trash = $posts = Post::onlyTrashed()->with(['parts' => function ($query) {
-            $query->withTrashed(); // Đảm bảo lấy các phần bị xóa mềm
-        }])->get();
+        $trash = Post::onlyTrashed()->get(); // Lấy tất cả bài viết đã bị xóa mềm
         return view('admin.posts.trash', compact('trash'));
     }
 
+    // Khôi phục bài viết
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->restore(); // Khôi phục bài viết
+        return redirect()->route('posts.trash')->with('success', 'Bài viết đã được khôi phục thành công.');
+    }
 
+    // Xóa vĩnh viễn bài viết
     public function forceDelete($id)
     {
-        $post = Post::withTrashed()->find($id);
-        $post->forceDelete();
-
+        $post = Post::withTrashed()->findOrFail($id);
+        $post->forceDelete(); // Xóa vĩnh viễn bài viết
         return redirect()->route('posts.trash')->with('success', 'Bài viết đã được xóa vĩnh viễn.');
     }
 }

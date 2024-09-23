@@ -12,42 +12,41 @@ class Post extends Model
 
     protected $fillable = [
         'title',
-        'summary',
+        'tomtat',  // Tóm tắt
+        'content', // Nội dung
+        'image',   // Đường dẫn ảnh
         'category_id',
-        'user_id'
+        'user_id',
+        'slug',
     ];
+
+    /**
+     * Quan hệ với bảng Category
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function user()
+    /**
+     * Tạo slug cho bài viết trước khi lưu
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($post) {
+            $post->slug = \Str::slug($post->title);
+        });
+    }
+
+    public function author()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-    public function parts()
-    {
-        return $this->hasMany(PostPart::class);
-    }
-
-    protected static function booted()
-    {
-        static::deleting(function ($post) {
-            if ($post->isForceDeleting()) {
-                $post->parts()->forceDelete();
-            } else {
-                $post->parts()->delete();
-            }
-        });
-
-        static::restoring(function ($post) {
-            $post->parts()->withTrashed()->restore();
-        });
     }
 }

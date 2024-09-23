@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route cho trang chưa đăng nhập
-Route::prefix('shoorip')->group(function () {
+Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -41,6 +41,8 @@ Route::prefix('shoorip')->group(function () {
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('/blog', [PostController::class, 'index'])->name('client.posts.index');
+
+
     Route::get('/contact', [ContactController::class, 'index'])->name('client.contact.index');
 
     // Route để lấy danh mục cho menu
@@ -90,13 +92,13 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // routes/web.php
     Route::post('comments/respond/{id}', [PostCommentController::class, 'respond'])->name('comments.respond');
-    Route::resource('comments',  PostCommentController::class);
+    Route::resource('comments', PostCommentController::class);
 
     // Route Order
     Route::resource('orders', OrderController::class);
-    Route::get('/orders-trash', [OrderController::class, 'trash'])->name('orders.trash');
-    Route::post('/orders/{id}/restore', [OrderController::class, 'restore'])->name('orders.restore');
-    Route::delete('/orders/{id}/force-delete', [OrderController::class, 'forceDelete'])->name('orders.forceDelete');
+    Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');
+    Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+    Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
 
     // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);

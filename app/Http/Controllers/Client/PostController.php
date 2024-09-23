@@ -3,12 +3,22 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
+
 
 class PostController extends Controller
 {
+    // Hiển thị danh sách tất cả bài viết
     public function index()
     {
-        return view('client.posts.index');
+        $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
+            ->select('posts.*', 'users.name as author_name')
+            ->paginate(6);
+
+        return view('client.posts.index', compact('posts'));
     }
+
 }
+
