@@ -78,17 +78,26 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('comments.index') }}">Danh sách bình luận</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
-
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-newspaper"></i>
-                        <span class="menu-text">Quản lý bình luận tin tức</span>
+                        <span class="menu-text">Quản lý sản phẩm</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('comments.index') }}">Danh sách bình luận tin tức</a>
+                                <a href="{{ route('products.index') }}">Danh sách sản phẩm</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('products.create') }}">Thêm sản phẩm</a>
                             </li>
                         </ul>
                     </div>

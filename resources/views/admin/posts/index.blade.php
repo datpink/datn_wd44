@@ -34,7 +34,16 @@
                             </div>
                         </div>
                         <div class="card-body">
-
+                            <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
+                                <div class="row g-2">
+                                    <div class="col-auto">
+                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                    </div>
+                                </div>
+                            </form>
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
