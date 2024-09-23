@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table='post_comments';
 
     protected $fillable = [
@@ -18,7 +19,7 @@ class Comment extends Model
    // Quan hệ với phản hồi
    public function commentReplys()
    {
-       return $this->hasMany(CommentReply::class, 'post_comment_id');
+       return $this->hasMany(CommentReply::class, 'post_comment_id')->withTrashed();
    }
     public function post()
     {
