@@ -49,6 +49,10 @@
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                     </div>
+                                    <div class="col-auto">
+                                        <button type="button" id="filterRemove" class="btn btn-sm btn-warning ">Xóa
+                                            lọc</button>
+                                    </div>
                                 </div>
                             </form>
 
@@ -96,7 +100,14 @@
 @endsection
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.all.min.js"></script>
-
+    <script>
+        $(document).ready(function() {
+            $('#filterRemove').click(function() {
+                $('#search').val('');
+                $(this).closest('form').submit();
+            });
+        });
+    </script>
     @if (session('create'))
         <script>
             Swal.fire({
