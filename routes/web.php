@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CommentReplyController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\RoleController;
@@ -58,7 +59,7 @@ Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('adm
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-// Routes dành cho quản trị viên
+
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
@@ -86,14 +87,21 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Route Brand
     Route::resource('brands', BrandController::class);
-    //
     Route::get('brands-trash', [BrandController::class, 'trash'])->name('brands.trash');
     Route::patch('brands/{id}/restore', [BrandController::class, 'restore'])->name('brands.restore');
     Route::delete('brands/{id}/delete-permanently', [BrandController::class, 'deletePermanently'])->name('brands.delete-permanently');
 
     // routes/web.php
     Route::post('comments/respond/{id}', [PostCommentController::class, 'respond'])->name('comments.respond');
+    Route::get('comments-trash', [PostCommentController::class, 'trash'])->name('comments.trash');
+    Route::patch('comments/{id}/restore', [PostCommentController::class, 'restore'])->name('comments.restore');
+    Route::delete('comments/{id}/delete-permanently', [PostCommentController::class, 'deletePermanently'])->name('comments.delete-permanently');
     Route::resource('comments', PostCommentController::class);
+    //  route reply comment post
+    Route::get('comments/{comment}/reply/{reply}/edit', [CommentReplyController::class, 'editReply'])->name('comments.reply.edit');
+    Route::put('comments/{comment}/reply/{reply}', [CommentReplyController::class, 'updateReply'])->name('comments.reply.update');
+
+
 
     // Route Order
     Route::resource('orders', OrderController::class);
