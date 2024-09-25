@@ -8,8 +8,8 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title">Cập Nhật Vai Trò</div>
-                    <a href="{{ route('roles.index') }}" class="btn rounded-pill btn-sm btn-secondary">
+                    <div class="card-title">Sửa Vai Trò</div>
+                    <a href="{{ route('roles.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -25,8 +25,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Mô Tả vai trò:</label>
-                            <input type="text" name="description" id="description" class="form-control" value="{{ old('description', $role->description) }}" required>
+                            <label for="guard_name">Guard:</label>
+                            <input type="text" name="guard_name" id="guard_name" class="form-control" value="{{ old('guard_name', $role->guard_name) }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Mô tả:</label>
+                            <textarea name="description" id="description" class="form-control">{{ old('description', $role->description) }}</textarea>
                         </div>
 
                         <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập nhật vai trò</button>

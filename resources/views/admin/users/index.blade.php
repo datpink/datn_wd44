@@ -61,7 +61,6 @@
                                             <th>Số Điện Thoại</th>
                                             <th>Địa Chỉ</th>
                                             <th>Hình Ảnh</th>
-                                            <th>Vai Trò</th>
                                             <th>Trạng Thái</th>
                                             <th>Hành Động</th>
                                         </tr>
@@ -82,17 +81,6 @@
                                                         <span class="text-muted">Không có hình ảnh</span>
                                                     @endif
                                                 </td> <!-- Hình ảnh -->
-                                                <td>
-                                                    @if ($user->roles->isNotEmpty())
-                                                        @foreach ($user->roles as $role)
-                                                            <span
-                                                                class="badge bg-success rounded-pill mt-1 mb-1">{{ $role->name }}</span>
-                                                            <br>
-                                                        @endforeach
-                                                    @else
-                                                        <span class="text-muted">Không có vai trò</span>
-                                                    @endif
-                                                </td>
                                                 <td>
                                                     @if ($user->status === 'locked')
                                                         <span class="badge bg-danger">Bị Khóa</span>

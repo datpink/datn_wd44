@@ -36,12 +36,6 @@ class LoginController extends Controller
             }
 
             // Kiểm tra vai trò của người dùng
-            if ($user->hasRole('admin')) {
-                Auth::logout(); // Đăng xuất người dùng admin
-                return back()->withErrors([
-                    'username' => 'Tài khoản của bạn không thể đăng nhập vào client vì là admin.',
-                ]);
-            }
 
             // Đăng nhập thành công, chuyển hướng người dùng đến trang chủ
             return redirect()->route('client.index'); // Sử dụng route name
