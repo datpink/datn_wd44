@@ -15,7 +15,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh Sách Người Dùng';
-        $users = User::with('roles')->paginate(10);
+        $users = User::paginate(10);
         return view('admin.users.index', compact('users', 'title'));
     }
 
@@ -23,8 +23,7 @@ class UserController extends Controller
     public function create()
     {
         $title = 'Thêm Mới Người Dùng';
-        $roles = Role::all(); // Lấy danh sách vai trò
-        return view('admin.users.create', compact('title', 'roles'));
+        return view('admin.users.create', compact('title',));
     }
 
     // Xử lý lưu thông tin người dùng mới
@@ -45,18 +44,14 @@ class UserController extends Controller
             'status' => $request->status, // Lưu trạng thái
         ]);
 
-        // Gán vai trò cho người dùng mới (ID của vai trò "user")
-        $user->roles()->attach(2); // Giả sử ID của vai trò "user" là 2
-
         return redirect()->route('users.index')->with('success', 'Người dùng đã được thêm thành công!');
     }
 
     public function edit($id)
     {
         $title = 'Chỉnh Sửa Người Dùng';
-        $user = User::with('roles')->findOrFail($id);
-        $roles = Role::all(); // Lấy danh sách vai trò
-        return view('admin.users.edit', compact('title', 'user', 'roles'));
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('title', 'user'));
     }
 
     public function update(Request $request, $id)
@@ -67,7 +62,6 @@ class UserController extends Controller
             'phone' => 'required|string|max:15',
             'address' => 'required|string|max:255',
             'image' => 'nullable|image|max:2048',
-            'roles' => 'required|array',
             'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
         ]);
 
@@ -90,10 +84,6 @@ class UserController extends Controller
 
         // Lưu thay đổi
         $user->save();
-
-        // Cập nhật vai trò
-        $user->roles()->sync($request->roles);
-
         return redirect()->route('users.index')->with('success', 'Người dùng đã được cập nhật thành công!');
     }
 

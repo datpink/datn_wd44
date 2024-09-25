@@ -25,14 +25,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="permissions">Quyền hạn:</label>
-                            <select name="permissions[]" id="permissions" class="form-control" multiple>
-                                @foreach($permissions as $permission)
-                                    <option value="{{ $permission->id }}" {{ $role->permissions->contains($permission->id) ? 'selected' : '' }}>
-                                        {{ $permission->name }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label for="guard_name">Guard:</label>
+                            <input type="text" name="guard_name" id="guard_name" class="form-control" value="{{ old('guard_name', $role->guard_name) }}" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Mô tả:</label>
+                            <textarea name="description" id="description" class="form-control">{{ old('description', $role->description) }}</textarea>
                         </div>
 
                         <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập nhật vai trò</button>

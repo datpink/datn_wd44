@@ -17,41 +17,44 @@ class RoleController extends Controller
 
     public function create()
     {
-        $permissions = Permission::all();
-        return view('admin.roles.create', compact('permissions'));
+        return view('admin.roles.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permissions' => 'nullable|array',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'guard_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $role = Role::create(['name' => $request->name]);
-        if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
-        }
+        Role::create($validatedData);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
+        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
 
     public function edit(Role $role)
     {
-        $permissions = Permission::all();
-        return view('admin.roles.edit', compact('role', 'permissions'));
+        return view('admin.roles.edit', compact('role'));
     }
 
     public function update(Request $request, Role $role)
     {
-        $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
-            'permissions' => 'nullable|array',
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'guard_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $role->update(['name' => $request->name]);
-        $role->syncPermissions($request->permissions);
+        $role->update($validatedData);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+    }
+
+    public function destroy(Role $role)
+    {
+        $role->delete();
+
+        return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
 }
