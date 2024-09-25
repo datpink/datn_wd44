@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PostCommentController;
+use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -118,4 +119,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
     Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
     Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
+
+    // Routes cho Product_Variants
+    Route::resource('product_variants', ProductVariantController::class);
+    Route::post('product_variants/{id}/restore', [ProductVariantController::class, 'restore'])->name('products.restore');
+    // Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
+
+    
 });
