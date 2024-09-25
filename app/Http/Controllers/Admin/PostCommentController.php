@@ -13,6 +13,7 @@ class PostCommentController extends Controller
      */
     public function index(Request $request)
     {
+        $title = 'Danh Sách Bình Luận';
         $comments = Comment::with(['user', 'post', 'commentReplys.user']);
         $search = $request->input('search');
 
@@ -28,7 +29,7 @@ class PostCommentController extends Controller
             });
         }
         $comments = $comments->paginate(10);
-        return view('admin.comments.list', compact('comments'));
+        return view('admin.comments.list', compact('comments', 'title'));
     }
 
 
@@ -62,6 +63,7 @@ class PostCommentController extends Controller
 
     public function trash()
     {
+        $title = 'Thùng Rác';
         // Lấy tất cả các bình luận đã bị xóa mềm cùng với các phản hồi đã bị xóa mềm và người dùng của phản hồi
         $comments = Comment::with(['user', 'post', 'commentReplys' => function ($query) {
             $query->withTrashed()->with('user');
@@ -70,7 +72,7 @@ class PostCommentController extends Controller
         // Để kiểm tra cấu trúc dữ liệu (chỉ dùng khi debug)
         // dd($comments->toArray());
 
-        return view('admin.comments.trash', compact('comments'));
+        return view('admin.comments.trash', compact('comments', 'title'));
     }
 
     public function restore(string $id)
@@ -81,7 +83,7 @@ class PostCommentController extends Controller
         // Khôi phục các phản hồi nếu cần
         $comment->commentReplys()->withTrashed()->restore();
 
-        return back();
+        return redirect()->route('comments.trash')->with('success', 'Bình luận đã được khôi phục thành công!');
     }
 
     public function deletePermanently($id)

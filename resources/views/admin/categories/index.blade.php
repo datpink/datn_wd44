@@ -5,7 +5,7 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -17,7 +17,7 @@
                     {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -79,17 +79,18 @@
                                                         <span class="badge rounded-pill bg-secondary">Không kích hoạt</span>
                                                     @endif
                                                 </td>
-                                                
-                                                <td>{{ $category->created_at ? $category->created_at->format('d-m-Y') : 'Chưa có' }}</td>
+
+                                                <td>{{ $category->created_at ? $category->created_at->format('d-m-Y') : 'Chưa có' }}
+                                                </td>
                                                 <td>
                                                     <a href="{{ route('categories.edit', $category) }}"
                                                         class="btn btn-warning btn-rounded">Sửa</a>
                                                     <form action="{{ route('categories.destroy', $category) }}"
-                                                        method="POST" style="display:inline;">
+                                                        method="POST" style="display:inline;" class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-rounded"
-                                                            onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                                        <button type="button"
+                                                            class="btn btn-danger btn-rounded delete-btn">Xóa</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -111,4 +112,78 @@
             </div>
         </div>
     </div>
+
+@endsection
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.delete-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn xóa danh mục này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500,
+                    timerProgressBar: true,
+                }).then((result) => {
+                    // Kiểm tra nếu không nhấn vào nút "Hủy" và timer đã hết
+                    if (result.isConfirmed) {
+                        form.submit();
+                    } else if (result.dismiss === Swal.DismissReason.timer) {
+                        // Thông báo tự động đóng
+                        Swal.fire('Đã hủy', 'Hành động đã bị hủy.', 'info');
+                    }
+                });
+            });
+        });
+    </script>
+
+    @if (session()->has('deleteCategory'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('deleteCategory') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    @if (session()->has('success'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                title: "{{ session('error') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 2500
+            });
+        </script>
+    @endif
 @endsection

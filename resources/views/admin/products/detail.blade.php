@@ -10,7 +10,10 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Chi tiết sản phẩm</div>
-                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Chỉnh sửa</a>
+                            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-rounded btn-warning">Chỉnh sửa</a>
+                            <a href="{{ route('products.index') }}" class="btn btn-sm rounded-pill btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Trở về
+                            </a>
                         </div>
                         <div class="card-body">
                             <!-- Tên sản phẩm -->

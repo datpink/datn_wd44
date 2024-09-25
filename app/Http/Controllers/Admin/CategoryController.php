@@ -11,7 +11,7 @@ class CategoryController extends Controller
     //
     public function index(Request $request)
     {
-        $title = 'Danh Sách Danh Mục';
+        $title = 'Danh Mục Bài Viết';
 
         $query = Category::query();
 
@@ -30,10 +30,11 @@ class CategoryController extends Controller
 
     public function create()
     {
+        $title = 'Thêm Mới Danh Mục';
         // Assuming you want to get all categories that could be parents
         $parentCategories = Category::whereNull('parent_id')->with('children')->get();
 
-        return view('admin.categories.create', compact('parentCategories'));
+        return view('admin.categories.create', compact('parentCategories', 'title'));
     }
 
 
@@ -99,7 +100,7 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'Danh mục đã được xóa thành công!');
+        return redirect()->route('categories.index')->with('deleteCategory', 'Xóa danh mục thành công');
     }
 
     public function trash()
@@ -115,7 +116,7 @@ class CategoryController extends Controller
         $category->restore();
 
         return redirect()->route('categories.trash')
-            ->with('success', 'Danh mục đã được khôi phục thành công!');
+        ->with('restoreCategory', 'Khôi phục danh mục thành công');
     }
 
     public function forceDelete($id)
@@ -130,6 +131,6 @@ class CategoryController extends Controller
         $category->forceDelete();
 
         return redirect()->route('categories.trash')
-            ->with('success', 'Danh mục đã được xóa cứng thành công!');
+        ->with('forceDeleteCategory', 'Xóa cứng danh mục thành công');
     }
 }

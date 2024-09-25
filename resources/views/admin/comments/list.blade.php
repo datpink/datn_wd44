@@ -103,9 +103,9 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-danger delete-btn">Xóa</button>
+                                                            class="btn rounded-pill btn-danger delete-btn">Xóa</button>
                                                     </form>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                    <button type="button" class="btn rounded-pill btn-primary" data-toggle="modal"
                                                         data-target="#responseModal" data-id="{{ $comment->id }}"
                                                         data-user="{{ $comment->user->name ?? '' }}"
                                                         data-content="{{ $comment->content }}">Phản hồi</button>

@@ -77,9 +77,9 @@
                     <div class="header-profile-actions">
                         <a href="{{ route('admin.profile') }}">Profile</a>
                         <a href="">Settings</a>
-                        <form action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
                             @csrf
-                            <a href="#" onclick="event.preventDefault(); if (confirm('Bạn có chắc chắn muốn Đăng Xuất?')) { this.closest('form').submit(); }">Đăng Xuất</a>
+                            <a href="#" class="logout-btn">Đăng Xuất</a>
                         </form>
                     </div>
                 </div>
@@ -87,3 +87,30 @@
         </ul>
     </div>
 </div>
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.querySelector('.logout-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = document.getElementById('logout-form');
+            Swal.fire({
+                position: 'top',
+                title: 'Logout?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Hủy',
+                timer: 3500
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
+@endsection

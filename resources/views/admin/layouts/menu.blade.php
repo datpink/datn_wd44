@@ -96,9 +96,6 @@
                             <li>
                                 <a href="{{ route('products.index') }}">Danh sách sản phẩm</a>
                             </li>
-                            <li>
-                                <a href="{{ route('products.create') }}">Thêm sản phẩm</a>
-                            </li>
                         </ul>
                     </div>
                 </li>

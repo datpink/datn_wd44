@@ -5,7 +5,7 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
             @if ($errors->any())
@@ -16,7 +16,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -38,7 +38,9 @@
                             <form method="GET" action="" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
+                                        <input type="text" id="id" name="search"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm"
+                                            value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -63,7 +65,11 @@
                                             <td>{{ $post->id }}</td>
                                             <td class="title-column" style="width: 18%;">{{ $post->title }}</td>
                                             <td class="title-column" style="width: 18%;">{{ $post->tomtat }}</td>
-                                            <td>{{ $post->category->name }}</td>
+                                            @if ($post->category)
+                                                <td>{{ $post->category->name }}</td>
+                                            @else
+                                                <td>Không có danh mục</td>
+                                            @endif
                                             <td>
                                                 @if ($post->image)
                                                     <img src="{{ asset('images/' . $post->image) }}"
@@ -76,25 +82,81 @@
                                             <td class="title-column" style="width: 20%;">
                                                 <!-- Nút sửa bài viết -->
                                                 <a href="{{ route('posts.edit', $post->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
+                                                    class="btn rounded-pill btn-warning">Sửa</a>
 
                                                 <!-- Form để xóa bài viết -->
-                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                                    class="d-inline-block"
-                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa mềm bài viết này?');">
+                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="d-inline-block delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-warning">Xóa</button>
+                                                    <button type="button" class="btn btn-danger rounded-pill delete-btn" title="Xóa bài viết">
+                                                        <i class="fa fa-trash"></i> Xóa
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
+                            {{ $posts->links() }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    @if (session()->has('success'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                title: "{{ session('error') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 2500
+            });
+        </script>
+    @endif
+
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.delete-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn xóa bài viết này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

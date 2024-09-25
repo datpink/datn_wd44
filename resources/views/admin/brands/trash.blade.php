@@ -38,17 +38,19 @@
                                         <td>
                                             <!-- Khôi phục -->
                                             <form action="{{ route('brands.restore', $brand->id) }}" method="POST"
-                                                style="display:inline-block;">
+                                                style="display:inline-block;" class="restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                <button type="button" class="btn btn-rounded btn-outline-success restore-btn">Khôi
+                                                    phục</button>
                                             </form>
                                             <!-- Xóa vĩnh viễn -->
                                             <form action="{{ route('brands.delete-permanently', $brand->id) }}"
                                                 method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger delete-btn">Xóa vĩnh
+                                                <button type="submit" class="btn btn-outline-danger btn-rounded delete-btn">Xóa
+                                                    vĩnh
                                                     viễn</button>
                                             </form>
                                         </td>
@@ -90,16 +92,37 @@
                 });
             });
         });
+
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.restore-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn khôi phục thương hiệu này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
 
-    @if (session('restore'))
+    @if (session()->has('restoreBrand'))
         <script>
             Swal.fire({
                 position: "top",
                 icon: "success",
-                title: "Khôi phục thành công",
+                title: "{{ session('restoreBrand') }}",
                 showConfirmButton: false,
-                timerProgressBar: true, // Hiển thị thanh thời gian
+                timerProgressBar: true,
                 timer: 1500
             });
         </script>

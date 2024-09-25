@@ -10,13 +10,13 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Thùng Rác Sản Phẩm</div>
-                            <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-rounded">
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary btn-rounded">
                                 <i class="bi bi-arrow-left me-2"></i> Trở về
                             </a>
                         </div>
                         <div class="card-body">
                             @if ($products->isEmpty())
-                                <p>Không có bài viết nào trong thùng rác.</p>
+                                <p>Không có sản phẩm nào trong thùng rác.</p>
                             @else
                                 <table class="table table-striped">
                                     <thead>

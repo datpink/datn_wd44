@@ -17,8 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
+        $title = 'Danh Sách Sản Phẩm';
         $products = Product::with('brand', 'catalogue')->paginate(10); // Phân trang 10 sản phẩm trên 1 trang
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products', 'title'));
     }
 
     /**
@@ -26,9 +27,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $title = 'Thêm Mới Sản Phẩm';
         $catalogues = Catalogue::all();
         $brands = Brand::all();
-        return view('admin.products.create', compact('catalogues', 'brands'));
+        return view('admin.products.create', compact('catalogues', 'brands', 'title'));
     }
 
     /**
@@ -67,8 +69,9 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
+        $title = 'Chi Tiết Sản Phẩm';
         $product = Product::with('brand', 'catalogue')->where('id', $id)->first();
-        return view('admin.products.detail', compact('product'));
+        return view('admin.products.detail', compact('product', 'title'));
     }
 
     /**
@@ -76,11 +79,12 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
+        $title = 'Cập Nhật Sản Phẩm';
         $product = Product::findOrFail($id);
         $brands = Brand::all(); // Lấy tất cả thương hiệu
         $catalogues = Catalogue::all(); // Lấy tất cả danh mục
 
-        return view('admin.products.edit', compact('product', 'brands', 'catalogues'));
+        return view('admin.products.edit', compact('product', 'brands', 'catalogues', 'title'));
     }
 
     /**
@@ -131,23 +135,24 @@ class ProductController extends Controller
     }
 
     public function trash()
-{
-    $products = Product::onlyTrashed()->paginate('10'); // Lấy sản phẩm trong thùng rác
-    return view('admin.products.trash', compact('products'));
-}
-public function restore($id)
-{
-    $product = Product::onlyTrashed()->findOrFail($id);
-    $product->restore();
-    return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được khôi phục.');
+    {
+        $title = 'Thùng Rác';
+        $products = Product::onlyTrashed()->paginate('10'); // Lấy sản phẩm trong thùng rác
+        return view('admin.products.trash', compact('products', 'title'));
+    }
+    public function restore($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->restore();
+        return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được khôi phục.');
 
 
-}
-public function forceDelete($id)
-{
-    $product = Product::onlyTrashed()->findOrFail($id);
-    $product->forceDelete(); // Xóa vĩnh viễn
-    return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được xóa vĩnh viễn.');
-}
+    }
+    public function forceDelete($id)
+    {
+        $product = Product::onlyTrashed()->findOrFail($id);
+        $product->forceDelete(); // Xóa vĩnh viễn
+        return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được xóa vĩnh viễn.');
+    }
 
 }

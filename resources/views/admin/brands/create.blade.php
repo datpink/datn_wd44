@@ -52,8 +52,7 @@
                             @endif
 
                         </div>
-                        <button type="submit" class="btn btn-success">Add Brand</button>
-                        <a href="{{ route('brands.index') }}" class="btn btn-secondary">Back to List</a>
+                        <button type="submit" class="btn btn-rounded btn-success">Add Brand</button>
                     </form>
                 </div>
             </div>

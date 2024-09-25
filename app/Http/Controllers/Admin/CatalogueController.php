@@ -111,7 +111,7 @@ class CatalogueController extends Controller
 
         $catalogue->delete();
 
-        return redirect()->route('catalogues.index')->with('success', 'Danh mục đã được xóa thành công!');
+        return redirect()->route('catalogues.index')->with('destroyCatalogue', 'Xóa danh mục thành công');
     }
 
     public function trash()
@@ -127,7 +127,7 @@ class CatalogueController extends Controller
         $catalogue->restore();
 
         return redirect()->route('catalogues.trash')
-                         ->with('success', 'Danh mục đã được khôi phục thành công!');
+                         ->with('restoreCatalogue', 'Khôi phục danh mục thành công');
     }
 
     public function forceDelete($id)
@@ -142,6 +142,6 @@ class CatalogueController extends Controller
         $catalogue->forceDelete();
 
         return redirect()->route('catalogues.trash')
-                         ->with('success', 'Danh mục đã được xóa cứng thành công!');
+                         ->with('forceDeleteCatalogue', 'Xóa cứng danh mục thành công');
     }
 }

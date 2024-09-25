@@ -17,6 +17,9 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Sửa sản phẩm</div>
+                            <a href="{{ route('products.index') }}" class="btn btn-sm rounded-pill btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Trở về
+                            </a>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('products.update', $product) }}" method="POST" enctype="multipart/form-data">
@@ -107,7 +110,7 @@
                                     <textarea name="description" id="description" class="form-control" rows="4">{{ $product->description }}</textarea>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                                <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
                             </form>
                         </div>
                     </div>

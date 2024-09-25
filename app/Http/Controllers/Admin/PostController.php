@@ -16,14 +16,16 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::with('category')->latest()->get();
-        return view('admin.posts.index', compact('posts'));
+        $title = 'Danh Sách Bài Viết';
+        $posts = Post::with('category')->latest()->paginate(10);
+        return view('admin.posts.index', compact('posts', 'title'));
     }
 
     public function create()
     {
+        $title = 'Thêm Mới Bài Viết';
         $categories = Category::all(); // Lấy tất cả danh mục
-        return view('admin.posts.create', compact('categories'));
+        return view('admin.posts.create', compact('categories', 'title'));
     }
 
     public function store(Request $request)
@@ -59,9 +61,10 @@ class PostController extends Controller
 
     public function edit($id)
     {
+        $title = 'Chỉnh Sửa Bài Viết';
         $post = Post::findOrFail($id);
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        return view('admin.posts.edit', compact('post', 'categories', 'title'));
     }
 
     public function update(Request $request, $id)
@@ -112,8 +115,9 @@ class PostController extends Controller
     // Hiển thị thùng rác
     public function trash()
     {
+        $title = 'Thùng Rác';
         $trash = Post::onlyTrashed()->get(); // Lấy tất cả bài viết đã bị xóa mềm
-        return view('admin.posts.trash', compact('trash'));
+        return view('admin.posts.trash', compact('trash', 'title'));
     }
 
     // Khôi phục bài viết

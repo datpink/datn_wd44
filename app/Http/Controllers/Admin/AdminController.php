@@ -46,9 +46,11 @@ class AdminController extends Controller
     }
 
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate(); // Xóa session
+        $request->session()->regenerateToken(); // Regenerate CSRF token
         return redirect()->route('admin.login');
     }
 

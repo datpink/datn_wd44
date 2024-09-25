@@ -74,13 +74,13 @@
                                                 <td>{{ $brand->description }}</td>
                                                 <td>
                                                     <a href="{{ route('brands.edit', $brand) }}"
-                                                        class="btn btn-warning">Sửa</a>
+                                                        class="btn btn-warning btn-rounded">Sửa</a>
                                                     <form action="{{ route('brands.destroy', $brand) }}" method="POST"
                                                         style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-danger delete-btn">Xóa</button>
+                                                            class="btn btn-danger btn-rounded delete-btn">Xóa</button>
                                                     </form>
                                                 </td>
                                             </tr>

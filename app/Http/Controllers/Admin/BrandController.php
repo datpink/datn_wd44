@@ -11,18 +11,20 @@ class BrandController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Danh sách Thương Hiệu';
+
         $search = $request->input('search');
         $brands = Brand::when($search, function ($query) use ($search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->paginate(10);
-        
-        return view('admin.brands.list', compact('brands'));
+
+        return view('admin.brands.list', compact('brands', 'title'));
     }
 
     public function create()
     {
-        // $title = 'Thêm Mới Thương Hiệu';
-        return view('admin.brands.create');
+        $title = 'Thêm Mới Thương Hiệu';
+        return view('admin.brands.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -45,9 +47,10 @@ class BrandController extends Controller
 
     public function edit(string $id)
     {
+        $title = 'Chỉnh Sửa Thương Hiệu';
         $brand = Brand::findOrFail($id);
         // dd($brand);
-        return view('admin.brands.edit', compact('brand'));
+        return view('admin.brands.edit', compact('brand', 'title'));
     }
 
     public function update(Request $request, string $id)
@@ -98,16 +101,21 @@ class BrandController extends Controller
     public function trash()
     {
         // dd('ahihi');
+        $title = 'Thùng Rác Thương Hiệu';
         $brands = Brand::onlyTrashed()->get();
-        return view('admin.brands.trash', compact('brands'));
+        return view('admin.brands.trash', compact('brands', 'title'));
     }
 
     public function restore($id)
     {
+        // Tìm thương hiệu đã xóa
         $brand = Brand::onlyTrashed()->findOrFail($id);
+
+        // Khôi phục thương hiệu
         $brand->restore();
 
-        return back();
+        // Trả về với thông báo thành công
+        return redirect()->route('brands.trash')->with('restoreBrand', 'Khôi phục thương hiệu thành công');
     }
 
     public function deletePermanently($id)

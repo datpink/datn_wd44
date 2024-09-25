@@ -23,6 +23,9 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Thêm Mới Sản Phẩm</div>
+                            <a href="{{ route('products.index') }}" class="btn btn-sm rounded-pill btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Trở về
+                            </a>
                         </div>
                         <div class="card-body">
                             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
@@ -88,7 +91,7 @@
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Thêm Mới</button>
+                                <button type="submit" class="btn btn-rounded btn-primary">Thêm Mới</button>
                             </form>
                         </div>
                     </div>

@@ -41,8 +41,8 @@
                                         <td>
                                             @if ($comment->commentReplys->count() > 0)
                                                 <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#commentReplys-{{ $comment->id }}" aria-expanded="false"
-                                                    aria-controls="commentReplys-{{ $comment->id }}">
+                                                    data-bs-target="#commentReplys-{{ $comment->id }}"
+                                                    aria-expanded="false" aria-controls="commentReplys-{{ $comment->id }}">
                                                     Xem {{ $comment->commentReplys->count() }} phản hồi
                                                 </button>
                                                 <div class="collapse mt-2" id="commentReplys-{{ $comment->id }}">
@@ -67,17 +67,20 @@
                                         <td>
                                             <!-- Khôi phục -->
                                             <form action="{{ route('comments.restore', $comment->id) }}" method="POST"
-                                                style="display:inline-block;">
+                                                class="d-inline-block restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                <button type="button" class="btn rounded-pill btn-outline-success restore-btn"
+                                                    title="Khôi phục bình luận">
+                                                    Khôi phục
+                                                </button>
                                             </form>
                                             <!-- Xóa vĩnh viễn -->
                                             <form action="{{ route('comments.delete-permanently', $comment->id) }}"
                                                 method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger delete-btn">Xóa vĩnh
+                                                <button type="submit" class="btn rounded-pill btn-outline-danger delete-btn">Xóa vĩnh
                                                     viễn</button>
                                             </form>
                                         </td>
@@ -115,6 +118,28 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         this.closest('form').submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.restore-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn khôi phục bình luận này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
                     }
                 });
             });

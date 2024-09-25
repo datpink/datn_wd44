@@ -32,7 +32,7 @@
                             <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
+                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm" value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -80,13 +80,13 @@
 
 
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm" style="font-size: 0.6rem; padding: 7px 13px;">Sửa</a>
-                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm" style="font-size: 0.6rem; padding: 7px 13px;">Chi tiết</a>
+                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-rounded">Sửa</a>
+                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-rounded">Chi tiết</a>
                                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline-block"
                                                       onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" style="font-size: 0.6rem; padding: 7px 13px;">Xóa</button>
+                                                    <button type="submit" class="btn btn-danger btn-rounded">Xóa</button>
                                                 </form>
                                             </td>
 
