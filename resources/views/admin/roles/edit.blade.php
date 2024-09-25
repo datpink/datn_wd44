@@ -8,8 +8,8 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title">Cập Nhật Vai Trò</div>
-                    <a href="{{ route('roles.index') }}" class="btn rounded-pill btn-sm btn-secondary">
+                    <div class="card-title">Sửa Vai Trò</div>
+                    <a href="{{ route('roles.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -25,8 +25,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="description">Mô Tả vai trò:</label>
-                            <input type="text" name="description" id="description" class="form-control" value="{{ old('description', $role->description) }}" required>
+                            <label for="permissions">Quyền hạn:</label>
+                            <select name="permissions[]" id="permissions" class="form-control" multiple>
+                                @foreach($permissions as $permission)
+                                    <option value="{{ $permission->id }}" {{ $role->permissions->contains($permission->id) ? 'selected' : '' }}>
+                                        {{ $permission->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập nhật vai trò</button>
