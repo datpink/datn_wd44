@@ -77,19 +77,6 @@
                             </select>
                         </div>
 
-                        <div class="form-group mb-3">
-                            <label for="roles">Chọn Vai Trò:</label>
-                            <select name="roles[]" id="roles" class="form-control" multiple required>
-                                @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}"
-                                        {{ $user->roles->contains($role->id) ? 'selected' : '' }}>
-                                        {{ $role->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <small class="form-text text-muted">Giữ Ctrl để chọn nhiều vai trò (nếu có).</small>
-                        </div>
-
                         <button type="submit" class="btn rounded-pill btn-primary">Cập Nhật Người Dùng</button>
                     </form>
                 </div>

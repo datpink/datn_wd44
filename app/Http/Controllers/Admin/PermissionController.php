@@ -9,10 +9,12 @@ use Illuminate\Http\Request;
 class PermissionController extends Controller
 {
     public function index()
-    {
-        $permissions = Permission::orderByDesc('id')->paginate('20');
-        return view('admin.permissions.index', compact('permissions'));
-    }
+{
+    $permissions = Permission::all();
+
+    return view('admin.permissions.index', compact('permissions'));
+}
+
 
     public function create()
     {
