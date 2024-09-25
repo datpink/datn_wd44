@@ -54,10 +54,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function hasRole($roleId)
-    {
-        return $this->roles()->where('role_id', $roleId)->exists();
-    }
 
     public function isAdmin(): bool
     {
