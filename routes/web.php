@@ -150,5 +150,5 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
 
-    // Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class);
 });

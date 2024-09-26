@@ -55,16 +55,17 @@
                                                 @csrf
                                                 <button type="button"
                                                     class="btn btn-outline-success rounded-pill btn-sm restore-btn">
-                                                    <i class="fas fa-undo"></i> Khôi phục
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
                                                 </button>
                                             </form>
+
                                             <form action="{{ route('catalogues.forceDelete', $catalogue->id) }}"
                                                 method="POST" style="display:inline;" class="force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button"
                                                     class="btn btn-outline-danger rounded-pill btn-sm force-delete-btn">
-                                                    <i class="fas fa-trash"></i> Xóa cứng
+                                                    <i class="bi bi-trash"></i> Xóa cứng
                                                 </button>
                                             </form>
                                         </td>

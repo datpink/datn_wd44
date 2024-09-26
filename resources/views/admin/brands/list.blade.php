@@ -1,5 +1,7 @@
 @extends('admin.master')
 
+@section('title', 'Danh Sách Thương Hiệu')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -74,13 +76,18 @@
                                                 <td>{{ $brand->description }}</td>
                                                 <td>
                                                     <a href="{{ route('brands.edit', $brand) }}"
-                                                        class="btn btn-warning btn-rounded">Sửa</a>
+                                                        class="btn btn-warning btn-rounded">
+                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    </a>
+
                                                     <form action="{{ route('brands.destroy', $brand) }}" method="POST"
                                                         style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-danger btn-rounded delete-btn">Xóa</button>
+                                                            class="btn btn-danger btn-rounded delete-btn">
+                                                            <i class="bi bi-trash"></i> Xóa
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>

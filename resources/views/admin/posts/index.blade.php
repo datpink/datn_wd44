@@ -82,14 +82,18 @@
                                             <td class="title-column" style="width: 20%;">
                                                 <!-- Nút sửa bài viết -->
                                                 <a href="{{ route('posts.edit', $post->id) }}"
-                                                    class="btn rounded-pill btn-warning">Sửa</a>
+                                                    class="btn rounded-pill btn-warning">
+                                                    <i class="bi bi-pencil-square"></i> Sửa
+                                                </a>
 
                                                 <!-- Form để xóa bài viết -->
-                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="d-inline-block delete-form">
+                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
+                                                    class="d-inline-block delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger rounded-pill delete-btn" title="Xóa bài viết">
-                                                        <i class="fa fa-trash"></i> Xóa
+                                                    <button type="submit" class="btn btn-danger rounded-pill delete-btn"
+                                                        title="Xóa bài viết">
+                                                        <i class="bi bi-trash"></i> Xóa
                                                     </button>
                                                 </form>
                                             </td>

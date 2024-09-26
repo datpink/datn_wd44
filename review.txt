@@ -14,7 +14,7 @@ php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvid
 
 chạy migrate
 
-php artisan db:seed --class=RolesTableSeeder
+php artisan db:seed --class=RolesAndPermissionsSeeder
 php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=PaymentMethodsTableSeeder
 php artisan db:seed --class=PromotionsTableSeeder

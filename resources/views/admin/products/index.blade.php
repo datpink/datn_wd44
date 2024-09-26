@@ -32,7 +32,9 @@
                             <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm" value="{{ request()->search }}">
+                                        <input type="text" id="id" name="search"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm"
+                                            value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -80,12 +82,23 @@
 
 
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-rounded">Sửa</a>
-                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-rounded">Chi tiết</a>
-                                                <form id="delete-form-{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline-block">
+                                                <a href="{{ route('products.edit', $product->id) }}"
+                                                    class="btn btn-warning btn-rounded">
+                                                    <i class="bi bi-pencil-square"></i> Sửa
+                                                </a>
+                                                <a href="{{ route('products.show', $product->id) }}"
+                                                    class="btn btn-info btn-rounded">
+                                                    <i class="bi bi-info-circle"></i> Chi tiết
+                                                </a>
+                                                <form id="delete-form-{{ $product->id }}"
+                                                    action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                    class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger btn-rounded delete-btn" data-id="{{ $product->id }}">Xóa</button>
+                                                    <button type="button" class="btn btn-danger btn-rounded delete-btn"
+                                                        data-id="{{ $product->id }}">
+                                                        <i class="bi bi-trash"></i> Xóa
+                                                    </button>
                                                 </form>
                                             </td>
 

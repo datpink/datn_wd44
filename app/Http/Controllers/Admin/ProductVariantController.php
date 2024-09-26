@@ -14,6 +14,7 @@ class ProductVariantController extends Controller
     // Hiển thị danh sách biến thể sản phẩm
     public function index(Request $request)
     {
+        $title = 'Danh Sách Biến Thể';
         // Lấy giá trị tìm kiếm nếu có
         $search = $request->input('search');
 
@@ -28,16 +29,17 @@ class ProductVariantController extends Controller
             ->paginate(10); // Phân trang, mỗi trang có 10 kết quả
 
         // Trả về view cùng với dữ liệu biến thể sản phẩm
-        return view('admin.product_variants.index', compact('product_variants'));
+        return view('admin.product_variants.index', compact('product_variants', 'title'));
     }
 
     public function create()
     {
+        $title = 'Thêm Mới Biến Thể';
         // Lấy danh sách các sản phẩm để gán vào select
         $products = Product::all();
 
         // Trả về view thêm biến thể sản phẩm cùng với danh sách sản phẩm
-        return view('admin.product_variants.create', compact('products'));
+        return view('admin.product_variants.create', compact('products', 'title'));
     }
 
     // Lưu biến thể mới vào cơ sở dữ liệu

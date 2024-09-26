@@ -46,21 +46,21 @@
                                             <form action="{{ route('categories.restore', $category->id) }}" method="POST"
                                                 style="display:inline;" class="restore-form">
                                                 @csrf
-                                                <button type="button"
+                                                <button type="submit"
                                                     class="btn btn-outline-success rounded-pill btn-sm restore-btn">
-                                                    <i class="fas fa-undo"></i> Khôi phục
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
                                                 </button>
                                             </form>
+
                                             <form action="{{ route('categories.forceDelete', $category->id) }}"
                                                 method="POST" style="display:inline;" class="force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button"
+                                                <button type="submit"
                                                     class="btn btn-outline-danger rounded-pill btn-sm force-delete-btn">
-                                                    <i class="fas fa-trash"></i> Xóa cứng
+                                                    <i class="bi bi-trash"></i> Xóa cứng
                                                 </button>
                                             </form>
-
                                         </td>
                                     </tr>
                                 @empty

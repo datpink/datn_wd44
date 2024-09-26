@@ -42,17 +42,23 @@
                                         <td>{{ $post->created_at }}</td>
                                         <td>{{ $post->deleted_at }}</td>
                                         <td>
-                                            <form action="{{ route('posts.restore', $post->id) }}" method="POST" class="d-inline-block restore-form">
+                                            <form action="{{ route('posts.restore', $post->id) }}" method="POST"
+                                                class="d-inline-block restore-form">
                                                 @csrf
-                                                <button type="button" class="btn btn-outline-success rounded-pill restore-btn" title="Khôi phục bài viết">
-                                                    Khôi phục
+                                                <button type="submit"
+                                                    class="btn btn-outline-success rounded-pill restore-btn"
+                                                    title="Khôi phục bài viết">
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
                                                 </button>
                                             </form>
-                                            <form action="{{ route('posts.forceDelete', $post->id) }}" method="POST" class="d-inline-block force-delete-form">
+                                            <form action="{{ route('posts.forceDelete', $post->id) }}" method="POST"
+                                                class="d-inline-block force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-outline-danger rounded-pill force-delete-btn" title="Xóa vĩnh viễn bài viết">
-                                                    Xóa vĩnh viễn
+                                                <button type="submit"
+                                                    class="btn btn-outline-danger rounded-pill force-delete-btn"
+                                                    title="Xóa vĩnh viễn bài viết">
+                                                    <i class="bi bi-trash"></i> Xóa vĩnh viễn
                                                 </button>
                                             </form>
                                         </td>

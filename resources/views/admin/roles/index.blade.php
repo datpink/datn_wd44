@@ -39,11 +39,11 @@
                                     <td>{{ $role->description }}</td>
                                     <td>{{ $role->created_at }}</td>
                                     <td>
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-warning">Sửa</a>
+                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-rounded btn-warning"><i class="bi bi-pencil-square"></i>Sửa</a>
                                         <form action="{{ route('roles.destroy', $role->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này không?')">Xóa</button>
+                                            <button type="submit" class="btn btn-rounded btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này không?')"><i class="bi bi-trash"></i>Xóa</button>
                                         </form>
                                     </td>
                                 </tr>

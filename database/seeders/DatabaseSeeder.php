@@ -13,20 +13,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Gọi các seeder khác
-        $this->call([
-            RolesTableSeeder::class,
-            UsersTableSeeder::class,
-            PaymentMethodsTableSeeder::class,
-            PromotionsTableSeeder::class,
-            OrdersTableSeeder::class,
-            BrandsTableSeeder::class,
-            CataloguesTableSeeder::class,
-            ProductsTableSeeder::class,
-            AttributesTableSeeder::class,
-            AttributeValueTableSeeder::class,
-            ProductVariantsTableSeeder::class,
-            ProductVariantAttributesTableSeeder::class,
-            OrderItemTableSeeder::class,
-        ]);
+        // $this->call([
+        //     RolesTableSeeder::class,
+        //     UsersTableSeeder::class,
+        //     PaymentMethodsTableSeeder::class,
+        //     PromotionsTableSeeder::class,
+        //     OrdersTableSeeder::class,
+        //     BrandsTableSeeder::class,
+        //     CataloguesTableSeeder::class,
+        //     ProductsTableSeeder::class,
+        //     AttributesTableSeeder::class,
+        //     AttributeValueTableSeeder::class,
+        //     ProductVariantsTableSeeder::class,
+        //     ProductVariantAttributesTableSeeder::class,
+        //     OrderItemTableSeeder::class,
+        // ]);
     }
 }

@@ -2,6 +2,8 @@
 
 @extends('admin.master')
 
+@section('title', 'Thùng Rác')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -41,17 +43,21 @@
                                                 style="display:inline-block;" class="restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="button" class="btn btn-rounded btn-outline-success restore-btn">Khôi
-                                                    phục</button>
+                                                <button type="button"
+                                                    class="btn btn-rounded btn-outline-success restore-btn">
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                </button>
                                             </form>
+
                                             <!-- Xóa vĩnh viễn -->
                                             <form action="{{ route('brands.delete-permanently', $brand->id) }}"
                                                 method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger btn-rounded delete-btn">Xóa
-                                                    vĩnh
-                                                    viễn</button>
+                                                <button type="submit"
+                                                    class="btn btn-outline-danger btn-rounded delete-btn">
+                                                    <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>

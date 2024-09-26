@@ -12,14 +12,16 @@ class RoleController extends Controller
 {
     public function index()
     {
+        $title = 'Danh Sách Vai Trò';
         $roles = Role::all();
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index', compact('roles', 'title'));
     }
 
     public function create()
     {
+        $title = 'Thêm Mới Vai Trò';
         $permissions = Permission::all();
-        return view('admin.roles.create', compact('permissions'));
+        return view('admin.roles.create', compact('permissions', 'title'));
     }
 
     public function store(Request $request)
@@ -37,8 +39,9 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        $title = 'Cập Nhật Vai Trò';
         $permissions = Permission::all();
-        return view('admin.roles.edit', compact('role', 'permissions'));
+        return view('admin.roles.edit', compact('role', 'permissions', 'title'));
     }
 
     public function update(Request $request, Role $role)

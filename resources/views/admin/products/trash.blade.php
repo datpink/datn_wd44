@@ -57,8 +57,10 @@
                                                         action="{{ route('products.restore', $product->id) }}"
                                                         method="POST" class="d-inline-block">
                                                         @csrf
-                                                        <button type="button" class="btn btn-success restore-btn"
-                                                            data-id="{{ $product->id }}">Khôi phục</button>
+                                                        <button type="submit" class="btn btn-outline-success btn-rounded restore-btn"
+                                                            data-id="{{ $product->id }}">
+                                                            <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                        </button>
                                                     </form>
 
                                                     <!-- Xóa vĩnh viễn sản phẩm -->
@@ -67,8 +69,10 @@
                                                         method="POST" class="d-inline-block">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-danger force-delete-btn"
-                                                            data-id="{{ $product->id }}">Xóa vĩnh viễn</button>
+                                                        <button type="submit" class="btn btn-outline-danger btn-rounded force-delete-btn"
+                                                            data-id="{{ $product->id }}">
+                                                            <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>

@@ -90,13 +90,18 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('catalogues.edit', $catalogue) }}"
-                                                        class="btn btn-warning btn-rounded">Sửa</a>
+                                                        class="btn btn-warning btn-rounded">
+                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    </a>
+
                                                     <form action="{{ route('catalogues.destroy', $catalogue) }}"
                                                         method="POST" style="display:inline;" class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button"
-                                                            class="btn btn-danger btn-rounded delete-btn">Xóa</button>
+                                                            class="btn btn-danger btn-rounded delete-btn">
+                                                            <i class="bi bi-trash"></i> Xóa
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>
