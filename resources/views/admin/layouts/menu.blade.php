@@ -31,54 +31,6 @@
 
                 <li class="sidebar-dropdown">
                     <a href="#">
-                        <i class="bi bi-cart-check"></i>
-                        <span class="menu-text">Quản lý Đơn Hàng</span>
-                    </a>
-                    <div class="sidebar-submenu">
-                        <ul>
-                            <li>
-                                <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="sidebar-dropdown">
-                    <a href="#">
-                        <i class="bi bi-tag"></i>
-                        <span class="menu-text">Quản lý Nhãn Hiệu</span>
-                    </a>
-                    <div class="sidebar-submenu">
-                        <ul>
-                            <li>
-                                <a href="{{ route('brands.index') }}">Danh sách Nhãn hiệu</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="sidebar-dropdown">
-                    <a href="#">
-                        <i class="bi bi-newspaper"></i>
-                        <span class="menu-text">Quản lý Tin Tức</span>
-                    </a>
-                    <div class="sidebar-submenu">
-                        <ul>
-                            <li>
-                                <a href="{{ route('categories.index') }}">Danh sách danh mục</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('posts.index') }}">Danh sách tin</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('comments.index') }}">Danh sách bình luận</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <li class="sidebar-dropdown">
-                    <a href="#">
                         <i class="bi bi-box"></i>
                         <span class="menu-text">Quản lý Sản Phẩm</span>
                     </a>
@@ -120,6 +72,54 @@
                             </li>
                             <li>
                                 <a href="{{ route('permissions.index') }}">Danh sách Quyền Hạn</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-newspaper"></i>
+                        <span class="menu-text">Quản lý Tin Tức</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('categories.index') }}">Danh sách danh mục</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('posts.index') }}">Danh sách tin</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('comments.index') }}">Danh sách bình luận</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-tag"></i>
+                        <span class="menu-text">Quản lý Nhãn Hiệu</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('brands.index') }}">Danh sách Nhãn hiệu</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-cart-check"></i>
+                        <span class="menu-text">Quản lý Đơn Hàng</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
                             </li>
                         </ul>
                     </div>

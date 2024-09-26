@@ -28,11 +28,19 @@
                             </a>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                            <form id="productForm" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
-                                    <label for="name" class="form-label">Tên Sản Phẩm</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}">
+                                    <label for="productName" class="form-label">Tên Sản Phẩm</label>
+                                    <input type="text" class="form-control" id="productName" name="name" value="{{ old('name') }}" oninput="ChangeToSlug()">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="sku" class="form-label">SKU</label>
+                                    <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku') }}" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="slug" class="form-label">Slug</label>
+                                    <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="catalogue_id" class="form-label">Danh Mục</label>
@@ -51,19 +59,10 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="sku" class="form-label">SKU</label>
-                                    <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku') }}">
-                                </div>
                                 <div class="form-group">
                                     <label for="weight">Cân nặng (kg)</label>
                                     <input type="text" name="weight" class="form-control" id="weight" value="{{ old('weight') }}">
                                 </div>
-
                                 <div class="form-group">
                                     <label for="dimensions">Kích thước (DxRxC)</label>
                                     <input type="text" name="dimensions" class="form-control" id="dimensions" value="{{ old('dimensions') }}">
@@ -91,6 +90,7 @@
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
+                                <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo SKU</button>
                                 <button type="submit" class="btn btn-rounded btn-primary">Thêm Mới</button>
                             </form>
                         </div>
@@ -99,4 +99,49 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function ChangeToSlug() {
+            var productName, slug;
+
+            // Lấy text từ thẻ input title
+            productName = document.getElementById("productName").value;
+
+            // Đổi chữ hoa thành chữ thường
+            slug = productName.toLowerCase();
+
+            // Đổi ký tự có dấu thành không dấu
+            slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+            slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+            slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+            slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+            slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+            slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+            slug = slug.replace(/đ/gi, 'd');
+
+            // Xóa các ký tự đặc biệt
+            slug = slug.replace(/\`|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+
+            // Đổi khoảng trắng thành ký tự gạch ngang
+            slug = slug.replace(/ /gi, "-");
+
+            // Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+            slug = slug.replace(/\-\-\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-\-/gi, '-');
+            slug = slug.replace(/\-\-/gi, '-');
+
+            // Xóa các ký tự gạch ngang ở đầu và cuối
+            slug = '@' + slug + '@';
+            slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+
+            // In slug ra textbox có id “slug”
+            document.getElementById('slug').value = slug;
+        }
+
+        document.getElementById('generateSkuBtn').addEventListener('click', function () {
+            const randomSku = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo SKU ngẫu nhiên
+            document.getElementById('sku').value = randomSku;
+        });
+    </script>
 @endsection

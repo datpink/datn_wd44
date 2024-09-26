@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
-    //
     public function index(Request $request)
     {
         $title = 'Danh Mục Bài Viết';
@@ -31,12 +31,10 @@ class CategoryController extends Controller
     public function create()
     {
         $title = 'Thêm Mới Danh Mục';
-        // Assuming you want to get all categories that could be parents
         $parentCategories = Category::whereNull('parent_id')->with('children')->get();
 
         return view('admin.categories.create', compact('parentCategories', 'title'));
     }
-
 
     public function store(Request $request)
     {
@@ -46,47 +44,55 @@ class CategoryController extends Controller
             'status' => 'required|in:active,inactive',
         ]);
 
-        $category = new Category();
+        DB::beginTransaction();
 
+        try {
+            $category = new Category();
+            $category->name = $request->name;
+            $category->parent_id = $request->parent_id;
+            $category->description = $request->description;
+            $category->status = $request->status;
 
-        $category->name = $request->name;
+            $category->save();
+            DB::commit();
 
-        $category->parent_id = $request->parent_id;
-        $category->description = $request->description;
-        $category->status = $request->status;
-
-
-        $category->save();
-
-        return redirect()->route('categories.index')
-            ->with('success', 'Danh mục đã được thêm mới.');
+            return redirect()->route('categories.index')
+                ->with('success', 'Danh mục đã được thêm mới.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('categories.index')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function edit(Category $category)
     {
         $title = 'Cập Nhật Danh Mục';
-
         return view('admin.categories.edit', compact('category', 'title'));
     }
+
     public function update(Request $request, Category $category)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'max:255',
-            // 'slug' => 'required|string|max:255|unique:catalogues,slug,' . $catalogue->id,
             'status' => 'required|in:active,inactive',
-            // 'image' => 'nullable|image|max:2048',
         ]);
 
-        $category->name = $request->name;
-        $category->description = $request->description;
-        $category->status = $request->status;
+        DB::beginTransaction();
 
+        try {
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->status = $request->status;
 
+            $category->save();
+            DB::commit();
 
-        $category->save();
-
-        return redirect()->route('categories.index')->with('success', 'Danh mục đã được cập nhật.');
+            return redirect()->route('categories.index')->with('success', 'Danh mục đã được cập nhật.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('categories.index')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function destroy($id)
@@ -98,9 +104,17 @@ class CategoryController extends Controller
                 ->with('error', 'Không thể xóa danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
         }
 
-        $category->delete();
+        DB::beginTransaction();
 
-        return redirect()->route('categories.index')->with('deleteCategory', 'Xóa danh mục thành công');
+        try {
+            $category->delete();
+            DB::commit();
+
+            return redirect()->route('categories.index')->with('deleteCategory', 'Xóa danh mục thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('categories.index')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function trash()
@@ -112,25 +126,41 @@ class CategoryController extends Controller
 
     public function restore($id)
     {
-        $category = Category::withTrashed()->findOrFail($id);
-        $category->restore();
+        DB::beginTransaction();
 
-        return redirect()->route('categories.trash')
-        ->with('restoreCategory', 'Khôi phục danh mục thành công');
+        try {
+            $category = Category::withTrashed()->findOrFail($id);
+            $category->restore();
+            DB::commit();
+
+            return redirect()->route('categories.trash')
+                ->with('restoreCategory', 'Khôi phục danh mục thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('categories.trash')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function forceDelete($id)
     {
-        $category = Category::onlyTrashed()->findOrFail($id);
+        DB::beginTransaction();
 
-        if (Category::where('parent_id', $category->id)->exists()) {
+        try {
+            $category = Category::onlyTrashed()->findOrFail($id);
+
+            if (Category::where('parent_id', $category->id)->exists()) {
+                return redirect()->route('categories.trash')
+                    ->with('error', 'Không thể xóa cứng danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
+            }
+
+            $category->forceDelete();
+            DB::commit();
+
             return redirect()->route('categories.trash')
-                ->with('error', 'Không thể xóa cứng danh mục này vì nó là danh mục cha của một hoặc nhiều danh mục khác.');
+                ->with('forceDeleteCategory', 'Xóa cứng danh mục thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('categories.trash')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
         }
-
-        $category->forceDelete();
-
-        return redirect()->route('categories.trash')
-        ->with('forceDeleteCategory', 'Xóa cứng danh mục thành công');
     }
 }

@@ -3,14 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
@@ -35,28 +32,35 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts',
             'tomtat' => 'nullable|string',
-            'content' => 'required|string', // Kiểm tra trường này
+            'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'user_id' => 'required|integer',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_featured' => 'nullable|boolean',
         ]);
 
-        // Tạo bài viết mới
-        $post = new Post($request->all());
+        DB::beginTransaction();
 
-        // Xử lý hình ảnh
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $post->image = $imageName;
+        try {
+            // Tạo bài viết mới
+            $post = new Post($request->all());
+
+            // Xử lý hình ảnh
+            if ($request->hasFile('image')) {
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+                $post->image = $imageName;
+            }
+
+            $post->is_featured = $request->has('is_featured');
+            $post->save();
+
+            DB::commit();
+            return redirect()->route('posts.index')->with('success', 'Bài viết đã được thêm thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('posts.index')->with('error', 'Có lỗi xảy ra khi thêm bài viết.');
         }
-
-        $post->is_featured = $request->has('is_featured');
-
-        $post->save();
-
-        return redirect()->route('posts.index')->with('success', 'Bài viết đã được thêm thành công.');
     }
 
     public function edit($id)
@@ -74,42 +78,58 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug,' . $id,
             'tomtat' => 'nullable|string',
-            'content' => 'required|string', // Đảm bảo có trường này
+            'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'user_id' => 'required|integer',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_featured' => 'nullable|boolean',
         ]);
 
-        // Cập nhật bài viết
-        $post = Post::findOrFail($id);
-        $post->fill($request->all());
+        DB::beginTransaction();
 
-        // Xử lý hình ảnh
-        if ($request->hasFile('image')) {
-            // Xóa hình ảnh cũ nếu có
-            if ($post->image) {
-                \File::delete(public_path('images/' . $post->image));
+        try {
+            // Cập nhật bài viết
+            $post = Post::findOrFail($id);
+            $post->fill($request->all());
+
+            // Xử lý hình ảnh
+            if ($request->hasFile('image')) {
+                // Xóa hình ảnh cũ nếu có
+                if ($post->image) {
+                    File::delete(public_path('images/' . $post->image));
+                }
+
+                $imageName = time() . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imageName);
+                $post->image = $imageName;
             }
 
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('images'), $imageName);
-            $post->image = $imageName;
+            $post->is_featured = $request->has('is_featured');
+            $post->save();
+
+            DB::commit();
+            return redirect()->route('posts.index')->with('success', 'Bài viết đã được cập nhật thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('posts.index')->with('error', 'Có lỗi xảy ra khi cập nhật bài viết.');
         }
-
-        $post->is_featured = $request->has('is_featured');
-
-        $post->save();
-
-        return redirect()->route('posts.index')->with('success', 'Bài viết đã được cập nhật thành công.');
     }
 
     // Xóa mềm bài viết
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
-        $post->delete(); // Thực hiện xóa mềm
-        return redirect()->route('posts.index')->with('success', 'Bài viết đã được xóa mềm thành công.');
+
+        DB::beginTransaction();
+
+        try {
+            $post->delete(); // Thực hiện xóa mềm
+            DB::commit();
+            return redirect()->route('posts.index')->with('success', 'Bài viết đã được xóa mềm thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('posts.index')->with('error', 'Có lỗi xảy ra khi xóa bài viết.');
+        }
     }
 
     // Hiển thị thùng rác
@@ -123,16 +143,32 @@ class PostController extends Controller
     // Khôi phục bài viết
     public function restore($id)
     {
-        $post = Post::withTrashed()->findOrFail($id);
-        $post->restore(); // Khôi phục bài viết
-        return redirect()->route('posts.trash')->with('success', 'Bài viết đã được khôi phục thành công.');
+        DB::beginTransaction();
+
+        try {
+            $post = Post::withTrashed()->findOrFail($id);
+            $post->restore(); // Khôi phục bài viết
+            DB::commit();
+            return redirect()->route('posts.trash')->with('success', 'Bài viết đã được khôi phục thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('posts.trash')->with('error', 'Có lỗi xảy ra khi khôi phục bài viết.');
+        }
     }
 
     // Xóa vĩnh viễn bài viết
     public function forceDelete($id)
     {
-        $post = Post::withTrashed()->findOrFail($id);
-        $post->forceDelete(); // Xóa vĩnh viễn bài viết
-        return redirect()->route('posts.trash')->with('success', 'Bài viết đã được xóa vĩnh viễn.');
+        DB::beginTransaction();
+
+        try {
+            $post = Post::withTrashed()->findOrFail($id);
+            $post->forceDelete(); // Xóa vĩnh viễn bài viết
+            DB::commit();
+            return redirect()->route('posts.trash')->with('success', 'Bài viết đã được xóa vĩnh viễn.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('posts.trash')->with('error', 'Có lỗi xảy ra khi xóa vĩnh viễn bài viết.');
+        }
     }
 }
