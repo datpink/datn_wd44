@@ -64,11 +64,7 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-    // route users
-    Route::resource('users', UserController::class);
-    Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
-    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+
 
 
     // Route cho vai trò
@@ -131,4 +127,21 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     // Permission
 
     Route::resource('permissions', PermissionController::class);
+
+    Route::group(['prefix' => 'users'], function () {
+
+        Route::get('', [UserController::class, 'index'])->name('users.index')->middleware('permission:full|user_index|editor');
+        Route::get('/create', [UserController::class, 'create'])->name('users.create')->middleware('permission:full|user_edit');
+        Route::post('', [UserController::class, 'store'])->name('users.store')->middleware('permission:full|user_edit');
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:full|user_edit');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:full|user_edit');
+        Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:full|user_edit');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:full|user_edit');
+
+        Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash')->middleware('permission:full|user_edit');
+        Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
+        Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
+    });
+
+    // Route::resource('users', UserController::class);
 });

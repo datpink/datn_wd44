@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     // Hiển thị danh sách người dùng
-    public function index(Request $request)
+    public function index()
     {
         $title = 'Danh Sách Người Dùng';
         $users = User::paginate(10);
@@ -23,17 +23,19 @@ class UserController extends Controller
     public function create()
     {
         $title = 'Thêm Mới Người Dùng';
-        return view('admin.users.create', compact('title',));
+        $roles = Role::all(); // Lấy tất cả vai trò
+        return view('admin.users.create', compact('title', 'roles'));
     }
 
-    // Xử lý lưu thông tin người dùng mới
+    // Lưu thông tin người dùng mới và gán vai trò
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
+            'status' => 'required|in:locked,unlocked',
+            'role' => 'required' // Kiểm tra role
         ]);
 
         // Tạo người dùng
@@ -41,19 +43,25 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'status' => $request->status, // Lưu trạng thái
+            'status' => $request->status,
         ]);
+
+        // Gán vai trò cho người dùng
+        $user->assignRole($request->role);
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được thêm thành công!');
     }
 
+    // Hiển thị form chỉnh sửa người dùng
     public function edit($id)
     {
         $title = 'Chỉnh Sửa Người Dùng';
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('title', 'user'));
+        $roles = Role::all(); // Lấy tất cả vai trò
+        return view('admin.users.edit', compact('title', 'user', 'roles'));
     }
 
+    // Cập nhật thông tin người dùng và vai trò
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -63,6 +71,7 @@ class UserController extends Controller
             'address' => 'required|string|max:255',
             'image' => 'nullable|image|max:2048',
             'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
+            'role' => 'required|string', // Thêm kiểm tra cho role
         ]);
 
         $user = User::findOrFail($id);
@@ -84,37 +93,10 @@ class UserController extends Controller
 
         // Lưu thay đổi
         $user->save();
+
+        // Gán vai trò mới cho người dùng
+        $user->syncRoles([$request->role]); // Sử dụng syncRoles thay vì assignRole
+
         return redirect()->route('users.index')->with('success', 'Người dùng đã được cập nhật thành công!');
-    }
-
-
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete(); // Xóa mềm người dùng
-
-        return redirect()->route('users.index')->with('success', 'Người dùng đã được xóa thành công!');
-    }
-
-    public function trash()
-    {
-        $users = User::onlyTrashed()->get();
-        return view('admin.users.trash', compact('users'));
-    }
-
-    public function restore($id)
-    {
-        $user = User::withTrashed()->findOrFail($id);
-        $user->restore(); // Khôi phục người dùng
-
-        return redirect()->route('users.trash')->with('success', 'Người dùng đã được khôi phục thành công!');
-    }
-
-    public function forceDelete($id)
-    {
-        $user = User::withTrashed()->findOrFail($id);
-        $user->forceDelete(); // Xóa cứng người dùng
-
-        return redirect()->route('users.trash')->with('success', 'Người dùng đã được xóa cứng thành công!');
     }
 }
