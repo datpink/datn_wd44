@@ -5,12 +5,12 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
             @if (session('errors'))
                 <div class="alert alert-errors">{{ session('errors') }}</div>
-            @endif
+            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -82,11 +82,10 @@
                                             <td>
                                                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-rounded">Sửa</a>
                                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-rounded">Chi tiết</a>
-                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline-block"
-                                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                                                <form id="delete-form-{{ $product->id }}" action="{{ route('products.destroy', $product->id) }}" method="POST" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-rounded">Xóa</button>
+                                                    <button type="button" class="btn btn-danger btn-rounded delete-btn" data-id="{{ $product->id }}">Xóa</button>
                                                 </form>
                                             </td>
 
@@ -103,4 +102,44 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const formId = `delete-form-${this.dataset.id}`;
+                const form = document.getElementById(formId);
+                Swal.fire({
+                    position: 'top',
+                    title: 'Bạn có chắc chắn muốn xóa sản phẩm này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Gửi form để xóa sản phẩm
+                    }
+                });
+            });
+        });
+
+        @if (session('success'))
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+    </script>
 @endsection
