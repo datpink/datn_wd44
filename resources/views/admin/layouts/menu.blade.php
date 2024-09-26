@@ -121,6 +121,9 @@
                             <li>
                                 <a href="{{ route('orders.index') }}">Danh sách đơn hàng</a>
                             </li>
+                            <li>
+                                <a href="{{ route('payment-methods.index') }}">Danh sách PTTT</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
