@@ -10,14 +10,17 @@ class ProductVariant extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'variant_name',
-        'attribute_value_id',
-        'price',
-        'stock',
-        'sku',
-        'image_url'
-    ];
+        'product_id', 
+        'variant_name', 
+        'sku', 
+        'weight', 
+        'dimension', // Đảm bảo cột này có trong $fillable
+        'price', 
+        'stock', 
+        'image_url', 
+        // 'description', 
+        'status'
+        ];
 
     public function product()
     {
