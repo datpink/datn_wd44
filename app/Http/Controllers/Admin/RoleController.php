@@ -3,83 +3,58 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $title = 'Danh Sách Vai Trò';
-
-        // Lấy giá trị tìm kiếm từ request
-        $search = $request->input('search');
-
-        // Tìm kiếm vai trò dựa trên tên
-        $roles = Role::when($search, function ($query) use ($search) {
-            return $query->where('name', 'like', '%' . $search . '%');
-        })->paginate(10);
-
-        // Trả về view với dữ liệu cần thiết
-        return view('admin.roles.index', compact('roles', 'search', 'title'));
+        $roles = Role::all();
+        return view('admin.roles.index', compact('roles'));
     }
 
     public function create()
     {
-        $title = 'Thêm Mới Vai Trò';
-
-        return view('admin.roles.create', compact('title'));
+        return view('admin.roles.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required']);
-        Role::create($request->all());
-        return redirect()->route('roles.index')->with('success', 'Vai trò đã được tạo thành công!');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'guard_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        Role::create($validatedData);
+
+        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
     }
 
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::findOrFail($id);
         return view('admin.roles.edit', compact('role'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        $request->validate(['name' => 'required']);
-        $role = Role::findOrFail($id);
-        $role->update($request->all());
-        return redirect()->route('roles.index')->with('success', 'Vai trò đã được cập nhật thành công!');
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'guard_name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $role->update($validatedData);
+
+        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
     }
 
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        $role = Role::findOrFail($id);
-        $role->delete(); // Xóa mềm vai trò
-        return redirect()->route('roles.index')->with('success', 'Vai trò đã được xóa.');
-    }
+        $role->delete();
 
-    public function trash()
-    {
-        $title = 'Thùng Rác Vai Trò';
-        $roles = Role::onlyTrashed()->paginate(10); // Lấy các vai trò đã bị xóa
-
-        return view('admin.roles.trash', compact('roles', 'title'));
-    }
-
-    public function restore($id)
-    {
-        $role = Role::onlyTrashed()->findOrFail($id);
-        $role->restore(); // Khôi phục vai trò
-
-        return redirect()->route('roles.trash')->with('success', 'Vai trò đã được khôi phục.');
-    }
-
-    public function forceDelete($id)
-    {
-        $role = Role::onlyTrashed()->findOrFail($id);
-        $role->forceDelete(); // Xóa vĩnh viễn vai trò
-
-        return redirect()->route('roles.trash')->with('success', 'Vai trò đã được xóa vĩnh viễn.');
+        return redirect()->route('roles.index')->with('success', 'Role deleted successfully.');
     }
 }

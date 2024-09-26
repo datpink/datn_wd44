@@ -133,6 +133,9 @@
                             <li>
                                 <a href="{{ route('roles.index') }}">Danh sách Vai Trò</a>
                             </li>
+                            <li>
+                                <a href="{{ route('permissions.index') }}">Danh sách Quyền Hạn</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

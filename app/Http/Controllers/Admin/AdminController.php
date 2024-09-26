@@ -38,12 +38,7 @@ class AdminController extends Controller
             }
 
             // Kiểm tra vai trò
-            if ($user->hasRole(1)) {
                 return redirect()->route('admin.index');
-            } else {
-                Auth::logout();
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
-            }
         }
 
         info('Login failed for: ' . $request->email);

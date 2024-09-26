@@ -11,9 +11,23 @@ class PostCommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $comments = Comment::with(['user', 'post', 'commentReplys.user'])->get();
+        $comments = Comment::with(['user', 'post', 'commentReplys.user']);
+        $search = $request->input('search');
+
+        if ($search) {
+            $comments->where(function ($query) use ($search) {
+                $query->whereHas('user', function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                })
+                    ->orWhereHas('post', function ($q) use ($search) {
+                        $q->where('title', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('content', 'like', '%' . $search . '%');
+            });
+        }
+        $comments = $comments->paginate(10);
         return view('admin.comments.list', compact('comments'));
     }
 
@@ -35,17 +49,52 @@ class PostCommentController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return redirect()->route('comments.index')->with('respondError', 'Phản hồi đã được gửi.');
-
         }
     }
 
     public function destroy($id)
     {
-        $comment = Comment::findOrFail($id);
-        $comment->delete();
+        $comment = Comment::with(['commentReplys'])->findOrFail($id);
+        $comment->commentReplys()->delete(); // Soft delete các phản hồi
+        $comment->delete(); // Soft delete bình luận
         return redirect()->route('comments.index')->with('destroyComment', 'Bình luận đã được xóa.');
     }
 
+    public function trash()
+    {
+        // Lấy tất cả các bình luận đã bị xóa mềm cùng với các phản hồi đã bị xóa mềm và người dùng của phản hồi
+        $comments = Comment::with(['user', 'post', 'commentReplys' => function ($query) {
+            $query->withTrashed()->with('user');
+        }])->onlyTrashed()->get();
+
+        // Để kiểm tra cấu trúc dữ liệu (chỉ dùng khi debug)
+        // dd($comments->toArray());
+
+        return view('admin.comments.trash', compact('comments'));
+    }
+
+    public function restore(string $id)
+    {
+        $comment = Comment::with(['commentReplys'])->onlyTrashed()->findOrFail($id);
+        $comment->restore(); // Khôi phục bình luận
+
+        // Khôi phục các phản hồi nếu cần
+        $comment->commentReplys()->withTrashed()->restore();
+
+        return back();
+    }
+
+    public function deletePermanently($id)
+    {
+        $comment = Comment::onlyTrashed()->findOrFail($id);
+        // if ($comment->products()->exists()) {
+        //     return redirect()->route('comments.trash')->with('deletePermanently', 'Xóa vĩnh viễn thành công');
+        //     // return redirect()->route('comments.trash')->with('error', 'Không thể xóa cứng thương hiệu này vì nó có sản phẩm liên quan.');
+        // }
+        $comment->forceDelete();
+
+        return redirect()->route('comments.trash')->with('deletePermanently', 'Xóa vĩnh viễn thành công');
+    }
     /**
      * Show the form for creating a new resource.
      */

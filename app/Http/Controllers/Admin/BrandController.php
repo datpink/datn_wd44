@@ -87,7 +87,7 @@ class BrandController extends Controller
 
         if ($brand->products()->exists()) {
             // return redirect()->route('brands.index')->with('error', 'Không thể xóa thương hiệu này vì nó có sản phẩm liên quan.');
-            return back()->with('destroy', 'Xóa thành công');
+            return back()->with('destroy', 'Xóa không thành công');
         }
 
         $brand->delete();
