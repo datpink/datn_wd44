@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CommentReplyController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
+use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -64,11 +65,7 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-    // route users
-    Route::resource('users', UserController::class);
-    Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
-    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+
 
 
     // Route cho vai trò
@@ -128,7 +125,30 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
     Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
 
+    // Routes cho Product_Variants
+    Route::resource('product_variants', ProductVariantController::class);
+    Route::post('product_variants/{id}/restore', [ProductVariantController::class, 'restore'])->name('products.restore');
+    // Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
+
+    
     // Permission
 
     Route::resource('permissions', PermissionController::class);
+
+    Route::group(['prefix' => 'users'], function () {
+
+        Route::get('', [UserController::class, 'index'])->name('users.index')->middleware('permission:full|user_index|editor');
+        Route::get('/create', [UserController::class, 'create'])->name('users.create')->middleware('permission:full|user_edit');
+        Route::post('', [UserController::class, 'store'])->name('users.store')->middleware('permission:full|user_edit');
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:full|user_edit');
+        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:full|user_edit');
+        Route::put('/{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:full|user_edit');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:full|user_edit');
+
+        Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash')->middleware('permission:full|user_edit');
+        Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
+        Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
+    });
+
+    // Route::resource('users', UserController::class);
 });

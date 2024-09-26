@@ -102,6 +102,23 @@
 
                 <li class="sidebar-dropdown">
                     <a href="#">
+                        <i class="bi bi-newspaper"></i>
+                        <span class="menu-text">Quản lý biến thể</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('product_variants.index') }}">Danh sách biến thể</a>
+                            </li>
+                            {{-- <li>
+                                <a href="{{ route('products.create') }}">Thêm sản phẩm</a>
+                            </li> --}}
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
                         <i class="bi bi-window-split"></i>
                         <span class="menu-text">Quản lý Users</span>
                     </a>

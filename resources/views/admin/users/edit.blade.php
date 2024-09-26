@@ -71,12 +71,20 @@
                         <div class="form-group mb-3">
                             <label for="status">Trạng Thái:</label>
                             <select name="status" id="status" class="form-control" required>
-                                <option value="unlocked" {{ $user->status === 'unlocked' ? 'selected' : '' }}>Mở Khóa
-                                </option>
+                                <option value="unlocked" {{ $user->status === 'unlocked' ? 'selected' : '' }}>Mở Khóa</option>
                                 <option value="locked" {{ $user->status === 'locked' ? 'selected' : '' }}>Bị Khóa</option>
                             </select>
                         </div>
 
+                        <div class="row">
+                            @foreach ($roles ?? [] as $item)
+                                <div class="form-group col-sm-2 form-check d-flex align-items-center gap-2">
+                                    <input type="radio" name="role" value="{{ $item->name }}"
+                                        {{ $user->hasRole($item->name) ? 'checked' : '' }}>
+                                    <label class="form-check-label mb-2">{{ $item->name }}</label>
+                                </div>
+                            @endforeach
+                        </div>
                         <button type="submit" class="btn rounded-pill btn-primary">Cập Nhật Người Dùng</button>
                     </form>
                 </div>
