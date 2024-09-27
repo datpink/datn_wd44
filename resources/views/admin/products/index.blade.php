@@ -22,10 +22,6 @@
                                     class="btn btn-primary btn-sm btn-rounded d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
-                                <a href="{{ route('products.trash') }}"
-                                    class="btn btn-primary btn-sm btn-rounded d-flex align-items-center mt-3">
-                                    <i class="bi bi-trash me-2"></i> Thùng Rác
-                                </a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -90,16 +86,6 @@
                                                     class="btn btn-info btn-rounded">
                                                     <i class="bi bi-info-circle"></i> Chi tiết
                                                 </a>
-                                                <form id="delete-form-{{ $product->id }}"
-                                                    action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                                    class="d-inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="button" class="btn btn-danger btn-rounded delete-btn"
-                                                        data-id="{{ $product->id }}">
-                                                        <i class="bi bi-trash"></i> Xóa
-                                                    </button>
-                                                </form>
                                             </td>
 
                                         </tr>

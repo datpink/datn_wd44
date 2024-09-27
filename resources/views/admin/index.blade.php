@@ -27,8 +27,8 @@
                             <i class="bi bi-emoji-smile"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-blue">24m</h3>
-                            <p>Sản Phẩm</p>
+                            <h3 class="text-yellow">{{ $userCount }}</h3>
+                            <a href="{{ route('users.index') }}">Tài Khoản</a>
                         </div>
                     </div>
                 </div>
@@ -38,8 +38,9 @@
                             <i class="bi bi-box-seam"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-yellow">{{ $userCount }}</h3>
-                            <a href="{{ route('users.index') }}">Tài Khoản</a>
+                            <h3 class="text-blue">24m</h3>
+                            <p>Sản Phẩm</p>
+
                         </div>
                     </div>
                 </div>
