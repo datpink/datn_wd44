@@ -126,7 +126,7 @@ class ProductController extends Controller
             ]);
 
             if ($request->hasFile("image_url")) {
-                $imagePath = Storage::put('image', $request->image_url);
+                $imagePath = Storage::put('images', $request->image_url);
                 $product->update(['image_url' => $imagePath]);
             }
             DB::commit();
