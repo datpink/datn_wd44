@@ -2,6 +2,8 @@
 
 @extends('admin.master')
 
+@section('title', 'Thùng Rác')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -12,7 +14,7 @@
 
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title mb-3">Thùng rác thương hiệu</div>
+                    <div class="card-title mb-3">Thùng rác</div>
                     <a href="{{ route('comments.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
@@ -41,8 +43,8 @@
                                         <td>
                                             @if ($comment->commentReplys->count() > 0)
                                                 <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#commentReplys-{{ $comment->id }}" aria-expanded="false"
-                                                    aria-controls="commentReplys-{{ $comment->id }}">
+                                                    data-bs-target="#commentReplys-{{ $comment->id }}"
+                                                    aria-expanded="false" aria-controls="commentReplys-{{ $comment->id }}">
                                                     Xem {{ $comment->commentReplys->count() }} phản hồi
                                                 </button>
                                                 <div class="collapse mt-2" id="commentReplys-{{ $comment->id }}">
@@ -67,18 +69,26 @@
                                         <td>
                                             <!-- Khôi phục -->
                                             <form action="{{ route('comments.restore', $comment->id) }}" method="POST"
-                                                style="display:inline-block;">
+                                                class="d-inline-block restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                <button type="submit"
+                                                    class="btn rounded-pill btn-outline-success restore-btn"
+                                                    title="Khôi phục bình luận">
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                </button>
                                             </form>
+
                                             <!-- Xóa vĩnh viễn -->
                                             <form action="{{ route('comments.delete-permanently', $comment->id) }}"
-                                                method="POST" style="display:inline-block;">
+                                                method="POST" class="d-inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger delete-btn">Xóa vĩnh
-                                                    viễn</button>
+                                                <button type="submit"
+                                                    class="btn rounded-pill btn-outline-danger delete-btn"
+                                                    title="Xóa vĩnh viễn bình luận">
+                                                    <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -115,6 +125,28 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         this.closest('form').submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.restore-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn khôi phục bình luận này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
                     }
                 });
             });

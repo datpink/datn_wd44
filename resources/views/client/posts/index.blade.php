@@ -43,12 +43,30 @@
                                 </div>
                             </article>
                         @endforeach
-                        <nav class="navigation pagination">
-                            {{ $posts->links() }}
-                        </nav>
                     </div>
+                    <nav class="navigation pagination">
+                        <div class="nav-links">
+                            @if ($posts->onFirstPage())
+                                <span class="disabled page-numbers">« Previous</span>
+                            @else
+                                <a class="page-numbers" href="{{ $posts->previousPageUrl() }}">« Previous</a>
+                            @endif
 
+                            @foreach (range(1, $posts->lastPage()) as $page)
+                                @if ($page == $posts->currentPage())
+                                    <span class="current page-numbers">{{ $page }}</span>
+                                @else
+                                    <a class="page-numbers" href="{{ $posts->url($page) }}">{{ $page }}</a>
+                                @endif
+                            @endforeach
 
+                            @if ($posts->hasMorePages())
+                                <a class="page-numbers" href="{{ $posts->nextPageUrl() }}">Next »</a>
+                            @else
+                                <span class="disabled page-numbers">Next »</span>
+                            @endif
+                        </div>
+                    </nav>
                 </div>
 
                 <div class="sidebar kobolg_sidebar col-xl-3 col-lg-4 col-md-12 col-sm-12">
@@ -238,28 +256,44 @@
             </div>
         </div>
     </div>
-    <style>
-        .navigation.pagination {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .nav-links {
-            display: inline-block;
-        }
-
-        .nav-links a {
-            padding: 10px 15px;
-            margin: 5px;
-            background-color: #f1f1f1;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-        .nav-links a:hover {
-            background-color: #007bff;
-            color: white;
-        }
-    </style>
 @endsection
+
+<style>
+    .navigation.pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .nav-links {
+        display: flex;
+    }
+
+    .page-numbers {
+        padding: 10px 15px;
+        margin: 0 5px;
+        border: 1px solid #007bff;
+        background-color: #f1f1f1;
+        color: #007bff;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .page-numbers:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .current.page-numbers {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        pointer-events: none;
+    }
+
+    .disabled.page-numbers {
+        color: #ccc;
+        pointer-events: none;
+    }
+</style>

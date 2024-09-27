@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CommentReply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CommentReplyController extends Controller
 {
@@ -21,12 +22,19 @@ class CommentReplyController extends Controller
             'reply' => 'required|string',
         ]);
 
-        $reply = CommentReply::findOrFail($replyId);
-        $reply->update(['reply' => $validated['reply']]);
+        DB::beginTransaction();
 
-        return redirect()->route('comments.index')->with('updateReply', 'Phản hồi đã được cập nhật.');
+        try {
+            $reply = CommentReply::findOrFail($replyId);
+            $reply->update(['reply' => $validated['reply']]);
+            DB::commit();
+
+            return redirect()->route('comments.index')->with('updateReply', 'Phản hồi đã được cập nhật.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('comments.index')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
-
 
     // Phương thức xóa phản hồi
     public function destroy($id)
@@ -38,9 +46,17 @@ class CommentReplyController extends Controller
             return redirect()->back()->with('error', 'Bạn không có quyền xóa phản hồi này.');
         }
 
-        // Xóa mềm phản hồi
-        $reply->delete();
+        DB::beginTransaction();
 
-        return redirect()->back()->with('success', 'Phản hồi đã được xóa thành công.');
+        try {
+            // Xóa mềm phản hồi
+            $reply->delete();
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Phản hồi đã được xóa thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 }

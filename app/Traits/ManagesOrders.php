@@ -15,7 +15,7 @@ trait ManagesOrders
 
     public function update(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::findOrFail(id: $id);
 
         $order->status = $request->input('status');
         $order->save();

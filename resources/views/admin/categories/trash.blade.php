@@ -39,25 +39,26 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $category->name }}</td>
-                                       
+
                                         <td>{{ $category->deleted_at ? $category->deleted_at->format('d-m-Y') : 'Chưa xóa' }}
                                         </td>
                                         <td>
                                             <form action="{{ route('categories.restore', $category->id) }}" method="POST"
-                                                style="display:inline;">
+                                                style="display:inline;" class="restore-form">
                                                 @csrf
-                                                <button type="submit" class="btn btn-outline-success rounded-pill btn-sm"
-                                                    onclick="return confirm('Khôi phục lại danh mục?')">
-                                                    <i class="fas fa-undo"></i> Khôi phục
+                                                <button type="submit"
+                                                    class="btn btn-outline-success rounded-pill btn-sm restore-btn">
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
                                                 </button>
                                             </form>
+
                                             <form action="{{ route('categories.forceDelete', $category->id) }}"
-                                                method="POST" style="display:inline;">
+                                                method="POST" style="display:inline;" class="force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?');">
-                                                    <i class="fas fa-trash"></i> Xóa cứng
+                                                <button type="submit"
+                                                    class="btn btn-outline-danger rounded-pill btn-sm force-delete-btn">
+                                                    <i class="bi bi-trash"></i> Xóa cứng
                                                 </button>
                                             </form>
                                         </td>
@@ -74,4 +75,97 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    @if (session()->has('restoreCategory'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('restoreCategory') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    @if (session()->has('forceDeleteCategory'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('forceDeleteCategory') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+
+    @if (session()->has('error'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                title: "{{ session('error') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 2500
+            });
+        </script>
+    @endif
+
+    <script>
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.restore-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn khôi phục danh mục này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.force-delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.force-delete-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn xóa cứng danh mục này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

@@ -15,7 +15,7 @@ class PostController extends Controller
     {
         $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
             ->select('posts.*', 'users.name as author_name')
-            ->paginate(6);
+            ->paginate(9);
 
         return view('client.posts.index', compact('posts'));
     }

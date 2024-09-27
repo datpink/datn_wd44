@@ -11,23 +11,25 @@ class BrandController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Danh sách Thương Hiệu';
+
         $search = $request->input('search');
         $brands = Brand::when($search, function ($query) use ($search) {
             return $query->where('name', 'like', '%' . $search . '%');
         })->paginate(10);
-        
-        return view('admin.brands.list', compact('brands'));
+
+        return view('admin.brands.list', compact('brands', 'title'));
     }
 
     public function create()
     {
-        // $title = 'Thêm Mới Thương Hiệu';
-        return view('admin.brands.create');
+        $title = 'Thêm Mới Thương Hiệu';
+        return view('admin.brands.create', compact('title'));
     }
 
     public function store(Request $request)
     {
-        $brands = $request->validate([
+        $data = $request->validate([
             'name' => 'required|max:255|min:3|unique:brands,name',
             'description' => 'max:255',
         ], [
@@ -38,21 +40,27 @@ class BrandController extends Controller
             'description.max' => 'Mô tả không được vượt quá :max ký tự.',
         ]);
 
-        Brand::create($brands);
+        DB::beginTransaction();
 
-        return redirect()->route('brands.index')->with('create', 'Thêm thành công');
+        try {
+            Brand::create($data);
+            DB::commit();
+            return redirect()->route('brands.index')->with('create', 'Thêm thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('brands.index')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function edit(string $id)
     {
+        $title = 'Chỉnh Sửa Thương Hiệu';
         $brand = Brand::findOrFail($id);
-        // dd($brand);
-        return view('admin.brands.edit', compact('brand'));
+        return view('admin.brands.edit', compact('brand', 'title'));
     }
 
     public function update(Request $request, string $id)
     {
-        //
         $data = $request->validate([
             'name' => 'required|max:255|min:3|unique:brands,name,' . $id,
             'description' => 'max:255',
@@ -65,17 +73,13 @@ class BrandController extends Controller
         ]);
 
         DB::beginTransaction();
+
         try {
-            // Tìm thương hiệu theo ID
             $brand = Brand::findOrFail($id);
-
-            // Cập nhật dữ liệu thương hiệu
             $brand->update($data);
-
             DB::commit();
             return back()->with('update', 'Cập nhật thành công.');
         } catch (\Throwable $th) {
-            // dd($th);
             DB::rollBack();
             return redirect()->route('brands.index')->with('updateError', 'Cập nhật thất bại.');
         }
@@ -86,39 +90,60 @@ class BrandController extends Controller
         $brand = Brand::findOrFail($id);
 
         if ($brand->products()->exists()) {
-            // return redirect()->route('brands.index')->with('error', 'Không thể xóa thương hiệu này vì nó có sản phẩm liên quan.');
             return back()->with('destroy', 'Xóa không thành công');
         }
 
-        $brand->delete();
+        DB::beginTransaction();
 
-        return back()->with('destroy', 'Xóa thành công');
+        try {
+            $brand->delete();
+            DB::commit();
+            return back()->with('destroy', 'Xóa thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function trash()
     {
-        // dd('ahihi');
+        $title = 'Thùng Rác Thương Hiệu';
         $brands = Brand::onlyTrashed()->get();
-        return view('admin.brands.trash', compact('brands'));
+        return view('admin.brands.trash', compact('brands', 'title'));
     }
 
     public function restore($id)
     {
-        $brand = Brand::onlyTrashed()->findOrFail($id);
-        $brand->restore();
+        DB::beginTransaction();
 
-        return back();
+        try {
+            $brand = Brand::onlyTrashed()->findOrFail($id);
+            $brand->restore();
+            DB::commit();
+            return redirect()->route('brands.trash')->with('restoreBrand', 'Khôi phục thương hiệu thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('brands.trash')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 
     public function deletePermanently($id)
     {
         $brand = Brand::onlyTrashed()->findOrFail($id);
-        if ($brand->products()->exists()) {
-            return redirect()->route('brands.trash')->with('deletePermanently', 'Xóa vĩnh viễn thành công');
-            // return redirect()->route('brands.trash')->with('error', 'Không thể xóa cứng thương hiệu này vì nó có sản phẩm liên quan.');
-        }
-        $brand->forceDelete();
 
-        return redirect()->route('brands.trash')->with('deletePermanently', 'Xóa vĩnh viễn thành công');
+        if ($brand->products()->exists()) {
+            return redirect()->route('brands.trash')->with('error', 'Không thể xóa cứng thương hiệu này vì nó có sản phẩm liên quan.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $brand->forceDelete();
+            DB::commit();
+            return redirect()->route('brands.trash')->with('deletePermanently', 'Xóa vĩnh viễn thành công');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('brands.trash')->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
+        }
     }
 }

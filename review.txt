@@ -7,10 +7,14 @@ tạo file .env mới
 chạy lệnh php artisan key:generate
 
 đổi tên name database
-dung test
+
+composer require spatie/laravel-permission
+
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+
 chạy migrate
 
-php artisan db:seed --class=RolesTableSeeder
+php artisan db:seed --class=RolesAndPermissionsSeeder
 php artisan db:seed --class=UsersTableSeeder
 php artisan db:seed --class=PaymentMethodsTableSeeder
 php artisan db:seed --class=PromotionsTableSeeder
@@ -25,6 +29,7 @@ php artisan db:seed --class=ProductVariantAttributesTableSeeder
 php artisan db:seed --class=OrderItemTableSeeder
 php artisan db:seed --class=CategoriesTableSeeder
 php artisan db:seed --class=PostSeeder
+php artisan db:seed --class=CommentSeeder
 
 
 chạy full seeder

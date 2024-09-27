@@ -10,15 +10,18 @@ class PermissionController extends Controller
 {
     public function index()
 {
+
+    $title = 'Danh Sách Quyền Hạn';
     $permissions = Permission::all();
 
-    return view('admin.permissions.index', compact('permissions'));
+    return view('admin.permissions.index', compact('permissions', 'title'));
 }
 
 
     public function create()
     {
-        return view('admin.permissions.create');
+        $title = 'Thêm Mới Quyền Hạn';
+        return view('admin.permissions.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -38,7 +41,8 @@ class PermissionController extends Controller
 
     public function edit(Permission $permission)
     {
-        return view('admin.permissions.edit', compact('permission'));
+        $title = 'Chỉnh Sửa Quyền Hạn';
+        return view('admin.permissions.edit', compact('permission', 'title'));
     }
 
     public function update(Request $request, Permission $permission)

@@ -26,7 +26,9 @@
                             <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
+                                        <input type="text" id="id" name="search"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng"
+                                            value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -80,7 +82,8 @@
                                                     @elseif ($order->payment_status === 'paid')
                                                         <span class="badge rounded-pill bg-success">Đã thanh toán</span>
                                                     @elseif ($order->payment_status === 'failed')
-                                                        <span class="badge rounded-pill bg-danger">Thanh toán thất bại</span>
+                                                        <span class="badge rounded-pill bg-danger">Thanh toán thất
+                                                            bại</span>
                                                     @else
                                                         <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                     @endif
@@ -88,39 +91,46 @@
                                                 <td>{{ $order->phone_number }}</td>
                                                 <td>{{ $order->shipping_address }}</td>
                                                 <td>
-                                                    <strong class="badge rounded-pill bg-warning">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
+                                                    <strong
+                                                        class="badge rounded-pill bg-warning">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
                                                 </td>
                                                 <td>
                                                     <div class="actions">
-                                                        <a
-                                                            href="{{ route('orders.show', $order->id) }}" class="editRow">
+                                                        <a href="{{ route('orders.show', $order->id) }}" class="editRow">
                                                             <i class="bi bi-eye text-green"></i>
                                                         </a>
 
-                                                        <a
-                                                            href="#" class="viewRow" data-bs-toggle="modal"
+                                                        <a href="#" class="viewRow" data-bs-toggle="modal"
                                                             data-bs-target="#editOrderStatus{{ $order->id }}"
                                                             data-order-id="{{ $order->id }}"
                                                             data-order-status="{{ $order->status }}">
                                                             <i class="bi bi-pencil-square text-warning"></i>
                                                         </a>
 
-                                                        <div class="modal modal-dark fade" id="editOrderStatus{{ $order->id }}" tabindex="-1" aria-labelledby="editOrderStatusLabel" aria-hidden="true">
+                                                        <div class="modal modal-dark fade"
+                                                            id="editOrderStatus{{ $order->id }}" tabindex="-1"
+                                                            aria-labelledby="editOrderStatusLabel" aria-hidden="true">
                                                             <div class="modal-dialog modal-lg modal-dialog-centered">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h5 class="modal-title" id="editOrderStatusLabel"> Sửa Trạng Thái Đơn Hàng</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        <h5 class="modal-title" id="editOrderStatusLabel">
+                                                                            Sửa Trạng Thái Đơn Hàng</h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
                                                                     </div>
                                                                     <div class="modal-body">
-                                                                        <form id="orderStatusForm{{ $order->id }}" action="{{ route('orders.update', $order->id) }}" method="POST">
+                                                                        <form id="orderStatusForm{{ $order->id }}"
+                                                                            action="{{ route('orders.update', $order->id) }}"
+                                                                            method="POST">
                                                                             @csrf
                                                                             @method('PUT')
                                                                             <div class="mb-3">
                                                                                 <label for="status"
                                                                                     class="form-label">Chọn Trạng
                                                                                     Thái</label>
-                                                                                <select id="status" name="status" class="form-select" required
+                                                                                <select id="status" name="status"
+                                                                                    class="form-select" required
                                                                                     {{ in_array($order->status, ['shipped', 'canceled', 'refunded']) ? 'disabled' : '' }}>
                                                                                     <option value="processing"
                                                                                         {{ $order->status === 'processing' ? 'selected' : '' }}>
@@ -139,16 +149,21 @@
                                                                                         Hoàn trả</option>
                                                                                 </select>
                                                                                 @if (in_array($order->status, ['shipped', 'canceled', 'refunded']))
-                                                                                    <small class="text-danger">Trạng thái này không thể sửa đổi.</small>
+                                                                                    <small class="text-danger">Trạng thái
+                                                                                        này không thể sửa đổi.</small>
                                                                                 @endif
                                                                             </div>
                                                                         </form>
                                                                     </div>
                                                                     <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary rounded-pill"
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary rounded-pill"
                                                                             data-bs-dismiss="modal">Đóng</button>
                                                                         @if (!in_array($order->status, ['shipped', 'canceled', 'refunded']))
-                                                                            <button type="submit" class="btn btn-success rounded-pill" form="orderStatusForm{{ $order->id }}">Lưu thay đổi</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-success rounded-pill"
+                                                                                form="orderStatusForm{{ $order->id }}">Lưu
+                                                                                thay đổi</button>
                                                                         @endif
                                                                     </div>
                                                                 </div>

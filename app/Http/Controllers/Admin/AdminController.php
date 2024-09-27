@@ -54,10 +54,13 @@ class AdminController extends Controller
         return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
     }
 
-    // Xử lý đăng xuất
-    public function logout()
+
+
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->invalidate(); // Xóa session
+        $request->session()->regenerateToken(); // Regenerate CSRF token
         return redirect()->route('admin.login');
     }
 

@@ -84,12 +84,12 @@
                                             </td>
                                             <td>
                                                 <!-- Route tới trang chỉnh sửa biến thể -->
-                                                <a href="{{ route('product_variants.edit', $variant->id) }}"
-                                                    class="btn btn-warning btn-sm"
-                                                    style="font-size: 0.6rem; padding: 7px 13px;">Sửa</a>
-                                                <a href="{{ route('product_variants.show', $variant->id) }}"
-                                                    class="btn btn-info btn-sm"
-                                                    style="font-size: 0.6rem; padding: 7px 13px;">Chi tiết</a>
+                                                <a href="{{ route('product_variants.edit', $variant->id) }}" class="btn btn-warning rounded-pill btn-sm">
+                                                    <i class="bi bi-pencil-square"></i> Sửa
+                                                </a>
+                                                <a href="{{ route('product_variants.show', $variant->id) }}" class="btn btn-info rounded-pill btn-sm">
+                                                    <i class="bi bi-info-circle"></i> Chi tiết
+                                                </a>
 
                                                 <!-- Form xóa biến thể -->
                                                 {{-- <form action="{{ route('product_variants.destroy', $variant->id) }}"

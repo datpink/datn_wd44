@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentReplyController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
@@ -107,6 +108,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
 
+    // route payment
+    Route::resource('/payment-methods', PaymentMethodController::class);
+    Route::get('payment-methods-trash', [PaymentMethodController::class, 'trash'])->name('payment-methods.trash');
+    Route::post('payment-methods/{id}/restore', [PaymentMethodController::class, 'restore'])->name('payment-methods.restore');
+    Route::delete('payment-methods/{id}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('payment-methods.forceDelete');
+
     // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
     Route::get('categories-trash', [CategoryController::class, 'trash'])->name('categories.trash');
@@ -130,7 +137,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('product_variants/{id}/restore', [ProductVariantController::class, 'restore'])->name('products.restore');
     // Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
 
-    
+
     // Permission
 
     Route::resource('permissions', PermissionController::class);
@@ -150,5 +157,5 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
 
-    // Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class);
 });
