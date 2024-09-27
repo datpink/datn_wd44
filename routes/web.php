@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CommentController;
@@ -135,6 +137,8 @@ Route::prefix('admin')->middleware('permission:full|editor')->group(function () 
 
     // Route cho chức năng kích hoạt lại trạng thái
     Route::post('product-variants/{id}/activate', [ProductVariantController::class, 'activate'])->name('product-variants.activate');
+    Route::resource('attributes', AttributeController::class);
+    Route::resource('attributevalue', AttributeValueController::class);
 
 
     // Permission

@@ -55,6 +55,14 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('attributes.index') }}">Danh sách thuộc tính biến thể</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </li>
 
                 <li class="sidebar-dropdown">
