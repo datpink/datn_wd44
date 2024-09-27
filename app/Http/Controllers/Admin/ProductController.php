@@ -125,8 +125,8 @@ class ProductController extends Controller
                 'catalogue_id' => $request->catalogue_id,
             ]);
 
-            if ($request->file("image_url")) {
-                $imagePath = $request->file("image_url")->store('products_images', 'public');
+            if ($request->hasFile("image_url")) {
+                $imagePath = Storage::put('image', $request->image_url);
                 $product->update(['image_url' => $imagePath]);
             }
             DB::commit();
