@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Thêm Mới Sản Phẩm Variant</div>
-                    <a href="{{ route('product-variants.index') }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('product-variants.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -76,8 +76,14 @@
 
                         <div class="form-group">
                             <label for="sku">SKU:</label>
-                            <input type="text" class="form-control @error('sku') is-invalid @enderror" name="sku"
-                                id="sku" value="{{ old('sku') }}">
+                            <div class="input-group">
+                                <input type="text" class="form-control @error('sku') is-invalid @enderror" name="sku"
+                                    id="sku" value="{{ old('sku') }}">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" id="generate-sku">Tự động sinh
+                                        SKU</button>
+                                </div>
+                            </div>
                             @error('sku')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -106,11 +112,23 @@
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-primary">Tạo Variant</button>
+                            <button type="submit" class="btn btn-rounded btn-primary">Tạo Variant</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.getElementById('generate-sku').addEventListener('click', function() {
+            // Tạo SKU ngẫu nhiên (có thể tùy chỉnh theo nhu cầu)
+            const randomSKU = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+
+            // Gán giá trị vào ô nhập SKU
+            document.getElementById('sku').value = randomSKU;
+        });
+    </script>
 @endsection
