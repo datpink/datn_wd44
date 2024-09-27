@@ -63,7 +63,7 @@ Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.logi
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 
-Route::prefix('admin')->middleware('admin')->group(function () {
+Route::prefix('admin')->middleware('permission:admin|editer')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
 
@@ -150,7 +150,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::get('{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:full|user_edit');
         Route::put('{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:full|user_edit');
         Route::delete('{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:full|user_edit');
-
         Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash')->middleware('permission:full|user_edit');
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
