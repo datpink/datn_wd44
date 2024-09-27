@@ -63,7 +63,7 @@ Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.logi
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 
-Route::prefix('admin')->middleware('permission:admin|editer')->group(function () {
+Route::prefix('admin')->middleware('permission:full|editor')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
 
