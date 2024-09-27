@@ -44,6 +44,8 @@ class AdminController extends Controller
                 return redirect()->route('admin.index'); // Điều hướng đến trang admin
             } elseif ($user->hasRole('editor')) {
                 return redirect()->route('admin.index'); // Điều hướng đến trang editor
+            } elseif ($user->hasRole('user')) {
+                return redirect()->route('client.index'); // Điều hướng đến trang editor
             } else {
                 Auth::logout(); // Đăng xuất nếu không có quyền phù hợp
                 return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');

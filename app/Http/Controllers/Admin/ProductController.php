@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Catalogue;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -38,29 +39,34 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        // Lưu ảnh nếu có
-        $imagePath = null;
-        if ($request->hasFile('image_url')) {
-            $imagePath = Storage::put('images', $request->image_url);
+        try {
+            DB::beginTransaction();
+            $imagePath = null;
+            if ($request->hasFile('image_url')) {
+                $imagePath = Storage::put('images', $request->image_url);
+            }
+
+            // Tạo mới sản phẩm
+            Product::create([
+                'name' => $request->name,
+                'catalogue_id' => $request->catalogue_id,
+                'brand_id' => $request->brand_id,
+                'slug' => $request->slug,
+                'sku' => $request->sku,
+                'price' => $request->price,
+                'stock' => $request->stock,
+                'weight' => $request->weight,
+                'dimensions' => $request->dimensions,
+                'image_url' => $imagePath,
+                'description' => $request->description,
+                'is_active' => $request->is_active,
+            ]);
+            DB::commit();
+            return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('errors', $th->getMessage());
         }
-
-        // Tạo mới sản phẩm
-        Product::create([
-            'name' => $request->name,
-            'catalogue_id' => $request->catalogue_id,
-            'brand_id' => $request->brand_id,
-            'slug' => $request->slug,
-            'sku' => $request->sku,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'weight' => $request->weight,
-            'dimensions' => $request->dimensions,
-            'image_url' => $imagePath,
-            'description' => $request->description,
-            'is_active' => $request->is_active,
-        ]);
-
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
     }
 
 
@@ -92,67 +98,42 @@ class ProductController extends Controller
      */
     public function update(Request $request, $product)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:products,slug,' . $product,
-            'sku' => 'nullable|string|max:255',
-            'price' => 'required|numeric',
-            'weight' => 'nullable|numeric',
-            'description' => 'nullable|string',
-            'dimensions' => 'nullable|string|max:255',
-            // Các validate khác
-        ]);
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'slug' => 'required|string|max:255|unique:products,slug,' . $product,
+                'sku' => 'nullable|string|max:255',
+                'price' => 'required|numeric',
+                'weight' => 'nullable|numeric',
+                'description' => 'nullable|string',
+                'dimensions' => 'nullable|string|max:255',
+                // Các validate khác
+            ]);
 
-        $product = Product::findOrFail($product);
-        $product->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'sku' => $request->sku,
-            'price' => $request->price,
-            'weight' => $request->weight,
-            'dimensions' => $request->dimensions,
-            'is_active' => $request->is_active,
-            'brand_id' => $request->brand_id,
-            'description' => $request->description,
-            'catalogue_id' => $request->catalogue_id,
-        ]);
+            $product = Product::findOrFail($product);
+            $product->update([
+                'name' => $request->name,
+                'slug' => $request->slug,
+                'sku' => $request->sku,
+                'price' => $request->price,
+                'weight' => $request->weight,
+                'dimensions' => $request->dimensions,
+                'is_active' => $request->is_active,
+                'brand_id' => $request->brand_id,
+                'description' => $request->description,
+                'catalogue_id' => $request->catalogue_id,
+            ]);
 
-        if ($request->file("image_url")) {
-            $imagePath = $request->file("image_url")->store('products_images', 'public');
-            $product->update(['image_url' => $imagePath]);
+            if ($request->file("image_url")) {
+                $imagePath = $request->file("image_url")->store('products_images', 'public');
+                $product->update(['image_url' => $imagePath]);
+            }
+            DB::commit();
+            return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with('errors', $th->getMessage());
         }
-
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
     }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        $product->delete(); // Xóa mềm
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được đưa vào thùng rác.');
-    }
-
-    public function trash()
-    {
-        $title = 'Thùng Rác';
-        $products = Product::onlyTrashed()->paginate('10'); // Lấy sản phẩm trong thùng rác
-        return view('admin.products.trash', compact('products', 'title'));
-    }
-    public function restore($id)
-    {
-        $product = Product::onlyTrashed()->findOrFail($id);
-        $product->restore();
-        return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được khôi phục.');
-
-
-    }
-    public function forceDelete($id)
-    {
-        $product = Product::onlyTrashed()->findOrFail($id);
-        $product->forceDelete(); // Xóa vĩnh viễn
-        return redirect()->route('products.trash')->with('success', 'Sản phẩm đã được xóa vĩnh viễn.');
-    }
-
 }
