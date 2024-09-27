@@ -10,15 +10,17 @@ class ProductVariantController extends Controller
 {
     public function index()
     {
+        $title = 'Danh Sách Biến Thể';
         // Hiển thị tất cả các bản ghi, bao gồm cả trạng thái 'inactive'
         $productVariants = ProductVariant::with('product')->latest()->get();
-        return view('admin.product-variants.index', compact('productVariants'));
+        return view('admin.product-variants.index', compact('productVariants', 'title'));
     }
 
     public function create()
-    { 
+    {
+        $title = 'Thêm Mới Biến Thể';
         $products = Product::all();
-        return view('admin.product-variants.create', compact(b'products'));
+        return view('admin.product-variants.create', compact('products', 'title'));
     }
 
     public function store(Request $request)
@@ -40,10 +42,11 @@ class ProductVariantController extends Controller
 
     public function edit($id)
     {
+        $title = 'Cập Nhật Biến Thể';
         $productVariant = ProductVariant::findOrFail($id);
         $products = Product::all();
 
-        return view('admin.product-variants.edit', compact('productVariant', 'products'));
+        return view('admin.product-variants.edit', compact('productVariant', 'products', 'title'));
     }
 
     public function update(Request $request, $id)

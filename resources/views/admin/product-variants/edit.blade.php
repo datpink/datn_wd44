@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Sửa Sản Phẩm Variant</div>
-                    <a href="{{ route('product-variants.index') }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('product-variants.index') }}" class="btn btn-sm rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -105,7 +105,7 @@
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            <button type="submit" class="btn rounded-pill btn-primary">Cập nhật</button>
                         </div>
                     </form>
                 </div>
