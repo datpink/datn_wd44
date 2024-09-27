@@ -63,7 +63,7 @@ Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.logi
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 //
-// Route::prefix('admin')->middleware('permission:full|editor')->group(function () {
+Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
 
@@ -154,4 +154,4 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-// });
+});
