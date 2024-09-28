@@ -35,7 +35,7 @@
                                 <div class="row g-2">
                                     <div class="col-auto">
                                         <input type="text" id="id" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng"
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm"
                                             value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
