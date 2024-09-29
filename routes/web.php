@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CommentController;
@@ -52,6 +53,7 @@ Route::prefix('shop')->group(function () {
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
+
 });
 
 // Route cho trang home không yêu cầu xác thực
@@ -128,6 +130,14 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     // Routes Cho Product
     Route::resource('products', AdminProductController::class);
+
+    //route banner
+    Route::resource('banners', BannerController::class);
+    // Banners soft delete routes
+    Route::get('banners-trash', [BannerController::class, 'trash'])->name('banners.trash');
+    Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
+    Route::delete('banners/{id}/force-delete', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
+
 
 
     //Route product variant
