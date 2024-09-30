@@ -23,7 +23,8 @@
                         <div class="kobolg-banner style-01">
                             <div class="banner-inner">
                                 <figure class="banner-thumb">
-                                    <img src="{{ asset('theme/client/assets/images/banner12.jpg') }}" class="attachment-full size-full" alt="img">
+                                    <img src="{{ asset('theme/client/assets/images/banner12.jpg') }}"
+                                        class="attachment-full size-full" alt="img">
                                 </figure>
                                 <div class="banner-info">
                                     <div class="banner-content">
@@ -46,7 +47,8 @@
                         <div class="kobolg-banner style-01">
                             <div class="banner-inner">
                                 <figure class="banner-thumb">
-                                    <img src="{{ asset('theme/client/assets/images/banner13.jpg') }}" class="attachment-full size-full" alt="img">
+                                    <img src="{{ asset('theme/client/assets/images/banner13.jpg') }}"
+                                        class="attachment-full size-full" alt="img">
                                 </figure>
                                 <div class="banner-info">
                                     <div class="banner-content">
@@ -75,484 +77,84 @@
             <div class="container">
                 <div class="kobolg-heading style-01">
                     <div class="heading-inner">
-                        <h3 class="title">Best Seller</h3>
+                        <h3 class="title">Nổi Bật</h3>
                         <div class="subtitle">Made with care for your little ones, our products are perfect for every
-                            occasion. Check it out.
-                        </div>
+                            occasion. Check it out.</div>
                     </div>
                 </div>
+
                 <div class="kobolg-products style-02">
                     <div class="response-product product-list-owl owl-slick equal-container better-height"
-                        data-slick="{&quot;arrows&quot;:false,&quot;slidesMargin&quot;:30,&quot;dots&quot;:true,&quot;infinite&quot;:false,&quot;speed&quot;:300,&quot;slidesToShow&quot;:4,&quot;rows&quot;:2}"
-                        data-responsive="[{&quot;breakpoint&quot;:480,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesMargin&quot;:&quot;30&quot;}}]">
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-34 product type-product status-publish has-post-thumbnail product_cat-light product_cat-new-arrivals product_tag-light product_tag-hat product_tag-sock first instock sale featured shipping-taxable product-type-grouped">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro61-1-270x350.jpg') }}"
-                                            alt="Black Watches" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Black Watches</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>79.00</span> – <span
-                                            class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>139.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                        data-slick='{"arrows":false,"slidesMargin":30,"dots":true,"infinite":false,"speed":300,"slidesToShow":4,"rows":2}'
+                        data-responsive='[
+                            {"breakpoint":480,"settings":{"slidesToShow":2,"slidesMargin":"10"}},
+                            {"breakpoint":768,"settings":{"slidesToShow":2,"slidesMargin":"10"}},
+                            {"breakpoint":992,"settings":{"slidesToShow":3,"slidesMargin":"20"}},
+                            {"breakpoint":1200,"settings":{"slidesToShow":3,"slidesMargin":"20"}},
+                            {"breakpoint":1500,"settings":{"slidesToShow":4,"slidesMargin":"30"}}
+                        ]'>
+
+                        @foreach ($featuredProducts as $product)
+                            <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
+                                <div class="product-inner tooltip-top">
+                                    <div class="product-thumb">
+                                        <a class="thumb-link" href="#" tabindex="0">
+                                            @if ($product->image_url && \Storage::exists($product->image_url))
+                                                <img src="{{ \Storage::url($product->image_url) }}"
+                                                    alt="{{ $product->name }}" width="270PX" height="350px">
+                                            @else
+                                                Không có ảnh
+                                            @endif
+                                        </a>
+                                        <div class="flash">
+                                            @if ($product->condition === 'new')
+                                                <span class="onsale"><span class="number">-18%</span></span>
+                                                <span class="onnew"><span class="text">New</span></span>
+                                            @endif
                                         </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
                                     </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            View products</a>
+                                    <div class="product-info">
+                                        <div class="rating-wapper nostar">
+                                            <div class="star-rating"><span style="width:0%">Rated <strong
+                                                        class="rating">0</strong> out of 5</span></div>
+                                            <span class="review">(0)</span>
+                                        </div>
+                                        <h3 class="product-name product_title">
+                                            <a href="{{ route('products.show', $product->id) }}"
+                                                tabindex="0">{{ $product->name }}</a>
+                                        </h3>
+                                        <span class="price">
+                                            <span class="kobolg-Price-amount amount text-danger">
+                                                <del>
+                                                    <span
+                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, 2) }}
+                                                </del>
+                                            </span>
+                                            @if ($product->discount_price)
+                                                <span class="kobolg-Price-amount amount old-price">
+                                                    <span
+                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price ?? $product->price, 2) }}
+                                                </span>
+                                            @endif
+                                        </span>
                                     </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
+                                    <div class="group-button clearfix">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_grouped">View products</a>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-32 product type-product status-publish has-post-thumbnail product_cat-light product_cat-chair product_cat-sofas product_tag-hat product_tag-sock  instock sale featured shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro71-1-270x350.jpg') }}"
-                                            alt="Gaming Mouse" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onsale"><span class="number">-18%</span></span>
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Gaming Mouse</a>
-                                    </h3>
-                                    <span class="price"><del><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>109.00</span></del>
-                                        <ins><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>89.00</span></ins></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-30 product type-product status-publish has-post-thumbnail product_cat-light product_cat-bed product_cat-specials product_tag-light product_tag-table product_tag-sock last instock featured downloadable shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro101-1-270x350.jpg') }}"
-                                            alt="Mac 27 Inch" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button" data-product_id="30"
-                                        tabindex="0">Quick
-                                        View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Mac 27 Inch</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>60.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-31 product type-product status-publish has-post-thumbnail product_cat-light product_cat-sofas product_tag-hat first instock sale featured shipping-taxable product-type-grouped">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro91-1-270x350.jpg') }}"
-                                            alt="Classic Watches" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Classic Watches</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>89.00</span> – <span
-                                            class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>139.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            View products</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-29 product type-product status-publish has-post-thumbnail product_cat-new-arrivals product_cat-specials product_tag-light product_tag-sock  instock featured downloadable shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro1113-270x350.jpg') }}"
-                                            alt="Red Consoles" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Red Consoles</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>129.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-28 product type-product status-publish has-post-thumbnail product_cat-light product_cat-chair product_cat-sofas product_tag-light product_tag-sock last instock sale featured shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro1211-2-270x350.jpg') }}"
-                                            alt="Modern Watches" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onsale"><span class="number">-14%</span></span>
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper ">
-                                        <div class="star-rating"><span style="width:100%">Rated <strong
-                                                    class="rating">5.00</strong> out of 5</span></div>
-                                        <span class="review">(1)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Modern Watches</a>
-                                    </h3>
-                                    <span class="price"><del><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>138.00</span></del>
-                                        <ins><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>119.00</span></ins></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-26 product type-product status-publish has-post-thumbnail product_cat-light product_cat-chair product_cat-sofas product_tag-light product_tag-hat first instock featured shipping-taxable product-type-external">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro141-1-270x350.jpg') }}"
-                                            alt="Smart Monitor" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper ">
-                                        <div class="star-rating"><span style="width:100%">Rated <strong
-                                                    class="rating">5.00</strong> out of 5</span></div>
-                                        <span class="review">(1)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Smart Monitor</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>207.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Buy it on Amazon</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-25 product type-product status-publish has-post-thumbnail product_cat-light product_cat-chair product_cat-specials product_tag-light product_tag-sock  instock sale featured shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro151-1-270x350.jpg') }}"
-                                            alt="Cellphone Factory" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onsale"><span class="number">-11%</span></span>
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button" data-product_id="25"
-                                        tabindex="0">Quick
-                                        View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="0">Cellphone Factory</a>
-                                    </h3>
-                                    <span class="price"><del><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>89.00</span></del>
-                                        <ins><span class="kobolg-Price-amount amount"><span
-                                                    class="kobolg-Price-currencySymbol">$</span>79.00</span></ins></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-24 product type-product status-publish has-post-thumbnail product_cat-chair product_cat-table product_cat-new-arrivals product_tag-light product_tag-hat product_tag-sock last instock featured shipping-taxable purchasable product-type-variable has-default-attributes">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro161-1-270x350.jpg') }}"
-                                            alt="Gaming Mouse" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <form class="variations_form cart">
-                                        <table class="variations">
-                                            <tbody>
-                                                <tr>
-                                                    <td class="value">
-                                                        <select title="box_style" data-attributetype="box_style"
-                                                            data-id="pa_color" class="attribute-select "
-                                                            name="attribute_pa_color"
-                                                            data-attribute_name="attribute_pa_color"
-                                                            data-show_option_none="yes" tabindex="-1">
-                                                            <option data-type="" data-pa_color="" value="">
-                                                                Choose an option
-                                                            </option>
-                                                            <option data-width="30" data-height="30" data-type="color"
-                                                                data-pa_color="#3155e2" value="blue">Blue
-                                                            </option>
-                                                            <option data-width="30" data-height="30" data-type="color"
-                                                                data-pa_color="#49aa51" value="green">Green
-                                                            </option>
-                                                            <option data-width="30" data-height="30" data-type="color"
-                                                                data-pa_color="#ff63cb" value="pink">Pink
-                                                            </option>
-                                                        </select>
-                                                        <div class="data-val attribute-pa_color"
-                                                            data-attributetype="box_style"><a class="change-value color"
-                                                                href="#" style="background: #3155e2;"
-                                                                data-value="blue"></a><a class="change-value color"
-                                                                href="#" style="background: #49aa51;"
-                                                                data-value="green"></a><a class="change-value color"
-                                                                href="#" style="background: #ff63cb;"
-                                                                data-value="pink"></a></div>
-                                                        <a class="reset_variations" href="#"
-                                                            tabindex="-1">Clear</a>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </form>
-                                    <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="-1">Gaming Mouse</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>45.00</span> – <span
-                                            class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>54.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Select options</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="product-item featured_products style-02 rows-space-30 post-22 product type-product status-publish has-post-thumbnail product_cat-table product_cat-bed product_cat-lamp product_tag-table product_tag-hat product_tag-sock first instock featured downloadable shipping-taxable purchasable product-type-simple">
-                            <div class="product-inner tooltip-top">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro181-2-270x350.jpg') }}"
-                                            alt="Red Mouse" width="270" height="350">
-                                    </a>
-                                    <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
-                                    </div>
-                                    <a href="#" class="button yith-wcqv-button" data-product_id="22"
-                                        tabindex="-1">Quick
-                                        View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating"><span style="width:0%">Rated <strong
-                                                    class="rating">0</strong> out of 5</span></div>
-                                        <span class="review">(0)</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="#" tabindex="-1">Red Mouse</a>
-                                    </h3>
-                                    <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">$</span>98.00</span></span>
-                                </div>
-                                <div class="group-button clearfix">
-                                    <div class="yith-wcwl-add-to-wishlist">
-                                        <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to cart</a>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <a href="#" class="button product_type_grouped">
-                                            Add to cart</a>
-                                    </div>
-                                    <div class="kobolg product compare-button">
-                                        <a href="#" class="compare button">Compare</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -564,7 +166,8 @@
                 <!-- GGI 2 -->
                 <div class="banner-inner">
                     <figure class="banner-thumb">
-                        <img src="{{ asset('theme/client/assets/images/banner101.jpg') }}" class="attachment-full size-full" alt="img">
+                        <img src="{{ asset('theme/client/assets/images/banner101.jpg') }}" class="attachment-full size-full"
+                            alt="img">
                     </figure>
                     <div class="banner-info container">
                         <div class="banner-content">
@@ -609,7 +212,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro13-1-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro13-1-270x350.jpg') }}"
                                             alt="Meta Watches                                                "
                                             width="270" height="350">
                                     </a>
@@ -651,7 +255,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro302-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro302-270x350.jpg') }}"
                                             alt="Circle Watches" width="270" height="350">
                                     </a>
                                     <div class="flash">
@@ -692,7 +297,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro31-1-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro31-1-270x350.jpg') }}"
                                             alt="Blue Smartphone" width="270" height="350">
                                     </a>
                                     <div class="flash">
@@ -733,7 +339,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro41-1-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro41-1-270x350.jpg') }}"
                                             alt="White Watches" width="270" height="350">
                                     </a>
                                     <div class="flash">
@@ -774,7 +381,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro51012-1-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro51012-1-270x350.jpg') }}"
                                             alt="Multi Cellphone" width="270" height="350">
                                     </a>
                                     <div class="flash">
@@ -818,7 +426,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="{{ asset('theme/client/assets/images/apro61-1-270x350.jpg') }}"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro61-1-270x350.jpg') }}"
                                             alt="Black Watches" width="270" height="350">
                                     </a>
                                     <div class="flash">
@@ -867,7 +476,8 @@
                 <!-- GGI 3  -->
                 <div class="banner-inner">
                     <figure class="banner-thumb">
-                        <img src="{{ asset('theme/client/assets/images/banner28.jpg') }}" class="attachment-full size-full" alt="img">
+                        <img src="{{ asset('theme/client/assets/images/banner28.jpg') }}"
+                            class="attachment-full size-full" alt="img">
                     </figure>
                     <div class="banner-info container">
                         <div class="banner-content">
@@ -895,12 +505,11 @@
         </div>
         <div class="section-001">
 
-            <!-- blog  -->
+            <!-- blog -->
             <div class="container">
                 <div class="kobolg-heading style-01">
                     <div class="heading-inner">
-                        <h3 class="title">
-                            From Our Blog </h3>
+                        <h3 class="title">Bài Viết Nổi Bật</h3>
                         <div class="subtitle">
                             Lorem ipsum dolor sit amet consectetur adipiscing elit erat vehicula ad, mollis viverra
                             vulputate
@@ -909,175 +518,44 @@
                 </div>
                 <div class="kobolg-blog style-01">
                     <div class="blog-list-owl owl-slick equal-container better-height"
-                        data-slick="{&quot;arrows&quot;:false,&quot;slidesMargin&quot;:30,&quot;dots&quot;:true,&quot;infinite&quot;:false,&quot;speed&quot;:300,&quot;slidesToShow&quot;:3,&quot;rows&quot;:1}"
-                        data-responsive="[{&quot;breakpoint&quot;:480,&quot;settings&quot;:{&quot;slidesToShow&quot;:1,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;30&quot;}}]">
-                        <article
-                            class="post-item post-grid rows-space-0 post-195 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-table category-life-style tag-light tag-life-style">
-                            <div class="post-inner blog-grid">
-                                <div class="post-thumb">
-                                    <a href="#" tabindex="0">
-                                        <img src="{{ asset('theme/client/assets/images/blogpost1-370x330.jpg') }}"
-                                            class="img-responsive attachment-370x330 size-370x330" alt="img"
-                                            width="370" height="330"> </a>
-                                    <a class="datebox" href="#" tabindex="0">
-                                        <span>19</span>
-                                        <span>Dec</span>
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <div class="post-author">
-                                            By:<a href="#" tabindex="0">
-                                                admin </a>
-                                        </div>
-                                        <div class="post-comment-icon">
-                                            <a href="#" tabindex="0">
-                                                0 </a>
-                                        </div>
+                        data-slick='{"arrows":false,"slidesMargin":30,"dots":true,"infinite":false,"speed":300,"slidesToShow":3,"rows":1}'
+                        data-responsive='[{"breakpoint":480,"settings":{"slidesToShow":1,"slidesMargin":"10"}},{"breakpoint":768,"settings":{"slidesToShow":2,"slidesMargin":"10"}},{"breakpoint":992,"settings":{"slidesToShow":2,"slidesMargin":"20"}},{"breakpoint":1200,"settings":{"slidesToShow":3,"slidesMargin":"20"}},{"breakpoint":1500,"settings":{"slidesToShow":3,"slidesMargin":"30"}}]'>
+
+                        @foreach ($featuredPosts as $post)
+                            <article class="post-item post-grid rows-space-0">
+                                <div class="post-inner blog-grid">
+                                    <div class="post-thumb">
+                                        <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
+                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
+                                                class="img-responsive attachment-370x330 size-370x330"
+                                                width="370" height="330">
+                                        </a>
+                                        <a class="datebox" href="{{ route('posts.show', $post->id) }}" tabindex="0">
+                                            <span>{{ $post->created_at->format('d') }}</span>
+                                            <span>{{ $post->created_at->format('M') }}</span>
+                                        </a>
                                     </div>
-                                    <div class="post-info equal-elem">
-                                        <h2 class="post-title"><a href="#" tabindex="0">Not your ordinary multi
-                                                service.</a></h2>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales
-                                        quisque litora dapibus primis lacinia
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article
-                            class="post-item post-grid rows-space-0 post-192 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-fashion category-multi category-life-style tag-light tag-fashion tag-multi">
-                            <div class="post-inner blog-grid">
-                                <div class="post-thumb">
-                                    <a href="#" tabindex="0">
-                                        <img src="{{ asset('theme/client/assets/images/blogpost5-370x330.jpg') }}"
-                                            class="img-responsive attachment-370x330 size-370x330" alt="img"
-                                            width="370" height="330"> </a>
-                                    <a class="datebox" href="#" tabindex="0">
-                                        <span>19</span>
-                                        <span>Dec</span>
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <div class="post-author">
-                                            By:<a href="#" tabindex="0">
-                                                admin </a>
+                                    <div class="post-content">
+                                        <div class="post-meta">
+                                            <div class="post-author">
+                                                By: <a href="#">{{ $post->author_name ?? 'Unknown' }}</a>
+                                            </div>
+                                            <div class="post-comment-icon">
+                                                <a href="#" tabindex="0">{{ $post->comments_count }}</a>
+                                            </div>
                                         </div>
-                                        <div class="post-comment-icon">
-                                            <a href="#" tabindex="0">
-                                                0 </a>
+                                        <div class="post-info equal-elem">
+                                            <h2 class="post-title">
+                                                <a href="{{ route('posts.show', $post->id) }}"
+                                                    tabindex="0">{{ $post->title }}</a>
+                                            </h2>
+                                            <p>{{ $post->excerpt }}</p>
                                         </div>
                                     </div>
-                                    <div class="post-info equal-elem">
-                                        <h2 class="post-title"><a href="#" tabindex="0">We bring you the best by
-                                                working</a></h2>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales
-                                        quisque litora dapibus primis lacinia
-                                    </div>
                                 </div>
-                            </div>
-                        </article>
-                        <article
-                            class="post-item post-grid rows-space-0 post-189 post type-post status-publish format-video has-post-thumbnail hentry category-table category-life-style tag-multi tag-life-style post_format-post-format-video">
-                            <div class="post-inner blog-grid">
-                                <div class="post-thumb">
-                                    <a href="#" tabindex="0">
-                                        <img src="{{ asset('theme/client/assets/images/blogpost9-370x330.jpg') }}"
-                                            class="img-responsive attachment-370x330 size-370x330" alt="img"
-                                            width="370" height="330"> </a>
-                                    <a class="datebox" href="#" tabindex="0">
-                                        <span>19</span>
-                                        <span>Dec</span>
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <div class="post-author">
-                                            By:<a href="#" tabindex="0">
-                                                admin </a>
-                                        </div>
-                                        <div class="post-comment-icon">
-                                            <a href="#" tabindex="0">
-                                                0 </a>
-                                        </div>
-                                    </div>
-                                    <div class="post-info equal-elem">
-                                        <h2 class="post-title"><a href="#" tabindex="0">We design functional best
-                                                multi</a></h2>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales
-                                        quisque litora dapibus primis lacinia
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article
-                            class="post-item post-grid rows-space-0 post-186 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-life-style tag-life-style">
-                            <div class="post-inner blog-grid">
-                                <div class="post-thumb">
-                                    <a href="#" tabindex="-1">
-                                        <img src="{{ asset('theme/client/assets/images/blogpost4-370x330.jpg') }}"
-                                            class="img-responsive attachment-370x330 size-370x330" alt="img"
-                                            width="370" height="330"> </a>
-                                    <a class="datebox" href="#" tabindex="-1">
-                                        <span>19</span>
-                                        <span>Dec</span>
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <div class="post-author">
-                                            By:<a href="#" tabindex="-1">
-                                                admin </a>
-                                        </div>
-                                        <div class="post-comment-icon">
-                                            <a href="#" tabindex="-1">
-                                                0 </a>
-                                        </div>
-                                    </div>
-                                    <div class="post-info equal-elem">
-                                        <h2 class="post-title"><a href="#" tabindex="-1">The child is swimming
-                                                with a
-                                                buoy</a></h2>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales
-                                        quisque litora dapibus primis lacinia
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                        <article
-                            class="post-item post-grid rows-space-0 post-183 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-fashion tag-light tag-multi">
-                            <div class="post-inner blog-grid">
-                                <div class="post-thumb">
-                                    <a href="#" tabindex="-1">
-                                        <img src="{{ asset('theme/client/assets/images/blogpost2-370x330.jpg') }}"
-                                            class="img-responsive attachment-370x330 size-370x330" alt="img"
-                                            width="370" height="330"> </a>
-                                    <a class="datebox" href="#" tabindex="-1">
-                                        <span>19</span>
-                                        <span>Dec</span>
-                                    </a>
-                                </div>
-                                <div class="post-content">
-                                    <div class="post-meta">
-                                        <div class="post-author">
-                                            By:<a href="#" tabindex="-1">
-                                                admin </a>
-                                        </div>
-                                        <div class="post-comment-icon">
-                                            <a href="#" tabindex="-1">
-                                                0 </a>
-                                        </div>
-                                    </div>
-                                    <div class="post-info equal-elem">
-                                        <h2 class="post-title"><a href="#" tabindex="-1">Collection hiding beside
-                                                beige
-                                                wall</a></h2>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales
-                                        quisque litora dapibus primis lacinia
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
+                            </article>
+                        @endforeach
+
                     </div>
                 </div>
             </div>
@@ -1143,137 +621,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-        <div class="section-008">
-
-            <!-- slider -->
-            <div class="kobolg-instagram style-01">
-                <div class="instagram-owl owl-slick"
-                    data-slick="{&quot;arrows&quot;:false,&quot;slidesMargin&quot;:15,&quot;dots&quot;:false,&quot;infinite&quot;:false,&quot;speed&quot;:300,&quot;slidesToShow&quot;:5,&quot;rows&quot;:1}"
-                    data-responsive="[{&quot;breakpoint&quot;:480,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesMargin&quot;:&quot;15&quot;}},{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesMargin&quot;:&quot;15&quot;}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:5,&quot;slidesMargin&quot;:&quot;15&quot;}}]">
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="0">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta1.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">1
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="0">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta2.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="0">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta3.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="0">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta4.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="0">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta5.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="-1">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta6.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="-1">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta7.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="rows-space-0">
-                        <a target="_blank" href="#" class="item" tabindex="-1">
-                            <img class="img-responsive lazy" src="{{ asset('theme/client/assets/images/insta8.jpg') }}" alt="Home 01">
-                            <span class="instagram-info">
-                                <span class="social-wrap">
-                                    <span class="social-info">0
-                                        <i class="flaticon-chat"></i>
-                                    </span>
-                                    <span class="social-info">0
-                                        <i class="flaticon-heart-shape-outline"></i>
-                                    </span>
-                                </span>
-                            </span>
-                        </a>
                     </div>
                 </div>
             </div>

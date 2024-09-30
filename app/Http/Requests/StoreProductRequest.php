@@ -35,6 +35,8 @@ class StoreProductRequest extends FormRequest
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'is_active' => 'required',
+            'is_featured' => 'nullable|boolean', // Xác thực là boolean
+            'condition' => 'required|in:new,used,refurbished',
         ];
     }
 }

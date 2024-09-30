@@ -11,9 +11,10 @@ class OrdersTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('orders')->insert([
+        // Giả sử bạn đã có các user với ID từ 1 đến 3 trong bảng users
+        $orders = [
             [
-                'user_id'           => 1,
+                'user_id'           => 1, // Đảm bảo user_id này tồn tại trong bảng users
                 'promotion_id'      => 1,
                 'total_amount'      => 100.00,
                 'discount_amount'   => 20.00,
@@ -22,6 +23,8 @@ class OrdersTableSeeder extends Seeder
                 'shipping_address'  => '123 Main St, Anytown, USA',
                 'payment_method_id' => 1,
                 'phone_number'      => '0123456789',
+                'created_at'        => now(),
+                'updated_at'        => now(),
             ],
             [
                 'user_id'           => 2,
@@ -33,6 +36,8 @@ class OrdersTableSeeder extends Seeder
                 'shipping_address'  => '456 Elm St, Othertown, USA',
                 'payment_method_id' => 2,
                 'phone_number'      => '0987654321',
+                'created_at'        => now(),
+                'updated_at'        => now(),
             ],
             [
                 'user_id'           => 3,
@@ -44,7 +49,11 @@ class OrdersTableSeeder extends Seeder
                 'shipping_address'  => '789 Pine St, Newtown, USA',
                 'payment_method_id' => 1,
                 'phone_number'      => '0112233445',
+                'created_at'        => now(),
+                'updated_at'        => now(),
             ],
-        ]);
+        ];
+
+        DB::table('orders')->insert($orders);
     }
 }

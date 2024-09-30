@@ -27,6 +27,7 @@ class Product extends Model
         'ratings_avg',
         'ratings_count',
         'is_active',
+        'condition',
         'is_featured'
     ];
 

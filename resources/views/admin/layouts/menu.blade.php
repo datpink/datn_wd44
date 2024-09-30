@@ -113,7 +113,7 @@
 
                 <li class="sidebar-dropdown">
                     <a href="#">
-                        <i class="bi bi-tag"></i>
+                        <i class="bi bi-image"></i>  <!-- Thay đổi icon ở đây -->
                         <span class="menu-text">Quản lý Banner</span>
                     </a>
                     <div class="sidebar-submenu">
