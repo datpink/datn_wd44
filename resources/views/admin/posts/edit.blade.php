@@ -8,13 +8,13 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Chỉnh sửa Bài Viết</div>
-                    <a href="{{ route('posts.index') }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('posts.index') }}" class="btn rounded-pill btn-sm btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
                 <div class="card-body mt-4">
 
-                    @if (session('success'))
+                    {{-- @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
                     @if ($errors->any())
@@ -25,7 +25,7 @@
                                 @endforeach
                             </ul>
                         </div>
-                    @endif
+                    @endif --}}
 
                     <form action="{{ route('posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -102,7 +102,7 @@
                         </div>
 
                         <div>
-                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            <button type="submit" class="btn rounded-pill btn-primary">Cập nhật</button>
                         </div>
                     </form>
                 </div>

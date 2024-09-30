@@ -1,14 +1,17 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentReplyController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
+use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -50,6 +53,7 @@ Route::prefix('shop')->group(function () {
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
+
 });
 
 // Route cho trang home không yêu cầu xác thực
@@ -60,15 +64,11 @@ Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('adm
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-
-Route::prefix('admin')->middleware('admin')->group(function () {
+//
+Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-    // route users
-    Route::resource('users', UserController::class);
-    Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
-    Route::post('users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+
 
 
     // Route cho vai trò
@@ -110,6 +110,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
 
+    // route payment
+    Route::resource('/payment-methods', PaymentMethodController::class);
+    Route::get('payment-methods-trash', [PaymentMethodController::class, 'trash'])->name('payment-methods.trash');
+    Route::post('payment-methods/{id}/restore', [PaymentMethodController::class, 'restore'])->name('payment-methods.restore');
+    Route::delete('payment-methods/{id}/force-delete', [PaymentMethodController::class, 'forceDelete'])->name('payment-methods.forceDelete');
+
     // Routes cho Categories và Posts
     Route::resource('categories', CategoryController::class);
     Route::get('categories-trash', [CategoryController::class, 'trash'])->name('categories.trash');
@@ -124,11 +130,38 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Routes Cho Product
     Route::resource('products', AdminProductController::class);
-    Route::post('products/{id}/restore', [AdminProductController::class, 'restore'])->name('products.restore');
-    Route::get('products-trash', [AdminProductController::class, 'trash'])->name('products.trash');
-    Route::delete('products/{id}/force-delete', [AdminProductController::class, 'forceDelete'])->name('products.forceDelete');
+
+    //route banner
+    Route::resource('banners', BannerController::class);
+    // Banners soft delete routes
+    Route::get('banners-trash', [BannerController::class, 'trash'])->name('banners.trash');
+    Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
+    Route::delete('banners/{id}/force-delete', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
+
+
+
+    //Route product variant
+    Route::resource('product-variants', ProductVariantController::class);
+
+    // Route cho chức năng kích hoạt lại trạng thái
+    Route::post('product-variants/{id}/activate', [ProductVariantController::class, 'activate'])->name('product-variants.activate');
+
 
     // Permission
 
     Route::resource('permissions', PermissionController::class);
+
+    Route::group(['prefix' => 'users'], function () {
+
+        Route::get('/', [UserController::class, 'index'])->name('users.index')->middleware('permission:full|user_index|editor');
+        Route::get('create', [UserController::class, 'create'])->name('users.create')->middleware('permission:full|user_edit');
+        Route::post('create', [UserController::class, 'store'])->name('users.store')->middleware('permission:full|user_edit');
+        Route::get('{user}', [UserController::class, 'show'])->name('users.show')->middleware('permission:full|user_edit');
+        Route::get('{user}/edit', [UserController::class, 'edit'])->name('users.edit')->middleware('permission:full|user_edit');
+        Route::put('{user}', [UserController::class, 'update'])->name('users.update')->middleware('permission:full|user_edit');
+        Route::delete('{user}', [UserController::class, 'destroy'])->name('users.destroy')->middleware('permission:full|user_edit');
+        Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash')->middleware('permission:full|user_edit');
+        Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
+        Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
+    });
 });

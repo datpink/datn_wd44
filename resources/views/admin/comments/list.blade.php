@@ -1,6 +1,8 @@
 <!-- resources/views/admin/comments/index.blade.php -->
 @extends('admin.master')
 
+@section('title', 'Danh Sách Bình Luận')
+
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
@@ -103,12 +105,17 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-danger delete-btn">Xóa</button>
+                                                            class="btn rounded-pill btn-danger delete-btn">
+                                                            <i class="bi bi-trash"></i> Xóa
+                                                        </button>
                                                     </form>
-                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                        data-target="#responseModal" data-id="{{ $comment->id }}"
+                                                    <button type="button" class="btn rounded-pill btn-primary"
+                                                        data-toggle="modal" data-target="#responseModal"
+                                                        data-id="{{ $comment->id }}"
                                                         data-user="{{ $comment->user->name ?? '' }}"
-                                                        data-content="{{ $comment->content }}">Phản hồi</button>
+                                                        data-content="{{ $comment->content }}">
+                                                        <i class="bi bi-reply"></i> Phản hồi
+                                                    </button>
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RoleController extends Controller
 {
     public function index()
     {
+        $title = 'Danh Sách Vai Trò';
         $roles = Role::all();
-        return view('admin.roles.index', compact('roles'));
+        return view('admin.roles.index', compact('roles', 'title'));
     }
 
     public function create()
     {
-        return view('admin.roles.create');
+        $title = 'Thêm Mới Vai Trò';
+        $permissions = Permission::all();
+        return view('admin.roles.create', compact('permissions', 'title'));
     }
 
     public function store(Request $request)
@@ -35,21 +39,40 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
-        return view('admin.roles.edit', compact('role'));
+        $title = 'Cập Nhật Vai Trò';
+        $permissions = Permission::all();
+        return view('admin.roles.edit', compact('role', 'permissions', 'title'));
     }
 
     public function update(Request $request, Role $role)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'guard_name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
+{
+    // Validate data
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'guard_name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+    ]);
+    $validatedData = $request->except('_token', 'permissions');
 
-        $role->update($validatedData);
+    // Update role information
+    $update = $role->update($validatedData);
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+    if ($update && !empty($request->permissions)) {
+        // Lấy danh sách tên quyền hiện tại của role (không phải ID)
+        $permissionNames = $role->permissions->pluck('name')->toArray();
+
+        // Thu hồi các quyền hiện tại
+        if ($permissionNames) {
+            $role->revokePermissionTo($permissionNames);
+        }
+
+        // Gán quyền mới từ request (nên là tên của quyền)
+        $role->givePermissionTo($request->permissions);
     }
+
+    return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+}
+
 
     public function destroy(Role $role)
     {

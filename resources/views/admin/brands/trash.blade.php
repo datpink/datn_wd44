@@ -2,6 +2,8 @@
 
 @extends('admin.master')
 
+@section('title', 'Thùng Rác')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -38,18 +40,24 @@
                                         <td>
                                             <!-- Khôi phục -->
                                             <form action="{{ route('brands.restore', $brand->id) }}" method="POST"
-                                                style="display:inline-block;">
+                                                style="display:inline-block;" class="restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                <button type="button"
+                                                    class="btn btn-rounded btn-outline-success restore-btn">
+                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                </button>
                                             </form>
+
                                             <!-- Xóa vĩnh viễn -->
                                             <form action="{{ route('brands.delete-permanently', $brand->id) }}"
                                                 method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger delete-btn">Xóa vĩnh
-                                                    viễn</button>
+                                                <button type="submit"
+                                                    class="btn btn-outline-danger btn-rounded delete-btn">
+                                                    <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -90,16 +98,37 @@
                 });
             });
         });
+
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.restore-form');
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn khôi phục thương hiệu này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
 
-    @if (session('restore'))
+    @if (session()->has('restoreBrand'))
         <script>
             Swal.fire({
                 position: "top",
                 icon: "success",
-                title: "Khôi phục thành công",
+                title: "{{ session('restoreBrand') }}",
                 showConfirmButton: false,
-                timerProgressBar: true, // Hiển thị thanh thời gian
+                timerProgressBar: true,
                 timer: 1500
             });
         </script>

@@ -1,5 +1,7 @@
 @extends('admin.master')
 
+@section('title', 'Cập Nhật Thương Hiệu')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -40,8 +42,7 @@
                             <label for="description">Description:</label>
                             <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $brand->description) }}</textarea>
                         </div>
-                        <button type="submit" class="btn btn-success">Cập nhật Brand</button>
-                        <a href="{{ route('brands.index') }}" class="btn btn-secondary">Quay lại</a>
+                        <button type="submit" class="btn btn-rounded btn-success">Cập nhật Brand</button>
                     </form>
                 </div>
             </div>

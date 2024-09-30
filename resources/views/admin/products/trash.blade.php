@@ -10,13 +10,13 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Thùng Rác Sản Phẩm</div>
-                            <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-rounded">
+                            <a href="{{ route('products.index') }}" class="btn btn-secondary btn-rounded">
                                 <i class="bi bi-arrow-left me-2"></i> Trở về
                             </a>
                         </div>
                         <div class="card-body">
                             @if ($products->isEmpty())
-                                <p>Không có bài viết nào trong thùng rác.</p>
+                                <p>Không có sản phẩm nào trong thùng rác.</p>
                             @else
                                 <table class="table table-striped">
                                     <thead>
@@ -53,19 +53,26 @@
                                                 <td>{{ $product->deleted_at }}</td>
                                                 <td>
                                                     <!-- Khôi phục sản phẩm -->
-                                                    <form action="{{ route('products.restore', $product->id) }}"
+                                                    <form id="restore-form-{{ $product->id }}"
+                                                        action="{{ route('products.restore', $product->id) }}"
                                                         method="POST" class="d-inline-block">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-success">Khôi phục</button>
+                                                        <button type="submit" class="btn btn-outline-success btn-rounded restore-btn"
+                                                            data-id="{{ $product->id }}">
+                                                            <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                        </button>
                                                     </form>
 
                                                     <!-- Xóa vĩnh viễn sản phẩm -->
-                                                    <form action="{{ route('products.forceDelete', $product->id) }}"
-                                                        method="POST" class="d-inline-block"
-                                                        onsubmit="return confirm('Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này?');">
+                                                    <form id="force-delete-form-{{ $product->id }}"
+                                                        action="{{ route('products.forceDelete', $product->id) }}"
+                                                        method="POST" class="d-inline-block">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger">Xóa vĩnh viễn</button>
+                                                        <button type="submit" class="btn btn-outline-danger btn-rounded force-delete-btn"
+                                                            data-id="{{ $product->id }}">
+                                                            <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -84,4 +91,70 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        // Xác nhận khôi phục sản phẩm
+        document.querySelectorAll('.restore-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const formId = `restore-form-${this.dataset.id}`;
+                const form = document.getElementById(formId);
+                Swal.fire({
+                    position: 'top',
+                    title: 'Bạn có chắc chắn muốn khôi phục sản phẩm này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Gửi form để khôi phục sản phẩm
+                    }
+                });
+            });
+        });
+
+        // Xác nhận xóa vĩnh viễn sản phẩm
+        document.querySelectorAll('.force-delete-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const formId = `force-delete-form-${this.dataset.id}`;
+                const form = document.getElementById(formId);
+                Swal.fire({
+                    position: 'top',
+                    title: 'Bạn có chắc chắn muốn xóa vĩnh viễn sản phẩm này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); // Gửi form để xóa vĩnh viễn sản phẩm
+                    }
+                });
+            });
+        });
+
+        // Hiển thị thông báo khi khôi phục hoặc xóa thành công
+        @if (session('success'))
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        @endif
+    </script>
 @endsection

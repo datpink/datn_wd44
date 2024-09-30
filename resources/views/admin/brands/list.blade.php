@@ -1,5 +1,7 @@
 @extends('admin.master')
 
+@section('title', 'Danh Sách Thương Hiệu')
+
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
 @endsection
@@ -7,7 +9,7 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -19,7 +21,7 @@
                     {{ session('error') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -74,13 +76,18 @@
                                                 <td>{{ $brand->description }}</td>
                                                 <td>
                                                     <a href="{{ route('brands.edit', $brand) }}"
-                                                        class="btn btn-warning">Sửa</a>
+                                                        class="btn btn-warning btn-rounded">
+                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    </a>
+
                                                     <form action="{{ route('brands.destroy', $brand) }}" method="POST"
                                                         style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                            class="btn btn-danger delete-btn">Xóa</button>
+                                                            class="btn btn-danger btn-rounded delete-btn">
+                                                            <i class="bi bi-trash"></i> Xóa
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>
