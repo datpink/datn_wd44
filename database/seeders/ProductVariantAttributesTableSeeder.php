@@ -11,15 +11,15 @@ class ProductVariantAttributesTableSeeder extends Seeder
     {
         DB::table('product_variant_attributes')->insert([
             [
-                'product_variant_id' => 10,
+                'product_variant_id' => 1,
                 'attribute_value_id' => 1,
             ],
             [
-                'product_variant_id' => 11,
+                'product_variant_id' => 2,
                 'attribute_value_id' => 3,
             ],
             [
-                'product_variant_id' => 12,
+                'product_variant_id' => 3,
                 'attribute_value_id' => 2,
             ],
         ]);
