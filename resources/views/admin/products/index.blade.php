@@ -5,13 +5,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if (session('errors'))
-                <div class="alert alert-errors">{{ session('errors') }}</div>
-            @endif --}}
-
             <div class="row">
                 <div class="col-sm-12 col-12">
                     <div class="card">
@@ -48,6 +41,8 @@
                                         <th>Giá</th>
                                         <th>Kích thước</th>
                                         <th>Trạng thái</th>
+                                        <th>Nổi bật</th> <!-- Thêm cột Nổi bật -->
+                                        <th>Tình trạng</th> <!-- Thêm cột Tình trạng -->
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -69,25 +64,38 @@
                                             <td>{{ number_format($product->price, 0, ',', '.') }}đ</td>
                                             <td>{{ $product->dimensions }}</td>
                                             <td>
-                                                @if ($product->is_active == '1')
+                                                @if ($product->is_active)
                                                     <span class="badge rounded-pill bg-success">Kích hoạt</span>
-                                                @elseif ($product->is_active == '0')
+                                                @else
                                                     <span class="badge rounded-pill bg-danger">Không kích hoạt</span>
                                                 @endif
                                             </td>
-
-
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}"
-                                                    class="btn btn-warning btn-rounded">
+                                                @if ($product->is_featured)
+                                                    <span class="badge rounded-pill bg-warning">Nổi bật</span>
+                                                @else
+                                                    <span class="badge rounded-pill bg-secondary">Không nổi bật</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($product->condition == 'new')
+                                                    <span class="badge rounded-pill bg-success">Mới</span>
+                                                @elseif ($product->condition == 'used')
+                                                    <span class="badge rounded-pill bg-warning">Đã qua sử dụng</span>
+                                                @elseif ($product->condition == 'refurbished')
+                                                    <span class="badge rounded-pill bg-info">Tái chế</span>
+                                                @else
+                                                    <span class="badge rounded-pill bg-secondary">Không xác định</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
                                                     <i class="bi bi-pencil-square"></i> Sửa
                                                 </a>
-                                                <a href="{{ route('products.show', $product->id) }}"
-                                                    class="btn btn-info btn-rounded">
-                                                    <i class="bi bi-info-circle"></i> Chi tiết
+                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm rounded-pill" title="Chi tiết">
+                                                    <i class="bi bi-info-circle"></i> Show
                                                 </a>
                                             </td>
-
                                         </tr>
                                     @endforeach
                                 </tbody>

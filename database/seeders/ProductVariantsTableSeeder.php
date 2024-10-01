@@ -11,7 +11,7 @@ class ProductVariantsTableSeeder extends Seeder
     {
         DB::table('product_variants')->insert([
             [
-                'product_id'        => 1,
+                'product_id'        => 10,
                 'variant_name'      => 'iPhone 13 Red',
                 'price'             => 799.00,
                 'stock'             => 10,
@@ -19,7 +19,7 @@ class ProductVariantsTableSeeder extends Seeder
                 'image_url'         => 'path/to/iphone13-red.jpg',
             ],
             [
-                'product_id'        => 1,
+                'product_id'        => 11,
                 'variant_name'      => 'iPhone 13 Blue',
                 'price'             => 799.00,
                 'stock'             => 5,
@@ -27,7 +27,7 @@ class ProductVariantsTableSeeder extends Seeder
                 'image_url'         => 'path/to/iphone13-blue.jpg',
             ],
             [
-                'product_id'        => 2,
+                'product_id'        => 12,
                 'variant_name'      => 'Samsung Galaxy S21 Black',
                 'price'             => 999.00,
                 'stock'             => 8,

@@ -28,19 +28,23 @@
                             </a>
                         </div>
                         <div class="card-body">
-                            <form id="productForm" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                            <form id="productForm" action="{{ route('products.store') }}" method="POST"
+                                enctype="multipart/form-data">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="productName" class="form-label">Tên Sản Phẩm</label>
-                                    <input type="text" class="form-control" id="productName" name="name" value="{{ old('name') }}" oninput="ChangeToSlug()">
+                                    <input type="text" class="form-control" id="productName" name="name"
+                                        value="{{ old('name') }}" oninput="ChangeToSlug()">
                                 </div>
                                 <div class="mb-3">
                                     <label for="sku" class="form-label">SKU</label>
-                                    <input type="text" class="form-control" id="sku" name="sku" value="{{ old('sku') }}" readonly>
+                                    <input type="text" class="form-control" id="sku" name="sku"
+                                        value="{{ old('sku') }}" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="slug" class="form-label">Slug</label>
-                                    <input type="text" class="form-control" id="slug" name="slug" value="{{ old('slug') }}" readonly>
+                                    <input type="text" class="form-control" id="slug" name="slug"
+                                        value="{{ old('slug') }}" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="catalogue_id" class="form-label">Danh Mục</label>
@@ -61,27 +65,31 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="weight">Cân nặng (kg)</label>
-                                    <input type="text" name="weight" class="form-control" id="weight" value="{{ old('weight') }}">
+                                    <input type="text" name="weight" class="form-control" id="weight"
+                                        value="{{ old('weight') }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="dimensions">Kích thước (DxRxC)</label>
-                                    <input type="text" name="dimensions" class="form-control" id="dimensions" value="{{ old('dimensions') }}">
+                                    <input type="text" name="dimensions" class="form-control" id="dimensions"
+                                        value="{{ old('dimensions') }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="price" class="form-label">Giá</label>
-                                    <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{ old('price') }}">
+                                    <input type="number" step="0.01" class="form-control" id="price" name="price"
+                                        value="{{ old('price') }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="stock" class="form-label">Tồn Kho</label>
-                                    <input type="number" class="form-control" id="stock" name="stock" value="{{ old('stock') }}">
+                                    <input type="number" class="form-control" id="stock" name="stock"
+                                        value="{{ old('stock') }}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="image_url" class="form-label">Ảnh Sản Phẩm</label>
                                     <input type="file" class="form-control" id="image_url" name="image_url">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="description" class="form-label">Mô Tả</label>
-                                    <textarea class="form-control" id="description" name="description">{{ old('description') }}</textarea>
+                                    <label for="editor" class="form-label">Mô Tả</label>
+                                    <textarea class="form-control" id="editor" name="description">{{ old('description') }}</textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="is_active" class="form-label">Trạng Thái</label>
@@ -90,7 +98,25 @@
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
-                                <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo SKU</button>
+
+                                <div class="mb-3">
+                                    <label for="is_featured" class="form-label">Nổi bật</label>
+                                    <input type="checkbox" id="is_featured" name="is_featured" value="1"
+                                        {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="condition" class="form-label">Tình trạng</label>
+                                    <select class="form-select" id="condition" name="condition" required>
+                                        <option value="">Chọn tình trạng</option>
+                                        <option value="new">Mới</option>
+                                        <option value="used">Đã qua sử dụng</option>
+                                        <option value="refurbished">Tái chế</option>
+                                    </select>
+                                </div>
+
+                                <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo
+                                    SKU</button>
                                 <button type="submit" class="btn btn-rounded btn-primary">Thêm Mới</button>
                             </form>
                         </div>
@@ -99,6 +125,11 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor');
+    </script>
 
     <script>
         function ChangeToSlug() {
@@ -139,7 +170,7 @@
             document.getElementById('slug').value = slug;
         }
 
-        document.getElementById('generateSkuBtn').addEventListener('click', function () {
+        document.getElementById('generateSkuBtn').addEventListener('click', function() {
             const randomSku = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo SKU ngẫu nhiên
             document.getElementById('sku').value = randomSku;
         });
