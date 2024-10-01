@@ -59,9 +59,7 @@ Route::prefix('shop')->group(function () {
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
-// Route đăng nhập admin
-Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.post');
+// Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 //
@@ -151,7 +149,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     Route::resource('permissions', PermissionController::class);
 
-    Route::group(['prefix' => 'users'], function () {
+    Route::group(['prefix' => 'permissions:users|full'], function () {
 
         Route::get('/', [UserController::class, 'index'])->name('users.index')->middleware('permission:full|user_index|editor');
         Route::get('create', [UserController::class, 'create'])->name('users.create')->middleware('permission:full|user_edit');

@@ -16,6 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit items',
             'delete items',
             'create items',
+            'full',
         ];
 
         foreach ($permissions as $permission) {
