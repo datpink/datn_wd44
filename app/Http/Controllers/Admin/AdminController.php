@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AdminController extends Controller
 {
@@ -16,53 +17,12 @@ class AdminController extends Controller
     {
         return view('admin.login'); // Tạo view đăng nhập
     }
-
-    // Xử lý đăng nhập
-    public function login(Request $request)
-    {
-        // Validate input
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        $credentials = $request->only('email', 'password');
-
-        // Thực hiện đăng nhập
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            info('User logged in: ' . $user->email);
-
-            // Kiểm tra trạng thái tài khoản
-            if ($user->status === 'locked') {
-                Auth::logout(); // Đăng xuất nếu tài khoản bị khóa
-                return redirect()->back()->with('error', 'Tài khoản của bạn đã bị khóa.');
-            }
-
-            if ($user->hasRole('super_admin')) {
-                return redirect()->route('admin.index'); // Điều hướng đến trang admin
-            } elseif ($user->hasRole('editor')) {
-                return redirect()->route('admin.index'); // Điều hướng đến trang editor
-            } elseif ($user->hasRole('user')) {
-                return redirect()->route('client.index'); // Điều hướng đến trang user
-            } else {
-                Auth::logout(); // Đăng xuất nếu không có quyền phù hợp
-                return redirect()->back()->with('error', 'Bạn không có quyền truy cập.');
-            }
-        }
-
-        info('Login failed for: ' . $request->email);
-        return redirect()->back()->with('error', 'Email hoặc mật khẩu không hợp lệ.');
-    }
-
-
-
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate(); // Xóa session
         $request->session()->regenerateToken(); // Regenerate CSRF token
-        return redirect()->route('admin.login');
+        return redirect()->route('client.index')->withCookie(Cookie::forget('laravel_session'));
     }
 
     // Trang chính của admin
