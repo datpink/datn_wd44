@@ -38,7 +38,7 @@ php artisan db:seed
 
 php artisan migrate:refresh
 
-hehe
+
 
 Zaia Enterprise
 
@@ -48,6 +48,7 @@ Zaia Enterprise
 
 
 
+hello
 #git
 git branch -a
 git checkout tên

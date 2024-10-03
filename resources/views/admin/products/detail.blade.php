@@ -31,7 +31,8 @@
                             <!-- Danh mục -->
                             <div class="form-group">
                                 <label for="catalogue_id">Danh mục</label>
-                                <p class="form-control">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</p>
+                                <p class="form-control">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}
+                                </p>
                             </div>
 
                             <!-- Hình ảnh sản phẩm -->
@@ -39,7 +40,8 @@
                                 <label for="image_url">Hình ảnh</label>
                                 <br>
                                 @if ($product->image_url && \Storage::exists($product->image_url))
-                                    <img src="{{ \Storage::url($product->image_url) }}" alt="{{ $product->name }}" style="max-width: 100px; height: auto;">
+                                    <img src="{{ \Storage::url($product->image_url) }}" alt="{{ $product->name }}"
+                                        style="max-width: 100px; height: auto;">
                                 @else
                                     <p>Không có ảnh</p>
                                 @endif
@@ -81,10 +83,30 @@
                                 <p class="form-control">{{ $product->dimensions }}</p>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="is_featured" class="form-label">Nổi bật</label>
+                                <input type="checkbox" id="is_featured" name="is_featured"
+                                    {{ $product->is_featured ? 'checked' : '' }} disabled>
+                                <small class="form-text text-muted">Sản phẩm này
+                                    {{ $product->is_featured ? 'được' : 'không được' }} đánh dấu là nổi bật.</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="condition" class="form-label">Tình trạng</label>
+                                <select class="form-select" id="condition" name="condition" disabled>
+                                    <option value="new" {{ $product->condition == 'new' ? 'selected' : '' }}>Mới
+                                    </option>
+                                    <option value="used" {{ $product->condition == 'used' ? 'selected' : '' }}>Đã qua sử
+                                        dụng</option>
+                                    <option value="refurbished"
+                                        {{ $product->condition == 'refurbished' ? 'selected' : '' }}>Tái chế</option>
+                                </select>
+                            </div>
+
                             <!-- Mô tả sản phẩm -->
                             <div class="form-group">
                                 <label for="description">Mô tả sản phẩm</label>
-                                <p class="form-control">{{ $product->description }}</p>
+                                <p class="card">{!! $product->description !!}</p>
                             </div>
                         </div>
                     </div>

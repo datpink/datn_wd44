@@ -15,11 +15,11 @@ class ProductVariantAttributesTableSeeder extends Seeder
                 'attribute_value_id' => 1,
             ],
             [
-                'product_variant_id' => 1,
+                'product_variant_id' => 2,
                 'attribute_value_id' => 3,
             ],
             [
-                'product_variant_id' => 2,
+                'product_variant_id' => 3,
                 'attribute_value_id' => 2,
             ],
         ]);
