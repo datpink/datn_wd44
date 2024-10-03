@@ -53,7 +53,6 @@ Route::prefix('shop')->group(function () {
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
-
 });
 
 // Route cho trang home không yêu cầu xác thực

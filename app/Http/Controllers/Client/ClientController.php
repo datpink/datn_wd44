@@ -32,4 +32,5 @@ class ClientController extends Controller
 
         return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'featuredProducts', 'productsByCondition', 'featuredPosts'));
     }
+
 }
