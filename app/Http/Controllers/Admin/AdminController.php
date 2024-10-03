@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\Cookie;
 
 class AdminController extends Controller
 {
-    // Hiển thị form đăng nhập cho Admin
-    public function showLoginForm()
-    {
-        return view('admin.login'); // Tạo view đăng nhập
-    }
     public function logout(Request $request)
     {
         Auth::logout();
@@ -49,19 +44,5 @@ class AdminController extends Controller
         $title = 'Quản Lý Người Dùng';
         $users = User::with('roles')->paginate(10); // Lấy danh sách người dùng kèm theo vai trò của họ
         return view('admin.users.index', compact('users', 'title'));
-    }
-
-    // Cập nhật vai trò người dùng
-    public function updateUserRole(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-        $request->validate([
-            'role' => 'required|string|exists:roles,name', // Kiểm tra vai trò hợp lệ
-        ]);
-
-        // Cập nhật vai trò người dùng
-        $user->syncRoles($request->role);
-
-        return redirect()->route('admin.users.index')->with('success', 'Vai trò của người dùng đã được cập nhật.');
     }
 }
