@@ -18,7 +18,7 @@
                                 @if ($catalogue->status == 'active')
                                     <li id="menu-item-886"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
-                                        <a class="azeroth-menu-item-title" title="Camera"
+                                        <a class="azeroth-menu-item-title" title="menu"
                                             href="{{ route('client.productByCatalogues', $catalogue->slug) }}"><span
                                                 class="icon flaticon-technology"></span>{{ $catalogue->name }}</a>
                                     </li>
@@ -62,14 +62,14 @@
                                                                     <!-- Kiểm tra trạng thái cho child -->
                                                                     <li>
                                                                         <a
-                                                                            href="{{ route('client.products.index', ['catalogues' => $child->id]) }}">{{ $child->name }}</a>
+                                                                            href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
                                                                     </li>
                                                                 @endif
                                                             @endforeach
                                                         </ul>
                                                     </div>
                                                 </div>
-                                              
+
                                             </div>
                                         @endif
                                     @endforeach
@@ -236,6 +236,3 @@
         </div>
     </div>
 </div>
-
-
-

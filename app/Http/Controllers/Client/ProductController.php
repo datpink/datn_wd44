@@ -22,19 +22,33 @@ class ProductController extends Controller
         return view('client.products.product-detail', compact('product'));
     }
 
-    public function productByCatalogues(string $slug)
+    public function productByCatalogues(string $parentSlug, $childSlug = null)
     {
-        $catalogues = Catalogue::where('slug', $slug)->firstOrFail();
-        
-        $childCategories = Catalogue::where('parent_id', $catalogues->id)
-            ->where('status', 'active')
-            ->pluck('id');
+        $catalogues = Catalogue::where('slug', $parentSlug)->firstOrFail();
 
-        // $childCategories->push($catalogues->id);
-        // dd($childCategories);
+        // dd($catalogues);
+
+        if ($childSlug) {
+            // dd($childCatalogues);
+
+            $childCatalogues = Catalogue::where('slug', $childSlug)
+                ->where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+
+            // dd($childCatalogues);
+        } else {
+            $childCatalogues = Catalogue::where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+        }
+
+        // dd($childCatalogues);
+
+        // $childCatalogues->push($catalogues->id);
 
         $productByCatalogues = Product::with('catalogue')
-            ->whereIn('catalogue_id', $childCategories)
+            ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1)
             ->paginate(10);
 
@@ -42,4 +56,5 @@ class ProductController extends Controller
 
         return view('client.products.by-catalogue', compact('productByCatalogues'));
     }
+
 }
