@@ -18,10 +18,18 @@ trait ManagesOrders
         $order = Order::findOrFail(id: $id);
 
         $order->status = $request->input('status');
+
+        // Nếu trạng thái được cập nhật là "shipped", cập nhật trạng thái thanh toán
+        if ($order->status === 'shipped') {
+            $order->payment_status = 'paid'; // Cập nhật trạng thái thanh toán
+        } elseif ($order->status === 'canceled' || $order->status === 'refunded') {
+            $order->payment_status = 'pending'; // Cập nhật trạng thái thanh toán thành chưa thanh toán
+        }
+
         $order->save();
 
         return redirect()->route('orders.index')
-                         ->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
+            ->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
     }
 
 }

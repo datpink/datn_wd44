@@ -60,3 +60,5 @@ git commit -m "nd"
 git pull
 git pull origin main
 git push
+
+composer require laravel/socialite
