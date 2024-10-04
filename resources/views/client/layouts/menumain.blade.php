@@ -19,7 +19,7 @@
                                     <li id="menu-item-886"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
                                         <a class="azeroth-menu-item-title" title="Camera"
-                                            href="#"><span
+                                            href="{{ route('client.productByCatelogues', $catalogue->slug) }}"><span
                                                 class="icon flaticon-technology"></span>{{ $catalogue->name }}</a>
                                     </li>
                                 @endif
@@ -94,7 +94,7 @@
                                                 <div class="kobolg-listitem style-01">
                                                     <div class="listitem-inner">
                                                         <h4 class="title"><a
-                                                                href="#">{{ $catalogues->name }}</a>
+                                                                href="{{ route('client.productByCatelogues', $catalogues->slug) }}">{{ $catalogues->name }}</a>
                                                         </h4>
                                                         <ul class="listitem-list mb-3">
                                                             @foreach ($catalogues->children as $child)
@@ -109,6 +109,7 @@
                                                         </ul>
                                                     </div>
                                                 </div>
+                                              
                                             </div>
                                         @endif
                                     @endforeach
@@ -275,3 +276,6 @@
         </div>
     </div>
 </div>
+
+
+
