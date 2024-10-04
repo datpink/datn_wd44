@@ -73,7 +73,7 @@
 
 
                                     <div class="text-center mt-2 mb-3">
-                                        <a href="" class="btn-light social-button" style="margin-right: 70px;">
+                                        <a href="{{ route('login.google') }}" class="btn-light social-button" style="margin-right: 70px;">
                                             <img src="{{ asset('images/search.png') }}" alt="Google" style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Google</span>
                                         </a>
