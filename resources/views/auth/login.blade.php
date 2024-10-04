@@ -78,7 +78,7 @@
                                             <span style="margin-left: 5px;">Google</span>
                                         </a>
 
-                                        <a href="" class="btn-light social-button" style="margin-right: 5px;">
+                                        <a href="{{ route('login.facebook') }}" class="btn-light social-button" style="margin-right: 5px;">
                                             <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Facebook</span>
                                         </a>
@@ -140,5 +140,4 @@
         background-color: transparent;
     }
     </style>
-
 @endsection
