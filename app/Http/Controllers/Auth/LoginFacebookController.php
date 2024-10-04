@@ -3,63 +3,52 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginFacebookController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Chuyển hướng đến Facebook để đăng nhập
+    public function redirectToFacebook()
     {
-        //
+        return Socialite::driver('facebook')->scopes(['email'])->redirect();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Xử lý callback từ Facebook
+    public function handleFacebookCallback()
     {
-        //
-    }
+        try {
+            $facebookUser = Socialite::driver('facebook')->user();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+            // Lấy thông tin từ Facebook
+            $facebookId = $facebookUser->getId();
+            $email = $facebookUser->getEmail();
+            $name = $facebookUser->getName();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+            // Kiểm tra xem người dùng đã tồn tại chưa
+            $user = User::where('email', $email)->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+            if (!$user) {
+                // Tạo người dùng mới nếu không tìm thấy
+                $user = User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'facebook_id' => $facebookId,
+                ]);
+            } else {
+                // Cập nhật facebook_id nếu đã tồn tại người dùng
+                $user->update(['facebook_id' => $facebookId]);
+            }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+            // Đăng nhập người dùng
+            Auth::login($user);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            // Chuyển hướng sau khi đăng nhập
+            return redirect('/home');
+        } catch (\Exception $e) {
+            return redirect('/login');
+        }
     }
 }
