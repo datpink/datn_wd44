@@ -22,5 +22,16 @@ class ProductController extends Controller
         return view('client.products.product-detail', compact('product'));
     }
 
+    public function productByCatalogues(string $slug)
+    {
+        $catalogues = Catalogue::where('slug', $slug)->firstOrFail();
+        // dd($catalogues);
+        $productByCatalogues = Product::with('catalogue')
+            ->where('catalogue_id', $catalogues->id)
+            ->where('is_active', 1)
+            ->paginate(10);
 
+        // dd($productByCatalogues);
+        return view('client.products.by-catalogue', compact('productByCatalogues'));
+    }
 }

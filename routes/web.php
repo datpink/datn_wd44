@@ -46,6 +46,8 @@ Route::prefix('shop')->group(function () {
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatelogues');
+    
     Route::get('/blog', [PostController::class, 'index'])->name('client.posts.index');
 
 
