@@ -51,12 +51,8 @@ Route::prefix('shop')->group(function () {
 
     Route::get('/login/google', [LoginGoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/login/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);
-
-    // Route để chuyển hướng đến Facebook
-    Route::get('/shop/login/facebook', [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
-
-    // Route để xử lý callback từ Facebook
-    Route::get('/shop/login/facebook/callback', [LoginFacebookController::class, 'handleFacebookCallback']);
+    Route::get('/login/facebook', [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
+    Route::get('/login/facebook/callback', [LoginFacebookController::class, 'handleFacebookCallback']);
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');

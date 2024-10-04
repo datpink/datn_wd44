@@ -18,37 +18,32 @@ class LoginFacebookController extends Controller
 
     // Xử lý callback từ Facebook
     public function handleFacebookCallback()
-    {
-        try {
-            $facebookUser = Socialite::driver('facebook')->user();
+{
+    try {
+        $facebookUser = Socialite::driver('facebook')->stateless()->user();
+        // dd($facebookUser);
+        $user = User::where('email', $facebookUser->email)->first();
 
-            // Lấy thông tin từ Facebook
-            $facebookId = $facebookUser->getId();
-            $email = $facebookUser->getEmail();
-            $name = $facebookUser->getName();
-
-            // Kiểm tra xem người dùng đã tồn tại chưa
-            $user = User::where('email', $email)->first();
-
-            if (!$user) {
-                // Tạo người dùng mới nếu không tìm thấy
-                $user = User::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'facebook_id' => $facebookId,
-                ]);
-            } else {
-                // Cập nhật facebook_id nếu đã tồn tại người dùng
-                $user->update(['facebook_id' => $facebookId]);
-            }
-
-            // Đăng nhập người dùng
+        if ($user) {
+            $user->update([
+                'facebook_id' => $facebookUser->id,
+            ]);
             Auth::login($user);
-
-            // Chuyển hướng sau khi đăng nhập
-            return redirect('/home');
-        } catch (\Exception $e) {
-            return redirect('/login');
+        }else if(!$user){
+            $user = User::create([
+                'name' => $facebookUser->name,
+                'email' => $facebookUser->email,
+                'password' => bcrypt('123456dummy'), // Bạn nên sử dụng một cách tạo mật khẩu an toàn hơn
+                'facebook_id' => $facebookUser->id,
+            ]);
+            Auth::login($user);
         }
+        return redirect('/');
+
+    } catch (\Exception $e) {
+        // Nếu có lỗi xảy ra, chuyển hướng về trang đăng nhập
+        return redirect('shop/login')->withErrors(['error' => 'Có lỗi xảy ra khi đăng nhập qua Facebook.']);
     }
+}
+
 }
