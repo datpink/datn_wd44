@@ -23,6 +23,7 @@ use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Auth\LoginGoogleController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,12 +38,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route cho trang home không yêu cầu xác thực
+Route::get('/', [ClientController::class, 'index'])->name('client.index');
+
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
+
+    Route::get('/login/google', [LoginGoogleController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('/login/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
@@ -56,9 +63,6 @@ Route::prefix('shop')->group(function () {
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
 });
-
-// Route cho trang home không yêu cầu xác thực
-Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
