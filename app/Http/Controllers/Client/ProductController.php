@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Catalogue;
 use App\Models\Product; // Đảm bảo đã import mô hình Product
 use Illuminate\Http\Request;
 
@@ -20,4 +21,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id); // Lấy sản phẩm theo ID
         return view('client.products.product-detail', compact('product'));
     }
+
+
 }
