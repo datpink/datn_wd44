@@ -23,6 +23,7 @@ use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -50,6 +51,8 @@ Route::prefix('shop')->group(function () {
 
     Route::get('/login/google', [LoginGoogleController::class, 'redirectToGoogle'])->name('login.google');
     Route::get('/login/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);
+    Route::get('/login/facebook', [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
+    Route::get('/login/facebook/callback', [LoginFacebookController::class, 'handleFacebookCallback']);
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');

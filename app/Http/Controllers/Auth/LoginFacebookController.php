@@ -3,63 +3,47 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginFacebookController extends Controller
 {
-     /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // Chuyển hướng đến Facebook để đăng nhập
+    public function redirectToFacebook()
     {
-        //
+        return Socialite::driver('facebook')->scopes(['email'])->redirect();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    // Xử lý callback từ Facebook
+    public function handleFacebookCallback()
+{
+    try {
+        $facebookUser = Socialite::driver('facebook')->stateless()->user();
+        // dd($facebookUser);
+        $user = User::where('email', $facebookUser->email)->first();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if ($user) {
+            $user->update([
+                'facebook_id' => $facebookUser->id,
+            ]);
+            Auth::login($user);
+        }else if(!$user){
+            $user = User::create([
+                'name' => $facebookUser->name,
+                'email' => $facebookUser->email,
+                'password' => bcrypt('123456dummy'), // Bạn nên sử dụng một cách tạo mật khẩu an toàn hơn
+                'facebook_id' => $facebookUser->id,
+            ]);
+            Auth::login($user);
+        }
+        return redirect('/');
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    } catch (\Exception $e) {
+        // Nếu có lỗi xảy ra, chuyển hướng về trang đăng nhập
+        return redirect('shop/login')->withErrors(['error' => 'Có lỗi xảy ra khi đăng nhập qua Facebook.']);
     }
+}
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

@@ -44,7 +44,7 @@ class LoginGoogleController extends Controller
             // Chuyển hướng người dùng sau khi đăng nhập thành công
             return redirect()->intended('');
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors('Something went wrong, please try again.');
+            return redirect('/shop/login')->withErrors('Something went wrong, please try again.');
         }
     }
 }
