@@ -14,12 +14,18 @@
                     </div>
                     <div class="block-content verticalmenu-content">
                         <ul id="menu-vertical-menu" class="azeroth-nav vertical-menu default">
-                            <li id="menu-item-886"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
-                                <a class="azeroth-menu-item-title" title="Camera" href="#"><span
-                                        class="icon flaticon-technology"></span>Camera</a>
-                            </li>
-                            <li id="menu-item-895"
+                            @foreach ($menuCatalogues as $catalogue)
+                                @if ($catalogue->status == 'active')
+                                    <li id="menu-item-886"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
+                                        <a class="azeroth-menu-item-title" title="Camera"
+                                            href="#"><span
+                                                class="icon flaticon-technology"></span>{{ $catalogue->name }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+
+                            {{-- <li id="menu-item-895"
                                 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-895">
                                 <a class="azeroth-menu-item-title" title="Game & Consoles" href="#"><span
                                         class="icon flaticon-console"></span>Game & Consoles</a>
@@ -58,7 +64,7 @@
                                 class="menu-item menu-item-type-custom menu-item-object-custom menu-item-894 link-other">
                                 <a class="azeroth-menu-item-title" title="Best Seller" href="#"><span
                                         class="icon flaticon-shiny-diamond"></span> Seller</a>
-                            </li>
+                            </li> --}}
                         </ul>
                         <div class="view-all-category">
                             <a href="#" data-closetext="Close" data-alltext="All Categories"
@@ -87,7 +93,9 @@
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
                                                     <div class="listitem-inner">
-                                                        <h4 class="title">{{ $catalogues->name }}</h4>
+                                                        <h4 class="title"><a
+                                                                href="#">{{ $catalogues->name }}</a>
+                                                        </h4>
                                                         <ul class="listitem-list mb-3">
                                                             @foreach ($catalogues->children as $child)
                                                                 @if ($child->status === 'active')
@@ -217,8 +225,7 @@
                                                             @foreach ($category->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <li>
-                                                                        <a
-                                                                            href="#">
+                                                                        <a href="#">
                                                                             {{ $child->name }}
                                                                         </a>
                                                                     </li>
