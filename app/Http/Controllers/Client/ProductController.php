@@ -25,13 +25,21 @@ class ProductController extends Controller
     public function productByCatalogues(string $slug)
     {
         $catalogues = Catalogue::where('slug', $slug)->firstOrFail();
-        // dd($catalogues);
+        
+        $childCategories = Catalogue::where('parent_id', $catalogues->id)
+            ->where('status', 'active')
+            ->pluck('id');
+
+        // $childCategories->push($catalogues->id);
+        // dd($childCategories);
+
         $productByCatalogues = Product::with('catalogue')
-            ->where('catalogue_id', $catalogues->id)
+            ->whereIn('catalogue_id', $childCategories)
             ->where('is_active', 1)
             ->paginate(10);
 
         // dd($productByCatalogues);
+
         return view('client.products.by-catalogue', compact('productByCatalogues'));
     }
 }
