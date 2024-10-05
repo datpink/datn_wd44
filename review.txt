@@ -30,6 +30,7 @@ php artisan db:seed --class=OrderItemTableSeeder
 php artisan db:seed --class=CategoriesTableSeeder
 php artisan db:seed --class=PostSeeder
 php artisan db:seed --class=CommentSeeder
+php artisan db:seed --class=BannerSeeder
 
 
 chạy full seeder
@@ -62,3 +63,5 @@ git pull origin main
 git push
 
 composer require laravel/socialite
+php artisan config:cache
+php artisan cache:clea

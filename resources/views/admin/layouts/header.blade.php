@@ -22,14 +22,17 @@
         </div>
         <!-- Search container end -->
 
-        <!-- Leads start -->
-        <a href="orders.html" class="leads d-none d-xl-flex">
-            <div class="lead-details">You have <span class="count"> 21 </span> new leads </div>
-            <span class="lead-icon"><i
-                    class="bi bi-bell-fill animate__animated animate__swing animate__infinite infinite"></i><b
-                    class="dot animate__animated animate__heartBeat animate__infinite"></b></span>
+        <a href="javascript:void(0);" class="leads d-none d-xl-flex" onclick="document.getElementById('mark-as-seen-form').submit();">
+            @if ($newOrdersCount > 0)
+                <div class="lead-details">
+                    Bạn có <span class="count">{{ $newOrdersCount }}</span> đơn hàng mới
+                </div>
+            @endif
+            <span class="lead-icon">
+                <i class="bi bi-bell-fill animate__animated animate__swing animate__infinite infinite"></i>
+                <b class="dot animate__animated animate__heartBeat animate__infinite"></b>
+            </span>
         </a>
-        <!-- Leads end -->
 
         <!-- Header actions start -->
         <ul class="header-actions">
@@ -68,7 +71,8 @@
                     <span class="user-name d-none d-md-block">{{ Auth::user()->name }}</span>
                     <span class="avatar">
                         @if (Auth::user()->image)
-                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="Admin Avatar" class="img-thumbnail">
+                            <img src="{{ asset('storage/' . Auth::user()->image) }}" alt="Admin Avatar"
+                                class="img-thumbnail">
                         @endif
                         <span class="status online"></span>
                     </span>
@@ -77,7 +81,8 @@
                     <div class="header-profile-actions">
                         <a href="{{ route('admin.profile') }}">Profile</a>
                         <a href="">Settings</a>
-                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: inline;">
+                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                            style="display: inline;">
                             @csrf
                             <a href="#" class="logout-btn">Đăng Xuất</a>
                         </form>

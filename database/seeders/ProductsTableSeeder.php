@@ -22,6 +22,7 @@ class ProductsTableSeeder extends Seeder
                 'slug' => Str::slug('Product ' . $i),
                 'sku' => 'SKU' . str_pad($i, 3, '0', STR_PAD_LEFT),
                 'description' => 'Description for Product ' . $i,
+                'tomtat' => 'Tóm tắt cho sản phẩm ' . $i, // Thêm trường tomtat
                 'image_url' => 'assets/images/product' . $i . '.jpg', // Thay đổi thành URL hình ảnh thực tế
                 'price' => rand(1000, 10000),
                 'discount_price' => rand(500, 9999),

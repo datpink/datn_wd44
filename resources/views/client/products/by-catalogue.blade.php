@@ -139,7 +139,7 @@
                                                 @endif
                                             </span>
                                             <div class="kobolg-product-details__short-description">
-                                                {{-- <p>{{ $product->short_description }}</p> --}}
+                                                <p>{{ $product->tomtat }}</p>
                                             </div>
                                         </div>
                                         <div class="group-button">

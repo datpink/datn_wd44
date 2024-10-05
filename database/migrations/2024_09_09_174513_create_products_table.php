@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->integer('ratings_count')->default(0);
             $table->boolean('is_active')->default(true);
             $table->boolean('is_featured')->default(false);
+            $table->text('tomtat')->nullable(); // Thêm trường tomtat
             $table->enum('condition', ['new', 'used', 'refurbished'])->default('new'); //theo dõi tình trạng sản phẩm (mới, đã qua sử dụng, tái chế...).
             $table->softDeletes();
             $table->timestamps();

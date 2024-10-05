@@ -5,7 +5,7 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
+            {{-- @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
             @if ($errors->any())
@@ -16,7 +16,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -113,6 +113,11 @@
                                         <option value="used">Đã qua sử dụng</option>
                                         <option value="refurbished">Tái chế</option>
                                     </select>
+                                </div>
+                                <!-- Thêm trường Tóm Tắt -->
+                                <div class="mb-3">
+                                    <label for="tomtat" class="form-label">Tóm Tắt</label>
+                                    <textarea class="form-control" id="tomtat" name="tomtat">{{ old('tomtat') }}</textarea>
                                 </div>
 
                                 <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo
