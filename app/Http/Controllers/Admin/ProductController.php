@@ -62,6 +62,7 @@ class ProductController extends Controller
                 'is_active' => $request->is_active,
                 'is_featured' => $request->has('is_featured'), // Thêm trường is_featured
                 'condition' => $request->condition, // Thêm trường condition
+                'tomtat' => $request->tomtat, // Thêm trường tomtat
             ]);
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
@@ -114,6 +115,7 @@ class ProductController extends Controller
                 'dimensions' => 'nullable|string|max:255',
                 'is_featured' => 'nullable|boolean',
                 'condition' => 'required|in:new,used,refurbished',
+                'tomtat' => 'nullable|string', // Thêm quy tắc xác thực cho trường tomtat
                 // Các quy tắc xác thực khác
             ]);
 
@@ -132,6 +134,7 @@ class ProductController extends Controller
                 'brand_id' => $request->brand_id,
                 'description' => $request->description,
                 'catalogue_id' => $request->catalogue_id,
+                'tomtat' => $request->tomtat, // Cập nhật trường tomtat
             ]);
 
             if ($request->hasFile("image_url")) {
