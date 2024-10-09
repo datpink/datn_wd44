@@ -11,7 +11,7 @@ class AdminAuthenticate
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check()) {
-            return redirect()->route('client.home');
+            return redirect()->route('client.index');
         }
         return $next($request);
     }
