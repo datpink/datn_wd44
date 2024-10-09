@@ -218,7 +218,7 @@
                                                                 @if ($child->status === 'active')
                                                                     <li>
                                                                         <a
-                                                                            href="#">
+                                                                            href="client.posts.index">
                                                                             {{ $child->name }}
                                                                         </a>
                                                                     </li>

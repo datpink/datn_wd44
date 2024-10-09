@@ -8,7 +8,7 @@
             </a>
         </div>
         <div class="header-logo">
-            <a href="index.html"><img alt="Zaia" src="{{ asset('theme/client/assets/images/logozaia.png') }}" class="logo" width="160px"></a>
+            <a href="/"><img alt="Zaia" src="{{ asset('theme/client/assets/images/logozaia.png') }}" class="logo" width="160px"></a>
         </div>
     </div>
     <div class="header-search-mid">

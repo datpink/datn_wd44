@@ -511,8 +511,7 @@
                     <div class="heading-inner">
                         <h3 class="title">Bài Viết Nổi Bật</h3>
                         <div class="subtitle">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit erat vehicula ad, mollis viverra
-                            vulputate
+                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất chỉ với một cú nhấp chuột
                         </div>
                     </div>
                 </div>
