@@ -216,11 +216,13 @@
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
                             <h2 class="widgettitle">Filter By Price<span class="arrow"></span></h2>
                             <form method="get" action="" id="priceFilterForm">
-                            
+                                @php
+                                    // dd($maxDiscountPrice);
+                                @endphp
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
-                                        data-unit="$" class="price_slider" data-value-min="0"
-                                        data-value-max="{{ $maxDiscountPrice }}">
+                                    data-unit="₫" class="price_slider" data-value-min="0" data-value-max="{{ $maxDiscountPrice }} "
+                                        >
                                     </div>
 
 
@@ -257,21 +259,21 @@
                                     max: maxDiscountPrice,
                                     values: [minPrice, maxPrice],
                                     slide: function(event, ui) {
-                                        priceFrom.textContent = `$${ui.values[0]}`;
-                                        priceTo.textContent = `$${ui.values[1]}`;
+                                        priceFrom.textContent = `₫${ui.values[0]}`;
+                                        priceTo.textContent = `₫${ui.values[1]}`;
                                     },
                                     change: function(event, ui) {
                                         // Cập nhật giá trị trong thuộc tính data
                                         priceFilterForm.querySelector('.price_slider').setAttribute('data-value-min', ui
-                                            .values[0]+'.00');
+                                            .values[0]);
                                         priceFilterForm.querySelector('.price_slider').setAttribute('data-value-max', ui
-                                            .values[1]+'.00');
+                                            .values[1]);
                                     }
                                 });
 
                                 // Cập nhật giá trị hiển thị ban đầu
-                                priceFrom.textContent = `$${minPrice}`;
-                                priceTo.textContent = `$${maxPrice}`;
+                                priceFrom.textContent = `₫${minPrice}`;
+                                priceTo.textContent = `₫${maxPrice}`;
 
                                 // Bắt sự kiện submit form
                                 priceFilterForm.addEventListener('submit', function(e) {
@@ -356,7 +358,7 @@
                                                         </li>
                                                     `;
                                                     productLists.innerHTML +=
-                                                    productHTML; // Thêm sản phẩm vào danh sách
+                                                        productHTML; // Thêm sản phẩm vào danh sách
                                                 });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);
