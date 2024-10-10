@@ -82,13 +82,13 @@
                                                                         {{ $response->reply }}
                                                                         <br>
                                                                         <small class="text-muted">Đã phản hồi vào:
-                                                                            {{ $response->created_at->format('d/m/Y H:i') }}</small>
-                                                                        <button type="button"
-                                                                            class="btn btn-sm btn-warning edit-reply"
-                                                                            data-id="{{ $response->id }}"
-                                                                            data-reply="{{ $response->reply }}">
-                                                                            Sửa
-                                                                        </button>
+                                                                            {{-- {{ $response->created_at->format('d/m/Y H:i') !=null ? $response->created_at->format('d/m/Y H:i') : '' }}</small> --}}
+                                                                            <button type="button"
+                                                                                class="btn btn-sm btn-warning edit-reply"
+                                                                                data-id="{{ $response->id }}"
+                                                                                data-reply="{{ $response->reply }}">
+                                                                                Sửa
+                                                                            </button>
                                                                     </li>
                                                                 @endforeach
 
@@ -109,8 +109,9 @@
                                                             <i class="bi bi-trash"></i> Xóa
                                                         </button>
                                                     </form>
-                                                    <button type="button" class="btn rounded-pill btn-primary"
-                                                        data-toggle="modal" data-target="#responseModal"
+                                                    <button type="button"
+                                                        class="btn rounded-pill btn-primary btnModalReply"
+                                                        data-toggle="modal" data-target="#responseModal" id="btnModalReply"
                                                         data-id="{{ $comment->id }}"
                                                         data-user="{{ $comment->user->name ?? '' }}"
                                                         data-content="{{ $comment->content }}">
@@ -160,8 +161,7 @@
                                     <div class="modal-content rounded-lg shadow-lg">
                                         <div class="modal-header border-b-2 p-4">
                                             <h5 class="modal-title text-lg font-semibold" id="responseModalLabel">Phản hồi
-                                                bình
-                                                luận
+                                                bình luận
                                             </h5>
                                             <button type="button" class="close rounded hover:bg-gray-200"
                                                 data-dismiss="modal" aria-label="Close">
@@ -177,14 +177,14 @@
                                                         <label for="user" class="mr-2 font-medium">Người dùng:</label>
                                                         <input type="text"
                                                             class="form-control flex-1 border-gray-300 rounded"
-                                                            id="user" readonly>
+                                                            id="user">
                                                     </div>
                                                     <div class="form-group flex items-center">
                                                         <label for="content" class="mr-2 font-medium">Nội dung bình
                                                             luận:</label>
                                                         <input type="text"
                                                             class="form-control flex-1 border-gray-300 rounded"
-                                                            id="content" readonly>
+                                                            id="content">
                                                     </div>
                                                 </div>
                                                 <div class="form-group mt-4">
@@ -233,17 +233,36 @@
 
 
         <script>
-            $('#responseModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var commentId = button.data('id'); // Extract info from data-* attributes
-                var userName = button.data('user');
-                var commentContent = button.data('content');
+            $('.btnModalReply').each(function() {
 
-                var modal = $(this);
-                modal.find('#commentId').val(commentId);
-                modal.find('#user').val(userName);
-                modal.find('#content').val(commentContent);
-                modal.find('#responseForm').attr('action', 'comments/respond/' + commentId);
+                var button = $(this); // Button that triggered the modal
+                console.log(button);
+
+                button.on('click', function(event) {
+
+
+                    console.log(this.dataset);
+
+                    var commentId = button.data('id'); // Extract info from data-* attributes
+                    var userName = button.data('user');
+                    var commentContent = button.data('content');
+                    // console.log('Comment ID:', commentId);
+                    // console.log('User Name:', userName);
+                    // console.log('Comment Content:', commentContent);
+
+                    // var modal = $(this);
+                    var modal = $('#responseModal');
+                    modal.find('#commentId').val(commentId);
+                    modal.find('#user').val(userName);
+                    modal.find('#content').val(commentContent);
+
+                    // console.log(modal.find('#commentId').val(commentId), modal.find('#user').val(userName));
+
+                    // console.log('modal:', modal);
+
+
+                    modal.find('#responseForm').attr('action', 'comments/respond/' + commentId);
+                })
             });
 
             // Xác nhận khi xóa brand

@@ -33,7 +33,7 @@
                             @endforeach
 
                         </select>
-                    </div> 
+                    </div>
                     <button type="submit" class="btn-submit">
                         <span class="flaticon-search"></span>
                     </button>

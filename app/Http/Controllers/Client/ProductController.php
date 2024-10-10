@@ -13,7 +13,11 @@ class ProductController extends Controller
     {
         // Lấy tất cả sản phẩm từ cơ sở dữ liệu
         $products = Product::paginate(6); // Bạn có thể thêm các điều kiện khác nếu cần
-        return view('client.products.index', compact('products'));
+        $minDiscountPrice = Product::min('discount_price');
+        $maxDiscountPrice = Product::max('discount_price');
+
+
+        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
     }
 
     public function show($id)
@@ -24,6 +28,10 @@ class ProductController extends Controller
 
     public function productByCatalogues(string $parentSlug, $childSlug = null)
     {
+
+        $minDiscountPrice = Product::min('discount_price');
+        $maxDiscountPrice = Product::max('discount_price');
+
         $catalogues = Catalogue::where('slug', $parentSlug)->firstOrFail();
 
         // dd($catalogues);
@@ -54,7 +62,28 @@ class ProductController extends Controller
 
         // dd($productByCatalogues);
 
-        return view('client.products.by-catalogue', compact('productByCatalogues'));
+        return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice'));
     }
 
+    public function filterByPrice(Request $request)
+    {
+        $minPrice = $request->query('min_price');
+        $maxPrice = $request->query('max_price');
+        // Kiểm tra và ép kiểu nếu cần
+        $minPrice = (float) $minPrice;
+        $maxPrice = (float) $maxPrice;
+
+        // Lọc sản phẩm theo khoảng giá discount_price
+        $products = Product::with('catalogue')
+            ->whereBetween('discount_price', [$minPrice, $maxPrice])
+            ->get();
+
+
+
+        // dd($products);
+        // dd($minPrice, $maxPrice);
+
+
+        return response()->json(['products' => $products->isNotEmpty() ? $products : []]);
+    }
 }
