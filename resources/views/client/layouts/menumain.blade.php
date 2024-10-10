@@ -31,7 +31,8 @@
                                 class="btn-view-all open-cate">All Categories</a>
                         </div>
                     </div>
-                </div><!-- block category -->
+                </div>
+                <!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
                         <li id="menu-item-230"
@@ -177,6 +178,7 @@
                             <div class="submenu megamenu megamenu-blog">
                                 <div class="row">
                                     @foreach ($menuCategories as $category)
+                                    
                                         @if ($category->status === 'active')
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
@@ -186,8 +188,7 @@
                                                             @foreach ($category->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <li>
-                                                                        <a
-                                                                            href="#">
+                                                                        <a href="#">
                                                                             {{ $child->name }}
                                                                         </a>
                                                                     </li>
