@@ -7,6 +7,7 @@
     @include('components.breadcrumb-client')
 
 
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Thêm jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -228,6 +229,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </form> --}}
                             <form method="get" action="" id="priceFilterForm">
 
