@@ -31,7 +31,6 @@ class ProductController extends Controller
 
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
-
         $catalogues = Catalogue::where('slug', $parentSlug)->firstOrFail();
 
         // dd($catalogues);
@@ -61,6 +60,7 @@ class ProductController extends Controller
             ->paginate(10);
 
         // dd($productByCatalogues);
+
 
         return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice'));
     }

@@ -1,85 +1,94 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 
 class ProductVariantController extends Controller
 {
-    public function index()
+    // Hiển thị danh sách biến thể của sản phẩm
+    public function index(Product $product)
     {
-        $title = 'Danh Sách Biến Thể';
-        // Hiển thị tất cả các bản ghi, bao gồm cả trạng thái 'inactive'
-        $productVariants = ProductVariant::with('product')->latest()->get();
-        return view('admin.product-variants.index', compact('productVariants', 'title'));
+        $variants = $product->variants; // Lấy tất cả biến thể của sản phẩm
+        $hasVariants = $variants->isNotEmpty(); // Kiểm tra xem có biến thể hay không
+
+        return view('admin.variants.index', compact('product', 'variants', 'hasVariants'));
     }
 
-    public function create()
+    // Hiển thị form thêm biến thể
+    public function create(Product $product)
     {
-        $title = 'Thêm Mới Biến Thể';
-        $products = Product::all();
-        return view('admin.product-variants.create', compact('products', 'title'));
-    }
+        // Giả sử bạn có model AttributeValue
+        $attributeValues = AttributeValue::all(); // Lấy tất cả giá trị thuộc tính
 
-    public function store(Request $request)
+        return view('admin.variants.create', compact('product', 'attributeValues'));
+    }
+    // Lưu biến thể mới
+    public function store(Request $request, Product $product)
     {
-        $validatedData = $request->validate([
-            'product_id' => 'required|integer',
-            'variant_name' => 'required|string|max:255',
+        $request->validate([
+            'variant_name' => 'required|string',
             'price' => 'required|numeric',
+            'sku' => 'required|string',
             'stock' => 'required|integer',
-            'sku' => 'required|string|max:255',
-            'image_url' => 'nullable|file|image|max:2048'
+            'attributes' => 'required|array', // Đảm bảo là mảng
+            'attributes.*' => 'exists:attribute_values,id', // Kiểm tra từng ID có tồn tại
+        ]);
+    
+        // Tạo biến thể mới
+        $variant = new ProductVariant([
+            'variant_name' => $request->variant_name,
+            'price' => $request->price,
+            'sku' => $request->sku,
+            'stock' => $request->stock,
+            'status' => 'inactive', // Mặc định là không kích hoạt
+        ]);
+    
+        // Lưu biến thể vào cơ sở dữ liệu
+        $product->variants()->save($variant);
+    
+        // Thêm thuộc tính vào biến thể qua bảng trung gian
+        if ($request->has('attributes')) {
+            $variant->attributes()->attach($request->attributes);
+        }
+    
+        return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
+    }
+    
+
+    // Chỉnh sửa biến thể
+    public function edit(ProductVariant $variant)
+    {
+        return view('admin.variants.edit', compact('variant'));
+    }
+
+    // Cập nhật biến thể
+    public function update(Request $request, ProductVariant $variant)
+    {
+        $request->validate([
+            'variant_name' => 'required|string',
+            'price' => 'required|numeric',
+            'sku' => 'required|string',
+            'stock' => 'required|integer',
         ]);
 
-        // Tạo mới ProductVariant với trạng thái mặc định là 'active'
-        ProductVariant::create(array_merge($validatedData, ['status' => 'active']));
+        $variant->update($request->all());
 
-        return redirect()->route('product-variants.index')->with('success', 'Product Variant created successfully.');
+        return redirect()->route('products.variants.index', $variant->product_id)->with('success', 'Biến thể đã được cập nhật thành công.');
     }
 
-    public function edit($id)
+    // Xóa biến thể
+
+    // Cập nhật trạng thái biến thể
+    public function updateStatus(ProductVariant $variant)
     {
-        $title = 'Cập Nhật Biến Thể';
-        $productVariant = ProductVariant::findOrFail($id);
-        $products = Product::all();
+        $variant->status = $variant->status === 'active' ? 'inactive' : 'active';
+        $variant->save();
 
-        return view('admin.product-variants.edit', compact('productVariant', 'products', 'title'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'product_id' => 'required|integer',
-            'variant_name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'sku' => 'required|string|max:255',
-            'image_url' => 'nullable|file|image|max:2048'
-        ]);
-
-        $productVariant = ProductVariant::findOrFail($id);
-        $productVariant->update($validatedData);
-
-        return redirect()->route('product-variants.index')->with('success', 'Product Variant updated successfully.');
-    }
-
-    // Cập nhật trạng thái thành 'inactive' thay vì xóa
-    public function destroy($id)
-    {
-        $productVariant = ProductVariant::findOrFail($id);
-        $productVariant->update(['status' => 'inactive']);
-
-        return redirect()->route('product-variants.index')->with('success', 'Đã cập nhật trạng thái Biến thể sản phẩm thành không hoạt động.');
-    }
-
-    // Kích hoạt lại trạng thái thành 'active'
-    public function activate($id)
-    {
-        $productVariant = ProductVariant::findOrFail($id);
-        $productVariant->update(['status' => 'active']);
-        return redirect()->route('product-variants.index')->with('success', 'Đã cập nhật trạng thái Biến thể sản phẩm thành hoạt động.');
+        return redirect()->route('products.variants.index', $variant->product_id)->with('success', 'Trạng thái biến thể đã được cập nhật thành công.');
     }
 }
