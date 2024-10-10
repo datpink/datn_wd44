@@ -37,7 +37,7 @@ class LoginGoogleController extends Controller
                     'google_id' => $googleUser->id,
                     'password' => bcrypt('123456dummy'),
                 ]);
-
+                $user->assignRole('user');
                 Auth::login($user);
             }
 
