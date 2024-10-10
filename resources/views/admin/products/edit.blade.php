@@ -95,6 +95,11 @@
                                         value="{{ $product->price }}" required>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="discount_price">Giá Khuyến Mãi</label>
+                                    <input type="text" name="discount_price" id="discount_price" class="form-control" value="{{ old('discount_price', $product->discount_price) }}">
+                                </div>
+
                                 <!-- SKU -->
                                 <div class="form-group">
                                     <label for="sku">SKU (Mã sản phẩm)</label>
@@ -150,7 +155,27 @@
                                     </select>
                                 </div>
 
-                                <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
+                                <div id="image-inputs">
+                                    @foreach ($product->galleries as $index => $gallery)
+                                        <div class="form-group d-flex align-items-center">
+                                            <label for="image{{ $index + 1 }}" class="me-2">Hình ảnh
+                                                {{ $index + 1 }}</label>
+                                            <input type="file" name="images[]" id="image{{ $index + 1 }}"
+                                                class="form-control me-2" accept="image/*">
+                                            <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
+                                            <input type="hidden" name="existing_images[]"
+                                                value="{{ $gallery->image_url }}">
+                                            <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
+                                                style="width: 100px; height: auto; margin-left: 10px;">
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="form-group d-flex align-items-center">
+                                    <button type="button" class="btn btn-rounded btn-secondary add-image">Thêm Hình
+                                        Ảnh</button>
+                                    <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -204,4 +229,33 @@
         }
     </script>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addImageButton = document.querySelector('.add-image');
+
+            // Sự kiện cho nút Thêm
+            if (addImageButton) {
+                addImageButton.addEventListener('click', function() {
+                    const container = document.getElementById('image-inputs');
+                    const newIndex = container.children.length + 1; // Tính số lượng trường hiện tại
+
+                    const newInput = document.createElement('div');
+                    newInput.classList.add('form-group', 'd-flex', 'align-items-center');
+                    newInput.innerHTML = `
+                    <label for="image${newIndex}" class="me-2">Hình ảnh ${newIndex}</label>
+                    <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*">
+                    <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
+                `;
+
+                    container.appendChild(newInput);
+
+                    // Xử lý sự kiện cho nút "Xóa"
+                    newInput.querySelector('.remove-image').addEventListener('click', function() {
+                        container.removeChild(newInput);
+                    });
+                });
+            }
+        });
+    </script>
 @endsection
