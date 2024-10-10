@@ -141,7 +141,20 @@
                         </ul>
                     </div>
                 </li>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-window-split"></i>
+                        <span class="menu-text">Quản Lý Khuyến Mại</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('promotions.index') }}">Danh Sách Mã Giảm Giá</a>
+                            </li>
 
+                        </ul>
+                    </div>
+                </li>
                 {{-- <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-archive"></i>
