@@ -22,29 +22,38 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Kiểm tra thông tin đăng nhập
-        if (Auth::attempt(['email' => $request->username, 'password' => $request->password])) {
-            // Lấy thông tin người dùng
-            $user = Auth::user();
+        // Lấy thông tin đăng nhập (sử dụng 'email' hoặc 'username')
+        $credentials = ['email' => $request->username, 'password' => $request->password];
 
-            // Kiểm tra trạng thái
+        // Kiểm tra thông tin đăng nhập
+        if (Auth::attempt($credentials)) {
+            // Lấy thông tin người dùng sau khi đăng nhập thành công
+            $user = Auth::user();
+            info('User logged in: ' . $user->email);
+
+            // Kiểm tra trạng thái tài khoản
             if ($user->status === 'locked') {
                 Auth::logout(); // Đăng xuất nếu tài khoản bị khóa
-                return back()->withErrors([
-                    'username' => 'Tài khoản của bạn đã bị khóa.',
-                ]);
+                return redirect()->back()->withErrors(['username' => 'Tài khoản của bạn đã bị khóa.']);
             }
 
-            // Kiểm tra vai trò của người dùng
+            // Kiểm tra vai trò của người dùng và điều hướng đến trang phù hợp
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin.index'); // Điều hướng đến trang admin
+            } elseif ($user->hasRole('editor')) {
+                return redirect()->route('editor.index'); // Điều hướng đến trang editor
+            } elseif ($user->hasRole('user')) {
+                return redirect()->route('client.index'); // Điều hướng đến trang client
+            }
 
-            // Đăng nhập thành công, chuyển hướng người dùng đến trang chủ
-            return redirect()->route('client.index'); // Sử dụng route name
+            // Nếu không có quyền truy cập phù hợp, đăng xuất và thông báo lỗi
+            Auth::logout();
+            return redirect()->back()->withErrors(['username' => 'Bạn không có quyền truy cập.']);
         }
 
         // Đăng nhập không thành công, quay lại với thông báo lỗi
-        return back()->withErrors([
-            'username' => 'Thông tin đăng nhập không chính xác.',
-        ]);
+        info('Login failed for: ' . $request->username);
+        return redirect()->back()->withErrors(['username' => 'Email hoặc mật khẩu không chính xác.']);
     }
 
 

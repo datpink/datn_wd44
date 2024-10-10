@@ -23,10 +23,10 @@ class PostCommentController extends Controller
                 $query->whereHas('user', function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%');
                 })
-                ->orWhereHas('post', function ($q) use ($search) {
-                    $q->where('title', 'like', '%' . $search . '%');
-                })
-                ->orWhere('content', 'like', '%' . $search . '%');
+                    ->orWhereHas('post', function ($q) use ($search) {
+                        $q->where('title', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('content', 'like', '%' . $search . '%');
             });
         }
 
@@ -36,6 +36,8 @@ class PostCommentController extends Controller
 
     public function respond(Request $request, $id)
     {
+        // dd($request->all());
+        // dd(123);
         try {
             $validated = $request->validate([
                 'response' => 'required|string',
@@ -49,6 +51,8 @@ class PostCommentController extends Controller
 
             return redirect()->route('comments.index')->with('respond', 'Phản hồi đã được gửi.');
         } catch (\Throwable $th) {
+            
+            return $th->getMessage();
             return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
         }
     }

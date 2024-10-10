@@ -30,6 +30,7 @@ php artisan db:seed --class=OrderItemTableSeeder
 php artisan db:seed --class=CategoriesTableSeeder
 php artisan db:seed --class=PostSeeder
 php artisan db:seed --class=CommentSeeder
+php artisan db:seed --class=BannerSeeder
 
 
 chạy full seeder
@@ -38,7 +39,7 @@ php artisan db:seed
 
 php artisan migrate:refresh
 
-hehe
+
 
 Zaia Enterprise
 
@@ -48,6 +49,7 @@ Zaia Enterprise
 
 
 
+hello
 #git
 git branch -a
 git checkout tên
@@ -59,3 +61,7 @@ git commit -m "nd"
 git pull
 git pull origin main
 git push
+
+composer require laravel/socialite
+php artisan config:cache
+php artisan cache:clea

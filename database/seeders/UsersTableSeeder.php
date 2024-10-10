@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Metadata\Uses;
 
 class UsersTableSeeder extends Seeder
 {
@@ -37,5 +39,7 @@ class UsersTableSeeder extends Seeder
                 'image'         =>      'path/to/image3.jpg',
             ],
         ]);
+        $user = User::where('email', 'john.doe@example.com')->first(); // Tìm user bằng email
+        $user->assignRole('admin'); // Gán vai trò admin cho user
     }
 }

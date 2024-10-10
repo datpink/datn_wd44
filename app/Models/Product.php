@@ -27,6 +27,8 @@ class Product extends Model
         'ratings_avg',
         'ratings_count',
         'is_active',
+        'condition',
+        'tomtat',
         'is_featured'
     ];
 

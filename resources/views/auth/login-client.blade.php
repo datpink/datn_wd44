@@ -4,13 +4,6 @@
     </a>
     <ul class="sub-menu">
         @if (Auth::check())
-            @if (Auth::user()->isAdmin())
-                <!-- Check if the user is an admin -->
-                <li
-                    class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--dashboard is-active">
-                    <a href="{{ route('admin.index') }}">Admin Dashboard</a> <!-- Link to admin dashboard -->
-                </li>
-            @endif
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--orders">
                 <a href="#">Orders</a>
             </li>

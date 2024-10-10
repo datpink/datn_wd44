@@ -21,7 +21,8 @@ class Order extends Model
         'payment_status',
         'shipping_address',
         'payment_method_id',
-        'phone_number'
+        'phone_number',
+        'is_new'
     ];
 
     public function orderItems()

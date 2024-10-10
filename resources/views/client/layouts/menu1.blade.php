@@ -8,7 +8,8 @@
             </a>
         </div>
         <div class="header-logo">
-            <a href="index.html"><img alt="Zaia" src="{{ asset('theme/client/assets/images/logozaia.png') }}" class="logo" width="160px"></a>
+            <a href="{{ route('client.index') }}"><img alt="Zaia"
+                    src="{{ asset('theme/client/assets/images/logozaia.png') }}" class="logo" width="160px"></a>
         </div>
     </div>
     <div class="header-search-mid">
@@ -17,22 +18,20 @@
                 <form role="search" method="get" class="form-search block-search-form kobolg-live-search-form">
                     <div class="form-content search-box results-search">
                         <div class="inner">
-                            <input autocomplete="off" class="searchfield txt-livesearch input" name="s" value="" placeholder="Search here..." type="text">
+                            <input autocomplete="off" class="searchfield txt-livesearch input" name="s"
+                                value="" placeholder="Search here..." type="text">
                         </div>
                     </div>
                     <input name="post_type" value="product" type="hidden">
                     <input name="taxonomy" value="product_cat" type="hidden">
                     <div class="category">
-                        <select title="product_cat" name="product_cat" id="1771262470" class="category-search-option" tabindex="-1" style="display: none;">
+                        <select title="catalogues" name="catalogue_slug" id="" class="category-search-option"
+                            tabindex="-1" style="display: none;">
                             <option value="0">All Categories</option>
-                            <option class="level-0" value="light">Camera</option>
-                            <option class="level-0" value="chair">Accessories</option>
-                            <option class="level-0" value="table">Game & Consoles</option>
-                            <option class="level-0" value="bed">Life style</option>
-                            <option class="level-0" value="new-arrivals">New arrivals</option>
-                            <option class="level-0" value="lamp">Summer Sale</option>
-                            <option class="level-0" value="specials">Specials</option>
-                            <option class="level-0" value="sofas">Featured</option>
+                            @foreach ($menuCatalogues as $catalogue)
+                                <option value="{{ $catalogue->slug }}">{{ $catalogue->name }}</option>
+                            @endforeach
+
                         </select>
                     </div>
                     <button type="submit" class="btn-submit">
@@ -46,11 +45,13 @@
         <div class="header-control-inner">
             <div class="meta-dreaming">
 
-                {{-- login --}}
-                @include('auth.login-client')
 
                 {{-- you-cart --}}
                 @include('client.you-cart.you-cart')
+                {{-- login --}}
+                @include('auth.login-client')
+
+
 
             </div>
         </div>

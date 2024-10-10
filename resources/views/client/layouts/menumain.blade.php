@@ -14,58 +14,25 @@
                     </div>
                     <div class="block-content verticalmenu-content">
                         <ul id="menu-vertical-menu" class="azeroth-nav vertical-menu default">
-                            <li id="menu-item-886"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
-                                <a class="azeroth-menu-item-title" title="Camera" href="#"><span
-                                        class="icon flaticon-technology"></span>Camera</a>
-                            </li>
-                            <li id="menu-item-895"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-895">
-                                <a class="azeroth-menu-item-title" title="Game & Consoles" href="#"><span
-                                        class="icon flaticon-console"></span>Game & Consoles</a>
-                            </li>
-                            <li id="menu-item-888"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-888">
-                                <a class="azeroth-menu-item-title" title="Printers & Ink" href="#"><span
-                                        class="icon flaticon-print-button"></span>Printers & Ink</a>
-                            </li>
-                            <li id="menu-item-889"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-889">
-                                <a class="azeroth-menu-item-title" title="Speaker" href="#"><span
-                                        class="icon flaticon-technology-1"></span>Speaker</a>
-                            </li>
-                            <li id="menu-item-890"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-890">
-                                <a class="azeroth-menu-item-title" title="Smartphone" href="#"><span
-                                        class="icon flaticon-smartphone"></span>Smartphone</a>
-                            </li>
-                            <li id="menu-item-891"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-891">
-                                <a class="azeroth-menu-item-title" title="Accessories" href="#"><span
-                                        class="icon flaticon-mouse"></span>Accessories</a>
-                            </li>
-                            <li id="menu-item-892"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-892">
-                                <a class="azeroth-menu-item-title" title="Essentials" href="#"><span
-                                        class="icon flaticon-layers"></span>Essentials</a>
-                            </li>
-                            <li id="menu-item-893"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-893">
-                                <a class="azeroth-menu-item-title" title="Featured" href="#"><span
-                                        class="icon flaticon-shapes"></span>Featured</a>
-                            </li>
-                            <li id="menu-item-894"
-                                class="menu-item menu-item-type-custom menu-item-object-custom menu-item-894 link-other">
-                                <a class="azeroth-menu-item-title" title="Best Seller" href="#"><span
-                                        class="icon flaticon-shiny-diamond"></span> Seller</a>
-                            </li>
+                            @foreach ($menuCatalogues as $catalogue)
+                                @if ($catalogue->status == 'active')
+                                    <li id="menu-item-886"
+                                        class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
+                                        <a class="azeroth-menu-item-title" title="menu"
+                                            href="{{ route('client.productByCatalogues', $catalogue->slug) }}"><span
+                                                class="icon flaticon-technology"></span>{{ $catalogue->name }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+
                         </ul>
                         <div class="view-all-category">
                             <a href="#" data-closetext="Close" data-alltext="All Categories"
                                 class="btn-view-all open-cate">All Categories</a>
                         </div>
                     </div>
-                </div><!-- block category -->
+                </div>
+                <!-- block category -->
                 <div class="box-header-nav menu-nocenter">
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
                         <li id="menu-item-230"
@@ -87,20 +54,23 @@
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
                                                     <div class="listitem-inner">
-                                                        <h4 class="title">{{ $catalogues->name }}</h4>
+                                                        <h4 class="title"><a
+                                                                href="{{ route('client.productByCatalogues', $catalogues->slug) }}">{{ $catalogues->name }}</a>
+                                                        </h4>
                                                         <ul class="listitem-list mb-3">
                                                             @foreach ($catalogues->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <!-- Kiểm tra trạng thái cho child -->
                                                                     <li>
                                                                         <a
-                                                                            href="{{ route('client.products.index', ['catalogues' => $child->id]) }}">{{ $child->name }}</a>
+                                                                            href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
                                                                     </li>
                                                                 @endif
                                                             @endforeach
                                                         </ul>
                                                     </div>
                                                 </div>
+
                                             </div>
                                         @endif
                                     @endforeach
@@ -208,6 +178,7 @@
                             <div class="submenu megamenu megamenu-blog">
                                 <div class="row">
                                     @foreach ($menuCategories as $category)
+                                    
                                         @if ($category->status === 'active')
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
@@ -217,8 +188,7 @@
                                                             @foreach ($category->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <li>
-                                                                        <a
-                                                                            href="#">
+                                                                        <a href="#">
                                                                             {{ $child->name }}
                                                                         </a>
                                                                     </li>

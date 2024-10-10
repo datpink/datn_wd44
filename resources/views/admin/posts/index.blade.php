@@ -56,6 +56,7 @@
                                         <th>Danh mục</th>
                                         <th>Hình Ảnh</th>
                                         <th>Ngày tạo</th>
+                                        <th>Nổi bật</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -77,6 +78,14 @@
                                                 @endif
                                             </td>
                                             <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
+
+                                            <td>
+                                                @if ($post->is_featured)
+                                                    <span class="badge rounded-pill bg-warning">Nổi bật</span>
+                                                @else
+                                                    <span class="badge rounded-pill bg-secondary">Không nổi bật</span>
+                                                @endif
+                                            </td>
 
 
                                             <td class="title-column" style="width: 20%;">

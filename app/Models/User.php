@@ -22,7 +22,9 @@ class User extends Authenticatable
         'address',
         'phone',
         'image',
-        'status'
+        'status',
+        'google_id',
+        'facebook_id',
     ];
 
     public function orders()

@@ -82,11 +82,6 @@ class ProductVariantController extends Controller
     }
 
     // Xóa biến thể
-    public function destroy(ProductVariant $variant)
-    {
-        $variant->delete();
-        return redirect()->route('products.variants.index', $variant->product_id)->with('success', 'Biến thể đã được xóa thành công.');
-    }
 
     // Cập nhật trạng thái biến thể
     public function updateStatus(ProductVariant $variant)

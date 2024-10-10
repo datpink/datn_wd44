@@ -121,6 +121,20 @@
 
                 <li class="sidebar-dropdown">
                     <a href="#">
+                        <i class="bi bi-image"></i>  <!-- Thay đổi icon ở đây -->
+                        <span class="menu-text">Quản lý Banner</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('banners.index') }}">Danh sách Banner</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
                         <i class="bi bi-cart-check"></i>
                         <span class="menu-text">Quản lý Đơn Hàng</span>
                     </a>

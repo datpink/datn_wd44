@@ -10,11 +10,9 @@ class AdminAuthenticate
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()) {
-            info('User ID: ' . Auth::id());
-                return $next($request);
+        if (!Auth::check()) {
+            return redirect()->route('client.index');
         }
-
-        return redirect()->route('admin.login');
+        return $next($request);
     }
 }

@@ -60,6 +60,9 @@ class ProductController extends Controller
                 'image_url' => $imagePath,
                 'description' => $request->description,
                 'is_active' => $request->is_active,
+                'is_featured' => $request->has('is_featured'), // Thêm trường is_featured
+                'condition' => $request->condition, // Thêm trường condition
+                'tomtat' => $request->tomtat, // Thêm trường tomtat
             ]);
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
@@ -77,6 +80,7 @@ class ProductController extends Controller
     {
         $title = 'Chi Tiết Sản Phẩm';
         $product = Product::with('brand', 'catalogue')->where('id', $id)->first();
+
         return view('admin.products.detail', compact('product', 'title'));
     }
 
@@ -96,22 +100,27 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $product)
+    public function update(Request $request, $productId)
     {
         try {
             DB::beginTransaction();
+
             $request->validate([
                 'name' => 'required|string|max:255',
-                'slug' => 'required|string|max:255|unique:products,slug,' . $product,
+                'slug' => 'required|string|max:255|unique:products,slug,' . $productId,
                 'sku' => 'nullable|string|max:255',
                 'price' => 'required|numeric',
                 'weight' => 'nullable|numeric',
                 'description' => 'nullable|string',
                 'dimensions' => 'nullable|string|max:255',
-                // Các validate khác
+                'is_featured' => 'nullable|boolean',
+                'condition' => 'required|in:new,used,refurbished',
+                'tomtat' => 'nullable|string', // Thêm quy tắc xác thực cho trường tomtat
+                // Các quy tắc xác thực khác
             ]);
 
-            $product = Product::findOrFail($product);
+            $product = Product::findOrFail($productId);
+
             $product->update([
                 'name' => $request->name,
                 'slug' => $request->slug,
@@ -120,19 +129,24 @@ class ProductController extends Controller
                 'weight' => $request->weight,
                 'dimensions' => $request->dimensions,
                 'is_active' => $request->is_active,
+                'is_featured' => $request->has('is_featured'),
+                'condition' => $request->condition,
                 'brand_id' => $request->brand_id,
                 'description' => $request->description,
                 'catalogue_id' => $request->catalogue_id,
+                'tomtat' => $request->tomtat, // Cập nhật trường tomtat
             ]);
 
-            if ($request->file("image_url")) {
-                $imagePath = $request->file("image_url")->store('products_images', 'public');
+            if ($request->hasFile("image_url")) {
+                $imagePath = Storage::put('images', $request->image_url);
                 $product->update(['image_url' => $imagePath]);
             }
+
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
         } catch (\Throwable $th) {
             DB::rollBack();
+            \Log::error('Update product error: ' . $th->getMessage());
             return back()->with('errors', $th->getMessage());
         }
     }

@@ -47,25 +47,49 @@
                                             <input class="kobolg-Input kobolg-Input--text input-text" type="password"
                                                 name="password" id="password" autocomplete="current-password" required>
                                         </p>
+
+                                        <div class="form-row d-flex justify-content-between align-items-center">
+                                            <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
+                                                <input class="kobolg-form__input kobolg-form__input-checkbox"
+                                                       name="rememberme" type="checkbox" id="rememberme" value="forever">
+                                                <span>Giữ đăng nhập</span>
+                                            </label>
+                                            <p class="kobolg-LostPassword lost_password mb-0">
+                                                <a href="my-account.htmllost-password/index.html">Quên mật khẩu?</a>
+                                            </p>
+                                        </div>
                                         <p class="form-row">
                                             <button type="submit" class="kobolg-Button button" name="login"
                                                 value="Log in">Đăng Nhập</button>
-                                                <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
-                                                    <input class="kobolg-form__input kobolg-form__input-checkbox"
-                                                           name="rememberme" type="checkbox" id="rememberme" value="forever">
-                                                    <span>Remember me</span>
-                                                </label>
-                                        </p>
-                                        <p class="kobolg-LostPassword lost_password">
-                                            <a href="my-account.htmllost-password/index.html">Lost your
-                                                password?</a>
                                         </p>
                                     </form>
+
+                                    <!-- Đường kẻ và logo đăng nhập -->
+                                    <div class="line-through d-flex align-items-center my-4">
+                                        <hr class="flex-grow-1" style="margin: 0; width: 30%;">
+                                        <span class="or-text mx-2">hoặc</span>
+                                        <hr class="flex-grow-1" style="margin: 0; width: 30%;">
+                                    </div>
+
+
+                                    <div class="text-center mt-2 mb-3">
+                                        <a href="{{ route('login.google') }}" class="btn-light social-button" style="margin-right: 70px;">
+                                            <img src="{{ asset('images/search.png') }}" alt="Google" style="width: 30px; height: 30px;">
+                                            <span style="margin-left: 5px;">Google</span>
+                                        </a>
+
+                                        <a href="{{ route('login.facebook') }}" class="btn-light social-button" style="margin-right: 5px;">
+                                            <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px; height: 30px;">
+                                            <span style="margin-left: 5px;">Facebook</span>
+                                        </a>
+                                    </div>
+
+
                                 </div>
                                 <div class="u-column2 col-2">
                                     <h2>Register</h2>
                                     <form method="POST" action="{{ route('register') }}" class="kobolg-form kobolg-form-register register">
-                                        @csrf <!-- Thêm CSRF token nếu bạn đang sử dụng Laravel -->
+                                        @csrf
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
                                             <label for="reg_email">Email addresses&nbsp;<span class="required">*</span></label>
                                             <input type="email" class="kobolg-Input kobolg-Input--text input-text"
@@ -105,5 +129,15 @@
             </div>
         </div>
     </main>
+    <style>
+        .social-button {
+        text-decoration: none;
+        color: inherit;
+        transition: background-color 0.3s;
+    }
 
+    .social-button:hover {
+        background-color: transparent;
+    }
+    </style>
 @endsection
