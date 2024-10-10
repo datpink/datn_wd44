@@ -55,7 +55,7 @@
                                                 <span>Giữ đăng nhập</span>
                                             </label>
                                             <p class="kobolg-LostPassword lost_password mb-0">
-                                                <a href="my-account.htmllost-password/index.html">Quên mật khẩu?</a>
+                                                <a href="{{ route('password.request')}}">Quên mật khẩu?</a>
                                             </p>
                                         </div>
                                         <p class="form-row">
