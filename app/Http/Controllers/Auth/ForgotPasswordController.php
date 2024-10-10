@@ -45,6 +45,7 @@ class ForgotPasswordController extends Controller
         return back()->with('status', 'Link đặt lại mật khẩu đã được gửi tới email của bạn.');
     }
 
+
     // Hiển thị form đặt lại mật khẩu
     public function showResetForm($token)
     {
