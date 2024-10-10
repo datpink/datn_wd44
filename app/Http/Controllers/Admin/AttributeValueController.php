@@ -9,72 +9,74 @@ use Illuminate\Http\Request;
 
 class AttributeValueController extends Controller
 {
-  // Hiển thị danh sách Attribute Values theo Attribute ID
-  public function index($attributeId)
-  {
-      $attribute = Attribute::findOrFail($attributeId);
-      $attributeValues = AttributeValue::where('attribute_id', $attributeId)->get();
-      
-      return view('attribute_values.index', compact('attribute', 'attributeValues'));
-  }
+    // Hiển thị danh sách Attribute Values theo Attribute ID
+    public function index($attributeId)
+    {
+        $attribute = Attribute::findOrFail($attributeId);
+        $attributeValues = AttributeValue::where('attribute_id', $attributeId)->get();
 
-  // Hiển thị form tạo mới Attribute Value
-  public function create($attributeId)
-  {
-      $attribute = Attribute::findOrFail($attributeId);
-      return view('attribute_values.create', compact('attribute'));
-  }
+        return view('admin.attribute_values.index', compact('attribute', 'attributeValues'));
+    }
 
-  // Lưu dữ liệu Attribute Value vào cơ sở dữ liệu
-  public function store(Request $request)
-  {
-      $request->validate([
-          'attribute_id' => 'required|exists:attributes,id',
-          'name' => 'required|string|max:255',
-      ]);
+    // Hiển thị form tạo mới Attribute Value
+    public function create($attributeId)
+    {
+        $attribute = Attribute::findOrFail($attributeId);
+        return view('admin.attribute_values.create', compact('attribute'));
+    }
 
-      AttributeValue::create([
-          'attribute_id' => $request->attribute_id,
-          'name' => $request->name,
-      ]);
+    // Lưu dữ liệu Attribute Value vào cơ sở dữ liệu
+    public function store(Request $request)
+    {
+        $request->validate([
+            'attribute_id' => 'required|exists:attributes,id',
+            'name' => 'required|string|max:255',
+        ]);
 
-      return redirect()->route('attribute_values.index', ['attribute_id' => $request->attribute_id])
-                       ->with('success', 'Attribute Value created successfully!');
-  }
+        AttributeValue::create([
+            'attribute_id' => $request->attribute_id,
+            'name' => $request->name,
+        ]);
 
-  // Hiển thị form chỉnh sửa Attribute Value
-  public function edit($id)
-  {
-      $attributeValue = AttributeValue::findOrFail($id);
-      $attribute = $attributeValue->attribute; // Lấy thông tin attribute liên kết
+        return redirect()->route('attributes.attribute_values.index', $request->attribute_id)
+            ->with('success', 'Attribute Value created successfully!');
+    }
 
-      return view('attribute_values.edit', compact('attributeValue', 'attribute'));
-  }
+    // Hiển thị form chỉnh sửa Attribute Value
+    public function edit($attributeId, $valueId)
+{
+    // Tìm giá trị thuộc tính theo ID
+    $value = AttributeValue::findOrFail($valueId);
 
-  // Cập nhật thông tin Attribute Value
-  public function update(Request $request, $id)
-  {
-      $request->validate([
-          'name' => 'required|string|max:255',
-      ]);
+    // Truyền giá trị thuộc tính và ID thuộc tính đến view
+    return view('admin.attribute_values.edit', [
+        'value' => $value,
+        'attributeId' => $attributeId,
+    ]);
+}
 
-      $attributeValue = AttributeValue::findOrFail($id);
-      $attributeValue->update([
-          'name' => $request->name,
-      ]);
+    // Cập nhật thông tin Attribute Value
+    public function update(Request $request, $attributeId, $valueId)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        // Thêm các quy tắc xác thực khác nếu cần
+    ]);
 
-      return redirect()->route('attribute_values.index', ['attribute_id' => $attributeValue->attribute_id])
-                       ->with('success', 'Attribute Value updated successfully!');
-  }
+    $value = AttributeValue::findOrFail($valueId);
+    $value->name = $request->name;
+    $value->save();
 
-  // Xóa Attribute Value
-  public function destroy($id)
-  {
-      $attributeValue = AttributeValue::findOrFail($id);
-      $attributeId = $attributeValue->attribute_id; // Lưu lại attribute_id trước khi xóa
-      $attributeValue->delete();
+    return redirect()->route('attributes.attribute_values.index', $attributeId)
+        ->with('success', 'Attribute value updated successfully.');
+}
 
-      return redirect()->route('attribute_values.index', ['attribute_id' => $attributeId])
-                       ->with('success', 'Attribute Value deleted successfully!');
-  }
+    // Xóa Attribute Value
+    public function destroy($attributeId, $valueId)
+    {
+        $value = AttributeValue::findOrFail($valueId);
+        $value->delete();
+        return redirect()->route('attributes.attribute_values.index', $attributeId)
+            ->with('success', 'Attribute value deleted successfully.');
+    }
 }

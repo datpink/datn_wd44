@@ -38,7 +38,7 @@ class ProductVariantController extends Controller
             'attributes' => 'required|array', // Đảm bảo là mảng
             'attributes.*' => 'exists:attribute_values,id', // Kiểm tra từng ID có tồn tại
         ]);
-    
+
         // Tạo biến thể mới
         $variant = new ProductVariant([
             'variant_name' => $request->variant_name,
@@ -47,18 +47,18 @@ class ProductVariantController extends Controller
             'stock' => $request->stock,
             'status' => 'inactive', // Mặc định là không kích hoạt
         ]);
-    
+
         // Lưu biến thể vào cơ sở dữ liệu
         $product->variants()->save($variant);
-    
+
         // Thêm thuộc tính vào biến thể qua bảng trung gian
         if ($request->has('attributes')) {
             $variant->attributes()->attach($request->attributes);
         }
-    
+
         return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
     }
-    
+
 
     // Chỉnh sửa biến thể
     public function edit(ProductVariant $variant)
@@ -90,5 +90,10 @@ class ProductVariantController extends Controller
         $variant->save();
 
         return redirect()->route('products.variants.index', $variant->product_id)->with('success', 'Trạng thái biến thể đã được cập nhật thành công.');
+    }
+    public function getAttributeValues($attributeId)
+    {
+        $values = AttributeValue::where('attribute_id', $attributeId)->get();
+        return response()->json($values);
     }
 }
