@@ -51,14 +51,14 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('product-variants.index') }}">Danh sách biến thể</a>
+                                <a href="">Danh sách biến thể</a>
                             </li>
                         </ul>
                     </div>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('attributes.index') }}">Danh sách thuộc tính biến thể</a>
+                                <a href="">Danh sách thuộc tính biến thể</a>
                             </li>
                         </ul>
                     </div>

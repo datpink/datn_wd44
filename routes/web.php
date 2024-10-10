@@ -132,14 +132,25 @@ Route::prefix('admin')->middleware('permission:full|editor')->group(function () 
     Route::resource('products', AdminProductController::class);
 
 
-    //Route product variant
-    Route::resource('product-variants', ProductVariantController::class);
+    // //Route product variant
+    // Route::resource('product-variants', ProductVariantController::class);
 
-    // Route cho chức năng kích hoạt lại trạng thái
-    Route::post('product-variants/{id}/activate', [ProductVariantController::class, 'activate'])->name('product-variants.activate');
-    Route::resource('attributes', AttributeController::class);
-    Route::resource('attributevalue', AttributeValueController::class);
+    // // Route cho chức năng kích hoạt lại trạng thái
+    // Route::post('product-variants/{id}/activate', [ProductVariantController::class, 'activate'])->name('product-variants.activate');
+    // Route::resource('attributes', AttributeController::class);
+    // Route::resource('attributevalue', AttributeValueController::class);
 
+
+    // Route để quản lý biến thể của sản phẩm
+    Route::get('admin/products/{product}/variants', [ProductVariantController::class, 'index'])->name('products.variants.index');
+
+    // Route để thêm biến thể của sản phẩm
+    Route::get('admin/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('products.variants.create');
+
+    // Route để lưu biến thể của sản phẩm
+    Route::post('admin/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
+    // Route để cập nhật trạng thái biến thể
+    Route::patch('admin/variants/{variant}/status', [ProductVariantController::class, 'updateStatus'])->name('variants.updateStatus');
 
     // Permission
 
