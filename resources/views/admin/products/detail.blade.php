@@ -103,6 +103,12 @@
                                 </select>
                             </div>
 
+                            <!-- Tóm tắt sản phẩm -->
+                            <div class="form-group">
+                                <label for="tomtat">Tóm tắt</label>
+                                <p class="card">{{ $product->tomtat }}</p>
+                            </div>
+
                             <!-- Mô tả sản phẩm -->
                             <div class="form-group">
                                 <label for="description">Mô tả sản phẩm</label>

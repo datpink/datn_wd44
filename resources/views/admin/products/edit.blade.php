@@ -116,6 +116,12 @@
                                         value="{{ $product->dimensions }}">
                                 </div>
 
+                                <!-- Tóm tắt sản phẩm -->
+                                <div class="form-group">
+                                    <label for="tomtat">Tóm tắt</label>
+                                    <textarea name="tomtat" id="tomtat" class="form-control" rows="2">{{ $product->tomtat }}</textarea>
+                                </div>
+
                                 <!-- Mô tả sản phẩm -->
                                 <div class="form-group">
                                     <label for="editor">Mô tả sản phẩm</label>
