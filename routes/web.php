@@ -83,6 +83,14 @@ Route::prefix('shop')->group(function () {
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
+
+    // Route cho trang profile
+    Route::get('/profile', [UserController::class, 'viewProfile'])->name('profile.show');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/edit-password', [UserController::class, 'editPassword'])->name('profile.edit-password');
+    Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
+
 });
 
     

@@ -14,7 +14,7 @@
                 <a href="#">Addresses</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--edit-account">
-                <a href="#">Account details</a>
+                <a href="{{ route('profile.show') }}">Account details</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--customer-logout">
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
