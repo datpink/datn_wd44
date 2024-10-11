@@ -14,20 +14,42 @@ class SearchController extends Controller
     {
         $query = $request->input('query');
 
-        if ($query) {
-            // Tìm kiếm trong các model Product, Post và Category
-            $products = Product::where('name', 'LIKE', "%{$query}%")->get();
-            $posts = Post::where('title', 'LIKE', "%{$query}%")->get();
-            $categories = Category::where('name', 'LIKE', "%{$query}%")->get();
+        // Tìm kiếm trong bảng sản phẩm
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+                            ->orWhere('description', 'LIKE', "%{$query}%")
+                            ->take(5) // Giới hạn số lượng kết quả trả về
+                            ->get();
+        
+        // Tìm kiếm trong bảng bài viết
+        $posts = Post::where('title', 'LIKE', "%{$query}%")
+                     ->orWhere('tomtat', 'LIKE', "%{$query}%")
+                     ->take(5)
+                     ->get();
+        
+        // Tìm kiếm trong bảng danh mục
+        $categories = Category::where('name', 'LIKE', "%{$query}%")
+                              ->take(5)
+                              ->get();
+        
+        // Kết hợp tất cả kết quả tìm kiếm
+        return response()->json([
+            'products' => $products,
+            'posts' => $posts,
+            'categories' => $categories,
+        ]);
+    }
 
-            // Trả về kết quả tìm kiếm
-            return response()->json([
-                'products' => $products,
-                'posts' => $posts,
-                'categories' => $categories,
-            ]);
-        }
+    // Chức năng gợi ý và tự động hoàn thành
+    public function autocomplete(Request $request)
+    {
+        $query = $request->input('query');
 
-        return response()->json([]);
+        // Tìm kiếm gợi ý từ sản phẩm
+        $suggestions = Product::where('name', 'LIKE', "%{$query}%")
+                                ->take(5)
+                                ->get()
+                                ->pluck('name'); // Chỉ trả về tên sản phẩm
+
+        return response()->json($suggestions);
     }
 }
