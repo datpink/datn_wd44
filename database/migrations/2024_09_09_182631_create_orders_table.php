@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->integer('points_redeemed')->nullable();
             $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
             $table->string('phone_number')->nullable();
-            $table->boolean('is_new')->default(true); // Thêm cột is_new
+            $table->boolean('is_new')->default(true);
             $table->softDeletes();
             $table->timestamps();
         });

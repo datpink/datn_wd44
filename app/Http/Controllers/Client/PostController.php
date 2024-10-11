@@ -19,6 +19,10 @@ class PostController extends Controller
 
         return view('client.posts.index', compact('posts'));
     }
-
+    public function show($id)
+    {
+        $product = Post::findOrFail($id); // Lấy sản phẩm theo ID
+        return view('client.products.product-detail', compact('product'));
+    }
 }
 

@@ -48,6 +48,8 @@
                                                 </a>
                                             </td>
                                             <td>
+
+                                                <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-warning">Chi tiết</a>
                                                 <a href="{{ route('attributes.edit', $attribute->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                                 <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;">
                                                     @csrf

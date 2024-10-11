@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Thêm mới Attribute Value</div>
-                    <a href="{{ route('attribute_values.index', ['attribute_id' => $attribute->id]) }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
@@ -27,7 +27,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('attribute_values.store') }}" method="POST">
+                    <form action="{{ route('attributes.attribute_values.store',$attribute->id) }}" method="POST">
                         @csrf
 
                         <div class="form-group">

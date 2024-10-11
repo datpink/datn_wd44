@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AttributeController;
+use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 // use App\Http\Controllers\CategoryController;
@@ -57,6 +60,12 @@ Route::prefix('shop')->group(function () {
     Route::get('/login/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);
     Route::get('/login/facebook', [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
     Route::get('/login/facebook/callback', [LoginFacebookController::class, 'handleFacebookCallback']);
+
+    Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+    Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
@@ -159,14 +168,19 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
 
 
-    //Route product variant
-    Route::resource('product-variants', ProductVariantController::class);
+    // //Route product variant
+    // Route::resource('product-variants', ProductVariantController::class);
 
-    // Route cho chức năng kích hoạt lại trạng thái
+    // // Route cho chức năng kích hoạt lại trạng thái
     Route::post('product-variants/{id}/activate', [ProductVariantController::class, 'activate'])->name('product-variants.activate');
+    Route::resource('attributes', AttributeController::class);
+    Route::resource('attributes.attribute_values', AttributeValueController::class);
 
 
-    // Permission
+    Route::get('admin/products/{product}/variants', [ProductVariantController::class, 'index'])->name('products.variants.index');
+    Route::get('admin/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('products.variants.create');
+    Route::post('admin/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
+    Route::patch('admin/variants/{variant}/status', [ProductVariantController::class, 'updateStatus'])->name('variants.updateStatus');
 
     Route::resource('permissions', PermissionController::class);
 
