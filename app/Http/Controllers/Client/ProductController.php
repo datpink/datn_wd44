@@ -20,11 +20,14 @@ class ProductController extends Controller
         return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $product = Product::findOrFail($id); // Lấy sản phẩm theo ID
+        // Lấy sản phẩm theo slug
+        $product = Product::where('slug', $slug)->firstOrFail(); // Sử dụng where để tìm sản phẩm theo slug
+
         return view('client.products.product-detail', compact('product'));
     }
+
 
     public function productByCatalogues(string $parentSlug, $childSlug = null)
     {

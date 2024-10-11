@@ -66,6 +66,7 @@ Route::prefix('shop')->group(function () {
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
