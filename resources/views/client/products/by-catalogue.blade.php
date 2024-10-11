@@ -137,8 +137,7 @@
                                                 <span class="review">({{ $product->reviews_count }})</span>
                                             </div>
                                             <h3 class="product-name product_title">
-                                                <a
-                                                    href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                                                <a href="{{ route('client.products.product-detail', $product->slug) }}">{{ $product->name }}</a>
                                             </h3>
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
@@ -341,7 +340,7 @@
                                                                         <span class="review">(${product.reviews_count})</span>
                                                                     </div>
                                                                     <h3 class="product-name product_title">
-                                                                        <a href="/products/${product.id}">${product.name}</a>
+                                                                        <a href="/products/chi-tiet/${product.id}">${product.name}</a>
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">
