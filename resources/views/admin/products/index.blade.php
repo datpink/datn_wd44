@@ -95,6 +95,22 @@
                                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm rounded-pill" title="Chi tiết">
                                                     <i class="bi bi-info-circle"></i> Show
                                                 </a>
+                                                <!-- Kiểm tra xem sản phẩm đã có biến thể chưa -->
+                                                @php
+                                                    $hasVariants = $product->variants->isNotEmpty(); // Kiểm tra có biến thể
+                                                @endphp
+
+                                                @if ($hasVariants)
+                                                    <a href="{{ route('products.variants.index', $product->id) }}"
+                                                        class="btn btn-info btn-rounded">
+                                                        Quản lý Biến Thể
+                                                    </a>
+                                                @else
+                                                    <a href="{{ route('products.variants.create', $product->id) }}"
+                                                        class="btn btn-info btn-rounded">
+                                                        Thêm Biến Thể
+                                                    </a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

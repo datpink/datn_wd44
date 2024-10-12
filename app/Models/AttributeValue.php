@@ -11,7 +11,7 @@ class AttributeValue extends Model
 
     protected $fillable = [
         'attribute_id',
-        'variant_value'
+        'name'
     ];
 
     public function attribute()
@@ -21,6 +21,6 @@ class AttributeValue extends Model
 
     public function productVariants()
     {
-        return $this->hasMany(ProductVariant::class);
+        return $this->belongsToMany(ProductVariant::class, 'product_variant_attributes');
     }
 }

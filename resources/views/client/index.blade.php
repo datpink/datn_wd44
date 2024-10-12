@@ -121,7 +121,7 @@
                                             <span class="review">(0)</span>
                                         </div>
                                         <h3 class="product-name product_title">
-                                            <a href="{{ route('products.show', $product->id) }}"
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">{{ $product->name }}</a>
                                         </h3>
                                         <span class="price">
@@ -511,8 +511,7 @@
                     <div class="heading-inner">
                         <h3 class="title">Bài Viết Nổi Bật</h3>
                         <div class="subtitle">
-                            Lorem ipsum dolor sit amet consectetur adipiscing elit erat vehicula ad, mollis viverra
-                            vulputate
+                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất chỉ với một cú nhấp chuột
                         </div>
                     </div>
                 </div>

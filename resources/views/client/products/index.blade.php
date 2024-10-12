@@ -311,7 +311,7 @@
                                             // console.log(res);
                                             // console.log(productLists);
                                             productLists.innerHTML = '';
-                                            console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
+                                            // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
                                             // console.log(res.data.data);
                                             // Xử lý danh sách sản phẩm
                                             // Kiểm tra nếu products là một mảng
@@ -328,11 +328,9 @@
                                                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                                                             <div class="product-inner images">
                                                                 <div class="product-thumb">
-                                                                <a class="thumb-link" href="#">
-                                                                    ${product.image_url && product.image_url !== 'null' ? `
-                                                                                                <img class="img-responsive" src="${asset('storage/' + product.image_url)}" alt="${product.name}" width="600" height="778">
-                                                                                            ` : 'Không có ảnh'}
-                                                                </a>
+                                                                    <a class="thumb-link" href="#">
+                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                    </a>
                                                                     <div class="flash">
                                                                         ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
                                                                     </div>
@@ -376,7 +374,8 @@
                                                             </div>
                                                         </li>
                                                     `;
-                                                    productLists.innerHTML += productHTML;
+                                                    productLists.innerHTML +=
+                                                        productHTML; // Thêm sản phẩm vào danh sách
                                                 });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);

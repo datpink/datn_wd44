@@ -18,7 +18,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-list-check"></i>
-                        <span class="menu-text">Quản lý Danh Mục</span>
+                        <span class="menu-text"> Danh Mục</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -32,7 +32,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-box"></i>
-                        <span class="menu-text">Quản lý Sản Phẩm</span>
+                        <span class="menu-text"> Sản Phẩm</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -40,18 +40,9 @@
                                 <a href="{{ route('products.index') }}">Danh sách sản phẩm</a>
                             </li>
                         </ul>
-                    </div>
-                </li>
-
-                <li class="sidebar-dropdown">
-                    <a href="#">
-                        <i class="bi bi-boxes"></i>
-                        <span class="menu-text">Quản lý Biến Thể</span>
-                    </a>
-                    <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('product-variants.index') }}">Danh sách biến thể</a>
+                                <a href="{{ route('attributes.index') }}">Thuộc tính</a>
                             </li>
                         </ul>
                     </div>
@@ -60,7 +51,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-person"></i>
-                        <span class="menu-text">Quản lý Người Dùng</span>
+                        <span class="menu-text"> Người Dùng</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -80,7 +71,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-newspaper"></i>
-                        <span class="menu-text">Quản lý Tin Tức</span>
+                        <span class="menu-text"> Tin Tức</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -100,7 +91,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-tag"></i>
-                        <span class="menu-text">Quản lý Nhãn Hiệu</span>
+                        <span class="menu-text"> Nhãn Hiệu</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -114,7 +105,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-image"></i>  <!-- Thay đổi icon ở đây -->
-                        <span class="menu-text">Quản lý Banner</span>
+                        <span class="menu-text"> Banner</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -128,7 +119,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-cart-check"></i>
-                        <span class="menu-text">Quản lý Đơn Hàng</span>
+                        <span class="menu-text"> Đơn Hàng</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -145,7 +136,7 @@
                 {{-- <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-archive"></i>
-                        <span class="menu-text">Quản lý Kho Nguyên Liệu</span>
+                        <span class="menu-text"> Kho Nguyên Liệu</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -168,7 +159,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-file-earmark-text"></i>
-                        <span class="menu-text">Quản lý Thanh Toán</span>
+                        <span class="menu-text"> Thanh Toán</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -182,7 +173,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-person-workspace"></i>
-                        <span class="menu-text">Quản lý Nhân Viên</span>
+                        <span class="menu-text"> Nhân Viên</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -196,7 +187,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-people-fill"></i>
-                        <span class="menu-text">Quản lý Khách Hàng</span>
+                        <span class="menu-text"> Khách Hàng</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
