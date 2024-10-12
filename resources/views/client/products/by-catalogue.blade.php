@@ -339,7 +339,7 @@
                                                                         <span class="review">(${product.reviews_count})</span>
                                                                     </div>
                                                                     <h3 class="product-name product_title">
-                                                                        <a href="/products/${product.id}">${product.name}</a>
+                                                                        <a href="products/${product.id}">${product.name}</a>
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">

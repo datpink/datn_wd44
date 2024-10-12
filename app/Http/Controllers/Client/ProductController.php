@@ -22,6 +22,7 @@ class ProductController extends Controller
 
     public function show($id)
     {
+        dd($id);
         $product = Product::findOrFail($id); // Lấy sản phẩm theo ID
         return view('client.products.product-detail', compact('product'));
     }
@@ -78,12 +79,10 @@ class ProductController extends Controller
             ->whereBetween('discount_price', [$minPrice, $maxPrice])
             ->get();
 
-
-
         // dd($products);
         // dd($minPrice, $maxPrice);
 
 
-        return response()->json(['products' => $products->isNotEmpty() ? $products : []]);
+        return response()->json(['products' => $products]);
     }
 }
