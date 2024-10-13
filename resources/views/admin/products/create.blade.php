@@ -128,7 +128,7 @@
 
                                 <div id="image-inputs">
                                     <div class="form-group d-flex align-items-center">
-                                        <label for="image1" class="me-2">Hình ảnh 1</label>
+                                        <label for="image1" class="me-2">Gallery 1</label>
                                         <input type="file" name="images[]" id="image1" class="form-control me-2"
                                             accept="image/*">
                                         <button type="button" class="btn btn-secondary add-image">Thêm</button>
@@ -204,7 +204,7 @@
             const newInput = document.createElement('div');
             newInput.classList.add('form-group', 'd-flex', 'align-items-center');
             newInput.innerHTML = `
-            <label for="image${newIndex}" class="me-2">Hình ảnh ${newIndex}</label>
+            <label for="image${newIndex}" class="me-2">Gallery ${newIndex}</label>
             <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*">
             <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
         `;

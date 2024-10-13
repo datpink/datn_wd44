@@ -8,26 +8,32 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="card-title">Thêm mới Attribute Value</div>
-                    <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-secondary">
+                    <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm rounded-pill btn-secondary d-flex align-items-center">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
                 </div>
                 <div class="card-body mt-4">
 
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
+                    {{-- @if (session('success'))
+                        <div class="alert alert-success d-flex align-items-center" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>
+                            <div>{{ session('success') }}</div>
                         </div>
                     @endif
+                    @if ($errors->any())
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <div>
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    @endif --}}
 
-                    <form action="{{ route('attributes.attribute_values.store',$attribute->id) }}" method="POST">
+                    <form action="{{ route('attributes.attribute_values.store', $attribute->id) }}" method="POST">
                         @csrf
 
                         <div class="form-group">
@@ -49,8 +55,10 @@
                             @enderror
                         </div>
 
-                        <div>
-                            <button type="submit" class="btn btn-primary">Tạo Attribute Value</button>
+                        <div class="mt-3">
+                            <button type="submit" class="btn btn-primary rounded-pill d-flex align-items-center">
+                                <i class="bi bi-plus-circle me-2"></i> Tạo Attribute Value
+                            </button>
                         </div>
                     </form>
                 </div>
