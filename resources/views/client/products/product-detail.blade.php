@@ -66,9 +66,68 @@
                                         <span class="onnew"><span class="text">New</span></span>
                                     </div>
                                     <h1 class="product_title entry-title">{{ $product->name }}</h1>
-                                    <p class="price"><span class="kobolg-Price-amount amount"><span
-                                                class="kobolg-Price-currencySymbol">  <span
-                                            class="kobolg-Price-amount amount"> {{ number_format($product->price, 0, ',', '.') }}đ</p>
+                                    <p class="price">
+                                        <span class="kobolg-Price-amount amount">
+                                            <span class="kobolg-Price-currencySymbol"></span>
+                                            <span id="product-price" class="kobolg-Price-amount amount">
+                                                {{ number_format($product->price, 0, ',', '.') }}đ
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <br>
+                                    @foreach ($product->variants as $variant)
+                                        <button class="variant-btn" data-id="{{ $variant->id }}"
+                                            data-price="{{ $variant->price }}">
+                                            {{ $variant->variant_name }}
+                                        </button>
+                                    @endforeach
+                                    <div id="error-message" style="color: red;"></div>
+
+                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const variantButtons = document.querySelectorAll('.variant-btn');
+                                            const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
+                                            let selectedButton = null;
+
+                                            // Xử lý sự kiện click trên từng nút biến thể
+                                            variantButtons.forEach(button => {
+                                                // Thiết lập màu nền ban đầu cho các button
+                                                button.style.backgroundColor = '#f4cdd1';
+                                                button.style.border = 'none';
+                                                button.style.color = 'black';
+
+                                                button.addEventListener('click', function() {
+                                                    if (selectedButton === this) {
+                                                        // Nếu click lại vào nút đã chọn, trở về trạng thái ban đầu
+                                                        selectedButton.style.backgroundColor = '#f4cdd1';
+                                                        selectedButton.style.border = 'none';
+                                                        selectedButton.style.color = 'black';
+                                                        selectedButton = null;
+
+                                                        // Đặt lại giá gốc
+                                                        $('#product-price').text(originalPrice);
+                                                    } else {
+                                                        // Nếu có nút khác đang được chọn, reset lại nút đó
+                                                        if (selectedButton) {
+                                                            selectedButton.style.backgroundColor = '#f4cdd1';
+                                                            selectedButton.style.border = 'none';
+                                                            selectedButton.style.color = 'black';
+                                                        }
+
+                                                        // Chọn nút hiện tại và thay đổi style
+                                                        selectedButton = this;
+                                                        selectedButton.style.backgroundColor = '#fff';
+                                                        selectedButton.style.border = '2px solid #bc2f3e';
+                                                        selectedButton.style.color = '#bc2f3e';
+
+                                                        // Thay đổi giá theo biến thể
+                                                        $('#product-price').text(this.dataset.price);
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
                                     <p class="stock in-stock">
                                         Thương hiệu: <span> {{ $product->brand ? $product->brand->name : 'Không có' }}</span>
                                     </p>
