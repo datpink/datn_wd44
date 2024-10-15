@@ -10,13 +10,15 @@ class PromotionController extends Controller
 {
     public function index()
     {
-        $promotions = Promotion::all();
-        return view('admin.promotions.index', compact('promotions'));
+        $title = 'Danh Sách Mã Giảm Giá';
+        $promotions = Promotion::paginate(10);
+        return view('admin.promotions.index', compact('promotions', 'title'));
     }
 
         public function create()
     {
-        return view('admin.promotions.create');
+        $title = 'Thêm mới mã giảm giá';
+        return view('admin.promotions.create', compact('title'));
     }
 
     /**
@@ -46,9 +48,10 @@ class PromotionController extends Controller
     }
     public function edit(string $id)
     {
+        $title = 'Cập Nhật Mã Giảm Giá';
         $promotion = Promotion::findOrFail($id);
     
-        return view('admin.promotions.edit', compact('promotion'));
+        return view('admin.promotions.edit', compact('promotion', 'title'));
     }
 
     /**

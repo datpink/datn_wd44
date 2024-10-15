@@ -1,5 +1,7 @@
 @extends('admin.master')
 
+@section('title', 'Thêm biến thể')
+
 @section('content')
     <h4>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h4>
 

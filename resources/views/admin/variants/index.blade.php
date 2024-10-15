@@ -1,5 +1,8 @@
 @extends('admin.master')
 
+
+@section('title', 'Danh sách biến thể')
+
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
