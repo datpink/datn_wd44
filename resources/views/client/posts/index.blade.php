@@ -18,7 +18,7 @@
                                 <div class="post-inner">
                                     <div class="post-thumb">
                                         <a href="#">
-                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
+                                            <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->title }}"
                                                 width="270" height="230">
                                         </a>
                                         <a class="datebox" href="#">

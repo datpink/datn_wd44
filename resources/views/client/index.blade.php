@@ -12,12 +12,12 @@
 
             </div>
         </div>
-
         {{-- content --}}
         <div class="section-003 section-002">
 
             <!-- GGI 1 -->
             <div class="container">
+                
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="kobolg-banner style-01">
@@ -121,7 +121,7 @@
                                             <span class="review">(0)</span>
                                         </div>
                                         <h3 class="product-name product_title">
-                                            <a href="{{ route('products.show', $product->id) }}"
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">{{ $product->name }}</a>
                                         </h3>
                                         <span class="price">

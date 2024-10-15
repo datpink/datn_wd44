@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
+use App\Http\Controllers\SearchController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +46,9 @@ use Illuminate\Support\Facades\Route;
 
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
+
+
+
 
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
@@ -65,6 +70,7 @@ Route::prefix('shop')->group(function () {
 
     // Các route không yêu cầu đăng nhập
     Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
@@ -79,7 +85,18 @@ Route::prefix('shop')->group(function () {
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
+
+    // Route cho trang profile
+    Route::get('/profile', [UserController::class, 'viewProfile'])->name('profile.show');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/edit-password', [UserController::class, 'editPassword'])->name('profile.edit-password');
+    Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
+
 });
+
+    
+    
 
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -88,9 +105,9 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-
-
-
+    // Promotions
+    Route::resource('promotions', PromotionController::class);
+    
     // Route cho vai trò
     Route::resource('roles', RoleController::class);
     Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');
@@ -189,4 +206,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
+    // Route cho chức năng tìm kiếm
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
+    Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
 });
