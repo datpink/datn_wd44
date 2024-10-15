@@ -195,7 +195,7 @@ class ProductController extends Controller
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
         } catch (\Throwable $th) {
             DB::rollBack();
-            \Log::error('Update product error: ' . $th->getMessage());
+            // \Log::error('Update product error: ' . $th->getMessage());
             return back()->with('errors', $th->getMessage());
         }
     }
