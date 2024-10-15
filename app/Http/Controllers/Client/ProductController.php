@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Product; // Đảm bảo đã import mô hình Product
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -24,11 +25,34 @@ class ProductController extends Controller
     {
 
         // Lấy sản phẩm theo slug
-        $product = Product::where('slug', $slug)->firstOrFail(); // Sử dụng where để tìm sản phẩm theo slug
+        $product = Product::where('slug', $slug)
+        ->with(['variants' => function($query) {
+            $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
+        }])            ->firstOrFail(); 
+
 
         return view('client.products.product-detail', compact('product'));
     }
 
+    public function getVariantPrice(Request $request)
+    {
+        // Lấy thông tin biến thể dựa trên ID
+        $variant = ProductVariant::find($request->variant_id);
+
+        if ($variant) {
+            // Trả về giá của biến thể
+            return response()->json([
+                'success' => true,
+                'price' => number_format($variant->price, 0, ',', '.')
+            ]);
+        } else {
+            // Trả về lỗi nếu không tìm thấy biến thể
+            return response()->json([
+                'success' => false,
+                'message' => 'Biến thể không tồn tại.'
+            ]);
+        }
+    }
 
     public function productByCatalogues(string $parentSlug, $childSlug = null)
     {
