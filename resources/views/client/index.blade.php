@@ -12,7 +12,6 @@
 
             </div>
         </div>
-        
         {{-- content --}}
         <div class="section-003 section-002">
 

@@ -130,8 +130,8 @@
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
-                                            <div class="star-rating"><span
-                                                        style="width:{{ $product->rating * 20 }}%">Rated <strong
+                                            <div class="star-rating">
+                                                <span style="width: {{ $product->rating * 20 }}%">Rated <strong
                                                             class="rating">{{ $product->rating }}</strong> out of 5</span>
                                                 </div>
                                                 <span class="review">({{ $product->reviews_count }})</span>

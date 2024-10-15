@@ -107,8 +107,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     // Promotions
     Route::resource('promotions', PromotionController::class);
-
-
+    
     // Route cho vai trò
     Route::resource('roles', RoleController::class);
     Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');
