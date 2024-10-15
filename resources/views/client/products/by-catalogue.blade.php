@@ -138,7 +138,7 @@
                                             </div>
                                             <h3 class="product-name product_title">
                                                 <a
-                                                    href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                                                    href="{{ route('client.products.product-detail', $product->slug) }}">{{ $product->name }}</a>
                                             </h3>
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
@@ -232,13 +232,12 @@
 
                             </form> --}}
                             <form method="get" action="" id="priceFilterForm">
-
+                                <input type="hidden" name="parentCataloguesID" id="parentCataloguesID" value="{{ $parentCataloguesID }}">
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
                                         data-unit="$" class="price_slider" data-value-min="0"
                                         data-value-max="{{ $maxDiscountPrice }}">
                                     </div>
-
 
                                     <div class="price_slider_amount">
                                         <button type="submit" class="button">Filter</button>
@@ -297,11 +296,15 @@
                                         'data-value-min');
                                     const maxPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
                                         'data-value-max');
+                                    const parentCataloguesID = document.getElementById('parentCataloguesID').value;
+                                    // console.log('123'+parentCataloguesID);
 
                                     let params = {
+                                        'parentCataloguesID': parentCataloguesID,
                                         'min_price': minPrice,
                                         'max_price': maxPrice,
                                     };
+
 
                                     // Gọi API lọc sản phẩm theo khoảng giá
                                     axios.get('/api/shop/products/filter-by-price', {
@@ -311,7 +314,7 @@
                                             // console.log(res);
                                             // console.log(productLists);
                                             productLists.innerHTML = '';
-                                            console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
+                                            // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
                                             // console.log(res.data.data);
                                             // Xử lý danh sách sản phẩm
                                             // Kiểm tra nếu products là một mảng
@@ -341,7 +344,7 @@
                                                                         <span class="review">(${product.reviews_count})</span>
                                                                     </div>
                                                                     <h3 class="product-name product_title">
-                                                                        <a href="/products/${product.id}">${product.name}</a>
+                                                                        <a href="/shop/products/chi-tiet/${product.slug}">${product.name}</a>
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">

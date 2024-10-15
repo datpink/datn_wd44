@@ -122,7 +122,7 @@
                                             <span class="review">(0)</span>
                                         </div>
                                         <h3 class="product-name product_title">
-                                            <a href="{{ route('products.show', $product->id) }}"
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">{{ $product->name }}</a>
                                         </h3>
                                         <span class="price">
