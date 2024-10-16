@@ -23,50 +23,37 @@
         .login-box {
             background-color: #fff;
             padding: 40px;
-            /* Tăng padding cho box */
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
             position: relative;
             width: 550px;
-            /* Tăng kích thước box */
         }
 
         .login-logo {
             display: flex;
-            /* Sử dụng flexbox để canh logo */
             align-items: center;
-            /* Canh giữa logo */
             margin-bottom: 20px;
-            /* Khoảng cách giữa logo và welcome text */
         }
 
         .login-logo img {
             width: 140px;
-            /* Kích thước logo */
             margin-right: 10px;
-            /* Khoảng cách giữa logo và text */
         }
 
         .login-welcome {
             margin-bottom: 20px;
             text-align: center;
             font-size: 16px;
-            /* Tăng kích thước chữ */
             color: #555;
             line-height: 1.5;
-            /* Tăng line height */
         }
 
         .form-label {
             font-weight: bold;
             font-size: 18px;
-            /* Tăng kích thước chữ label */
             line-height: 1.5;
-            /* Tăng line height cho label */
             margin-bottom: 8px;
-            /* Khoảng cách giữa label và input */
             display: block;
-            /* Để label nằm trên ô input */
         }
 
         .form-control {
@@ -74,16 +61,12 @@
             border: 1px solid #ced4da;
             padding: 10px;
             font-size: 16px;
-            /* Tăng kích thước chữ trong input */
             line-height: 1.5;
-            /* Tăng line height cho input */
             width: 100%;
-            /* Đặt chiều rộng đầy đủ */
         }
 
         .login-form-actions {
             text-align: right;
-            /* Lệch nút về bên phải */
         }
 
         .btn {
@@ -92,15 +75,31 @@
             color: white;
             border: none;
             padding: 10px 15px;
-            /* Tăng kích thước nút submit */
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            /* Tăng kích thước chữ nút */
         }
 
         .btn:hover {
             background-color: #0056b3;
+        }
+
+        /* Style for status and error messages */
+        .alert {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
@@ -108,20 +107,38 @@
 <body>
 
     <!-- Login box start -->
-    <form action="{{ route('password.email') }} ">
+    <form action="{{ route('password.email') }}" method="POST">
+        @csrf
         <div class="login-box">
             <div class="login-form">
                 <div class="login-logo">
                     <img src="{{ asset('theme/client/assets/images/logozaia.png') }}" alt="Logo" />
-                    <span>Quên mật khẩu</span> <!-- Tiêu đề cho giao diện -->
+                    <span>Quên mật khẩu</span>
                 </div>
+
+                <!-- Hiển thị thông báo trạng thái -->
+                @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
+                <!-- Hiển thị lỗi nếu có -->
+                @if ($errors->any())
+                    <div class="alert alert-error">
+                        @foreach ($errors->all() as $error)
+                            <div>{{ $error }}</div>
+                        @endforeach
+                    </div>
+                @endif
+
                 <div class="login-welcome">
                     Để truy cập tài khoản của bạn, vui lòng nhập địa chỉ email mà bạn đã cung cấp trong quá trình đăng
                     ký.
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" placeholder="Nhập email của bạn" required>
+                    <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn" required>
                 </div>
                 <div class="login-form-actions">
                     <button type="submit" class="btn">

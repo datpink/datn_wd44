@@ -36,6 +36,7 @@ class LoginFacebookController extends Controller
                 'password' => bcrypt('123456dummy'), // Bạn nên sử dụng một cách tạo mật khẩu an toàn hơn
                 'facebook_id' => $facebookUser->id,
             ]);
+            $user->assignRole('user');
             Auth::login($user);
         }
         return redirect('/');

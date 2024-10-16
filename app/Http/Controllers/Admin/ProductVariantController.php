@@ -13,19 +13,21 @@ class ProductVariantController extends Controller
     // Hiển thị danh sách biến thể của sản phẩm
     public function index(Product $product)
     {
+        $title = 'Danh Sách Biến Thể';
         $variants = $product->variants; // Lấy tất cả biến thể của sản phẩm
         $hasVariants = $variants->isNotEmpty(); // Kiểm tra xem có biến thể hay không
 
-        return view('admin.variants.index', compact('product', 'variants', 'hasVariants'));
+        return view('admin.variants.index', compact('product', 'variants', 'hasVariants', 'title'));
     }
 
     // Hiển thị form thêm biến thể
     public function create(Product $product)
     {
+        $title = 'Thêm Mới Biến Thể';
         // Giả sử bạn có model AttributeValue
         $attributeValues = AttributeValue::all(); // Lấy tất cả giá trị thuộc tính
 
-        return view('admin.variants.create', compact('product', 'attributeValues'));
+        return view('admin.variants.create', compact('product', 'attributeValues', 'title'));
     }
     // Lưu biến thể mới
     public function store(Request $request, Product $product)
@@ -67,7 +69,8 @@ class ProductVariantController extends Controller
     // Chỉnh sửa biến thể
     public function edit(ProductVariant $variant)
     {
-        return view('admin.variants.edit', compact('variant'));
+        $title = 'Chỉnh Sửa Biến Thể';
+        return view('admin.variants.edit', compact('variant', 'title'));
     }
 
     // Cập nhật biến thể

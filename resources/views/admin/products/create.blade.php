@@ -78,6 +78,12 @@
                                     <input type="number" step="0.01" class="form-control" id="price" name="price"
                                         value="{{ old('price') }}">
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="discount_price">Giá Khuyến Mãi</label>
+                                    <input type="text" name="discount_price" id="discount_price" class="form-control" value="{{ old('discount_price', $product->discount_price ?? '') }}">
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="stock" class="form-label">Tồn Kho</label>
                                     <input type="number" class="form-control" id="stock" name="stock"
@@ -118,6 +124,15 @@
                                 <div class="mb-3">
                                     <label for="tomtat" class="form-label">Tóm Tắt</label>
                                     <textarea class="form-control" id="tomtat" name="tomtat">{{ old('tomtat') }}</textarea>
+                                </div>
+
+                                <div id="image-inputs">
+                                    <div class="form-group d-flex align-items-center">
+                                        <label for="image1" class="me-2">Gallery 1</label>
+                                        <input type="file" name="images[]" id="image1" class="form-control me-2"
+                                            accept="image/*">
+                                        <button type="button" class="btn btn-secondary add-image">Thêm</button>
+                                    </div>
                                 </div>
 
                                 <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo
@@ -178,6 +193,28 @@
         document.getElementById('generateSkuBtn').addEventListener('click', function() {
             const randomSku = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo SKU ngẫu nhiên
             document.getElementById('sku').value = randomSku;
+        });
+    </script>
+
+    <script>
+        document.querySelector('.add-image').addEventListener('click', function() {
+            const container = document.getElementById('image-inputs');
+            const newIndex = container.children.length + 1; // Tính số lượng trường hiện tại
+
+            const newInput = document.createElement('div');
+            newInput.classList.add('form-group', 'd-flex', 'align-items-center');
+            newInput.innerHTML = `
+            <label for="image${newIndex}" class="me-2">Gallery ${newIndex}</label>
+            <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*">
+            <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
+        `;
+
+            container.appendChild(newInput);
+
+            // Xử lý sự kiện cho nút "Xóa" mới
+            newInput.querySelector('.remove-image').addEventListener('click', function() {
+                container.removeChild(newInput);
+            });
         });
     </script>
 @endsection

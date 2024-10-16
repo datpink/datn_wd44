@@ -28,7 +28,7 @@ class StoreProductRequest extends FormRequest
             'slug' => 'required|string|max:255|unique:products,slug',
             'sku' => 'required|string|max:255|unique:products,sku',
             'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric', // Xác thực discount_price
             'stock' => 'required|integer|min:0',
             'weight' => 'nullable|numeric',
             'dimensions' => 'nullable|string|max:255',
