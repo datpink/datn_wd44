@@ -35,10 +35,10 @@ class ProductVariantController extends Controller
             'price' => 'required|numeric',
             'sku' => 'required|string',
             'stock' => 'required|integer',
-            'attributes' => 'required|array', // Đảm bảo là mảng
-            'attributes.*' => 'exists:attribute_values,id', // Kiểm tra từng ID có tồn tại
+            'attributes' => 'required|array|min:1', // Đảm bảo là mảng và có ít nhất 1 phần tử
+            'attributes.*' => 'integer|exists:attribute_values,id', // Đảm bảo là số nguyên và tồn tại
         ]);
-
+    
         // Tạo biến thể mới
         $variant = new ProductVariant([
             'variant_name' => $request->variant_name,
@@ -47,18 +47,22 @@ class ProductVariantController extends Controller
             'stock' => $request->stock,
             'status' => 'inactive', // Mặc định là không kích hoạt
         ]);
-
+    
         // Lưu biến thể vào cơ sở dữ liệu
         $product->variants()->save($variant);
-
+    
         // Thêm thuộc tính vào biến thể qua bảng trung gian
-        if ($request->has('attributes')) {
-            $variant->attributes()->attach($request->attributes);
+        if ($request->has('attributes') && is_array($request->attributes)) {
+            $validAttributes = array_filter($request->attributes, function ($value) {
+                return is_numeric($value); // Kiểm tra xem giá trị có phải là số không
+            });
+            if (count($validAttributes) > 0) {
+                $variant->attributes()->attach($validAttributes);
+            }
         }
-
+    
         return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
     }
-
 
     // Chỉnh sửa biến thể
     public function edit(ProductVariant $variant)
