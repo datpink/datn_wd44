@@ -5,27 +5,14 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <div class="row">
                 <div class="col-sm-12 col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">Danh Sách Attributes</div>
+                            <div class="card-title">Danh Sách Thuộc Tính</div>
                             <div>
                                 <a href="{{ route('attributes.create') }}"
-                                    class="btn btn-primary btn-rounded d-flex align-items-center">
+                                   class="btn btn-primary btn-rounded d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
                             </div>
@@ -36,25 +23,27 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Tên thuộc tính</th>
-                                        <th>Actions</th>
+                                        <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($attributes as $attribute)
                                         <tr>
                                             <td>{{ $attribute->id }}</td>
+                                            <td>{{ $attribute->name }}</td>
                                             <td>
-                                                    {{ $attribute->name }}
+                                                <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-warning rounded-pill">
+                                                    <i class="bi bi-info-circle me-1"></i> Chi tiết
                                                 </a>
-                                            </td>
-                                            <td>
-
-                                                <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-warning">Chi tiết</a>
-                                                <a href="{{ route('attributes.edit', $attribute->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                                <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;">
+                                                <a href="{{ route('attributes.edit', $attribute->id) }}" class="btn btn-sm btn-success rounded-pill">
+                                                    <i class="bi bi-pencil me-1"></i> Sửa
+                                                </a>
+                                                <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                    <button type="submit" class="btn btn-sm btn-danger rounded-pill">
+                                                        <i class="bi bi-trash me-1"></i> Xóa
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -67,4 +56,43 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.all.min.js"></script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "success",
+                title: "{{ session('success') }}",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        </script>
+    @endif
+    <script>
+        $(document).ready(function() {
+            // Xác nhận xóa thuộc tính
+            $('.delete-form').on('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                Swal.fire({
+                    position: "top",
+                    title: 'Bạn có chắc chắn muốn xóa thuộc tính này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

@@ -7,6 +7,7 @@
 @section('content')
 
     @include('components.breadcrumb-client')
+    @include('admin.layouts.load')
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <!-- Thêm jQuery -->
@@ -221,8 +222,8 @@
                                 @endphp
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
-                                    data-unit="₫" class="price_slider" data-value-min="0" data-value-max="{{ $maxDiscountPrice }} "
-                                        >
+                                        data-unit="₫" class="price_slider" data-value-min="0"
+                                        data-value-max="{{ $maxDiscountPrice }} ">
                                     </div>
 
 
@@ -237,7 +238,18 @@
                             </form>
                         </div>
 
+                        {{-- <a href="#" class="link-item" id="myLink">Click me</a>
+                        <script>
+                            document.getElementById('myLink').addEventListener('click', function(event) {
+                                event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
 
+                                // Thực hiện hành động nào đó khi nhấp vào liên kết
+                                console.log('Link clicked!');
+
+                                // Thay đổi màu sắc của liên kết bằng cách thêm class mới
+                                this.classList.add('clicked');
+                            });
+                        </script> --}}
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
                                 const priceFilterForm = document.getElementById('priceFilterForm');
@@ -293,19 +305,24 @@
                                     axios.get('/api/shop/products/filter-by-price', {
                                             params
                                         })
+
                                         .then((res) => {
+
                                             // console.log(res);
                                             // console.log(productLists);
                                             productLists.innerHTML = '';
-                                            console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
+                                            // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
                                             // console.log(res.data.data);
                                             // Xử lý danh sách sản phẩm
                                             // Kiểm tra nếu products là một mảng
                                             if (Array.isArray(res.data.products)) {
+
                                                 productLists.innerHTML = ''; // Xóa danh sách sản phẩm cũ
 
                                                 // Duyệt qua từng sản phẩm và thêm vào danh sách
                                                 res.data.products.forEach(product => {
+                                                    // console.log(product.image_url);
+
                                                     const productHTML = `
                                                         <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                                                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">

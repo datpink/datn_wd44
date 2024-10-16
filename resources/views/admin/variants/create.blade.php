@@ -1,7 +1,9 @@
 @extends('admin.master')
 
+@section('title', 'Thêm biến thể')
+
 @section('content')
-    <h1>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h1>
+    <h4>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h4>
 
     <form action="{{ route('variants.store', $product->id) }}" method="POST">
         @csrf

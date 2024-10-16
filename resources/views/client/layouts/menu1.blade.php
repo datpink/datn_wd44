@@ -57,3 +57,34 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Sự kiện khi người dùng nhập vào ô tìm kiếm
+        $('.searchfield').on('input', function() {
+            var query = $(this).val();
+            if (query.length > 2) {
+                // Gửi yêu cầu AJAX tới route autocomplete
+                $.ajax({
+                    url: "{{ route('autocomplete') }}",
+                    data: { query: query },
+                    success: function(data) {
+                        // Xóa kết quả gợi ý cũ trong phần #suggestions-box
+                        $('#suggestions-box').empty();
+                        // Thêm các kết quả gợi ý mới
+                        data.forEach(function(item) {
+                            $('#suggestions-box').append('<div>' + item + '</div>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        // Xử lý lỗi khi có sự cố từ phía server
+                        console.log("Có lỗi xảy ra: " + error);
+                    }
+                });
+            } else {
+                // Xóa kết quả gợi ý nếu không có từ khóa
+                $('#suggestions-box').empty();
+            }
+        });
+    });
+</script>

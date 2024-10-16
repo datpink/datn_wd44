@@ -11,13 +11,15 @@ class AttributeController extends Controller
 {
     public function index()
     {
+        $title = 'Danh sách Thuộc Tính';
         $attributes = Attribute::all();
-        return view('admin.attributes.index', compact('attributes'));
+        return view('admin.attributes.index', compact('attributes', 'title'));
     }
-    
+
     public function create()
     {
-        return view('admin.attributes.create');
+        $title = 'Thêm Mới Thuộc Tính';
+        return view('admin.attributes.create', compact('title'));
     }
 
     public function store(Request $request)
@@ -33,8 +35,9 @@ class AttributeController extends Controller
 
     public function edit($id)
     {
+        $title = 'Chỉnh Sửa Thuộc Tính';
         $attribute = Attribute::findOrFail($id);
-        return view('admin.attributes.edit', compact('attribute'));
+        return view('admin.attributes.edit', compact('attribute', 'title'));
     }
 
     public function update(Request $request, $id)
@@ -46,7 +49,7 @@ class AttributeController extends Controller
         $attribute = Attribute::findOrFail($id);
         $attribute->update($request->all());
 
-        return redirect()->route('attributes.index')->with('success', 'Cjp nhật thuộc tính thành công!');
+        return redirect()->route('attributes.index')->with('success', 'Cập nhật thuộc tính thành công!');
     }
 
     public function destroy($id)

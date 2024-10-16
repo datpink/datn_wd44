@@ -17,10 +17,12 @@
                                 class="post-item post-grid col-bg-4 col-xl-4 col-lg-4 col-md-4 col-sm-6 col-ts-12 post-{{ $post->id }} post type-post status-publish format-standard has-post-thumbnail hentry">
                                 <div class="post-inner">
                                     <div class="post-thumb">
-                                        <a href="#">
-                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
-                                                width="270" height="230">
-                                        </a>
+                                        <td>
+                                            @if ($post->image)
+                                                <img src="{{ asset('images/' . $post->image) }}"
+                                                    alt="{{ $post->title }}" style="width: 270px" height="230px">
+                                            @endif
+                                        </td>
                                         <a class="datebox" href="#">
                                             <span>{{ $post->created_at->day }}</span>
                                             <span>{{ $post->created_at->format('M') }}</span>

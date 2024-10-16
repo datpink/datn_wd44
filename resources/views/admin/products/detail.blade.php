@@ -47,6 +47,17 @@
                                 @endif
                             </div>
 
+                            <label for="image_url">Gallery</label>
+                            <br>
+                            <div class="image-gallery d-flex flex-wrap">
+                                @foreach ($product->galleries as $gallery)
+                                    <div class="image-item me-2 mb-2">
+                                        <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
+                                            class="img-thumbnail" style="width: 150px;">
+                                    </div>
+                                @endforeach
+                            </div>
+
                             <!-- Trạng thái hoạt động -->
                             <div class="form-group">
                                 <label for="is_active">Trạng thái hoạt động</label>
@@ -58,6 +69,15 @@
                                 <label for="price">Giá sản phẩm</label>
                                 <p class="form-control">{{ number_format($product->price, 0, ',', '.') }}đ</p>
                             </div>
+
+                            <!-- Giá khuyến mãi -->
+                            @if ($product->discount_price)
+                                <div class="form-group">
+                                    <label for="discount_price">Giá khuyến mãi</label>
+                                    <p class="form-control">
+                                        {{ number_format($product->discount_price, 0, ',', '.') }}đ</p>
+                                </div>
+                            @endif
 
                             <!-- Slug -->
                             <div class="form-group">

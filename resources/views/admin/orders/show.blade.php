@@ -72,6 +72,7 @@
                                         <tr>
                                             <th>Stt</th>
                                             <th>Tên Sản Phẩm</th>
+                                            <th>Hình Ảnh</th> <!-- Cột cho hình ảnh -->
                                             <th>Số lượng</th>
                                             <th>Giá</th>
                                             <th>Tổng</th>
@@ -82,13 +83,22 @@
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>{{ $item->productVariant->product->name }}</td>
+                                                <td>
+                                                    @if ($item->productVariant->product->image_url && \Storage::exists($item->productVariant->product->image_url))
+                                                        <img src="{{ \Storage::url($item->productVariant->product->image_url) }}"
+                                                            alt="{{ $item->productVariant->product->name }}"
+                                                            style="max-width: 100px; height: auto;">
+                                                    @else
+                                                        Không có ảnh
+                                                    @endif
+                                                </td>
                                                 <td>{{ $item->quantity }}</td>
                                                 <td>{{ number_format($item->price, 0, ',', '.') }} VND</td>
                                                 <td>{{ number_format($item->total, 0, ',', '.') }} VND</td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="5" class="text-center">Không có sản phẩm nào trong đơn hàng.
+                                                <td colspan="6" class="text-center">Không có sản phẩm nào trong đơn hàng.
                                                 </td>
                                             </tr>
                                         @endforelse

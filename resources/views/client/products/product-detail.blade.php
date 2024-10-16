@@ -21,7 +21,6 @@
                         <div class="main-contain-summary">
                             <div class="contain-left has-gallery">
                                 <div class="single-left">
-
                                     <div
                                         class="kobolg-product-gallery kobolg-product-gallery--with-images kobolg-product-gallery--columns-4 images">
                                         <a href="#" class="kobolg-product-gallery__trigger">
