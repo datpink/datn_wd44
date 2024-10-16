@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Imports\ProductsImport;
 use App\Models\Brand;
 use App\Models\Catalogue;
 use App\Models\Gallery;
@@ -11,6 +12,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -199,4 +201,32 @@ class ProductController extends Controller
             return back()->with('errors', $th->getMessage());
         }
     }
+    public function import(Request $request)
+{
+    // Xác thực và xử lý tệp được tải lên
+    $request->validate([
+        'file' => 'required|mimes:xlsx,xls,csv',
+    ]);
+
+    // Lưu tệp vào thư mục public/temp
+    $path = $request->file('file')->store('temp', 'public');
+
+    // Kiểm tra xem tệp đã được lưu thành công chưa
+    if (!$path) {
+        return redirect()->back()->with('error', 'Không thể lưu tệp.');
+    }
+
+    // Bây giờ bạn có thể sử dụng $path để nhập dữ liệu
+    $fullPath = storage_path('app/public/' . $path);
+
+    // Gọi phương thức import ở đây, ví dụ:
+    try {
+        Excel::import(new ProductsImport(), $fullPath);
+        return redirect()->back()->with('success', 'Nhập dữ liệu thành công!');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+    }
+}
+
+
 }

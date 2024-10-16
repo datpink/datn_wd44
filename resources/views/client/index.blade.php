@@ -3,6 +3,7 @@
 @section('title', 'Trang Chủ')
 
 @section('content')
+
     <div class="fullwidth-template">
         <div class="slide-home-01">
             <div class="container">
@@ -17,7 +18,7 @@
 
             <!-- GGI 1 -->
             <div class="container">
-                
+
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="kobolg-banner style-01">
