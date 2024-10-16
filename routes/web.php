@@ -69,9 +69,10 @@ Route::prefix('shop')->group(function () {
 
 
     // Các route không yêu cầu đăng nhập
-    Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
-    Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
+    Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
+    Route::post('products/import', [AdminProductController::class, 'import'])->name('products.import');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
@@ -95,8 +96,8 @@ Route::prefix('shop')->group(function () {
 
 });
 
-    
-    
+
+
 
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -107,7 +108,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     // Promotions
     Route::resource('promotions', PromotionController::class);
-    
+
     // Route cho vai trò
     Route::resource('roles', RoleController::class);
     Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');
