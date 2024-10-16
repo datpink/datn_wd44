@@ -19,7 +19,7 @@
                     <div class="form-content search-box results-search">
                         <div class="inner">
                             <input autocomplete="off" class="searchfield txt-livesearch input" name="s"
-                                value="" placeholder="Search here..." type="text">
+                                value="" placeholder="Tìm kiếm..." type="text">
                         </div>
                     </div>
                     <input name="post_type" value="product" type="hidden">
@@ -27,7 +27,7 @@
                     <div class="category">
                         <select title="catalogues" name="catalogue_slug" id="" class="category-search-option"
                             tabindex="-1" style="display: none;">
-                            <option value="0">All Categories</option>
+                            <option value="0">Tất cả danh mục</option>
                             @foreach ($menuCatalogues as $catalogue)
                                 <option value="{{ $catalogue->slug }}">{{ $catalogue->name }}</option>
                             @endforeach

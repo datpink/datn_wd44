@@ -10,7 +10,7 @@
                             <span></span>
                             <span></span>
                         </span>
-                        <span class="text-title">SHOP BY CATEGORIES</span>
+                        <span class="text-title">DANH MỤC SẢN PHẨM</span>
                     </div>
                     <div class="block-content verticalmenu-content">
                         <ul id="menu-vertical-menu" class="azeroth-nav vertical-menu default">
@@ -37,14 +37,14 @@
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
                         <li id="menu-item-230"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Home</a>
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Trang chủ</a>
                             <span class="toggle-submenu"></span>
                         </li>
 
                         <li id="menu-item-228"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Shop"
-                                href="{{ route('client.products.index') }}">Shop</a>
+                                href="{{ route('client.products.index') }}">Cửa hàng</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
@@ -77,10 +77,46 @@
                                 </div>
                             </div>
                         </li>
+
+
+                        <li id="menu-item-996"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-996 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Blog"
+                                href="{{ route('client.posts.index') }}">Tin tức</a>
+                            <span class="toggle-submenu"></span>
+                            <div class="submenu megamenu megamenu-blog">
+                                <div class="row">
+                                    @foreach ($menuCategories as $category)
+                                    
+                                        @if ($category->status === 'active')
+                                            <div class="col-md-4">
+                                                <div class="kobolg-listitem style-01">
+                                                    <div class="listitem-inner">
+                                                        <h4 class="title">{{ $category->name }}</h4>
+                                                        <ul class="listitem-list mb-3">
+                                                            @foreach ($category->children as $child)
+                                                                @if ($child->status === 'active')
+                                                                    <li>
+                                                                        <a href="#">
+                                                                            {{ $child->name }}
+                                                                        </a>
+                                                                    </li>
+                                                                @endif
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </li>
+
                         <li id="menu-item-229"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
 
-                            <a class="kobolg-menu-item-title" title="Elements" href="#">Elements</a>
+                            <a class="kobolg-menu-item-title" title="Elements" href="#">Liên hệ</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-elements">
                                 <div class="row">
@@ -169,45 +205,9 @@
                             </div>
                         </li>
 
-
-                        <li id="menu-item-996"
-                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-996 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Blog"
-                                href="{{ route('client.posts.index') }}">Blog</a>
-                            <span class="toggle-submenu"></span>
-                            <div class="submenu megamenu megamenu-blog">
-                                <div class="row">
-                                    @foreach ($menuCategories as $category)
-                                    
-                                        @if ($category->status === 'active')
-                                            <div class="col-md-4">
-                                                <div class="kobolg-listitem style-01">
-                                                    <div class="listitem-inner">
-                                                        <h4 class="title">{{ $category->name }}</h4>
-                                                        <ul class="listitem-list mb-3">
-                                                            @foreach ($category->children as $child)
-                                                                @if ($child->status === 'active')
-                                                                    <li>
-                                                                        <a href="#">
-                                                                            {{ $child->name }}
-                                                                        </a>
-                                                                    </li>
-                                                                @endif
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </li>
-
-
                         <li id="menu-item-237"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-237 parent">
-                            <a class="kobolg-menu-item-title" title="Pages" href="#">Pages</a>
+                            <a class="kobolg-menu-item-title" title="Pages" href="#">Hỏi & Đáp</a>
                             <span class="toggle-submenu"></span>
                             <ul role="menu" class="submenu">
                                 <li id="menu-item-987"
@@ -229,8 +229,8 @@
                         <li id="menu-item-238"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100"
-                                href="#">Free
-                                Shipping on Orders $100</a>
+                                href="#">Freeship với đơn từ 1.000.000đ
+                                </a>
                         </li>
                     </ul>
                 </div>

@@ -216,7 +216,7 @@
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
-                            <h2 class="widgettitle">Filter By Price<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo giá<span class="arrow"></span></h2>
                             {{-- <form method="get" action="#">
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="1000" data-unit="$"
@@ -394,7 +394,7 @@
 
 
                         <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
-                            <h2 class="widgettitle">Filter By Color<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
                             <div class="color-group">
                                 <a class="term-color " href="#">
                                     <i style="color: #000000"></i>
