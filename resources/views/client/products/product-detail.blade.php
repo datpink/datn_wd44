@@ -1,5 +1,5 @@
 @extends('client.master')
-@section('title', 'CT')
+@section('title', $product->name.' - Zaia Enterprise' )
 
 @section('content')
 
@@ -21,7 +21,6 @@
                         <div class="main-contain-summary">
                             <div class="contain-left has-gallery">
                                 <div class="single-left">
-                 
                                     <div
                                         class="kobolg-product-gallery kobolg-product-gallery--with-images kobolg-product-gallery--columns-4 images">
                                         <a href="#" class="kobolg-product-gallery__trigger">
@@ -31,13 +30,14 @@
                                             <figure class="kobolg-product-gallery__wrapper">
                                                 <div class="kobolg-product-gallery__image">
                                                     @if ($product->image_url && \Storage::exists($product->image_url))
-                                                    <img src="{{ \Storage::url($product->image_url) }}" alt="{{ $product->name }}"
-                                                        style="max-width: 100px; height: auto;">
-                                                @else
-                                                    <p>Không có ảnh</p>
-                                                @endif
-                
-                                               </div>
+                                                        <img src="{{ \Storage::url($product->image_url) }}"
+                                                            alt="{{ $product->name }}"
+                                                            style="max-width: 100px; height: auto;">
+                                                    @else
+                                                        <p>Không có ảnh</p>
+                                                    @endif
+
+                                                </div>
                                                 <div class="kobolg-product-gallery__image">
                                                     <img src="assets/images/apro134-1.jpg" alt="img">
                                                 </div>
@@ -129,11 +129,13 @@
                                         });
                                     </script>
                                     <p class="stock in-stock">
-                                        Thương hiệu: <span> {{ $product->brand ? $product->brand->name : 'Không có' }}</span>
+                                        Thương hiệu: <span>
+                                            {{ $product->brand ? $product->brand->name : 'Không có' }}</span>
                                     </p>
+
                                     <div class="kobolg-product-details__short-description">
                                         <p>{{ $product->tomtat }}</p>
-                                        
+
                                     </div>
                                     <form class="variations_form cart">
                                         <div class="single_variation_wrap">
@@ -143,10 +145,10 @@
                                                     <span class="qty-label">Quantiy:</span>
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
-                                                        <input type="text" data-step="1" min="0"
-                                                            max="" name="quantity[25]" value="0"
-                                                            title="Qty" class="input-qty input-text qty text"
-                                                            size="4" pattern="[0-9]*" inputmode="numeric">
+                                                        <input type="text" data-step="1" min="0" max=""
+                                                            name="quantity[25]" value="0" title="Qty"
+                                                            class="input-qty input-text qty text" size="4"
+                                                            pattern="[0-9]*" inputmode="numeric">
                                                         <a class="btn-number qtyplus quantity-plus" href="#">+</a>
                                                     </div>
                                                 </div>
@@ -180,8 +182,10 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
-                                        <span class="posted_in">Categories: <a href="#" rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</span>
+                                        <span class="sku_wrapper">SKU: <span
+                                                class="sku">{{ $product->sku }}</span></span>
+                                        <span class="posted_in">Categories: <a href="#"
+                                                rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</span>
                                         <span class="tagged_as">Tags: <a href="#" rel="tag">Game &
                                                 Consoles</a>, <a href="#" rel="tag">Sock</a></span>
                                     </div>
