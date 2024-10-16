@@ -89,12 +89,15 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
+                                                <a href="{{ route('products.edit', $product->id) }}"
+                                                    class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
                                                     <i class="bi bi-pencil-square"></i> Sửa
                                                 </a>
-                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm rounded-pill" title="Chi tiết">
-                                                    <i class="bi bi-info-circle"></i> Show
+                                                <a href="{{ route('products.show', $product->id) }}"
+                                                    class="btn btn-info btn-sm rounded-pill mb-2" title="Chi tiết">
+                                                    <i class="bi bi-info-circle"></i> Chi tiết
                                                 </a>
+
                                                 <!-- Kiểm tra xem sản phẩm đã có biến thể chưa -->
                                                 @php
                                                     $hasVariants = $product->variants->isNotEmpty(); // Kiểm tra có biến thể
@@ -102,13 +105,14 @@
 
                                                 @if ($hasVariants)
                                                     <a href="{{ route('products.variants.index', $product->id) }}"
-                                                        class="btn btn-info btn-rounded">
-                                                        Quản lý Biến Thể
+                                                        class="btn btn-success btn-sm rounded-pill"
+                                                        title="Quản lý Biến Thể">
+                                                        <i class="bi bi-gear"></i> Quản lý Biến Thể
                                                     </a>
                                                 @else
                                                     <a href="{{ route('products.variants.create', $product->id) }}"
-                                                        class="btn btn-info btn-rounded">
-                                                        Thêm Biến Thể
+                                                        class="btn btn-primary btn-sm rounded-pill" title="Thêm Biến Thể">
+                                                        <i class="bi bi-plus-circle"></i> Thêm Biến Thể
                                                     </a>
                                                 @endif
                                             </td>
