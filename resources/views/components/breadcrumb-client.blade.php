@@ -21,10 +21,10 @@
             $breadcrumbs[] = ['name' => 'Login', 'url' => ''];
             break;
 
-        // case 'client.products.show':
-        //     $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
-        //     $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
-        //     break;
+        case 'client.products.product-detail':
+            $breadcrumbs[] = ['name' => 'Product', 'url' => route('client.products.index')];
+            $breadcrumbs[] = ['name' => 'Product Detail', 'url' => ''];
+            break;
 
     }
 @endphp

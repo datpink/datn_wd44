@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <form action="{{ route('profile.update-password', $user->id) }}" method="POST">
                             @csrf
-                            @method('PUT')
+                            {{-- @method('PUT') --}}
 
                             @if($errors->any())
                                 <div class="alert alert-danger">
@@ -31,17 +31,17 @@
 
                             <div class="mb-3">
                                 <label for="current_password" class="form-label">Current Password</label>
-                                <input type="password" name="current_password" class="form-control" id="current_password" required>
+                                <input type="text" name="current_password" class="form-control" id="current_password" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="new_password" class="form-label">New Password</label>
-                                <input type="password" name="new_password" class="form-control" id="new_password" required>
+                                <input type="text" name="new_password" class="form-control" id="new_password" required>
                             </div>
 
                             <div class="mb-3">
                                 <label for="new_password_confirmation" class="form-label">Confirm New Password</label>
-                                <input type="password" name="new_password_confirmation" class="form-control" id="new_password_confirmation" required>
+                                <input type="text" name="new_password_confirmation" class="form-control" id="new_password_confirmation" required>
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
