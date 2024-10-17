@@ -31,29 +31,20 @@
                             <h2 class="post-title"><a href="#">{{ $post->title }}</a></h2>
                             <div class="post-meta">
                                 <div class="date">
-                                    <a href="#">December 19, 2018 </a>
-                                </div>
+                                    <span>{{ $post->created_at->day }}</span>
+                                    <span>{{ $post->created_at->format('M') }}</span>                                </div>
                                 <div class="post-author">
-                                    By:<a href="#"> admin </a>
+                                    By:<a href="#"> {{ $post->author_name ?? 'Unknown' }} </a>
                                 </div>
                             </div>
                         </div>
                         <div class="post-content">
                             <div id="output">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Malesuada sodales quisque litora
-                                    dapibus primis lacinia condimentum non mauris, rutrum duis vitae fringilla vulputate
-                                    nulla neque. Per convallis pulvinar sem faucibus blandit commodo nec vulputate, class
-                                    fames accumsan duis eleifend quisque phasellus.</p>
+                                <p>{{ $post->tomtat }}.</p>
                                 <blockquote>
-                                    <p>Arcu dictum odio elementum torquent tincidunt aptent nec convallis massa
-                                        ultrices, urna nisl eu sollicitudin proin imperdiet curabitur vestibulum dis diam,
-                                        pretium porttitor lectus senectus parturient sodales purus dapibus porta.</p>
+                                    <p>{{ $post->slug }}</p>
                                 </blockquote>
-                                <p>Ultricies pretium etiam sapien dictum libero eleifend justo laoreet a, at in scelerisque
-                                    augue posuere lectus ornare magna penatibus vitae, eu leo molestie lacinia faucibus mi
-                                    quis viverra. Eleifend suspendisse fermentum pretium nulla taciti laoreet dictumst
-                                    dignissim vitae, fusce enim nibh cras natoque nam placerat tristique sagittis, lacus
-                                    pharetra magna non hendrerit imperdiet sollicitudin per.</p>
+                                <p>{{ $post->content }}</p>
                             </div>
                             <p>&nbsp;</p>
                             <div id="gallery-1" class="gallery galleryid-195 gallery-columns-2 gallery-size-full">
