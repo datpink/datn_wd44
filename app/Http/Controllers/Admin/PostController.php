@@ -8,6 +8,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -24,7 +25,6 @@ class PostController extends Controller
         $categories = Category::all(); // Lấy tất cả danh mục
         return view('admin.posts.create', compact('categories', 'title'));
     }
-
     public function store(Request $request)
     {
         // Xác thực dữ liệu
@@ -43,16 +43,23 @@ class PostController extends Controller
 
         try {
             // Tạo bài viết mới
-            $post = new Post($request->all());
+            $post = new Post();
+            $post->title = $request->title;
+            $post->slug = $request->slug;
+            $post->tomtat = $request->tomtat;
+            $post->content = $request->content;
+            $post->category_id = $request->category_id;
+            $post->user_id = $request->user_id;
 
             // Xử lý hình ảnh
             if ($request->hasFile('image')) {
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('images'), $imageName);
-                $post->image = $imageName;
+                $imagePath = $request->file('image')->store('images');
+                $post->image = $imagePath;
             }
 
-            $post->is_featured = $request->has('is_featured');
+            // Cập nhật is_featured
+            $post->is_featured = $request->has('is_featured') ? 1 : 0;
+
             $post->save();
 
             DB::commit();
@@ -62,6 +69,7 @@ class PostController extends Controller
             return redirect()->route('posts.index')->with('error', 'Có lỗi xảy ra khi thêm bài viết.');
         }
     }
+
 
     public function edit($id)
     {
@@ -88,23 +96,24 @@ class PostController extends Controller
         DB::beginTransaction();
 
         try {
-            // Cập nhật bài viết
             $post = Post::findOrFail($id);
-            $post->fill($request->all());
+            // Cập nhật bài viết
+            $post->title = $request->title;
+            $post->slug = $request->slug;
+            $post->tomtat = $request->tomtat;
+            $post->content = $request->content;
+            $post->category_id = $request->category_id;
+            $post->user_id = $request->user_id;
 
-            // Xử lý hình ảnh
             if ($request->hasFile('image')) {
-                // Xóa hình ảnh cũ nếu có
                 if ($post->image) {
-                    File::delete(public_path('images/' . $post->image));
+                    Storage::delete($post->image);
                 }
-
-                $imageName = time() . '.' . $request->image->extension();
-                $request->image->move(public_path('images'), $imageName);
-                $post->image = $imageName;
+                $imagePath = $request->file('image')->store('images');
+                $post->image = $imagePath;
             }
+            $post->is_featured = $request->has('is_featured') ? 1 : 0;
 
-            $post->is_featured = $request->has('is_featured');
             $post->save();
 
             DB::commit();
@@ -115,7 +124,7 @@ class PostController extends Controller
         }
     }
 
-    // Xóa mềm bài viết
+
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
