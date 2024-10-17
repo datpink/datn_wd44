@@ -135,7 +135,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-window-split"></i>
-                        <span class="menu-text">Quản Lý Khuyến Mại</span>
+                        <span class="menu-text">Khuyến Mại</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>

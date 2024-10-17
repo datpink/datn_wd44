@@ -12,53 +12,57 @@
                         <form action="{{ route('profile.update', $user->id) }}" enctype="multipart/form-data" method="POST">
                             @csrf
                             <!-- Name -->
-                            <div class="mb-3">
-                                <label for="name" class="form-label"><strong>Full Name</strong></label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    value="{{ $user->name }}" required>
-                            </div>
-                            <!-- Phone -->
-                            <div class="mb-3">
-                                <label for="phone" class="form-label"><strong>Phone Number</strong></label>
-                                <input type="text" class="form-control" id="phone" name="phone"
-                                    value="{{ $user->phone }}">
-                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label"><strong>Full Name</strong></label>
+                                        <input type="text" class="form-control" id="name" name="name"
+                                            value="{{ $user->name }}" required>
+                                    </div>
+                                    <!-- Phone -->
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label"><strong>Phone Number</strong></label>
+                                        <input type="text" class="form-control" id="phone" name="phone"
+                                            value="{{ $user->phone }}">
+                                    </div>
 
-                            <!-- Address -->
-                            <div class="mb-3">
-                                <label for="address" class="form-label"><strong>Address</strong></label>
-                                <input type="text" class="form-control" id="address" name="address"
-                                    value="{{ $user->address }}">
-                            </div>
+                                    <!-- Address -->
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label"><strong>Address</strong></label>
+                                        <input type="text" class="form-control" id="address" name="address"
+                                            value="{{ $user->address }}">
+                                    </div>
+                                </div>
 
-                            <!-- Image -->
-                            <div class="mb-4 text-center">
-                                <label for="image" class="form-label"><strong>Profile Image</strong></label>
-                                <div class="position-relative d-flex flex-column align-items-center">
-                                    @if ($user->image)
-                                        <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}"
-                                            class="img-thumbnail mb-2" style="max-width: 150px; border-radius: 50%;">
-                                        <p class="form-text">Current Image</p>
-                                    @else
-                                        <div class="mb-2"
-                                            style="width: 150px; height: 150px; background-color: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                            <span class="text-muted">No Image Available</span>
+                                <div class="col-md-4 text-center">
+                                    <!-- Image -->
+                                    <div class="mb-4 text-center">
+                                        <label for="image" class="form-label"><strong>Profile Image</strong></label>
+                                        <div class="position-relative d-flex flex-column align-items-center">
+                                            @if ($user->image)
+                                                <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}"
+                                                    class="img-thumbnail mb-2"
+                                                    style="max-width: 150px; border-radius: 50%;">
+                                                <p class="form-text">Current Image</p>
+                                            @else
+                                                <div class="mb-2"
+                                                    style="width: 150px; height: 150px; background-color: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                                    <span class="text-muted">No Image Available</span>
+                                                </div>
+                                            @endif
+                                            <input type="file" class="form-control-file position-absolute" id="image"
+                                                name="image" accept="image/*"
+                                                style="top: 0; left: 0; width: 150px; height: 150px; opacity: 0;">
+                                            <button type="button" class="btn btn-danger mt-2" style="width: 150px;"
+                                                onclick="document.getElementById('image').click();">Change Image</button>
                                         </div>
-                                    @endif
-                                    <input type="file" class="form-control-file position-absolute" id="image"
-                                        name="image" accept="image/*"
-                                        style="top: 0; left: 0; width: 150px; height: 150px; opacity: 0;">
-                                    <button type="button" class="btn btn-danger mt-2" style="width: 150px;"
-                                        onclick="document.getElementById('image').click();">Change Image</button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="d-grid gap-3 mt-4">
-                                <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow">Save
-                                    Changes</button>
-                                <a href="{{ route('profile.show') }}"
-                                    class="btn btn-outline-danger btn-lg rounded-pill shadow">Back</a>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow">Save Changes</button>
+                                <a href="{{ route('profile.show') }}" class="btn btn-outline-danger btn-lg rounded-pill shadow">Back</a>
                             </div>
                         </form>
                     </div>
