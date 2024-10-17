@@ -11,6 +11,7 @@ use App\Models\Gallery;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -203,30 +204,41 @@ class ProductController extends Controller
     }
     public function import(Request $request)
 {
-    // Xác thực và xử lý tệp được tải lên
-    $request->validate([
-        'file' => 'required|mimes:xlsx,xls,csv',
-    ]);
+    // Kiểm tra xem đã có file hay chưa
+    if ($request->hasFile('file')) {
+        // Lưu file vào thư mục tạm trong storage
+        $path = $request->file('file')->store('temp');
+        $filePath = storage_path('app/public/' . $path);
 
-    // Lưu tệp vào thư mục public/temp
-    $path = $request->file('file')->store('temp', 'public');
+        // Kiểm tra xem file đã được lưu thành công hay chưa
+        if (!Storage::exists($path)) {
+            return redirect()->back()->with('error', 'Không thể lưu tệp vào thư mục tạm.');
+        }
 
-    // Kiểm tra xem tệp đã được lưu thành công chưa
-    if (!$path) {
-        return redirect()->back()->with('error', 'Không thể lưu tệp.');
+        // In ra đường dẫn tệp để kiểm tra
+        Log::info('File path: ' . $filePath);
+
+        // Thực hiện import và trích xuất ảnh
+        try {
+            // Kiểm tra xem file có tồn tại trước khi import
+            if (!file_exists($filePath)) {
+                return redirect()->back()->with('error', 'File không tồn tại: ' . $filePath);
+            }
+
+            Excel::import(new ProductsImport($filePath), $filePath);
+
+            // Xóa file sau khi sử dụng
+            Storage::delete($path);
+
+            return redirect()->back()->with('success', 'Import sản phẩm và trích xuất hình ảnh thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Có lỗi khi nhập sản phẩm: ' . $e->getMessage());
+        }
     }
 
-    // Bây giờ bạn có thể sử dụng $path để nhập dữ liệu
-    $fullPath = storage_path('app/public/' . $path);
-
-    // Gọi phương thức import ở đây, ví dụ:
-    try {
-        Excel::import(new ProductsImport(), $fullPath);
-        return redirect()->back()->with('success', 'Nhập dữ liệu thành công!');
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
-    }
+    return redirect()->back()->with('error', 'Vui lòng chọn tệp để nhập.');
 }
+
 
 
 }

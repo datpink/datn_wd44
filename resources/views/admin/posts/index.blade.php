@@ -72,10 +72,12 @@
                                                 <td>Không có danh mục</td>
                                             @endif
                                             <td>
-                                                @if ($post->image)
-                                                    <img src="{{ asset('images/' . $post->image) }}"
-                                                        alt="{{ $post->title }}" style="width: 100px">
-                                                @endif
+                                                @if ($post->image && \Storage::exists($post->image))
+                                                <img src="{{ \Storage::url($post->image) }}"
+                                                    alt="{{ $post->name }}" style="max-width: 100px; height: auto;">
+                                            @else
+                                                Không có ảnh
+                                            @endif
                                             </td>
                                             <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
 

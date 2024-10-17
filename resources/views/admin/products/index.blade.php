@@ -26,6 +26,11 @@
                                 </ul>
                             </div>
                         @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="card-body">
                             <!-- Form upload file Excel -->
                             <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data"
