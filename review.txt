@@ -9,8 +9,10 @@ chạy lệnh php artisan key:generate
 đổi tên name database
 
 composer require spatie/laravel-permission
-
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+composer require laravel/socialite
+composer require maatwebsite/excel
+
 
 chạy migrate
 
@@ -62,6 +64,7 @@ git pull
 git pull origin main
 git push
 
-composer require laravel/socialite
+
+
 php artisan config:cache
 php artisan cache:clea
