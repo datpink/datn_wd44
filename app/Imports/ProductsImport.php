@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Storage;
@@ -12,77 +13,79 @@ use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 
 class ProductsImport implements ToModel, WithHeadingRow
 {
+    private $filePath;
+
+    public function __construct($filePath)
+    {
+        $this->filePath = $filePath;
+    }
+
     public function model(array $row)
     {
+        // Bỏ qua hàng rỗng
         if (empty(array_filter($row))) {
             return null;
         }
-        
-        // Giả sử bạn đã lưu tệp Excel vào thư mục tạm thời
-        $filePath = 'storage/app/public/temp/' . $row['file']; // Đường dẫn tới tệp Excel
-        // Lưu ảnh từ Excel
 
-        $this->extractImages($filePath);
+        // Gọi hàm extractImages để lấy và lưu ảnh từ Excel
+        $imagePaths = $this->extractImages($this->filePath);
+
         return new Product([
-            'catalogue_id' => $row['catalogue_id'], // ID danh mục
-            'brand_id' => $row['brand_id'], // ID thương hiệu
-            'name' => $row['name'], // Tên
-            'slug' => $row['slug'], // Slug
-            'sku' => $row['sku'], // SKU
-            'description' => $row['description'], // Mô tả
-            'image_url' => $row['image_url'], // Đường dẫn ảnh
-            'price' => $row['price'], // Giá
-            'discount_price' => $row['discount_price'], // Giá giảm
-            'discount_percentage' => $row['discount_percentage'], // Phần trăm giảm giá
-            'stock' => $row['stock'], // Số lượng tồn kho
-            'weight' => $row['weight'], // Trọng lượng
-            'dimensions' => $row['dimensions'], // Kích thước
-            'ratings_avg' => $row['ratings_avg'], // Điểm đánh giá trung bình
-            'ratings_count' => $row['ratings_count'], // Số lượng đánh giá
-            'is_active' => $row['is_active'], // Trạng thái hoạt động
-            'is_featured' => $row['is_featured'], // Trạng thái nổi bật
-            'tomtat' => $row['tomtat'], // Tóm tắt
-            'condition' => $row['condition'], // Tình trạng
+            'catalogue_id' => $row['catalogue_id'],
+            'brand_id' => $row['brand_id'],
+            'name' => $row['name'],
+            'slug' => $row['slug'],
+            'sku' => $row['sku'],
+            'description' => $row['description'],
+            'image_url' => implode(',', $imagePaths), // Nếu có nhiều ảnh, lưu vào dưới dạng chuỗi
+            'price' => $row['price'],
+            'discount_price' => $row['discount_price'],
+            'discount_percentage' => $row['discount_percentage'],
+            'stock' => $row['stock'],
+            'weight' => $row['weight'],
+            'dimensions' => $row['dimensions'],
+            'ratings_avg' => $row['ratings_avg'],
+            'ratings_count' => $row['ratings_count'],
+            'is_active' => $row['is_active'],
+            'is_featured' => $row['is_featured'],
+            'tomtat' => $row['tomtat'],
+            'condition' => $row['condition'],
         ]);
     }
 
-    public function headingRow(): int
-    {
-        return 1; // Đặt dòng đầu tiên làm tiêu đề
-    }
+    // Cập nhật phương thức extractImages
     public function extractImages($filePath)
     {
         $spreadsheet = IOFactory::load($filePath);
         $sheet = $spreadsheet->getActiveSheet();
         $images = $sheet->getDrawingCollection();
+        $imagePaths = []; // Mảng lưu đường dẫn hình ảnh
 
         foreach ($images as $image) {
             if ($image instanceof Drawing) {
-                // Lấy thông tin về ảnh
                 $imageName = $image->getName();
                 $imagePath = $image->getPath();
                 $imageContents = file_get_contents($imagePath);
                 $imageExtension = pathinfo($imagePath, PATHINFO_EXTENSION);
-
-                // Lưu ảnh vào storage/images
-                $storedImagePath = 'images/' . $imageName . '.' . $imageExtension;
+                $storedImagePath = 'images/' . uniqid() . '_' . $imageName . '.' . $imageExtension;
                 Storage::put($storedImagePath, $imageContents);
+                $imagePaths[] = $storedImagePath; // Thêm vào mảng đường dẫn hình ảnh
             } elseif ($image instanceof MemoryDrawing) {
-                // Xử lý các ảnh từ MemoryDrawing
                 ob_start();
                 call_user_func($image->getRenderingFunction(), $image->getImageResource());
                 $imageContents = ob_get_contents();
                 ob_end_clean();
-
                 $imageExtension = $this->getMemoryDrawingExtension($image);
                 $imageName = 'image_' . uniqid() . '.' . $imageExtension;
                 $storedImagePath = 'images/' . $imageName;
-
-                // Lưu ảnh vào storage/images
                 Storage::put($storedImagePath, $imageContents);
+                $imagePaths[] = $storedImagePath; // Thêm vào mảng đường dẫn hình ảnh
             }
         }
+
+        return $imagePaths; // Trả về mảng đường dẫn hình ảnh
     }
+
     private function getMemoryDrawingExtension(MemoryDrawing $drawing)
     {
         switch ($drawing->getMimeType()) {
@@ -95,5 +98,10 @@ class ProductsImport implements ToModel, WithHeadingRow
             default:
                 return 'png';
         }
+    }
+
+    public function headingRow(): int
+    {
+        return 1;
     }
 }
