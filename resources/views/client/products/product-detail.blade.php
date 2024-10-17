@@ -32,7 +32,7 @@
                                                     @if ($product->image_url && \Storage::exists($product->image_url))
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
-                                                            style="max-width: 100px; height: auto;">
+                                                            style="width: 70%;margin: 0 auto; height: auto;">
                                                     @else
                                                         <p>Không có ảnh</p>
                                                     @endif
