@@ -8,7 +8,7 @@
         <div class="col-md-8">
             <div class="card shadow-lg p-4 border-0 rounded">
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row mt-5 mb-5">
                         <div class="col-md-4 text-center">
                             <!-- User Profile Picture -->
                             @if ($user->image)

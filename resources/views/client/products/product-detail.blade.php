@@ -1,16 +1,10 @@
 @extends('client.master')
-@section('title', $product->name.' - Zaia Enterprise' )
+@section('title', $product->name . ' - Zaia Enterprise')
 
 @section('content')
 
-    <div class="banner-wrapper no_background">
-        <div class="banner-wrapper-inner">
-            <nav class="kobolg-breadcrumb container"><a href="index-2.html">Home</a><i class="fa fa-angle-right"></i><a
-                    href="#">Shop</a>
-                <i class="fa fa-angle-right"></i>Single Product
-            </nav>
-        </div>
-    </div>
+    @include('components.breadcrumb-client')
+
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
             <div class="row">
@@ -39,24 +33,24 @@
 
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="assets/images/apro134-1.jpg" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}" alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="assets/images/apro132-1.jpg" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}" class="" alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="assets/images/apro133-1.jpg" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}" class="" alt="img">
                                                 </div>
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            <li><img src="assets/images/apro131-2-100x100.jpg" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}" alt="img">
                                             </li>
-                                            <li><img src="assets/images/apro134-1-100x100.jpg" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}" alt="img">
                                             </li>
-                                            <li><img src="assets/images/apro132-1-100x100.jpg" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}" alt="img">
                                             </li>
-                                            <li><img src="assets/images/apro133-1-100x100.jpg" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}" alt="img">
                                             </li>
                                         </ol>
                                     </div>
@@ -167,8 +161,7 @@
                                         </div>
                                     </div>
                                     <div class="clear"></div>
-                                    <a href="#" class="compare button" data-product_id="27"
-                                        rel="nofollow">Compare</a>
+                                    <a href="#" class="compare button" data-product_id="27" rel="nofollow">Compare</a>
                                     <div class="product_meta">
                                         <div class="wcml-dropdown product wcml_currency_switcher">
                                             <ul>
@@ -224,22 +217,13 @@
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--description panel entry-content kobolg-tab"
                                 id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
                                 <h2>Description</h2>
-                                <div class="container-table">
-                                    <div class="container-cell">
-                                        <h2 class="az_custom_heading">{!! $product->description !!}
-                                            luctus</p>
-                                    </div>
-                                    <div class="container-cell">
-                                        <div class="az_single_image-wrapper az_box_border_grey">
-                                            <img src="assets/images/single-pro1.jpg"
-                                                class="az_single_image-img attachment-full" alt="img">
-                                        </div>
-                                    </div>
+                                <div class="col-md-8 justify-content-center align-items-center text-center">
+                                    {!! $product->description !!}
                                 </div>
-                                <div class="container-table">
+                                {{-- <div class="container-table">
                                     <div class="container-cell">
                                         <div class="az_single_image-wrapper az_box_border_grey">
-                                            <img src="assets/images/single-pro2.jpg"
+                                            <img src="{{ asset('theme/client/assets/images/single-pro2.jpg') }}"
                                                 class="az_single_image-img attachment-full" alt="img">
                                         </div>
                                     </div>
@@ -255,7 +239,7 @@
                                             Lorem Ipsum text is unique, free of repetition and also
                                             resembles readable text as much as possible.</p>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
@@ -355,7 +339,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="assets/images/apro101-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro101-1-600x778.jpg') }}"
                                             alt="Mac 27 Inch" width="600" height="778">
                                     </a>
                                     <div class="flash"><span class="onnew"><span class="text">New</span></span></div>
@@ -395,7 +380,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="assets/images/apro41-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro41-1-600x778.jpg') }}"
                                             alt="White Watches" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -437,7 +423,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="assets/images/apro151-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro151-1-600x778.jpg') }}"
                                             alt="Cellphone Factory" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -482,7 +469,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="assets/images/apro13-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro13-1-600x778.jpg') }}"
                                             alt="Meta Watches                                                "
                                             width="600" height="778">
                                     </a>
@@ -525,7 +513,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="assets/images/apro181-2-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro181-2-600x778.jpg') }}"
                                             alt="Red Mouse" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -568,7 +557,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="assets/images/apro171-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro171-1-600x778.jpg') }}"
                                             alt="Photo Camera" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -665,7 +655,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="assets/images/apro141-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro141-1-600x778.jpg') }}"
                                             alt="Smart Monitor" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -706,7 +697,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive" src="assets/images/apro31-1-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro31-1-600x778.jpg') }}"
                                             alt="Blue Smartphone" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -747,7 +739,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link kobolg-product-gallery__image" href="#" tabindex="0">
-                                        <img class="img-responsive wp-post-image" src="assets/images/apro83-1-600x778.jpg"
+                                        <img class="img-responsive wp-post-image"
+                                            src="{{ asset('theme/client/assets/images/apro83-1-600x778.jpg') }}"
                                             alt="Glasses – Red" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -788,7 +781,8 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive" src="assets/images/apro302-600x778.jpg"
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro302-600x778.jpg') }}"
                                             alt="Circle Watches" width="600" height="778">
                                     </a>
                                     <div class="flash">
