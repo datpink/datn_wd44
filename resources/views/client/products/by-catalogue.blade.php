@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Sản phẩm')
+@section('title', 'Danh sách sản phẩm ')
 
 @section('content')
 
