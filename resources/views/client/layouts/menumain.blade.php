@@ -37,14 +37,14 @@
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
                         <li id="menu-item-230"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Trang chủ</a>
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Trang Chủ</a>
                             <span class="toggle-submenu"></span>
                         </li>
 
                         <li id="menu-item-228"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-228 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Shop"
-                                href="{{ route('client.products.index') }}">Cửa hàng</a>
+                                href="{{ route('client.products.index') }}">Cửa Hàng</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-shop">
                                 <div class="row">
@@ -82,12 +82,11 @@
                         <li id="menu-item-996"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-996 parent parent-megamenu item-megamenu menu-item-has-children">
                             <a class="kobolg-menu-item-title" title="Blog"
-                                href="{{ route('client.posts.index') }}">Tin tức</a>
+                                href="{{ route('client.posts.index') }}">Tin Tức</a>
                             <span class="toggle-submenu"></span>
                             <div class="submenu megamenu megamenu-blog">
                                 <div class="row">
                                     @foreach ($menuCategories as $category)
-                                    
                                         @if ($category->status === 'active')
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
@@ -113,7 +112,7 @@
                             </div>
                         </li>
 
-                        <li id="menu-item-229"
+                        {{-- <li id="menu-item-229"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-229 parent parent-megamenu item-megamenu menu-item-has-children">
 
                             <a class="kobolg-menu-item-title" title="Elements" href="#">Liên hệ</a>
@@ -203,7 +202,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </li>
+                        </li> --}}
 
                         <li id="menu-item-237"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-237 parent">
@@ -230,7 +229,7 @@
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100"
                                 href="#">Freeship với đơn từ 1.000.000đ
-                                </a>
+                            </a>
                         </li>
                     </ul>
                 </div>

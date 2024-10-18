@@ -11,13 +11,10 @@
                 <a href="#">Downloads</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--edit-account">
-                <a href="#">Thông tin tài khoản</a>
+                <a href="{{ route('profile.show') }}">Thông tin tài khoản</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--edit-addresses">
                 <a href="#">Cập nhật địa chỉ</a>
-            </li>
-            <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--edit-account">
-                <a href="#">Thông tin tài khoản</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--customer-logout">
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
