@@ -93,13 +93,7 @@
                                     <div class="product-inner images">
                                         <div class="product-thumb">
                                             <a class="thumb-link" href="#">
-                                                @if ($product->image_url && \Storage::exists($product->image_url))
-                                                    <img class="img-responsive"
-                                                        src="{{ \Storage::url($product->image_url) }}"
-                                                        alt="{{ $product->name }}" width="600" height="778">
-                                                @else
-                                                    Không có ảnh
-                                                @endif
+                                                <img class="img-responsive" src="{{ $product->image_url }}">
                                             </a>
                                             <div class="flash">
                                                 @if ($product->condition === 'new')
@@ -130,8 +124,8 @@
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
-                                            <div class="star-rating">
-                                                <span style="width: {{ $product->rating * 20 }}%">Rated <strong
+                                                <div class="star-rating">
+                                                    <span style="width: {{ $product->rating * 20 }}%">Rated <strong
                                                             class="rating">{{ $product->rating }}</strong> out of 5</span>
                                                 </div>
                                                 <span class="review">({{ $product->reviews_count }})</span>
@@ -232,7 +226,8 @@
 
                             </form> --}}
                             <form method="get" action="" id="priceFilterForm">
-                                <input type="hidden" name="parentCataloguesID" id="parentCataloguesID" value="{{ $parentCataloguesID }}">
+                                <input type="hidden" name="parentCataloguesID" id="parentCataloguesID"
+                                    value="{{ $parentCataloguesID }}">
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
                                         data-unit="$" class="price_slider" data-value-min="0"
@@ -329,7 +324,7 @@
                                                             <div class="product-inner images">
                                                                 <div class="product-thumb">
                                                                     <a class="thumb-link" href="#">
-                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                     </a>
                                                                     <div class="flash">
                                                                         ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}

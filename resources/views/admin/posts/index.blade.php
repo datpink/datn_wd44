@@ -73,11 +73,11 @@
                                             @endif
                                             <td>
                                                 @if ($post->image && \Storage::exists($post->image))
-                                                <img src="{{ \Storage::url($post->image) }}"
-                                                    alt="{{ $post->name }}" style="max-width: 100px; height: auto;">
-                                            @else
-                                                Không có ảnh
-                                            @endif
+                                                    <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                                        style="max-width: 100px; height: auto;">
+                                                @else
+                                                    Không có ảnh
+                                                @endif
                                             </td>
                                             <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
 
