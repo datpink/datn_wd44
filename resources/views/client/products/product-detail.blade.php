@@ -26,31 +26,38 @@
                                                     @if ($product->image_url && \Storage::exists($product->image_url))
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
-                                                            style="max-width: 100px; height: auto;">
+                                                            style="max-width: 70% ;margin:0 auto; height: 100% auto;">
                                                     @else
                                                         <p>Không có ảnh</p>
                                                     @endif
 
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}"
+                                                        alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}"
+                                                        class="" alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}"
+                                                        class="" alt="img">
                                                 </div>
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
                                         </ol>
                                     </div>
@@ -69,15 +76,52 @@
                                         </span>
                                     </p>
                                     <br>
-                                    @foreach ($product->variants as $variant)
-                                        <button class="variant-btn" data-id="{{ $variant->id }}"
-                                            data-price="{{ $variant->price }}">
-                                            {{ $variant->variant_name }}
-                                        </button>
-                                    @endforeach
+                                    <div class="product-variants">
+                                        @php
+                                            // Khởi tạo các mảng để lưu trữ các biến thể theo thuộc tính
+                                            $dungLuongVariants = [];
+                                            $mauSacVariants = [];
+
+                                            // Duyệt qua tất cả các biến thể và phân loại dựa trên tên của attribute
+                                            foreach ($product->variants as $variant) {
+                                                foreach ($variant->attributeValues as $attributeValue) {
+                                                    if ($attributeValue->attribute->name === 'Storage') {
+                                                        $dungLuongVariants[$attributeValue->name][] = $variant;
+                                                    }
+
+                                                    if ($attributeValue->attribute->name === 'Color') {
+                                                        $mauSacVariants[$attributeValue->name][] = $variant;
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+
+                                        <div class="product-attributes">
+                                            <!-- Dung lượng -->
+                                            <div class="attribute-group">
+                                                <h4>Dung lượng:</h4>
+                                                @foreach ($dungLuongVariants as $dungLuong => $variants)
+                                                    <button class="variant-btn" data-dung-luong="{{ $dungLuong }}">
+                                                        {{ $dungLuong }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+
+                                            <!-- Màu sắc -->
+                                            <div class="attribute-group">
+                                                <h4>Màu sắc:</h4>
+                                                @foreach ($mauSacVariants as $mauSac => $variants)
+                                                    <button class="variant-btn" data-mau-sac="{{ $mauSac }}">
+                                                        {{ $mauSac }}
+                                                    </button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+
+                                    </div>
+
                                     <div id="error-message" style="color: red;"></div>
 
-                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             const variantButtons = document.querySelectorAll('.variant-btn');
@@ -161,7 +205,8 @@
                                         </div>
                                     </div>
                                     <div class="clear"></div>
-                                    <a href="#" class="compare button" data-product_id="27" rel="nofollow">Compare</a>
+                                    <a href="#" class="compare button" data-product_id="27"
+                                        rel="nofollow">Compare</a>
                                     <div class="product_meta">
                                         <div class="wcml-dropdown product wcml_currency_switcher">
                                             <ul>
@@ -824,3 +869,4 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

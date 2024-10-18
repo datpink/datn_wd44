@@ -31,12 +31,17 @@ class ProductController extends Controller
     {
         // Lấy sản phẩm theo slug
         $product = Product::where('slug', $slug)
-        ->with(['variants' => function($query) {
-            $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
-        }])            ->firstOrFail();
-
+            ->with([
+                'variants' => function ($query) {
+                    $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
+                },
+                'variants.attributeValues.attribute' // Nạp thêm quan hệ attributeValues và attribute
+            ])
+            ->firstOrFail();
+                dd($product);
         return view('client.products.product-detail', compact('product'));
     }
+
 
     public function getVariantPrice(Request $request)
     {
