@@ -26,7 +26,7 @@
                                                     @if ($product->image_url && \Storage::exists($product->image_url))
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
-                                                            style="max-width: 90%; height: auto;">
+                                                            style="max-width: 70% ;margin:0 auto; height: 100% auto;">
                                                     @else
                                                         <p>Không có ảnh</p>
                                                     @endif
@@ -76,15 +76,61 @@
                                         </span>
                                     </p>
                                     <br>
-                                    @foreach ($product->variants as $variant)
-                                        <button class="variant-btn" data-id="{{ $variant->id }}"
-                                            data-price="{{ $variant->price }}">
-                                            {{ $variant->variant_name }}
-                                        </button>
-                                    @endforeach
+                                    <div class="product-variants">
+                                        @php
+                                            // Khởi tạo các mảng để lưu trữ các biến thể theo thuộc tính
+                                            $dungLuongVariants = [];
+                                            $mauSacVariants = [];
+
+                                            // Duyệt qua tất cả các biến thể và phân loại dựa trên tên của attribute
+                                            foreach ($product->variants as $variant) {
+                                                foreach ($variant->attributeValues as $attributeValue) {
+                                                    if ($attributeValue->attribute->name === 'Storage') {
+                                                        $dungLuongVariants[$attributeValue->value][] = $variant; // Lưu trữ biến thể theo dung lượng
+                                                    }
+
+                                                    if ($attributeValue->attribute->name === 'Color') {
+                                                        $mauSacVariants[$attributeValue->value][] = $variant; // Lưu trữ biến thể theo màu sắc
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+
+                                        <div class="product-attributes">
+                                            <!-- Dung lượng -->
+                                            <div class="attribute-group">
+                                                <h4>Dung lượng:</h4>
+                                                @if (count($dungLuongVariants) > 0)
+                                                    @foreach ($dungLuongVariants as $dungLuong => $variants)
+                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}">
+                                                            {{ $dungLuong }}
+                                                        </button>
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có dung lượng nào cho sản phẩm này.</p>
+                                                @endif
+                                            </div>
+
+                                            <!-- Màu sắc -->
+                                            <div class="attribute-group">
+                                                <h4>Màu sắc:</h4>
+                                                @if (count($mauSacVariants) > 0)
+                                                    @foreach ($mauSacVariants as $mauSac => $variants)
+                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}">
+                                                            {{ $mauSac }}
+                                                        </button>
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có màu sắc nào cho sản phẩm này.</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                     <div id="error-message" style="color: red;"></div>
 
-                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
                                             const variantButtons = document.querySelectorAll('.variant-btn');
@@ -168,7 +214,8 @@
                                         </div>
                                     </div>
                                     <div class="clear"></div>
-                                    <a href="#" class="compare button" data-product_id="27" rel="nofollow">Compare</a>
+                                    <a href="#" class="compare button" data-product_id="27"
+                                        rel="nofollow">Compare</a>
                                     <div class="product_meta">
                                         <div class="wcml-dropdown product wcml_currency_switcher">
                                             <ul>
@@ -831,3 +878,4 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
