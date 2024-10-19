@@ -5,7 +5,7 @@
 @section('content')
     <h4>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h4>
 
-    <form action="{{ route('variants.store', $product->id) }}" method="POST">
+    <form action="{{ route('variants.store', $product->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <label for="variant_name">Tên Biến Thể</label>
