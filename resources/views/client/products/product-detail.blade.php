@@ -89,6 +89,28 @@
                                     </p>
                                     <br>
                                     <div class="product-variants">
+<<<<<<< HEAD
+=======
+                                        @php
+                                            // Khởi tạo các mảng để lưu trữ các biến thể theo thuộc tính
+                                            $dungLuongVariants = [];
+                                            $mauSacVariants = [];
+
+                                            // Duyệt qua tất cả các biến thể và phân loại dựa trên tên của attribute
+                                            foreach ($product->variants as $variant) {
+                                                foreach ($variant->attributeValues as $attributeValue) {
+                                                    if ($attributeValue->attribute->name === 'Storage') {
+                                                        $dungLuongVariants[$attributeValue->value][] = $variant;
+                                                    }
+
+                                                    if ($attributeValue->attribute->name === 'Color') {
+                                                        $mauSacVariants[$attributeValue->value][] = $variant;
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+
+>>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
                                         <div class="product-attributes">
                                             <!-- Dung lượng -->
                                             <div class="attribute-group">
@@ -105,7 +127,8 @@
                                                 @endphp
                                                 @if (count($dungLuongVariants) > 0)
                                                     @foreach ($dungLuongVariants as $dungLuong => $variants)
-                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}">
+                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
+                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ">
                                                             {{ $dungLuong }}
                                                         </button>
                                                     @endforeach
@@ -129,7 +152,8 @@
                                                 @endphp
                                                 @if (count($mauSacVariants) > 0)
                                                     @foreach ($mauSacVariants as $mauSac => $variants)
-                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}">
+                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
+                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ">
                                                             {{ $mauSac }}
                                                         </button>
                                                     @endforeach
@@ -138,6 +162,10 @@
                                                 @endif
                                             </div>
                                         </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
                                     </div>
 
                                     <div id="error-message" style="color: red;"></div>
@@ -245,6 +273,19 @@
                                                                     .price);
                                                             }
                                                         }
+<<<<<<< HEAD
+=======
+
+                                                        // Chọn nút hiện tại và thay đổi style
+                                                        selectedButton = this;
+                                                        selectedButton.style.backgroundColor = '#fff';
+                                                        selectedButton.style.border = '2px solid #bc2f3e';
+                                                        selectedButton.style.color = '#bc2f3e';
+
+                                                        // Thay đổi giá theo biến thể
+                                                        const newPrice = this.dataset.price || originalPrice;
+                                                        $('#product-price').text(newPrice);
+>>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
                                                     }
 
                                                     // Kiểm tra nếu là nút màu sắc
@@ -302,21 +343,22 @@
                                             }
                                         });
                                     </script>
+
                                     <p class="stock in-stock">
-                                        Thương hiệu: <span>
-                                            {{ $product->brand ? $product->brand->name : 'Không có' }}</span>
+                                        Thương hiệu:
+                                        <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
                                     </p>
 
                                     <div class="kobolg-product-details__short-description">
                                         <p>{{ $product->tomtat }}</p>
-
                                     </div>
+
                                     <form class="variations_form cart">
                                         <div class="single_variation_wrap">
                                             <div class="kobolg-variation single_variation"></div>
                                             <div class="kobolg-variation-add-to-cart variations_button">
                                                 <div class="quantity">
-                                                    <span class="qty-label">Quantiy:</span>
+                                                    <span class="qty-label">Số lượng:</span>
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
                                                         <input type="text" data-step="1" min="0" max=""
@@ -328,56 +370,47 @@
                                                 </div>
                                                 <button type="submit"
                                                     class="single_add_to_cart_button button alt kobolg-variation-selection-needed">
-                                                    Add to cart
+                                                    Thêm vào giỏ hàng
                                                 </button>
                                             </div>
                                         </div>
                                     </form>
+
                                     <div class="yith-wcwl-add-to-wishlist">
                                         <div class="yith-wcwl-add-button show">
                                             <a href="#" rel="nofollow" data-product-id="27"
                                                 data-product-type="variable" class="add_to_wishlist">
-                                                Add to Wishlist</a>
+                                                Thêm vào danh sách yêu thích</a>
                                         </div>
                                     </div>
+
                                     <div class="clear"></div>
-                                    <a href="#" class="compare button" data-product_id="27"
-                                        rel="nofollow">Compare</a>
+                                    <a href="#" class="compare button" data-product_id="27" rel="nofollow">So
+                                        sánh</a>
+
                                     <div class="product_meta">
-                                        <div class="wcml-dropdown product wcml_currency_switcher">
-                                            <ul>
-                                                <li class="wcml-cs-active-currency">
-                                                    <a class="wcml-cs-item-toggle">USD</a>
-                                                    <ul class="wcml-cs-submenu">
-                                                        <li>
-                                                            <a>EUR</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </div>
                                         <span class="sku_wrapper">SKU: <span
                                                 class="sku">{{ $product->sku }}</span></span>
-                                        <span class="posted_in">Categories: <a href="#"
-                                                rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</span>
-                                        <span class="tagged_as">Tags: <a href="#" rel="tag">Game &
-                                                Consoles</a>, <a href="#" rel="tag">Sock</a></span>
+                                        <span class="posted_in">Danh mục:
+                                            <a href="#"
+                                                rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>
+                                        </span>
                                     </div>
+
                                     <div class="kobolg-share-socials">
-                                        <h5 class="social-heading">Share: </h5>
+                                        <h5 class="social-heading">Chia sẻ:</h5>
                                         <a target="_blank" class="facebook" href="#">
                                             <i class="fa fa-facebook-f"></i>
                                         </a>
-                                        <a target="_blank" class="twitter" href="#"><i class="fa fa-twitter"></i>
-                                        </a>
+                                        <a target="_blank" class="twitter" href="#"><i
+                                                class="fa fa-twitter"></i></a>
                                         <a target="_blank" class="pinterest" href="#"> <i
-                                                class="fa fa-pinterest"></i>
-                                        </a>
+                                                class="fa fa-pinterest"></i></a>
                                         <a target="_blank" class="googleplus" href="#"><i
-                                                class="fa fa-google-plus"></i>
-                                        </a>
+                                                class="fa fa-google-plus"></i></a>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                         <div class="kobolg-tabs kobolg-tabs-wrapper">

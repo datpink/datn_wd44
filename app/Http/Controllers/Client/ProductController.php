@@ -29,15 +29,29 @@ class ProductController extends Controller
 
     public function show($slug)
     {
+        // Lấy sản phẩm theo slug
         $product = Product::where('slug', $slug)
+<<<<<<< HEAD
             ->with(['variants' => function($query) {
                 $query->where('status', 'active')->with('attributeValues.attribute');
             }])
+=======
+            ->with([
+                'variants' => function ($query) {
+                    $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
+                },
+                'variants.attributeValues.attribute' // Nạp thêm quan hệ attributeValues và attribute
+            ])
+>>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
             ->firstOrFail();
-    
+            // dd($product);
         return view('client.products.product-detail', compact('product'));
     }
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
     public function getVariantPrice(Request $request)
     {
         // Lấy thông tin biến thể dựa trên ID
