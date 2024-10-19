@@ -24,7 +24,7 @@
                                         @else
                                             Không có ảnh
                                         @endif
-                                         
+
                                         </td>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}">
                                             <span>{{ $post->created_at->day }}</span>

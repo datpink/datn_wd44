@@ -26,31 +26,38 @@
                                                     @if ($product->image_url && \Storage::exists($product->image_url))
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
-                                                            style="max-width: 100px; height: auto;">
+                                                            style="max-width: 90%; height: auto;">
                                                     @else
                                                         <p>Không có ảnh</p>
                                                     @endif
 
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}"
+                                                        alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}"
+                                                        class="" alt="img">
                                                 </div>
                                                 <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}" class="" alt="img">
+                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}"
+                                                        class="" alt="img">
                                                 </div>
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}" alt="img">
+                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}"
+                                                    alt="img">
                                             </li>
                                         </ol>
                                     </div>
@@ -140,7 +147,7 @@
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
                                                         <input type="text" data-step="1" min="0" max=""
-                                                            name="quantity[25]" value="0" title="Qty"
+                                                            name="quantity[25]" value="1" title="Qty"
                                                             class="input-qty input-text qty text" size="4"
                                                             pattern="[0-9]*" inputmode="numeric">
                                                         <a class="btn-number qtyplus quantity-plus" href="#">+</a>

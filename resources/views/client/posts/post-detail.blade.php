@@ -15,13 +15,13 @@
                                 <div class="owl-slick">
                                     <td>
                                         @if ($post->image && \Storage::exists($post->image))
-                                        <img src="{{ \Storage::url($post->image) }}"
-                                            alt="{{ $post->name }}" style="max-width: 100%; height: auto; margin:0 auto">
-                                    @else
-                                        Không có ảnh
-                                    @endif
-                                     
-                                     
+                                            <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                                style="max-width: 100%; height: auto; margin:0 auto">
+                                        @else
+                                            Không có ảnh
+                                        @endif
+
+
                                     </td>
 
                                 </div>
@@ -32,9 +32,10 @@
                             <div class="post-meta">
                                 <div class="date">
                                     <span>{{ $post->created_at->day }}</span>
-                                    <span>{{ $post->created_at->format('M') }}</span>                                </div>
+                                    <span>{{ $post->created_at->format('M') }}</span>
+                                </div>
                                 <div class="post-author">
-                                    By:<a href="#"> {{ $post->author_name ?? 'Unknown' }} </a>
+                                    By: <a href="#">{{ $post->author_name ?? 'Unknown' }}</a>
                                 </div>
                             </div>
                         </div>
@@ -44,23 +45,23 @@
                                 <blockquote>
                                     <p>{{ $post->slug }}</p>
                                 </blockquote>
-                                <p>{{ $post->content }}</p>
+                                <p>{!! $post->content !!}</p>
                             </div>
                             <p>&nbsp;</p>
-                            <div id="gallery-1" class="gallery galleryid-195 gallery-columns-2 gallery-size-full">
+                            {{-- <div id="gallery-1" class="gallery galleryid-195 gallery-columns-2 gallery-size-full">
                                 <figure class="gallery-item">
                                     <div class="gallery-icon landscape">
-                                        <a href="#"><img src="assets/images/blog-gallery-1.jpg"
+                                        <a href="#"><img src="{{ asset('theme/client/assets/images/blog-gallery-1.jpg') }}"
                                                 class="attachment-full size-full" alt="img"></a>
                                     </div>
                                 </figure>
                                 <figure class="gallery-item">
                                     <div class="gallery-icon landscape">
-                                        <a href="#"><img src="assets/images/blog-gallery-2.jpg"
+                                        <a href="#"><img src="{{ asset('theme/client/assets/images/blog-gallery-2.jpg') }}"
                                                 class="attachment-full size-full" alt="img"></a>
                                     </div>
                                 </figure>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="tags"><a href="#" rel="tag">Camera</a>, <a href="#"
                                 rel="tag">Life Style</a></div>

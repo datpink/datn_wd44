@@ -510,7 +510,8 @@
                     <div class="heading-inner">
                         <h3 class="title">Bài Viết Nổi Bật</h3>
                         <div class="subtitle">
-                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất chỉ với một cú nhấp chuột
+                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất
+                            chỉ với một cú nhấp chuột
                         </div>
                     </div>
                 </div>
@@ -524,9 +525,13 @@
                                 <div class="post-inner blog-grid">
                                     <div class="post-thumb">
                                         <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
-                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-responsive attachment-370x330 size-370x330"
-                                                width="370" height="330">
+                                            @if ($post->image && \Storage::exists($post->image))
+                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                                    class="img-responsive attachment-370x330 size-370x330" width="370"
+                                                    height="330">
+                                            @else
+                                                Không có ảnh
+                                            @endif
                                         </a>
                                         <a class="datebox" href="{{ route('posts.show', $post->id) }}" tabindex="0">
                                             <span>{{ $post->created_at->format('d') }}</span>

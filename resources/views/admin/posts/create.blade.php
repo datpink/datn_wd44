@@ -75,7 +75,7 @@
 
                         <div class="form-group">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control-file @error('image') is-invalid @enderror"
+                            <input type="file" class="form-control @error('image') is-invalid @enderror"
                                 name="image" id="image">
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
