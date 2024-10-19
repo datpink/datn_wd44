@@ -89,28 +89,6 @@
                                     </p>
                                     <br>
                                     <div class="product-variants">
-<<<<<<< HEAD
-=======
-                                        @php
-                                            // Khởi tạo các mảng để lưu trữ các biến thể theo thuộc tính
-                                            $dungLuongVariants = [];
-                                            $mauSacVariants = [];
-
-                                            // Duyệt qua tất cả các biến thể và phân loại dựa trên tên của attribute
-                                            foreach ($product->variants as $variant) {
-                                                foreach ($variant->attributeValues as $attributeValue) {
-                                                    if ($attributeValue->attribute->name === 'Storage') {
-                                                        $dungLuongVariants[$attributeValue->value][] = $variant;
-                                                    }
-
-                                                    if ($attributeValue->attribute->name === 'Color') {
-                                                        $mauSacVariants[$attributeValue->value][] = $variant;
-                                                    }
-                                                }
-                                            }
-                                        @endphp
-
->>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
                                         <div class="product-attributes">
                                             <!-- Dung lượng -->
                                             <div class="attribute-group">
@@ -162,11 +140,7 @@
                                                 @endif
                                             </div>
                                         </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
-                                    </div>
+                                                                        </div>
 
                                     <div id="error-message" style="color: red;"></div>
 
@@ -174,174 +148,159 @@
 
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
-                                            let selectedStorage = null;
-                                            let selectedColor = null;
-                                            let selectedStorageButton = null;
-                                            let selectedColorButton = null;
-                                            const priceElement = document.getElementById('product-price');
+    let selectedStorage = null;
+    let selectedColor = null;
+    let selectedStorageButton = null;
+    let selectedColorButton = null;
+    const priceElement = document.getElementById('product-price');
 
-                                            // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
-                                            let storageData = {
-                                                name: null,
-                                                price: null
-                                            };
-                                            let colorData = {
-                                                name: null
-                                            };
+    // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
+    let storageData = {
+        name: null,
+        price: null
+    };
+    let colorData = {
+        name: null
+    };
 
-                                            // Lấy danh sách biến thể từ PHP
-                                            const variants = {!! json_encode(
-                                                $product->variants->map(function ($variant) {
-                                                    return [
-                                                        'price' => $variant->price,
-                                                        'attributes' => $variant->attributeValues->map(function ($attributeValue) {
-                                                            return [
-                                                                'name' => $attributeValue->attribute->name,
-                                                                'value' => $attributeValue->name,
-                                                            ];
-                                                        }),
-                                                    ];
-                                                }),
-                                            ) !!};
+    // Lấy danh sách biến thể từ PHP
+    const variants = {!! json_encode(
+        $product->variants->map(function ($variant) {
+            return [
+                'price' => $variant->price,
+                'attributes' => $variant->attributeValues->map(function ($attributeValue) {
+                    return [
+                        'name' => $attributeValue->attribute->name,
+                        'value' => $attributeValue->name,
+                    ];
+                }),
+            ];
+        }),
+    ) !!};
 
-                                            // Giá gốc của sản phẩm
-                                            const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
+    // Giá gốc của sản phẩm
+    const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
 
-                                            // Kiểm tra nếu không có biến thể
-                                            if (variants.length === 0) {
-                                                // Hiển thị giá gốc nếu sản phẩm không có biến thể
-                                                priceElement.innerHTML = originalPrice;
-                                                console.log('No variants available. Showing original product price.');
-                                                return; // Không tiếp tục xử lý biến thể nếu không có biến thể
-                                            }
+    // Kiểm tra nếu không có biến thể
+    if (variants.length === 0) {
+        // Hiển thị giá gốc nếu sản phẩm không có biến thể
+        priceElement.innerHTML = originalPrice;
+        console.log('No variants available. Showing original product price.');
+        return; // Không tiếp tục xử lý biến thể nếu không có biến thể
+    }
 
-                                            // Lọc giá dựa trên dung lượng (Storage)
-                                            const storageVariants = variants.filter(variant =>
-                                                variant.attributes.some(attr => attr.name === 'Storage')
-                                            );
+    // Lọc giá dựa trên dung lượng (Storage)
+    const storageVariants = variants.filter(variant =>
+        variant.attributes.some(attr => attr.name === 'Storage')
+    );
 
-                                            // Tìm giá nhỏ nhất và lớn nhất
-                                            const minPrice = Math.min(...storageVariants.map(variant => variant.price));
-                                            const maxPrice = Math.max(...storageVariants.map(variant => variant.price));
+    // Tìm giá nhỏ nhất và lớn nhất
+    const minPrice = Math.min(...storageVariants.map(variant => variant.price));
+    const maxPrice = Math.max(...storageVariants.map(variant => variant.price));
 
-                                            // Hiển thị giá mặc định nhỏ nhất - lớn nhất
-                                            function showDefaultPrice() {
-                                                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(maxPrice) + '';
-                                            }
+    // Hiển thị giá mặc định nhỏ nhất - lớn nhất
+    function showDefaultPrice() {
+        priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(minPrice) + 'đ - ' + new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(maxPrice) + 'đ';
+    }
 
-                                            // Hiển thị giá mặc định khi trang được tải
-                                            showDefaultPrice();
+    // Hiển thị giá mặc định khi trang được tải
+    showDefaultPrice();
 
-                                            // Sử dụng event delegation để lắng nghe sự kiện click
-                                            document.addEventListener('click', function(event) {
-                                                if (event.target.classList.contains('variant-btn')) {
-                                                    const storage = event.target.getAttribute('data-dung-luong');
-                                                    const color = event.target.getAttribute('data-mau-sac');
+    // Sử dụng event delegation để lắng nghe sự kiện click
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('variant-btn')) {
+            const storage = event.target.getAttribute('data-dung-luong');
+            const color = event.target.getAttribute('data-mau-sac');
 
-                                                    // Kiểm tra nếu là nút dung lượng
-                                                    if (storage) {
-                                                        console.log('Selected storage:', storage);
-                                                        if (selectedStorage === storage) {
-                                                            // Khi bỏ chọn dung lượng, đặt lại giá về mặc định
-                                                            resetButton(selectedStorageButton);
-                                                            selectedStorage = null;
-                                                            selectedStorageButton = null;
-                                                            storageData.name = null;
-                                                            storageData.price = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn dung lượng
-                                                        } else {
-                                                            if (selectedStorageButton) resetButton(selectedStorageButton);
-                                                            selectedStorage = storage;
-                                                            selectedStorageButton = event.target;
-                                                            selectButton(selectedStorageButton);
+            // Kiểm tra nếu là nút dung lượng
+            if (storage) {
+                console.log('Selected storage:', storage);
+                if (selectedStorage === storage) {
+                    // Khi bỏ chọn dung lượng, đặt lại giá về mặc định
+                    resetButton(selectedStorageButton);
+                    selectedStorage = null;
+                    selectedStorageButton = null;
+                    storageData.name = null;
+                    storageData.price = null;
+                    showDefaultPrice();  // Đặt lại giá mặc định khi bỏ chọn dung lượng
+                } else {
+                    if (selectedStorageButton) resetButton(selectedStorageButton);
+                    selectedStorage = storage;
+                    selectedStorageButton = event.target;
+                    selectButton(selectedStorageButton);
 
-                                                            // Lưu tên dung lượng và giá của dung lượng đã chọn
-                                                            const foundStorageVariant = storageVariants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Storage' && attr
-                                                                    .value === selectedStorage)
-                                                            );
-                                                            if (foundStorageVariant) {
-                                                                storageData.name = selectedStorage;
-                                                                storageData.price = foundStorageVariant.price;
-                                                                console.log('Storage selected:', storageData.name, 'Price:', storageData
-                                                                    .price);
-                                                            }
-                                                        }
-<<<<<<< HEAD
-=======
+                    // Lưu tên dung lượng và giá của dung lượng đã chọn
+                    const foundStorageVariant = storageVariants.find(variant =>
+                        variant.attributes.some(attr => attr.name === 'Storage' && attr.value === selectedStorage)
+                    );
+                    if (foundStorageVariant) {
+                        storageData.name = selectedStorage;
+                        storageData.price = foundStorageVariant.price;
+                        console.log('Storage selected:', storageData.name, 'Price:', storageData.price);
+                    }
+                }
+            }
 
-                                                        // Chọn nút hiện tại và thay đổi style
-                                                        selectedButton = this;
-                                                        selectedButton.style.backgroundColor = '#fff';
-                                                        selectedButton.style.border = '2px solid #bc2f3e';
-                                                        selectedButton.style.color = '#bc2f3e';
+            // Kiểm tra nếu là nút màu sắc
+            if (color) {
+                console.log('Selected color:', color);
+                if (selectedColor === color) {
+                    // Khi bỏ chọn màu sắc, đặt lại giá về mặc định
+                    resetButton(selectedColorButton);
+                    selectedColor = null;
+                    selectedColorButton = null;
+                    colorData.name = null;
+                    showDefaultPrice();  // Đặt lại giá mặc định khi bỏ chọn màu sắc
+                } else {
+                    if (selectedColorButton) resetButton(selectedColorButton);
+                    selectedColor = color;
+                    selectedColorButton = event.target;
+                    selectButton(selectedColorButton);
 
-                                                        // Thay đổi giá theo biến thể
-                                                        const newPrice = this.dataset.price || originalPrice;
-                                                        $('#product-price').text(newPrice);
->>>>>>> 306ded94698e238983d90a30ba7f0d03281cdfde
-                                                    }
+                    // Lưu tên màu sắc đã chọn
+                    colorData.name = selectedColor;
+                    console.log('Color selected:', colorData.name);
+                }
+            }
 
-                                                    // Kiểm tra nếu là nút màu sắc
-                                                    if (color) {
-                                                        console.log('Selected color:', color);
-                                                        if (selectedColor === color) {
-                                                            // Khi bỏ chọn màu sắc, đặt lại giá về mặc định
-                                                            resetButton(selectedColorButton);
-                                                            selectedColor = null;
-                                                            selectedColorButton = null;
-                                                            colorData.name = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn màu sắc
-                                                        } else {
-                                                            if (selectedColorButton) resetButton(selectedColorButton);
-                                                            selectedColor = color;
-                                                            selectedColorButton = event.target;
-                                                            selectButton(selectedColorButton);
+            // Chỉ cập nhật giá khi cả dung lượng và màu sắc được chọn
+            if (storageData.name && colorData.name) {
+                // Cập nhật giá chỉ dựa trên dung lượng
+                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                }).format(storageData.price) + 'đ';
+                console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData.name, 'Price:', storageData.price);
+            } else {
+                // Khi chưa chọn đủ hoặc bỏ chọn dung lượng/màu sắc, hiển thị giá mặc định
+                showDefaultPrice();
+            }
+        }
+    });
 
-                                                            // Lưu tên màu sắc đã chọn
-                                                            colorData.name = selectedColor;
-                                                            console.log('Color selected:', colorData.name);
-                                                        }
-                                                    }
+    // Hàm để đặt lại trạng thái của nút về mặc định
+    function resetButton(button) {
+        if (button) {
+            button.style.backgroundColor = 'white'; // Màu nền trắng
+            button.style.border = '1px solid black'; // Viền đen
+        }
+    }
 
-                                                    // Chỉ cập nhật giá khi cả dung lượng và màu sắc được chọn
-                                                    if (storageData.name && colorData.name) {
-                                                        // Cập nhật giá chỉ dựa trên dung lượng
-                                                        priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                            style: 'currency',
-                                                            currency: 'VND'
-                                                        }).format(storageData.price) + 'đ';
-                                                        console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData
-                                                            .name, 'Price:', storageData.price);
-                                                    } else {
-                                                        // Khi chưa chọn đủ hoặc bỏ chọn dung lượng/màu sắc, hiển thị giá mặc định
-                                                        showDefaultPrice();
-                                                    }
-                                                }
-                                            });
+    // Hàm để cập nhật trạng thái của nút khi được chọn
+    function selectButton(button) {
+        if (button) {
+            button.style.backgroundColor = 'white'; // Màu nền trắng
+            button.style.border = '2px solid red'; // Viền đỏ
+        }
+    }
+});
 
-                                            // Hàm để đặt lại trạng thái của nút về mặc định
-                                            function resetButton(button) {
-                                                if (button) {
-                                                    button.style.backgroundColor = 'white'; // Màu nền trắng
-                                                    button.style.border = '1px solid black'; // Viền đen
-                                                }
-                                            }
-
-                                            // Hàm để cập nhật trạng thái của nút khi được chọn
-                                            function selectButton(button) {
-                                                if (button) {
-                                                    button.style.backgroundColor = 'white'; // Màu nền trắng
-                                                    button.style.border = '2px solid red'; // Viền đỏ
-                                                }
-                                            }
-                                        });
                                     </script>
 
                                     <p class="stock in-stock">
