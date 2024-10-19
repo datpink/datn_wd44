@@ -39,8 +39,9 @@ class ProductVariantController extends Controller
             'stock' => 'required|integer',
             'attributes' => 'required|array|min:1', // Đảm bảo là mảng và có ít nhất 1 phần tử
             'attributes.*' => 'integer|exists:attribute_values,id', // Đảm bảo là số nguyên và tồn tại
+
         ]);
-    
+
         // Tạo biến thể mới
         $variant = new ProductVariant([
             'variant_name' => $request->variant_name,

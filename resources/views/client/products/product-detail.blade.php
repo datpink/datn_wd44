@@ -81,44 +81,53 @@
                                             // Khởi tạo các mảng để lưu trữ các biến thể theo thuộc tính
                                             $dungLuongVariants = [];
                                             $mauSacVariants = [];
-
+                                    
                                             // Duyệt qua tất cả các biến thể và phân loại dựa trên tên của attribute
                                             foreach ($product->variants as $variant) {
                                                 foreach ($variant->attributeValues as $attributeValue) {
                                                     if ($attributeValue->attribute->name === 'Storage') {
-                                                        $dungLuongVariants[$attributeValue->name][] = $variant;
+                                                        $dungLuongVariants[$attributeValue->value][] = $variant; // Lưu trữ biến thể theo dung lượng
                                                     }
-
+                                    
                                                     if ($attributeValue->attribute->name === 'Color') {
-                                                        $mauSacVariants[$attributeValue->name][] = $variant;
+                                                        $mauSacVariants[$attributeValue->value][] = $variant; // Lưu trữ biến thể theo màu sắc
                                                     }
                                                 }
                                             }
                                         @endphp
-
+                                    
                                         <div class="product-attributes">
                                             <!-- Dung lượng -->
                                             <div class="attribute-group">
                                                 <h4>Dung lượng:</h4>
-                                                @foreach ($dungLuongVariants as $dungLuong => $variants)
-                                                    <button class="variant-btn" data-dung-luong="{{ $dungLuong }}">
-                                                        {{ $dungLuong }}
-                                                    </button>
-                                                @endforeach
+                                                @if (count($dungLuongVariants) > 0)
+                                                    @foreach ($dungLuongVariants as $dungLuong => $variants)
+                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}">
+                                                            {{ $dungLuong }}
+                                                        </button>
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có dung lượng nào cho sản phẩm này.</p>
+                                                @endif
                                             </div>
-
+                                    
                                             <!-- Màu sắc -->
                                             <div class="attribute-group">
                                                 <h4>Màu sắc:</h4>
-                                                @foreach ($mauSacVariants as $mauSac => $variants)
-                                                    <button class="variant-btn" data-mau-sac="{{ $mauSac }}">
-                                                        {{ $mauSac }}
-                                                    </button>
-                                                @endforeach
+                                                @if (count($mauSacVariants) > 0)
+                                                    @foreach ($mauSacVariants as $mauSac => $variants)
+                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}">
+                                                            {{ $mauSac }}
+                                                        </button>
+                                                    @endforeach
+                                                @else
+                                                    <p>Không có màu sắc nào cho sản phẩm này.</p>
+                                                @endif
                                             </div>
                                         </div>
-
                                     </div>
+                                    
+
 
                                     <div id="error-message" style="color: red;"></div>
 
