@@ -41,8 +41,11 @@ class ProductVariantController extends Controller
             'stock' => 'required|integer',
             'attributes' => 'required|array|min:1',
             'attributes.*' => 'integer|exists:attribute_values,id',
+            'weight' => 'required|numeric',
+            'dimension' => 'required|string',
+            'image_url' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
-    
+        $imageUrl = $request->file('image_url') ? $request->file('image_url')->store('product_images', 'public') : null;
         // Kiểm tra và lọc các thuộc tính hợp lệ
         $validAttributes = array_filter($request->input('attributes', []), 'is_numeric');
     
@@ -52,8 +55,10 @@ class ProductVariantController extends Controller
         }
     
         // Tạo biến thể mới và lưu vào cơ sở dữ liệu
-        $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock']) + [
+        $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
             'status' => 'inactive', // Mặc định là không kích hoạt
+            'image_url' => $imageUrl,
+
         ]);
     
         // Lưu biến thể vào cơ sở dữ liệu
