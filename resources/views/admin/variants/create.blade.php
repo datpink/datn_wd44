@@ -24,6 +24,18 @@
             <input type="number" name="stock" class="form-control" required>
         </div>
         <div class="form-group">
+            <label for="weight">Cân Nặng</label>
+            <input type="number" name="weight" class="form-control" step="0.01">
+        </div>
+        <div class="form-group">
+            <label for="dimension">Kích Thước</label>
+            <input type="text" name="dimension" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="image_url">Hình Ảnh</label>
+            <input type="file" name="image_url" class="form-control">
+        </div>
+        <div class="form-group">
             <label for="attributes">Chọn Thuộc Tính</label>
             <select name="attributes[]" class="form-control" multiple>
                 @foreach ($attributeValues as $value)
