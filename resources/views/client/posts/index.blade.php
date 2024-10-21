@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Sản phẩm')
+@section('title', 'Bài Viết')
 
 @section('content')
 
@@ -24,7 +24,7 @@
                                         @else
                                             Không có ảnh
                                         @endif
-                                         
+
                                         </td>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}">
                                             <span>{{ $post->created_at->day }}</span>

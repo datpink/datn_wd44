@@ -4,7 +4,7 @@
             <span class="icon">
                 <i class="fa fa-home" aria-hidden="true"></i>
             </span>
-            Home
+            Trang Chủ
         </a>
     </div>
     <div class="footer-device-mobile-item device-home device-wishlist">
@@ -12,7 +12,7 @@
             <span class="icon">
                 <i class="fa fa-heart" aria-hidden="true"></i>
             </span>
-            Wishlist
+            Yêu thích
         </a>
     </div>
     <div class="footer-device-mobile-item device-home device-cart">
@@ -23,7 +23,7 @@
                     0
                 </span>
             </span>
-            <span class="text">Cart</span>
+            <span class="text">Giỏ Hàng</span>
         </a>
     </div>
     <div class="footer-device-mobile-item device-home device-user">
@@ -31,7 +31,7 @@
             <span class="icon">
                 <i class="fa fa-user" aria-hidden="true"></i>
             </span>
-            Account
+            Tài Khoản
         </a>
     </div>
 </div>

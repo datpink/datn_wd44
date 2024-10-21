@@ -33,46 +33,34 @@
                                         class="kobolg-product-gallery kobolg-product-gallery--with-images kobolg-product-gallery--columns-4 images">
                                         <a href="#" class="kobolg-product-gallery__trigger">
                                             <img draggable="false" class="emoji" alt="🔍"
-                                                src="https://s.w.org/images/core/emoji/11/svg/1f50d.svg"></a>
+                                                src="https://s.w.org/images/core/emoji/11/svg/1f50d.svg">
+                                        </a>
                                         <div class="flex-viewport">
                                             <figure class="kobolg-product-gallery__wrapper">
-                                                <div class="kobolg-product-gallery__image">
-                                                    @if ($product->image_url && \Storage::exists($product->image_url))
-                                                        <img src="{{ \Storage::url($product->image_url) }}"
-                                                            alt="{{ $product->name }}"
-                                                            style="max-width: 70% ;margin:0 auto; height: 100% auto;">
-                                                    @else
+                                                @if ($product->galleries->isNotEmpty())
+                                                    @foreach ($product->galleries as $gallery)
+                                                        <div class="kobolg-product-gallery__image">
+                                                            <img src="{{ \Storage::url($gallery->image_url) }}"
+                                                                alt="{{ $product->name }}"
+                                                                style="max-width: 70%; margin: 0 auto; height: auto;">
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="kobolg-product-gallery__image">
                                                         <p>Không có ảnh</p>
-                                                    @endif
-
-                                                </div>
-                                                <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}"
-                                                        alt="img">
-                                                </div>
-                                                <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}"
-                                                        class="" alt="img">
-                                                </div>
-                                                <div class="kobolg-product-gallery__image">
-                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}"
-                                                        class="" alt="img">
-                                                </div>
+                                                    </div>
+                                                @endif
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
+                                            @if ($product->galleries->isNotEmpty())
+                                                @foreach ($product->galleries as $gallery)
+                                                    <li>
+                                                        <img src="{{ \Storage::url($gallery->image_url) }}" alt="Thumbnail"
+                                                            style="width: 100px; height: auto;">
+                                                    </li>
+                                                @endforeach
+                                            @endif
                                         </ol>
                                     </div>
                                 </div>
@@ -204,7 +192,9 @@
                                             ) !!};
 
                                             // Giá gốc của sản phẩm
-                                            const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
+                                            // const originalPrice = "{{ number_format($product->price, 0, ',', '.') }}đ";
+                                            const originalPrice = {{ number_format($product->price, 0, ',', '.') }}đ;
+
 
                                             // Kiểm tra nếu không có biến thể
                                             if (!variants || variants.length === 0) {
@@ -346,7 +336,7 @@
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
                                                         <input type="text" data-step="1" min="0" max=""
-                                                            name="quantity[25]" value="0" title="Qty"
+                                                            name="quantity[25]" value="1" title="Qty"
                                                             class="input-qty input-text qty text" size="4"
                                                             pattern="[0-9]*" inputmode="numeric">
                                                         <a class="btn-number qtyplus quantity-plus" href="#">+</a>
@@ -401,48 +391,28 @@
                             <ul class="tabs dreaming-tabs" role="tablist">
                                 <li class="description_tab active" id="tab-title-description" role="tab"
                                     aria-controls="tab-description">
-                                    <a href="#tab-description">Description</a>
+                                    <a href="#tab-description">Mô tả</a>
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Additional information</a>
+                                    <a href="#tab-additional_information">Thông tin bổ sung</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
                                     aria-controls="tab-reviews">
-                                    <a href="#tab-reviews">Reviews (0)</a>
+                                    <a href="#tab-reviews">Đánh giá (0)</a>
                                 </li>
                             </ul>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--description panel entry-content kobolg-tab"
                                 id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
-                                <h2>Description</h2>
-                                <div class="col-md-8 justify-content-center align-items-center text-center">
+                                <h2>Mô tả</h2>
+                                <div class="col-md-12">
                                     {!! $product->description !!}
                                 </div>
-                                {{-- <div class="container-table">
-                                    <div class="container-cell">
-                                        <div class="az_single_image-wrapper az_box_border_grey">
-                                            <img src="{{ asset('theme/client/assets/images/single-pro2.jpg') }}"
-                                                class="az_single_image-img attachment-full" alt="img">
-                                        </div>
-                                    </div>
-                                    <div class="container-cell">
-                                        <h2 class="az_custom_heading">
-                                            Potenti praesent molestie<br>
-                                            at viverra</h2>
-                                        <p>This generator uses a dictionary of Latin words to construct
-                                            passages of Lorem Ipsum text that meet your desired length. The
-                                            sentence and paragraph durations and punctuation dispersal are
-                                            calculated using Gaussian distribution, based on statistical
-                                            analysis of real world texts. This ensures that the generated
-                                            Lorem Ipsum text is unique, free of repetition and also
-                                            resembles readable text as much as possible.</p>
-                                    </div>
-                                </div> --}}
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
                                 aria-labelledby="tab-title-additional_information">
-                                <h2>Additional information</h2>
+                                <h2>Thông tin bổ sung</h2>
                                 <table class="shop_attributes">
                                     <tbody>
                                         <tr>
@@ -458,18 +428,19 @@
                                 id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
                                 <div id="reviews" class="kobolg-Reviews">
                                     <div id="comments">
-                                        <h2 class="kobolg-Reviews-title">Reviews</h2>
-                                        <p class="kobolg-noreviews">There are no reviews yet.</p>
+                                        <h2 class="kobolg-Reviews-title">Đánh giá</h2>
+                                        <p class="kobolg-noreviews">Chưa có đánh giá nào</p>
                                     </div>
                                     <div id="review_form_wrapper">
                                         <div id="review_form">
                                             <div id="respond" class="comment-respond">
-                                                <span id="reply-title" class="comment-reply-title">Be the first to review
-                                                    “T-shirt with skirt”</span>
+                                                <span id="reply-title" class="comment-reply-title">
+                                                    Hãy là người đầu tiên đánh giá</span>
                                                 <form id="commentform" class="comment-form">
-                                                    <p class="comment-notes"><span id="email-notes">Your email addresses
-                                                            will not be published.</span>
-                                                        Required fields are marked <span class="required">*</span></p>
+                                                    <p class="comment-notes"><span id="email-notes">Địa chỉ email của bạn
+                                                            sẽ không được công bố.</span>
+                                                        Các trường bắt buộc được đánh dấu <span class="required">*</span>
+                                                    </p>
                                                     <p class="comment-form-author">
                                                         <label for="author">Name&nbsp;<span
                                                                 class="required">*</span></label>
@@ -481,8 +452,8 @@
                                                         <input id="email" name="email" value=""
                                                             size="30" required="" type="email">
                                                     </p>
-                                                    <div class="comment-form-rating"><label for="rating">Your
-                                                            rating</label>
+                                                    <div class="comment-form-rating"><label for="rating">Đánh
+                                                            giá</label>
                                                         <p class="stars">
                                                             <span>
                                                                 <a class="star-1" href="#">1</a>
@@ -502,8 +473,8 @@
                                                             <option value="1">Very poor</option>
                                                         </select>
                                                     </div>
-                                                    <p class="comment-form-comment"><label for="comment">Your
-                                                            review&nbsp;<span class="required">*</span></label>
+                                                    <p class="comment-form-comment"><label for="comment">Đánh giá của
+                                                            bạn&nbsp;<span class="required">*</span></label>
                                                         <textarea id="comment" name="comment" cols="45" rows="8" required=""></textarea>
                                                     </p><input name="wpml_language_code" value="en" type="hidden">
                                                     <p class="form-submit"><input name="submit" id="submit"
@@ -523,7 +494,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-sm-12 dreaming_related-product">
+                {{-- <div class="col-md-12 col-sm-12 dreaming_related-product">
                     <div class="block-title">
                         <h2 class="product-grid-title">
                             <span>Related Products</span>
@@ -1017,7 +988,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
