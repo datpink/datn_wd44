@@ -7,6 +7,7 @@
 @section('content')
 
     @include('components.breadcrumb-client')
+
     @include('admin.layouts.load')
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -94,7 +95,7 @@
                                     <div class="product-inner images">
                                         <div class="product-thumb">
                                             <a class="thumb-link" href="#">
-                                                <img src="{{ $product->image_url}}" alt="">
+                                                <img src="{{ $product->image_url }}" alt="">
 
 
                                             </a>
@@ -123,7 +124,7 @@
                                                 </table>
                                             </form>
                                             <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Quick View</a>
+                                                data-product_id="{{ $product->id }}">Xem nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -159,16 +160,16 @@
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
                                                     <a href="#"
-                                                        class="button product_type_variable add_to_cart_button">Select
-                                                        options</a>
+                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ
+                                                        hàng</a>
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                        <a href="#" class="add_to_wishlist">Thêm vào yêu thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
+                                                    <a href="#" class="compare button">So sánh</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,12 +207,12 @@
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
                             <form class="kobolg-product-search">
                                 <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="" name="s" type="search">
-                                <button type="submit" value="Search">Search</button>
+                                    placeholder="Tìm kiếm sản phẩm…" value="" name="s" type="search">
+                                <button type="submit" value="Search">Tìm kiếm</button>
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
-                            <h2 class="widgettitle">Filter By Price<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo giá<span class="arrow"></span></h2>
                             <form method="get" action="" id="priceFilterForm">
                                 @php
                                     // dd($maxDiscountPrice);
@@ -317,7 +318,7 @@
 
                                                 // Duyệt qua từng sản phẩm và thêm vào danh sách
                                                 res.data.products.forEach(product => {
-    const productHTML = `
+                                                    const productHTML = `
         <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
             <div class="product-inner images">
@@ -368,8 +369,9 @@
             </div>
         </li>
     `;
-    productLists.innerHTML += productHTML; // Thêm sản phẩm vào danh sách
-});
+                                                    productLists.innerHTML +=
+                                                    productHTML; // Thêm sản phẩm vào danh sách
+                                                });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);
                                                 productLists.innerHTML =
@@ -390,7 +392,7 @@
 
 
                         <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
-                            <h2 class="widgettitle">Filter By Color<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
                             <div class="color-group">
                                 <a class="term-color " href="#">
                                     <i style="color: #000000"></i>
@@ -427,7 +429,7 @@
                             </div>
                         </div>
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
-                            <h2 class="widgettitle">Filter By Size<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
                             <ul class="kobolg-widget-layered-nav-list">
                                 <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
                                     <a rel="nofollow" href="#">XS</a>
@@ -464,7 +466,7 @@
                             </ul>
                         </div>
                         <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Product categories<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
                             <ul class="product-categories">
                                 <li class="cat-item cat-item-22"><a href="#">Camera</a>
                                     <span class="count">(11)</span>

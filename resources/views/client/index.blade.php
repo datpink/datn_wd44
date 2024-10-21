@@ -526,7 +526,7 @@
                                     <div class="post-thumb">
                                         <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
                                             @if ($post->image && \Storage::exists($post->image))
-                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->title }}"
                                                     class="img-responsive attachment-370x330 size-370x330" width="370"
                                                     height="330">
                                             @else
@@ -544,7 +544,7 @@
                                                 By: <a href="#">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="#" tabindex="0">{{ $post->comments_count }}</a>
+                                                <a href="#" tabindex="0">{{ $post->comments_count ?? 0 }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">
@@ -576,9 +576,10 @@
                                     <span class="flaticon-rocket-launch"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Worldwide Delivery</h4>
-                                    <div class="desc">With sites in 5 languages, we ship to over 200 countries &amp;
-                                        regions.
+                                    <h4 class="title">Giao hàng toàn cầu</h4>
+                                    <div class="desc">Với các trang web bằng 5 ngôn ngữ, chúng tôi gửi hàng đến hơn 200
+                                        quốc gia &amp;
+                                        các vùng.
                                     </div>
                                 </div>
                             </div>
@@ -591,8 +592,9 @@
                                     <span class="flaticon-truck"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Safe Shipping</h4>
-                                    <div class="desc">Pay with the world’s most popular and secure payment methods.
+                                    <h4 class="title">Vận chuyển an toàn</h4>
+                                    <div class="desc">Thanh toán bằng các phương thức thanh toán an toàn và phổ biến nhất
+                                        thế giới.
                                     </div>
                                 </div>
                             </div>
@@ -605,8 +607,8 @@
                                     <span class="flaticon-reload"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">365 Days Return</h4>
-                                    <div class="desc">Round-the-clock assistance for a smooth shopping experience.</div>
+                                    <h4 class="title">Hoàn trả 365 ngày</h4>
+                                    <div class="desc">Hỗ trợ suốt ngày đêm để có trải nghiệm mua sắm suôn sẻ.</div>
                                 </div>
                             </div>
                         </div>
@@ -618,8 +620,9 @@
                                     <span class="flaticon-telemarketer"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Shop Confidence</h4>
-                                    <div class="desc">Our Buyer Protection covers your purchase from click to delivery.
+                                    <h4 class="title">Niềm tin mua sắm</h4>
+                                    <div class="desc">Bảo vệ người mua của chúng tôi bao gồm việc mua hàng của bạn từ
+                                        nhấp chuột đến giao hàng.
                                     </div>
                                 </div>
                             </div>

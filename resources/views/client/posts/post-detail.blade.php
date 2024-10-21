@@ -74,7 +74,7 @@
                                 <a target="_blank" class="googleplus" href="#"><i class="fa fa-google-plus"></i></a>
                             </div>
                             <div class="categories">
-                                <span>Categories: </span>
+                                <span>Danh Mục: </span>
                                 <a href="#">Camera</a>,
                                 <a href="#">Game & Consoles</a>,
                                 <a href="#">Life Style</a>
@@ -83,21 +83,20 @@
                     </article>
                     <div id="comments" class="comments-area">
                         <div id="respond" class="comment-respond">
-                            <h3 id="reply-title" class="comment-reply-title">Leave a comment</h3>
+                            <h3 id="reply-title" class="comment-reply-title">Để lại một bình luận</h3>
                             <form id="commentform" class="comment-form">
-                                <p class="comment-notes"><span id="email-notes">Your email addresses will not be
-                                        published.</span> Required fields
-                                    are marked <span class="required">*</span></p>
+                                <p class="comment-notes"><span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span> 
+                                    Các trường bắt buộc được đánh dấu<span class="required">*</span></p>
                                 <p class="comment-reply-content"><input name="author" id="name"
                                         class="input-form name" placeholder="Name*" type="text"></p>
                                 <p class="comment-reply-content"><input name="email" id="email"
                                         class="input-form email" placeholder="Email*" type="text"></p>
                                 <p class="comment-form-comment">
                                     <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true"
-                                        placeholder="Enter you comment here..."></textarea>
+                                        placeholder="Nhập bình luận của bạn vào đây..."></textarea>
                                 </p><input name="wpml_language_code" value="en" type="hidden">
                                 <p class="form-submit"><input name="submit" id="submit" class="submit"
-                                        value="Post a comment" type="submit"></p>
+                                        value="Đăng bình luận" type="submit"></p>
                             </form>
                         </div><!-- #respond -->
                     </div><!-- #comments -->

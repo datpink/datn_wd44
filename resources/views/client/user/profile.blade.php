@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'User Profile')
+@section('title', 'Hồ sơ người dùng')
 
 @section('content')
 <div class="container mt-5">
@@ -15,7 +15,7 @@
                                 <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}" class="img-thumbnail mt-2" style="max-width: 150px; border-radius: 50%;">
                             @else
                                 <div class="mb-2" style="width: 150px; height: 150px; background-color: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                                    <span class="text-muted">No Image Available</span>
+                                    <span class="text-muted">Không có hình ảnh</span>
                                 </div>
                             @endif
                         </div>
@@ -26,18 +26,18 @@
                                 <strong>Email:</strong> {{ $user->email }}
                             </div>
                             <div class="mb-3">
-                                <strong>Phone Number:</strong> {{ $user->phone }}
+                                <strong>Số điện thoại:</strong> {{ $user->phone }}
                             </div>
                             <div class="mb-3">
-                                <strong>Address:</strong> {{ $user->address }}
+                                <strong>Địa chỉ:</strong> {{ $user->address }}
                             </div>
                             <!-- Action Buttons -->
                             <div class="row mt-4">
                                 <div class="col-md-6 mb-3">
-                                    <a href="{{ route('profile.edit') }}" class="btn btn-danger btn-lg rounded-pill shadow w-100">Edit Personal</a>
+                                    <a href="{{ route('profile.edit') }}" class="btn btn-danger btn-lg rounded-pill shadow w-100">Chỉnh sửa cá nhân</a>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <a href="{{ route('profile.edit-password') }}" class="btn btn-danger btn-lg rounded-pill shadow w-100">Change Password</a>
+                                    <a href="{{ route('profile.edit-password') }}" class="btn btn-danger btn-lg rounded-pill shadow w-100">Thay đổi mật khẩu</a>
                                 </div>
                             </div>
                         </div>
