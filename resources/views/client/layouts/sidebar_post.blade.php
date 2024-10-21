@@ -2,13 +2,15 @@
     <div id="widget-area" class="widget-area sidebar-blog">
         <div id="search-3" class="widget widget_search">
             <form role="search" method="get" class="search-form" action="{{ route('search') }}">
-                <input class="search-field" placeholder="Your search here…" value="{{ request()->get('s') }}" name="s" type="search">
-                <button type="submit" class="search-submit"><span class="fa fa-search" aria-hidden="true"></span></button>
+                <input class="search-field" placeholder="Tìm kiếm của bạn ở đây…" value="{{ request()->get('s') }}"
+                    name="s" type="search">
+                <button type="submit" class="search-submit"><span class="fa fa-search"
+                        aria-hidden="true"></span></button>
             </form>
-            
+
         </div>
         <div id="categories-3" class="widget widget_categories">
-            <h2 class="widgettitle">Categories<span class="arrow"></span></h2>
+            <h2 class="widgettitle">Thể loại<span class="arrow"></span></h2>
             <ul>
                 <li class="cat-item cat-item-51"><a href="#">Camera</a>
                 </li>
@@ -24,8 +26,7 @@
             </ul>
         </div>
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
-            <h2 class="widgettitle">Recent
-                Post<span class="arrow"></span></h2>
+            <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
                 <article
                     class="post-195 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-table category-life-style tag-light tag-life-style">
@@ -33,8 +34,8 @@
                         <div class="post-thumb">
                             <a href="#">
                                 <img src="{{ asset('theme/client/assets/images/blogpost1-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img"
-                                    width="83" height="83"> </a>
+                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
+                                    height="83"> </a>
                         </div>
                         <div class="post-info">
                             <div class="block-title">
@@ -51,8 +52,8 @@
                         <div class="post-thumb">
                             <a href="#">
                                 <img src="{{ asset('theme/client/assets/images/blogpost5-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img"
-                                    width="83" height="83"> </a>
+                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
+                                    height="83"> </a>
                         </div>
                         <div class="post-info">
                             <div class="block-title">
@@ -69,8 +70,8 @@
                         <div class="post-thumb">
                             <a href="#">
                                 <img src="{{ asset('theme/client/assets/images/blogpost9-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img"
-                                    width="83" height="83"> </a>
+                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
+                                    height="83"> </a>
                         </div>
                         <div class="post-info">
                             <div class="block-title">
@@ -87,8 +88,8 @@
                         <div class="post-thumb">
                             <a href="#">
                                 <img src="{{ asset('theme/client/assets/images/blogpost4-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img"
-                                    width="83" height="83"> </a>
+                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
+                                    height="83"> </a>
                         </div>
                         <div class="post-info">
                             <div class="block-title">
@@ -102,7 +103,7 @@
             </div>
         </div>
         <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
-            <h2 class="widgettitle">Follow us<span class="arrow"></span></h2>
+            <h2 class="widgettitle">Theo dõi chúng tôi<span class="arrow"></span></h2>
             <div class="content-socials">
                 <ul class="socials-list">
                     <li>
@@ -132,33 +133,27 @@
             <h2 class="widgettitle">Instagram<span class="arrow"></span></h2>
             <div class="content-instagram">
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta1.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta1.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta2.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta2.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta3.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta3.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta4.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta4.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta5.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta5.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
                 <a target="_blank" href="#" class="item">
-                    <img class="img-responsive"
-                        src="{{ asset('theme/client/assets/images/insta6.jpg') }}"
+                    <img class="img-responsive" src="{{ asset('theme/client/assets/images/insta6.jpg') }}"
                         alt="Not your ordinary multi service.">
                 </a>
             </div>

@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Danh sách sản phẩm ')
+@section('title', 'Sản phẩm ')
 
 @section('content')
 
@@ -120,7 +120,7 @@
                                                 </table>
                                             </form>
                                             <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Quick View</a>
+                                                data-product_id="{{ $product->id }}">Xem nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -156,16 +156,15 @@
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
                                                     <a href="#"
-                                                        class="button product_type_variable add_to_cart_button">Select
-                                                        options</a>
+                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng</a>
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                        <a href="#" class="add_to_wishlist">Thêm vào yêu thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
+                                                    <a href="#" class="compare button">So sánh</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -205,8 +204,8 @@
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
                             <form class="kobolg-product-search">
                                 <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="" name="s" type="search">
-                                <button type="submit" value="Search">Search</button>
+                                    placeholder="Tìm kiếm sản phẩm…" value="" name="s" type="search">
+                                <button type="submit" value="Search">Tìm kiếm</button>
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
@@ -429,7 +428,7 @@
                             </div>
                         </div>
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
-                            <h2 class="widgettitle">Filter By Size<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
                             <ul class="kobolg-widget-layered-nav-list">
                                 <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
                                     <a rel="nofollow" href="#">XS</a>
@@ -466,7 +465,7 @@
                             </ul>
                         </div>
                         <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Product categories<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
                             <ul class="product-categories">
                                 <li class="cat-item cat-item-22"><a href="#">Camera</a>
                                     <span class="count">(11)</span>

@@ -18,30 +18,28 @@ class ProductController extends Controller
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
 
-    // Update image URLs using Storage::url
-    foreach ($products as $product) {
-        $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
-    }
+        // Update image URLs using Storage::url
+        foreach ($products as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
 
-    // return response()->json(['products' => $products]);
+        // return response()->json(['products' => $products]);
         return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
     }
 
     public function show($slug)
     {
-   // Lấy sản phẩm theo slug
+        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
         $product = Product::where('slug', $slug)
-            ->with(['variants' => function($query) {
-                $query->where('status', 'active')->with('attributeValues.attribute');
-            }])
             ->with([
+                'galleries',
                 'variants' => function ($query) {
-                    $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
-                },
-                'variants.attributeValues.attribute' // Nạp thêm quan hệ attributeValues và attribute
+                    $query->where('status', 'active')
+                        ->with('attributeValues.attribute');
+                }
             ])
             ->firstOrFail();
-            // dd($product);
+
         return view('client.products.product-detail', compact('product'));
     }
     public function getVariantPrice(Request $request)
