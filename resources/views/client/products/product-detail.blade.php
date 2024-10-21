@@ -6,7 +6,7 @@
     @include('components.breadcrumb-client')
     <style>
         .variant-btn {
-            height: 70px;
+            height: 50px;
             background-color: white;
 
             border: 1px solid black;
@@ -134,10 +134,10 @@
                                                     @foreach ($mauSacVariants as $mauSac => $variants)
                                                         <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
                                                             data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->img_url }}">
-                                                            @if (!empty($variants[0]->img_url))
+                                                            data-img-url="{{ $variants[0]->image_url }}">
+                                                            @if (!empty($variants[0]->image_url))
                                                                 <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ $variants[0]->img_url }}"
+                                                                <img src="{{ \Storage::url($variants[0]->image_url) }}"
                                                                     alt="{{ $mauSac }}" width="50" height="50"
                                                                     style="margin-right: 5px;">
                                                             @else
