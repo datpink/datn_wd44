@@ -21,7 +21,7 @@
         .variant-btn:hover {
             border: 2px solid red;
         }
-        
+
         .tbnsend {
             background-color: #fff
         }
@@ -84,7 +84,6 @@
         .reply {
             margin-bottom: 10px;
         }
-
     </style>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
@@ -227,20 +226,27 @@
 
 
                                     <script>
-                                                                                document.addEventListener('DOMContentLoaded', function() {
+                                        document.addEventListener('DOMContentLoaded', function() {
                                             let selectedStorage = null;
                                             let selectedColor = null;
+                                            let selectedSize = null;
                                             let selectedStorageButton = null;
                                             let selectedColorButton = null;
+                                            let selectedSizeButton = null;
                                             const priceElement = document.getElementById('product-price'); // Đảm bảo phần tử này tồn tại
 
-                                            // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
+                                            // Lưu dữ liệu dung lượng, màu sắc và kích thước cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
                                             let storageData = {
                                                 name: null,
-                                                price: null
+                                                price: 0
                                             };
                                             let colorData = {
-                                                name: null
+                                                name: null,
+                                                price: 0
+                                            };
+                                            let sizeData = {
+                                                name: null,
+                                                price: 0
                                             };
 
                                             // Lấy danh sách biến thể từ PHP
@@ -258,35 +264,41 @@
                                                 }),
                                             ) !!};
 
-                                            // Giá gốc của sản phẩm
-                                            const originalPrice =
-                                                "{{ number_format($product->price, 0, ',', '.') }}"; // Giá gốc là chuỗi, không thêm 'đ' ở đây
+                                            // Tìm giá nhỏ nhất và lớn nhất từ danh sách các biến thể
+                                            const minPrice = Math.min(...variants.map(variant => variant.price));
+                                            const maxPrice = Math.max(...variants.map(variant => variant.price));
 
-                                            // Kiểm tra nếu không có biến thể
-                                            if (!variants || variants.length === 0) {
-                                                priceElement.innerHTML = originalPrice + 'đ'; // Hiển thị giá gốc nếu không có biến thể
-                                                console.log('No variants available. Showing original product price.');
-                                                return;
+                                            // Hiển thị giá mặc định theo min - max
+                                            function showDefaultPrice() {
+                                                if (minPrice === maxPrice) {
+                                                    // Nếu min và max là giống nhau, chỉ hiển thị một giá
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(minPrice);
+                                                } else {
+                                                    // Hiển thị theo định dạng "min - max"
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(maxPrice);
+                                                }
                                             }
 
-                                            // Lọc giá dựa trên dung lượng (Storage)
-                                            const storageVariants = variants.filter(variant =>
-                                                variant.attributes.some(attr => attr.name === 'Storage')
-                                            );
+                                            // Cập nhật hiển thị giá tổng
+                                            function updateTotalPrice() {
+                                                let totalPrice = minPrice;
+                                                if (storageData.price) totalPrice += storageData.price - minPrice;
+                                                if (colorData.price) totalPrice += colorData.price - minPrice;
+                                                if (sizeData.price) totalPrice += sizeData.price - minPrice;
 
-                                            // Tìm giá nhỏ nhất và lớn nhất
-                                            const minPrice = Math.min(...storageVariants.map(variant => variant.price));
-                                            const maxPrice = Math.max(...storageVariants.map(variant => variant.price));
-
-                                            // Hiển thị giá mặc định nhỏ nhất - lớn nhất
-                                            function showDefaultPrice() {
                                                 priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND'
-                                                }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(maxPrice);
+                                                }).format(totalPrice);
                                             }
 
                                             // Hiển thị giá mặc định khi trang được tải
@@ -297,72 +309,85 @@
                                                 if (event.target.classList.contains('variant-btn')) {
                                                     const storage = event.target.getAttribute('data-dung-luong');
                                                     const color = event.target.getAttribute('data-mau-sac');
+                                                    const size = event.target.getAttribute('data-size');
 
                                                     // Kiểm tra nếu là nút dung lượng
                                                     if (storage) {
-                                                        console.log('Selected storage:', storage);
                                                         if (selectedStorage === storage) {
-                                                            // Khi bỏ chọn dung lượng, đặt lại giá về mặc định
                                                             resetButton(selectedStorageButton);
                                                             selectedStorage = null;
                                                             selectedStorageButton = null;
                                                             storageData.name = null;
-                                                            storageData.price = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn dung lượng
+                                                            storageData.price = 0;
                                                         } else {
                                                             if (selectedStorageButton) resetButton(selectedStorageButton);
                                                             selectedStorage = storage;
                                                             selectedStorageButton = event.target;
                                                             selectButton(selectedStorageButton);
 
-                                                            // Lưu tên dung lượng và giá của dung lượng đã chọn
-                                                            const foundStorageVariant = storageVariants.find(variant =>
+                                                            const foundStorageVariant = variants.find(variant =>
                                                                 variant.attributes.some(attr => attr.name === 'Storage' && attr
                                                                     .value === selectedStorage)
                                                             );
                                                             if (foundStorageVariant) {
                                                                 storageData.name = selectedStorage;
                                                                 storageData.price = foundStorageVariant.price;
-                                                                console.log('Storage selected:', storageData.name, 'Price:', storageData
-                                                                    .price);
                                                             }
                                                         }
                                                     }
 
                                                     // Kiểm tra nếu là nút màu sắc
                                                     if (color) {
-                                                        console.log('Selected color:', color);
                                                         if (selectedColor === color) {
                                                             resetButton(selectedColorButton);
                                                             selectedColor = null;
                                                             selectedColorButton = null;
                                                             colorData.name = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn màu sắc
+                                                            colorData.price = 0;
                                                         } else {
                                                             if (selectedColorButton) resetButton(selectedColorButton);
                                                             selectedColor = color;
                                                             selectedColorButton = event.target;
                                                             selectButton(selectedColorButton);
 
-                                                            // Lưu tên màu sắc đã chọn
-                                                            colorData.name = selectedColor;
-                                                            console.log('Color selected:', colorData.name);
+                                                            const foundColorVariant = variants.find(variant =>
+                                                                variant.attributes.some(attr => attr.name === 'Color' && attr.value ===
+                                                                    selectedColor)
+                                                            );
+                                                            if (foundColorVariant) {
+                                                                colorData.name = selectedColor;
+                                                                colorData.price = foundColorVariant.price;
+                                                            }
                                                         }
                                                     }
 
-                                                    // Chỉ cập nhật giá khi cả dung lượng và màu sắc được chọn
-                                                    if (storageData.name && colorData.name) {
-                                                        // Cập nhật giá chỉ dựa trên dung lượng
-                                                        priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                            style: 'currency',
-                                                            currency: 'VND'
-                                                        }).format(storageData.price);
-                                                        console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData
-                                                            .name, 'Price:', storageData.price);
-                                                    } else {
-                                                        // Khi chưa chọn đủ hoặc bỏ chọn dung lượng/màu sắc, hiển thị giá mặc định
-                                                        showDefaultPrice();
+                                                    // Kiểm tra nếu là nút kích thước
+                                                    if (size) {
+                                                        if (selectedSize === size) {
+                                                            resetButton(selectedSizeButton);
+                                                            selectedSize = null;
+                                                            selectedSizeButton = null;
+                                                            sizeData.name = null;
+                                                            sizeData.price = 0;
+                                                        } else {
+                                                            if (selectedSizeButton) resetButton(selectedSizeButton);
+                                                            selectedSize = size;
+                                                            selectedSizeButton = event.target;
+                                                            selectButton(selectedSizeButton);
+
+                                                            const foundSizeVariant = variants.find(variant =>
+                                                                variant.attributes.some(attr => attr.name === 'Size' && attr.value ===
+                                                                    selectedSize)
+                                                            );
+                                                            if (foundSizeVariant) {
+                                                                sizeData.name = selectedSize;
+                                                                sizeData.price = foundSizeVariant.price;
+                                                            }
+                                                        }
                                                     }
+
+                                                    // Cập nhật giá tổng
+                                                    updateTotalPrice();
                                                 }
                                             });
 
@@ -382,7 +407,6 @@
                                                 }
                                             }
                                         });
-
                                     </script>
 
                                     <p class="stock in-stock">
@@ -589,25 +613,30 @@
                                             <!-- Nút menu thả xuống -->
 
                                             @if ($comment->user_id == Auth::id())
-                                            <!-- Nút menu thả xuống -->
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle"
-                                                    onclick="toggleDropdown({{ $comment->id }})" type="button"
-                                                    id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                </button>
-                                                <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
-                                                    style="display:none;" aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                                    <button class="dropdown-item" onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
-                                                    <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
-                                                    </form>
+                                                <!-- Nút menu thả xuống -->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle"
+                                                        onclick="toggleDropdown({{ $comment->id }})" type="button"
+                                                        id="dropdownMenuButton{{ $comment->id }}"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
+                                                        style="display:none;"
+                                                        aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                                        <button class="dropdown-item"
+                                                            onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
+                                                        <form
+                                                            action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item" type="submit"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endif
-                                        
+                                            @endif
+
                                             <!-- Form chỉnh sửa bình luận ẩn -->
                                             <div id="edit-comment-form-{{ $comment->id }}" style="display: none;">
                                                 <form
@@ -635,21 +664,32 @@
 
                                                     <!-- Nút menu thả xuống cho phản hồi -->
                                                     @if ($reply->user_id == Auth::id())
-                                                    <!-- Nút menu thả xuống cho phản hồi -->
-                                                    <div class="dropdown">
-                                                        <button class=" dropdown-toggle" onclick="toggleDropdownReply({{ $reply->id }})" type="button" id="dropdownMenuButtonReply{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        </button>
-                                                        <div class="dropdown-menu" id="customDropdownReply-{{ $reply->id }}" style="display:none;" aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
-                                                            <button class="dropdown-item" onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
-                                                            <form action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}" method="POST" style="display:inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
-                                                            </form>
+                                                        <!-- Nút menu thả xuống cho phản hồi -->
+                                                        <div class="dropdown">
+                                                            <button class=" dropdown-toggle"
+                                                                onclick="toggleDropdownReply({{ $reply->id }})"
+                                                                type="button"
+                                                                id="dropdownMenuButtonReply{{ $reply->id }}"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                id="customDropdownReply-{{ $reply->id }}"
+                                                                style="display:none;"
+                                                                aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
+                                                                <button class="dropdown-item"
+                                                                    onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
+                                                                <form
+                                                                    action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="dropdown-item" type="submit"
+                                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
+                                                                </form>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                @endif
-                                                                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
+                                                    @endif
+                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
                                                     <div id="edit-reply-form-{{ $reply->id }}" style="display: none;">
                                                         <form
                                                             action="{{ route('client.updateReply', [$comment->id, $reply->id]) }}"
