@@ -527,7 +527,7 @@
                                         <a href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             @if ($post->image && \Storage::exists($post->image))
                                                 <img src="{{ \Storage::url($post->image) }}"class="img-responsive attachment-370x330 size-370x330"
-                                                    alt="{{ $post->name }}" width="370" height="330">
+                                                    alt="{{ $post->name }}" width="370px" height="330px">
                                             @else
                                                 Không có ảnh
                                             @endif

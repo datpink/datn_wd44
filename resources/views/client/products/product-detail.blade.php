@@ -113,7 +113,9 @@
                                                     @endforeach
                                                 @else
                                                     <div class="kobolg-product-gallery__image">
-                                                        <p>Không có ảnh</p>
+                                                        <img src="{{ \Storage::url($product->image_url) }}"
+                                                            alt="{{ $product->name }}"
+                                                            style="max-width: 70%; margin: 0 auto; height: auto;">
                                                     </div>
                                                 @endif
                                             </figure>
@@ -126,6 +128,12 @@
                                                             style="width: 100px; height: auto;">
                                                     </li>
                                                 @endforeach
+                                            @else
+                                                <li>
+                                                    <img src="{{ \Storage::url($product->image_url) }}"
+                                                        alt="{{ $product->name }} Thumbnail"
+                                                        style="width: 100px; height: auto;">
+                                                </li>
                                             @endif
                                         </ol>
                                     </div>
