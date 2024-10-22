@@ -143,6 +143,43 @@ class ProductController extends Controller
 
         return response()->json(['products' => $products]);
     }
+    public function search(Request $request)
+{
+    // Get the search query from the request
+    $query = $request->input('s');
+
+    // Initialize query builder for products
+    $products = Product::query();
+
+    // Add search conditions
+    if ($query) {
+        $products->where(function ($subQuery) use ($query) {
+            $subQuery->where('name', 'LIKE', "%{$query}%")
+                ->orWhere('sku', 'LIKE', "%{$query}%")
+                ->orWhere('description', 'LIKE', "%{$query}%")
+                ->orWhere('catalogue_id', 'LIKE', "%{$query}%")
+                ->orWhere('brand_id', 'LIKE', "%{$query}%")
+                ->orWhere('price', 'LIKE', "%{$query}%")
+                ->orWhere('discount_price', 'LIKE', "%{$query}%")
+                ->orWhere('discount_percentage', 'LIKE', "%{$query}%")
+                ->orWhere('stock', 'LIKE', "%{$query}%")
+                ->orWhere('weight', 'LIKE', "%{$query}%")
+                ->orWhere('dimensions', 'LIKE', "%{$query}%")
+                ->orWhere('ratings_avg', 'LIKE', "%{$query}%");
+        });
+    }
+
+    // Filter only active products
+    $products->where('is_active', 1);
+
+    // Paginate the results
+    $products = $products->paginate(9);
+
+    // Get the maximum discount price from the database
+    $maxDiscountPrice = Product::max('discount_price');
+    // Return the search results to a view
+    return view('client.products.product-search-results', compact('products','maxDiscountPrice'));
+}
     public function storeComment(Request $request, $productId)
     {
         $request->validate([
@@ -246,5 +283,4 @@ class ProductController extends Controller
         $reply->delete();
         return redirect()->back()->with('success', 'Phản hồi đã được xóa!');
     }
-
 }

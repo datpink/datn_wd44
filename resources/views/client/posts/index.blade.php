@@ -19,11 +19,11 @@
                                     <div class="post-thumb">
                                         <td>
                                             @if ($post->image && \Storage::exists($post->image))
-                                            <img src="{{ \Storage::url($post->image) }}"
-                                                alt="{{ $post->name }}" style="max-width: 100%; height: auto; margin:0 auto">
-                                        @else
-                                            Không có ảnh
-                                        @endif
+                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                                    style="max-width: 100%; height: auto; margin:0 auto">
+                                            @else
+                                                Không có ảnh
+                                            @endif
 
                                         </td>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}">
@@ -34,10 +34,12 @@
                                     <div class="post-content">
                                         <div class="post-meta">
                                             <div class="post-author">
-                                                By: <a href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
+                                                By: <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="{{ route('post.show', $post->id) }}">{{ $post->comments_count }}</a>
+                                                <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->comments_count }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">
@@ -82,5 +84,3 @@
         </div>
     </div>
 @endsection
-
-
