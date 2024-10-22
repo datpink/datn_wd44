@@ -18,6 +18,70 @@
         .variant-btn:hover {
             border: 2px solid red;
         }
+        
+        .tbnsend {
+            background-color: #fff
+        }
+
+        .comment,
+        .reply {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .send-button {
+            background-image: url('https://www.flaticon.com/free-icons/message');
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding-left: 20px;
+            /* Điều chỉnh để phù hợp với kích thước biểu tượng */
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .comment strong,
+        .reply strong {
+            font-size: 14px;
+        }
+
+        .comment span,
+        .reply span {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .comment p,
+        .reply p {
+            margin: 10px 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-right: 5px;
+        }
+
+        /* Khoảng cách giữa các bình luận và phản hồi */
+        .comment {
+            margin-bottom: 20px;
+        }
+
+        .reply {
+            margin-bottom: 10px;
+        }
+
     </style>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
@@ -160,12 +224,12 @@
 
 
                                     <script>
-                                        document.addEventListener('DOMContentLoaded', function() {
+                                                                                document.addEventListener('DOMContentLoaded', function() {
                                             let selectedStorage = null;
                                             let selectedColor = null;
                                             let selectedStorageButton = null;
                                             let selectedColorButton = null;
-                                            const priceElement = document.getElementById('product-price');
+                                            const priceElement = document.getElementById('product-price'); // Đảm bảo phần tử này tồn tại
 
                                             // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
                                             let storageData = {
@@ -192,16 +256,16 @@
                                             ) !!};
 
                                             // Giá gốc của sản phẩm
-                                            // const originalPrice = "{{ number_format($product->price, 0, ',', '.') }}đ";
-                                            const originalPrice = {{ number_format($product->price, 0, ',', '.') }}đ;
-
+                                            const originalPrice =
+                                                "{{ number_format($product->price, 0, ',', '.') }}"; // Giá gốc là chuỗi, không thêm 'đ' ở đây
 
                                             // Kiểm tra nếu không có biến thể
                                             if (!variants || variants.length === 0) {
-                                                priceElement.innerHTML = originalPrice;
+                                                priceElement.innerHTML = originalPrice + 'đ'; // Hiển thị giá gốc nếu không có biến thể
                                                 console.log('No variants available. Showing original product price.');
                                                 return;
                                             }
+
                                             // Lọc giá dựa trên dung lượng (Storage)
                                             const storageVariants = variants.filter(variant =>
                                                 variant.attributes.some(attr => attr.name === 'Storage')
@@ -219,7 +283,7 @@
                                                 }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
                                                     style: 'currency',
                                                     currency: 'VND'
-                                                }).format(maxPrice) + '';
+                                                }).format(maxPrice);
                                             }
 
                                             // Hiển thị giá mặc định khi trang được tải
@@ -266,7 +330,6 @@
                                                     if (color) {
                                                         console.log('Selected color:', color);
                                                         if (selectedColor === color) {
-                                                            // Khi bỏ chọn màu sắc, đặt lại giá về mặc định
                                                             resetButton(selectedColorButton);
                                                             selectedColor = null;
                                                             selectedColorButton = null;
@@ -290,7 +353,7 @@
                                                         priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                                                             style: 'currency',
                                                             currency: 'VND'
-                                                        }).format(storageData.price) + '';
+                                                        }).format(storageData.price);
                                                         console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData
                                                             .name, 'Price:', storageData.price);
                                                     } else {
@@ -316,6 +379,7 @@
                                                 }
                                             }
                                         });
+
                                     </script>
 
                                     <p class="stock in-stock">
@@ -395,7 +459,8 @@
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Thông tin bổ sung</a>
+                                    <a href="#tab-additional_information">Bình luận
+                                        ({{ $product->comments->count() }})</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
                                     aria-controls="tab-reviews">
@@ -412,17 +477,171 @@
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
                                 aria-labelledby="tab-title-additional_information">
-                                <h2>Thông tin bổ sung</h2>
-                                <table class="shop_attributes">
-                                    <tbody>
-                                        <tr>
-                                            <th>Color</th>
-                                            <td>
-                                                <p>Blue, Pink, Red, Yellow</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <h2>Bình luận ({{ $product->comments->count() }})</h2>
+
+                                <!-- Hiển thị danh sách bình luận -->
+                                <div class="comments-section">
+                                    @foreach ($product->comments as $comment)
+                                        <div class="comment">
+                                            <!-- Hiển thị tên người dùng và ngày đăng bình luận -->
+                                            <p><strong>{{ $comment->user->name }}</strong>
+                                                <span>{{ $comment->created_at->format('d/m/Y') }}</span>
+                                            </p>
+
+                                            <!-- Nội dung bình luận -->
+                                            <div id="comment-content-{{ $comment->id }}">
+                                                <p>{{ $comment->comment }}</p>
+                                            </div>
+
+                                            <!-- Nút menu thả xuống -->
+
+                                            @if ($comment->user_id == Auth::id())
+                                            <!-- Nút menu thả xuống -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle"
+                                                    onclick="toggleDropdown({{ $comment->id }})" type="button"
+                                                    id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                </button>
+                                                <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
+                                                    style="display:none;" aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                                    <button class="dropdown-item" onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
+                                                    <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        
+                                            <!-- Form chỉnh sửa bình luận ẩn -->
+                                            <div id="edit-comment-form-{{ $comment->id }}" style="display: none;">
+                                                <form
+                                                    action="{{ route('client.updateComment', [$product->id, $comment->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <textarea name="comment" required>{{ $comment->comment }}</textarea>
+                                                    <button type="submit">Lưu thay đổi</button>
+                                                    <button type="button"
+                                                        onclick="toggleEditForm({{ $comment->id }})">Hủy</button>
+                                                </form>
+                                            </div>
+
+                                            <!-- Hiển thị các phản hồi -->
+                                            @foreach ($comment->replies as $reply)
+                                                <div class="reply">
+                                                    <p><strong>{{ $reply->user->name }}</strong>
+                                                        <span>{{ $reply->created_at->format('d/m/Y') }}</span>
+                                                    </p>
+
+                                                    <div id="reply-content-{{ $reply->id }}">
+                                                        <p>{{ $reply->reply }}</p>
+                                                    </div>
+
+                                                    <!-- Nút menu thả xuống cho phản hồi -->
+                                                    @if ($reply->user_id == Auth::id())
+                                                    <!-- Nút menu thả xuống cho phản hồi -->
+                                                    <div class="dropdown">
+                                                        <button class=" dropdown-toggle" onclick="toggleDropdownReply({{ $reply->id }})" type="button" id="dropdownMenuButtonReply{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        </button>
+                                                        <div class="dropdown-menu" id="customDropdownReply-{{ $reply->id }}" style="display:none;" aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
+                                                            <button class="dropdown-item" onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
+                                                            <form action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}" method="POST" style="display:inline;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
+                                                    <div id="edit-reply-form-{{ $reply->id }}" style="display: none;">
+                                                        <form
+                                                            action="{{ route('client.updateReply', [$comment->id, $reply->id]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <textarea name="reply" required>{{ $reply->reply }}</textarea>
+                                                            <button type="submit">Lưu thay đổi</button>
+                                                            <button type="button"
+                                                                onclick="toggleEditFormReply({{ $reply->id }})">Hủy</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            <!-- Form thêm phản hồi -->
+                                            @auth
+                                                <form action="{{ route('client.storeReply', $comment->id) }}" method="POST">
+                                                    @csrf
+                                                    <textarea name="reply" required placeholder="Phản hồi của bạn"></textarea>
+                                                    <button type="submit" class="tbnsend"> <img
+                                                            src="{{ asset('theme/client/assets/images/send.png') }}"
+                                                            width="39px" alt=""></button>
+                                                </form>
+                                            @endauth
+                                        </div>
+                                    @endforeach
+
+                                    <!-- Form thêm bình luận -->
+                                    @auth
+                                        <form action="{{ route('client.storeComment', $product->id) }}" method="POST">
+                                            @csrf
+                                            <textarea name="comment" required placeholder="Bình luận của bạn"></textarea>
+                                            <button type="submit" class="tbnsend"> <img
+                                                    src="{{ asset('theme/client/assets/images/send.png') }}" width="39px"
+                                                    alt=""></button>
+                                        </form>
+                                    @endauth
+                                </div>
+
+                                <!-- JavaScript để bật tắt form chỉnh sửa -->
+                                <script>
+                                    function toggleDropdown(commentId) {
+                                        var dropdown = document.getElementById("customDropdown-" + commentId);
+                                        if (dropdown.style.display === "none") {
+                                            dropdown.style.display = "block";
+                                        } else {
+                                            dropdown.style.display = "none";
+                                        }
+                                    }
+
+                                    function toggleDropdownReply(replyId) {
+                                        var dropdown = document.getElementById("customDropdownReply-" + replyId);
+                                        if (dropdown.style.display === "none") {
+                                            dropdown.style.display = "block";
+                                        } else {
+                                            dropdown.style.display = "none";
+                                        }
+                                    }
+
+
+                                    function toggleEditForm(commentId) {
+                                        var content = document.getElementById('comment-content-' + commentId);
+                                        var form = document.getElementById('edit-comment-form-' + commentId);
+                                        if (form.style.display === "none") {
+                                            form.style.display = "block";
+                                            content.style.display = "none";
+                                        } else {
+                                            form.style.display = "none";
+                                            content.style.display = "block";
+                                        }
+                                    }
+
+                                    function toggleEditFormReply(replyId) {
+                                        var content = document.getElementById('reply-content-' + replyId);
+                                        var form = document.getElementById('edit-reply-form-' + replyId);
+                                        if (form.style.display === "none") {
+                                            form.style.display = "block";
+                                            content.style.display = "none";
+                                        } else {
+                                            form.style.display = "none";
+                                            content.style.display = "block";
+                                        }
+                                    }
+                                </script>
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--reviews panel entry-content kobolg-tab"
                                 id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
