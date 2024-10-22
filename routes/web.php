@@ -92,11 +92,17 @@ Route::prefix('shop')->group(function () {
 
 
     Route::get('/blog',            [PostController::class, 'index'])->name('client.posts.index');
-    Route::get('post/{id}',        [PostController::class, 'show'])->name('post.show');
-    Route::get('/search',          [PostController::class, 'search'])->name('search');
+    Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/search', [PostController::class, 'search'])->name('search');
+    Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
+
 
     // Route::get('/search', [SearchController::class, 'search'])->name('client.search');
     // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('client.autocomplete');
+
+    Route::get('/privacy-policy', function () {
+        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
+    })->name('privacy.policy');
 
     Route::get('/contact',         [ContactController::class, 'index'])->name('client.contact.index');
 

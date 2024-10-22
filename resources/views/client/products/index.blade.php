@@ -123,8 +123,9 @@
                                                     </tbody>
                                                 </table>
                                             </form>
-                                            <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Xem nhanh</a>
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                class="button yith-wcqv-button" data-product_id="{{ $product->id }}">Xem
+                                                nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -136,7 +137,7 @@
                                             </div>
                                             <h3 class="product-name product_title">
                                                 <a
-                                                    href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                                                    href="{{ route('client.products.product-detail', $product->slug) }}">{{ $product->name }}</a>
                                             </h3>
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
@@ -371,7 +372,7 @@
         </li>
     `;
                                                     productLists.innerHTML +=
-                                                    productHTML; // Thêm sản phẩm vào danh sách
+                                                        productHTML; // Thêm sản phẩm vào danh sách
                                                 });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);

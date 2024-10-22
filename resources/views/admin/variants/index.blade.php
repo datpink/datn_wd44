@@ -16,6 +16,10 @@
                                    class="btn btn-primary btn-rounded d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
+                                <a href="{{ route('products.index') }}"
+                                    class="btn btn-secondary mt-2 btn-rounded d-flex align-items-center">
+                                    <i class="bi bi-arrow-left me-2"></i> Trở về
+                                </a>
                             </div>
                         </div>
 

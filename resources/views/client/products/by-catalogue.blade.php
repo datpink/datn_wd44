@@ -119,7 +119,7 @@
                                                     </tbody>
                                                 </table>
                                             </form>
-                                            <a href="#" class="button yith-wcqv-button"
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button yith-wcqv-button"
                                                 data-product_id="{{ $product->id }}">Xem nhanh</a>
                                         </div>
                                         <div class="product-info">
