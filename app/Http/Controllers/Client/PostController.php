@@ -55,3 +55,4 @@ class PostController extends Controller
         return view('client.posts.search-results', compact('posts'));
     }
 }
+

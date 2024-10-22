@@ -524,16 +524,15 @@
                             <article class="post-item post-grid rows-space-0">
                                 <div class="post-inner blog-grid">
                                     <div class="post-thumb">
-                                        <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
+                                        <a href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             @if ($post->image && \Storage::exists($post->image))
-                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->title }}"
-                                                    class="img-responsive attachment-370x330 size-370x330" width="370"
-                                                    height="330">
+                                                <img src="{{ \Storage::url($post->image) }}"class="img-responsive attachment-370x330 size-370x330"
+                                                    alt="{{ $post->name }}" width="370" height="330">
                                             @else
                                                 Không có ảnh
                                             @endif
                                         </a>
-                                        <a class="datebox" href="{{ route('posts.show', $post->id) }}" tabindex="0">
+                                        <a class="datebox" href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             <span>{{ $post->created_at->format('d') }}</span>
                                             <span>{{ $post->created_at->format('M') }}</span>
                                         </a>
@@ -541,15 +540,17 @@
                                     <div class="post-content">
                                         <div class="post-meta">
                                             <div class="post-author">
-                                                By: <a href="#">{{ $post->author_name ?? 'Unknown' }}</a>
+                                                By: <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="#" tabindex="0">{{ $post->comments_count ?? 0 }}</a>
+                                                <a href="{{ route('post.show', $post->id) }}"
+                                                    tabindex="0">{{ $post->comments_count }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">
                                             <h2 class="post-title">
-                                                <a href="{{ route('posts.show', $post->id) }}"
+                                                <a href="{{ route('post.show', $post->id) }}"
                                                     tabindex="0">{{ $post->title }}</a>
                                             </h2>
                                             <p>{{ $post->excerpt }}</p>

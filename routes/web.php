@@ -74,6 +74,17 @@ Route::prefix('shop')->group(function () {
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::post('products/import',          [AdminProductController::class, 'import'])->name('products.import');
+    Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
+    Route::post('product/{product}/comment', [ProductController::class, 'storeComment'])->name('client.storeComment');
+    Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
+    // Route sửa và xóa bình luận
+    Route::put('product/{product}/comment/{comment}/edit', [ProductController::class, 'updateComment'])->name('client.updateComment');
+    Route::delete('product/{product}/comment/{comment}/delete', [ProductController::class, 'deleteComment'])->name('client.deleteComment');
+
+    // Route sửa và xóa phản hồi
+    Route::put('comment/{comment}/reply/{reply}/edit', [ProductController::class, 'updateReply'])->name('client.updateReply');
+    Route::delete('comment/{comment}/reply/{reply}/delete', [ProductController::class, 'deleteReply'])->name('client.deleteReply');
+
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
@@ -85,6 +96,9 @@ Route::prefix('shop')->group(function () {
     Route::get('/search', [PostController::class, 'search'])->name('search');
     Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
 
+
+    // Route::get('/search', [SearchController::class, 'search'])->name('client.search');
+    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('client.autocomplete');
 
     Route::get('/privacy-policy', function () {
         return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
@@ -215,7 +229,5 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-    // // Route cho chức năng tìm kiếm
-    // Route::get('/search',       [SearchController::class, 'search'])->name('search');
-    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
+
 });
