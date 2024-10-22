@@ -28,78 +28,33 @@
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
             <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
-                <article
-                    class="post-195 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-table category-life-style tag-light tag-life-style">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost1-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">Not
-                                        your ordinary baby service.</a></h2>
+                @foreach ($latestPosts as $post)
+                    <article
+                        class="post-{{ $post->id }} post type-post status-publish format-standard has-post-thumbnail hentry">
+                        <div class="post-item-inner">
+                            <div class="post-thumb">
+                                <a href="{{ route('post.show', $post->id) }}">
+                                    @if ($post->image && \Storage::exists($post->image))
+                                        <img src="{{ \Storage::url($post->image) }}"
+                                            class="img-responsive attachment-83x83 size-83x83" alt="{{ $post->title }}"
+                                            width="83" height="83">
+                                    @else
+                                        Không có ảnh
+                                    @endif
+                                </a>
                             </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
-                <article
-                    class="post-192 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-fashion category-multi category-life-style tag-light tag-fashion tag-multi">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost5-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        child is sleeping on the bed</a></h2>
+                            <div class="post-info">
+                                <div class="block-title">
+                                    <h2 class="post-title">
+                                        <a href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
+                                    </h2>
+                                </div>
+                                <div class="date">{{ $post->created_at->format('F d, Y') }}</div>
                             </div>
-                            <div class="date">December 19, 2018</div>
                         </div>
-                    </div>
-                </article>
-                <article
-                    class="post-189 post type-post status-publish format-video has-post-thumbnail hentry category-table category-life-style tag-multi tag-life-style post_format-post-format-video">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost9-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        light is hugging the dog on the room</a></h2>
-                            </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
-                <article
-                    class="post-186 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-life-style tag-life-style">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost4-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        child is swimming with a buoy</a></h2>
-                            </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
+                    </article>
+                @endforeach
+
             </div>
         </div>
         <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">

@@ -1,5 +1,5 @@
 @extends('client.master')
-@section('title', $post->name . ' - Zaia Enterprise')
+@section('title', $post->title . ' - Zaia Enterprise')
 
 @section('content')
     <div class="main-container left-sidebar has-sidebar">

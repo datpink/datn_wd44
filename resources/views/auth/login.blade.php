@@ -119,7 +119,7 @@
                                                 toàn bộ trang web này, để quản lý
                                                 quyền truy cập vào tài khoản của bạn và cho các mục đích khác được mô tả
                                                 trong phần của chúng tôi.
-                                                <a href="#" class="kobolg-privacy-policy-link" target="_blank">chính
+                                                <a href="{{ route('privacy.policy') }}" class="kobolg-privacy-policy-link">chính
                                                     sách bảo mật</a>.
                                             </p>
                                         </div>

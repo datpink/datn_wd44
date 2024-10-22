@@ -21,6 +21,10 @@
             $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
             break;
 
+        case 'privacy.policy':
+            $breadcrumbs[] = ['name' => 'Chính Sách Bảo Mật', 'url' => ''];
+            break;
+
         case 'login':
             $breadcrumbs[] = ['name' => 'Đăng Nhập', 'url' => ''];
             break;

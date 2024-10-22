@@ -1,7 +1,10 @@
 @extends('client.master')
+
 @section('title', $product->name . ' - Zaia Enterprise')
 
 @section('content')
+
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
 
     @include('components.breadcrumb-client')
     <style>
@@ -102,11 +105,11 @@
                                                             @if (!empty($variants[0]->img_url))
                                                                 <!-- Kiểm tra nếu có ảnh -->
                                                                 <img src="{{ $variants[0]->img_url }}"
-                                                                    alt="{{ $dungLuong }}" width="50" height="50"
+                                                                    alt="{{ $dungLuong }}" width="35px" height="35px"
                                                                     style="margin-right: 5px;">
                                                             @else
                                                                 <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
+                                                                    alt="No Image" width="35px" height="35px"
                                                                     style="margin-right: 5px;">
                                                             @endif
                                                             {{ $dungLuong }}
@@ -138,11 +141,11 @@
                                                             @if (!empty($variants[0]->image_url))
                                                                 <!-- Kiểm tra nếu có ảnh -->
                                                                 <img src="{{ \Storage::url($variants[0]->image_url) }}"
-                                                                    alt="{{ $mauSac }}" width="50" height="50"
+                                                                    alt="{{ $mauSac }}" width="35px" height="35px"
                                                                     style="margin-right: 5px;">
                                                             @else
                                                                 <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
+                                                                    alt="No Image" width="35px" height="35px"
                                                                     style="margin-right: 5px;">
                                                             @endif
                                                             {{ $mauSac }}
@@ -404,16 +407,94 @@
                             </ul>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--description panel entry-content kobolg-tab"
                                 id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
-                                <h2>Mô tả</h2>
-                                <div class="col-md-12">
-                                    {!! $product->description !!}
+                                <h2 class="text-center">Mô tả</h2>
+                                <div class="col-md-6 mx-auto">
+                                    <div id="description-content" class="content-collapsed">
+                                        {!! $product->description !!}
+                                    </div>
+                                    <a id="toggle-link" class="toggle-link" href="javascript:void(0);"
+                                        style="display: none;">
+                                        <i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung
+                                    </a>
                                 </div>
                             </div>
+
+
+                            <style>
+                                /* Thu gọn nội dung */
+                                .content-collapsed {
+                                    max-height: 100px;
+                                    /* Chiều cao ban đầu */
+                                    overflow: hidden;
+                                    position: relative;
+                                    transition: max-height 0.3s ease;
+                                }
+
+                                /* Nội dung mở rộng */
+                                .content-expanded {
+                                    max-height: none;
+                                    /* Hiển thị toàn bộ */
+                                }
+
+                                /* Link "Xem thêm" */
+                                .toggle-link {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin-top: 10px;
+                                    font-weight: bold;
+                                    color: #007bff;
+                                    /* Màu sắc liên kết */
+                                    cursor: pointer;
+                                    text-decoration: none;
+                                }
+
+                                .toggle-icon {
+                                    margin-right: 5px;
+                                    transition: transform 0.3s ease;
+                                    /* Hiệu ứng chuyển động của mũi tên */
+                                }
+
+                                .icon-up {
+                                    transform: rotate(180deg);
+                                    /* Mũi tên hướng lên */
+                                }
+                            </style>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    var content = document.getElementById("description-content");
+                                    var toggleLink = document.getElementById("toggle-link");
+                                    var icon = toggleLink.querySelector(".toggle-icon");
+
+                                    // Kiểm tra nếu nội dung vượt quá giới hạn chiều cao
+                                    if (content.scrollHeight > content.clientHeight) {
+                                        toggleLink.style.display = "inline-flex"; // Hiển thị link "Xem thêm"
+                                    }
+
+                                    // Thêm sự kiện click cho link "Xem thêm"
+                                    toggleLink.addEventListener("click", function() {
+                                        if (content.classList.contains("content-collapsed")) {
+                                            content.classList.remove("content-collapsed");
+                                            content.classList.add("content-expanded");
+                                            icon.classList.add("icon-up"); // Xoay mũi tên hướng lên
+                                            this.innerHTML = '<i class="fa fa-chevron-up toggle-icon"></i> Thu gọn nội dung';
+                                        } else {
+                                            content.classList.remove("content-expanded");
+                                            content.classList.add("content-collapsed");
+                                            icon.classList.remove("icon-up"); // Mũi tên trở lại hướng xuống
+                                            this.innerHTML = '<i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung';
+                                        }
+                                    });
+                                });
+                            </script>
+
+
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
                                 aria-labelledby="tab-title-additional_information">
                                 <h2>Thông tin bổ sung</h2>
-                                <table class="shop_attributes">
+                                <table class="shop_attributes col-md-6 mx-auto">
                                     <tbody>
                                         <tr>
                                             <th>Color</th>
@@ -426,7 +507,7 @@
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--reviews panel entry-content kobolg-tab"
                                 id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
-                                <div id="reviews" class="kobolg-Reviews">
+                                <div id="reviews" class="kobolg-Reviews col-md-6 mx-auto">
                                     <div id="comments">
                                         <h2 class="kobolg-Reviews-title">Đánh giá</h2>
                                         <p class="kobolg-noreviews">Chưa có đánh giá nào</p>
@@ -478,7 +559,7 @@
                                                         <textarea id="comment" name="comment" cols="45" rows="8" required=""></textarea>
                                                     </p><input name="wpml_language_code" value="en" type="hidden">
                                                     <p class="form-submit"><input name="submit" id="submit"
-                                                            class="submit" value="Submit" type="submit"> <input
+                                                            class="submit" value="Đánh Giá" type="submit"> <input
                                                             name="comment_post_ID" value="27" id="comment_post_ID"
                                                             type="hidden">
                                                         <input name="comment_parent" id="comment_parent" value="0"
@@ -993,4 +1074,5 @@
         </div>
     </div>
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
