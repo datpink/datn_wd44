@@ -74,6 +74,7 @@ Route::prefix('shop')->group(function () {
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::post('products/import',          [AdminProductController::class, 'import'])->name('products.import');
+    Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
@@ -81,9 +82,11 @@ Route::prefix('shop')->group(function () {
 
 
     Route::get('/blog',            [PostController::class, 'index'])->name('client.posts.index');
-    Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
-    Route::get('/search', [PostController::class, 'search'])->name('search');
+    Route::get('post/{id}',        [PostController::class, 'show'])->name('post.show');
+    Route::get('/search',          [PostController::class, 'search'])->name('search');
 
+    // Route::get('/search', [SearchController::class, 'search'])->name('client.search');
+    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('client.autocomplete');
 
     Route::get('/contact',         [ContactController::class, 'index'])->name('client.contact.index');
 
@@ -210,7 +213,5 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-    // // Route cho chức năng tìm kiếm
-    // Route::get('/search',       [SearchController::class, 'search'])->name('search');
-    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
+
 });
