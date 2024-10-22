@@ -21,19 +21,25 @@ class PostController extends Controller
     }
     public function show($id)
     {
-        $post = Post::findOrFail($id); // Lấy bài viết theo ID
+        $post = Post::join('users', 'posts.user_id', '=', 'users.id')
+            ->select('posts.*', 'users.name as author_name')
+            ->where('posts.id', $id)
+            ->firstOrFail();
+
         return view('client.posts.post-detail', compact('post'));
     }
     public function search(Request $request)
-{
-    $query = $request->input('s');
-    $posts = Post::where('title', 'LIKE', "%{$query}%")
-    ->orWhere('tomtat', 'LIKE', "%{$query}%")
-    ->orWhere('slug', 'LIKE', "%{$query}%")
-    ->get();
+    {
+        $query = $request->input('s');
+        $posts = Post::join('users', 'posts.user_id', '=', 'users.id')
+            ->select('posts.*', 'users.name as author_name')
+            ->where('posts.title', 'LIKE', "%{$query}%")
+            ->orWhere('posts.tomtat', 'LIKE', "%{$query}%")
+            ->orWhere('posts.slug', 'LIKE', "%{$query}%")
+            ->paginate(9); // Thêm phân trang nếu cần
 
-    return view('client.posts.search-results', compact('posts'));
-}
-
+        return view('client.posts.search-results', compact('posts'));
+    }
+    
 }
 

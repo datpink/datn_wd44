@@ -5,7 +5,7 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
+            @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
             @if ($errors->any())
@@ -16,7 +16,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif --}}
+            @endif
 
             <div class="row">
                 <div class="col-sm-12 col-12">

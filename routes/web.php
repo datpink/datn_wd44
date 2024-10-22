@@ -75,6 +75,16 @@ Route::prefix('shop')->group(function () {
     Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::post('products/import',          [AdminProductController::class, 'import'])->name('products.import');
     Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
+    Route::post('product/{product}/comment', [ProductController::class, 'storeComment'])->name('client.storeComment');
+    Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
+    // Route sửa và xóa bình luận
+    Route::put('product/{product}/comment/{comment}/edit', [ProductController::class, 'updateComment'])->name('client.updateComment');
+    Route::delete('product/{product}/comment/{comment}/delete', [ProductController::class, 'deleteComment'])->name('client.deleteComment');
+
+    // Route sửa và xóa phản hồi
+    Route::put('comment/{comment}/reply/{reply}/edit', [ProductController::class, 'updateReply'])->name('client.updateReply');
+    Route::delete('comment/{comment}/reply/{reply}/delete', [ProductController::class, 'deleteReply'])->name('client.deleteReply');
+
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');

@@ -59,7 +59,7 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="category_id">Danh mục:</label>
                             <select name="category_id" class="form-control @error('category_id') is-invalid @enderror"
                                 id="category_id">
@@ -77,10 +77,13 @@
 
                         <div class="form-group">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class=" mb-3 form-control-file @error('image') is-invalid @enderror" name="image" id="image">
-                            @if ($post->image)
-                                <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
-                                    style="width: 150px">
+                            <input type="file" class=" mb-3 form-control @error('image') is-invalid @enderror"
+                                name="image" id="image">
+                            @if ($post->image && \Storage::exists($post->image))
+                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
+                                    style="max-width: 300px; height: auto;">
+                            @else
+                                Không có ảnh
                             @endif
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -94,7 +97,7 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
- 
+
                         <div class="form-group">
                             <label for="is_featured">Bài viết nổi bật:</label>
                             <input type="checkbox" name="is_featured" id="is_featured" value="1"
