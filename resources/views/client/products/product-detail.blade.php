@@ -21,7 +21,7 @@
         .variant-btn:hover {
             border: 2px solid red;
         }
-        
+
         .tbnsend {
             background-color: #fff
         }
@@ -84,7 +84,6 @@
         .reply {
             margin-bottom: 10px;
         }
-
     </style>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
@@ -114,7 +113,9 @@
                                                     @endforeach
                                                 @else
                                                     <div class="kobolg-product-gallery__image">
-                                                        <p>Không có ảnh</p>
+                                                        <img src="{{ \Storage::url($product->image_url) }}"
+                                                            alt="{{ $product->name }}"
+                                                            style="max-width: 70%; margin: 0 auto; height: auto;">
                                                     </div>
                                                 @endif
                                             </figure>
@@ -127,6 +128,12 @@
                                                             style="width: 100px; height: auto;">
                                                     </li>
                                                 @endforeach
+                                            @else
+                                                <li>
+                                                    <img src="{{ \Storage::url($product->image_url) }}"
+                                                        alt="{{ $product->name }} Thumbnail"
+                                                        style="width: 100px; height: auto;">
+                                                </li>
                                             @endif
                                         </ol>
                                     </div>
@@ -227,7 +234,7 @@
 
 
                                     <script>
-                                                                                document.addEventListener('DOMContentLoaded', function() {
+                                        document.addEventListener('DOMContentLoaded', function() {
                                             let selectedStorage = null;
                                             let selectedColor = null;
                                             let selectedStorageButton = null;
@@ -382,7 +389,6 @@
                                                 }
                                             }
                                         });
-
                                     </script>
 
                                     <p class="stock in-stock">
@@ -589,25 +595,30 @@
                                             <!-- Nút menu thả xuống -->
 
                                             @if ($comment->user_id == Auth::id())
-                                            <!-- Nút menu thả xuống -->
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle"
-                                                    onclick="toggleDropdown({{ $comment->id }})" type="button"
-                                                    id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                </button>
-                                                <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
-                                                    style="display:none;" aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                                    <button class="dropdown-item" onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
-                                                    <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}" method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
-                                                    </form>
+                                                <!-- Nút menu thả xuống -->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle"
+                                                        onclick="toggleDropdown({{ $comment->id }})" type="button"
+                                                        id="dropdownMenuButton{{ $comment->id }}"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
+                                                        style="display:none;"
+                                                        aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                                        <button class="dropdown-item"
+                                                            onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
+                                                        <form
+                                                            action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item" type="submit"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endif
-                                        
+                                            @endif
+
                                             <!-- Form chỉnh sửa bình luận ẩn -->
                                             <div id="edit-comment-form-{{ $comment->id }}" style="display: none;">
                                                 <form
@@ -635,21 +646,32 @@
 
                                                     <!-- Nút menu thả xuống cho phản hồi -->
                                                     @if ($reply->user_id == Auth::id())
-                                                    <!-- Nút menu thả xuống cho phản hồi -->
-                                                    <div class="dropdown">
-                                                        <button class=" dropdown-toggle" onclick="toggleDropdownReply({{ $reply->id }})" type="button" id="dropdownMenuButtonReply{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                                                        </button>
-                                                        <div class="dropdown-menu" id="customDropdownReply-{{ $reply->id }}" style="display:none;" aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
-                                                            <button class="dropdown-item" onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
-                                                            <form action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}" method="POST" style="display:inline;">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button class="dropdown-item" type="submit" onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
-                                                            </form>
+                                                        <!-- Nút menu thả xuống cho phản hồi -->
+                                                        <div class="dropdown">
+                                                            <button class=" dropdown-toggle"
+                                                                onclick="toggleDropdownReply({{ $reply->id }})"
+                                                                type="button"
+                                                                id="dropdownMenuButtonReply{{ $reply->id }}"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                id="customDropdownReply-{{ $reply->id }}"
+                                                                style="display:none;"
+                                                                aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
+                                                                <button class="dropdown-item"
+                                                                    onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
+                                                                <form
+                                                                    action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="dropdown-item" type="submit"
+                                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
+                                                                </form>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                @endif
-                                                                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
+                                                    @endif
+                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
                                                     <div id="edit-reply-form-{{ $reply->id }}" style="display: none;">
                                                         <form
                                                             action="{{ route('client.updateReply', [$comment->id, $reply->id]) }}"
