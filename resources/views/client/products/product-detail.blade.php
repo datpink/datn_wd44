@@ -155,77 +155,71 @@
                                     <div class="product-variants">
                                         <div class="product-attributes">
                                             <!-- Dung lượng -->
-                                            <div class="attribute-group">
-                                                <h4>Dung lượng:</h4>
-                                                @php
-                                                    $dungLuongVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Storage') {
-                                                                $dungLuongVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($dungLuongVariants) > 0)
-                                                    @foreach ($dungLuongVariants as $dungLuong => $variants)
-                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->img_url }}">
-                                                            <!-- Đảm bảo img_url được lấy từ CSDL -->
-                                                            @if (!empty($variants[0]->img_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ $variants[0]->img_url }}"
-                                                                    alt="{{ $dungLuong }}" width="35px" height="35px"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="35px" height="35px"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $dungLuong }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có dung lượng nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
+@php
+$dungLuongVariants = [];
+foreach ($product->variants as $variant) {
+    foreach ($variant->attributeValues as $attributeValue) {
+        if ($attributeValue->attribute->name === 'Storage') {
+            $dungLuongVariants[$attributeValue->name][] = $variant;
+        }
+    }
+}
+@endphp
+@if (count($dungLuongVariants) > 0)
+<div class="attribute-group">
+    <h4>Dung lượng:</h4>
+    @foreach ($dungLuongVariants as $dungLuong => $variants)
+        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
+            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
+            data-img-url="{{ $variants[0]->img_url }}">
+            @if (!empty($variants[0]->img_url))
+                <img src="{{ $variants[0]->img_url }}"
+                    alt="{{ $dungLuong }}" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @else
+                <img src="{{ \Storage::url($product->image_url) }}"
+                    alt="No Image" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @endif
+            {{ $dungLuong }}
+        </button>
+    @endforeach
+</div>
+@endif
 
-                                            <!-- Màu sắc -->
-                                            <div class="attribute-group">
-                                                <h4>Màu sắc:</h4>
-                                                @php
-                                                    $mauSacVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Color') {
-                                                                $mauSacVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($mauSacVariants) > 0)
-                                                    @foreach ($mauSacVariants as $mauSac => $variants)
-                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->image_url }}">
-                                                            @if (!empty($variants[0]->image_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ \Storage::url($variants[0]->image_url) }}"
-                                                                    alt="{{ $mauSac }}" width="35px" height="35px"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="35px" height="35px"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $mauSac }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có màu sắc nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
+<!-- Màu sắc -->
+@php
+$mauSacVariants = [];
+foreach ($product->variants as $variant) {
+    foreach ($variant->attributeValues as $attributeValue) {
+        if ($attributeValue->attribute->name === 'Color') {
+            $mauSacVariants[$attributeValue->name][] = $variant;
+        }
+    }
+}
+@endphp
+@if (count($mauSacVariants) > 0)
+<div class="attribute-group">
+    <h4>Màu sắc:</h4>
+    @foreach ($mauSacVariants as $mauSac => $variants)
+        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
+            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
+            data-img-url="{{ $variants[0]->image_url }}">
+            @if (!empty($variants[0]->image_url))
+                <img src="{{ \Storage::url($variants[0]->image_url) }}"
+                    alt="{{ $mauSac }}" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @else
+                <img src="{{ \Storage::url($product->image_url) }}"
+                    alt="No Image" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @endif
+            {{ $mauSac }}
+        </button>
+    @endforeach
+</div>
+@endif
+
                                         </div>
                                     </div>
 
@@ -241,23 +235,12 @@
                                             let selectedStorageButton = null;
                                             let selectedColorButton = null;
                                             let selectedSizeButton = null;
-                                            const priceElement = document.getElementById('product-price'); // Đảm bảo phần tử này tồn tại
 
-                                            // Lưu dữ liệu dung lượng, màu sắc và kích thước cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
-                                            let storageData = {
-                                                name: null,
-                                                price: 0
-                                            };
-                                            let colorData = {
-                                                name: null,
-                                                price: 0
-                                            };
-                                            let sizeData = {
-                                                name: null,
-                                                price: 0
-                                            };
+                                            // Giá gốc của sản phẩm (giá cơ bản)
+                                            const originalPrice = parseFloat("{{ $product->price }}");
+                                            const priceElement = document.getElementById('product-price');
 
-                                            // Lấy danh sách biến thể từ PHP
+                                            // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
                                             const variants = {!! json_encode(
                                                 $product->variants->map(function ($variant) {
                                                     return [
@@ -272,45 +255,92 @@
                                                 }),
                                             ) !!};
 
-                                            // Tìm giá nhỏ nhất và lớn nhất từ danh sách các biến thể
-                                            const minPrice = Math.min(...variants.map(variant => variant.price));
-                                            const maxPrice = Math.max(...variants.map(variant => variant.price));
+                                            // Hiển thị giá
+                                            function updatePrice() {
+                                                let totalPrice = originalPrice;
+                                                let minPrice = originalPrice; // Giá tối thiểu khởi tạo là giá gốc
+                                                let maxPrice = originalPrice; // Giá tối đa khởi tạo là giá gốc
+                                                let isVariantSelected = false;
 
-                                            // Hiển thị giá mặc định theo min - max
-                                            function showDefaultPrice() {
-                                                if (minPrice === maxPrice) {
-                                                    // Nếu min và max là giống nhau, chỉ hiển thị một giá
+                                                // Nếu không có biến thể nào
+                                                if (variants.length === 0) {
                                                     priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                                                         style: 'currency',
                                                         currency: 'VND'
-                                                    }).format(minPrice);
+                                                    }).format(originalPrice);
+                                                    return;
+                                                }
+
+                                                // Tính toán giá tối thiểu và tối đa từ danh sách biến thể
+                                                variants.forEach(variant => {
+                                                    const variantPrice = variant.price;
+                                                    if (variantPrice < minPrice) {
+                                                        minPrice = variantPrice; // Cập nhật giá tối thiểu
+                                                    }
+                                                    if (variantPrice > maxPrice) {
+                                                        maxPrice = variantPrice; // Cập nhật giá tối đa
+                                                    }
+                                                });
+
+                                                // Tìm biến thể lưu trữ được chọn và cộng giá nếu có
+                                                if (selectedStorage) {
+                                                    const foundStorageVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Storage' && attr.value ===
+                                                            selectedStorage)
+                                                    );
+                                                    if (foundStorageVariant) {
+                                                        totalPrice += foundStorageVariant.price - originalPrice; // Cộng thêm giá biến thể lưu trữ
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Tìm biến thể màu sắc được chọn và cộng giá nếu có
+                                                if (selectedColor) {
+                                                    const foundColorVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Color' && attr.value === selectedColor)
+                                                    );
+                                                    if (foundColorVariant) {
+                                                        totalPrice += foundColorVariant.price - originalPrice; // Cộng thêm giá biến thể màu sắc
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Tìm biến thể kích thước được chọn và cộng giá nếu có
+                                                if (selectedSize) {
+                                                    const foundSizeVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Size' && attr.value === selectedSize)
+                                                    );
+                                                    if (foundSizeVariant) {
+                                                        totalPrice += foundSizeVariant.price - originalPrice; // Cộng thêm giá biến thể kích thước
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Hiển thị giá
+                                                if (!isVariantSelected && minPrice === maxPrice) {
+                                                    // Nếu không có biến thể được chọn và giá min = max, hiển thị giá đơn lẻ
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(originalPrice);
+                                                } else if (!isVariantSelected) {
+                                                    // Nếu không có biến thể được chọn, hiển thị giá min và max
+                                                    priceElement.innerHTML = `${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(minPrice)} - ${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(maxPrice)}`;
                                                 } else {
-                                                    // Hiển thị theo định dạng "min - max"
+                                                    // Nếu có biến thể được chọn, hiển thị giá tổng
                                                     priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                                                         style: 'currency',
                                                         currency: 'VND'
-                                                    }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND'
-                                                    }).format(maxPrice);
+                                                    }).format(totalPrice);
                                                 }
                                             }
 
-                                            // Cập nhật hiển thị giá tổng
-                                            function updateTotalPrice() {
-                                                let totalPrice = minPrice;
-                                                if (storageData.price) totalPrice += storageData.price - minPrice;
-                                                if (colorData.price) totalPrice += colorData.price - minPrice;
-                                                if (sizeData.price) totalPrice += sizeData.price - minPrice;
-
-                                                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(totalPrice);
-                                            }
-
-                                            // Hiển thị giá mặc định khi trang được tải
-                                            showDefaultPrice();
 
                                             // Sử dụng event delegation để lắng nghe sự kiện click
                                             document.addEventListener('click', function(event) {
@@ -325,22 +355,11 @@
                                                             resetButton(selectedStorageButton);
                                                             selectedStorage = null;
                                                             selectedStorageButton = null;
-                                                            storageData.name = null;
-                                                            storageData.price = 0;
                                                         } else {
                                                             if (selectedStorageButton) resetButton(selectedStorageButton);
                                                             selectedStorage = storage;
                                                             selectedStorageButton = event.target;
                                                             selectButton(selectedStorageButton);
-
-                                                            const foundStorageVariant = variants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Storage' && attr
-                                                                    .value === selectedStorage)
-                                                            );
-                                                            if (foundStorageVariant) {
-                                                                storageData.name = selectedStorage;
-                                                                storageData.price = foundStorageVariant.price;
-                                                            }
                                                         }
                                                     }
 
@@ -350,22 +369,11 @@
                                                             resetButton(selectedColorButton);
                                                             selectedColor = null;
                                                             selectedColorButton = null;
-                                                            colorData.name = null;
-                                                            colorData.price = 0;
                                                         } else {
                                                             if (selectedColorButton) resetButton(selectedColorButton);
                                                             selectedColor = color;
                                                             selectedColorButton = event.target;
                                                             selectButton(selectedColorButton);
-
-                                                            const foundColorVariant = variants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Color' && attr.value ===
-                                                                    selectedColor)
-                                                            );
-                                                            if (foundColorVariant) {
-                                                                colorData.name = selectedColor;
-                                                                colorData.price = foundColorVariant.price;
-                                                            }
                                                         }
                                                     }
 
@@ -375,27 +383,16 @@
                                                             resetButton(selectedSizeButton);
                                                             selectedSize = null;
                                                             selectedSizeButton = null;
-                                                            sizeData.name = null;
-                                                            sizeData.price = 0;
                                                         } else {
                                                             if (selectedSizeButton) resetButton(selectedSizeButton);
                                                             selectedSize = size;
                                                             selectedSizeButton = event.target;
                                                             selectButton(selectedSizeButton);
-
-                                                            const foundSizeVariant = variants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Size' && attr.value ===
-                                                                    selectedSize)
-                                                            );
-                                                            if (foundSizeVariant) {
-                                                                sizeData.name = selectedSize;
-                                                                sizeData.price = foundSizeVariant.price;
-                                                            }
                                                         }
                                                     }
 
-                                                    // Cập nhật giá tổng
-                                                    updateTotalPrice();
+                                                    // Cập nhật giá dựa trên các lựa chọn hiện tại
+                                                    updatePrice();
                                                 }
                                             });
 
@@ -414,6 +411,9 @@
                                                     button.style.border = '2px solid red'; // Viền đỏ
                                                 }
                                             }
+
+                                            // Hiển thị giá gốc khi trang được tải
+                                            updatePrice();
                                         });
                                     </script>
 

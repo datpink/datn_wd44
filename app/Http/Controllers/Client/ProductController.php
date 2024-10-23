@@ -8,8 +8,8 @@ use App\Models\Product;
 use App\Models\ProductComment;
 use App\Models\ProductCommentReply;
 use App\Models\ProductVariant;
-use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -31,20 +31,41 @@ class ProductController extends Controller
     }
 
     public function show($slug)
-    {
-        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
-        $product = Product::where('slug', $slug)
-            ->with([
-                'galleries',
-                'variants' => function ($query) {
-                    $query->where('status', 'active')
-                        ->with('attributeValues.attribute');
-                }
-            ])
-            ->firstOrFail();
+{
+    // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
+    $product = Product::where('slug', $slug)
+        ->with([
+            'galleries',
+            'variants' => function ($query) {
+                $query->where('status', 'active')
+                    ->with('attributeValues.attribute');
+            }
+        ])
+        ->firstOrFail();
 
-        return view('client.products.product-detail', compact('product'));
-    }
+    // Lấy các biến thể cụ thể dựa trên thuộc tính
+    $storageVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    $colorVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    $sizeVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    // Truyền các biến thể vào view
+    return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
+}
+
     public function getVariantPrice(Request $request)
     {
         // Lấy thông tin biến thể dựa trên ID
@@ -274,12 +295,12 @@ class ProductController extends Controller
     public function deleteReply($commentId, $replyId)
     {
         $reply = ProductCommentReply::findOrFail($replyId);
-    
+
         // Kiểm tra quyền sở hữu phản hồi
         if ($reply->user_id != Auth::id()) {
             return redirect()->back()->with('error', 'Bạn không có quyền xóa phản hồi này.');
         }
-    
+
         $reply->delete();
         return redirect()->back()->with('success', 'Phản hồi đã được xóa!');
     }
