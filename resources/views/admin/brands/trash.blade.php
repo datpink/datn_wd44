@@ -43,9 +43,11 @@
                                                 style="display:inline-block;" class="restore-form">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="button"
-                                                    class="btn btn-rounded btn-outline-success restore-btn">
-                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                <button type="submit" class="restore-btn"
+                                                    style="background: none; border: none; padding: 0; margin-right: 15px;"
+                                                    title="Khôi phục">
+                                                    <i class="bi bi-arrow-repeat text-success"
+                                                        style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
 
@@ -54,9 +56,10 @@
                                                 method="POST" style="display:inline-block;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-outline-danger btn-rounded delete-btn">
-                                                    <i class="bi bi-trash"></i> Xóa vĩnh viễn
+                                                <button type="submit" class="delete-btn"
+                                                    style="background: none; border: none; padding: 0;"
+                                                    title="Xóa vĩnh viễn">
+                                                    <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
                                         </td>

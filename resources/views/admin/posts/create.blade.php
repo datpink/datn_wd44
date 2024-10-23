@@ -73,10 +73,14 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                name="image" id="image">
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image"
+                                id="image" onchange="previewImage(event)">
+
+                            <img id="imagePreview" src="" alt="Hình ảnh xem trước"
+                                style="max-width: 300px; height: auto; display: none;" class="mt-2">
+
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -111,6 +115,23 @@
     </script>
 
     <script>
+        function previewImage(event) {
+            const imagePreview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = ''; // Xóa ảnh xem trước
+                imagePreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+            }
+        }
+
         function generateSlug() {
             const title = document.getElementById("title").value;
             let slug = title.toLowerCase()

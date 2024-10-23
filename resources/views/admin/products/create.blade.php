@@ -81,7 +81,8 @@
 
                                 <div class="form-group">
                                     <label for="discount_price">Giá Khuyến Mãi</label>
-                                    <input type="text" name="discount_price" id="discount_price" class="form-control" value="{{ old('discount_price', $product->discount_price ?? '') }}">
+                                    <input type="text" name="discount_price" id="discount_price" class="form-control"
+                                        value="{{ old('discount_price', $product->discount_price ?? '') }}">
                                 </div>
 
                                 <div class="mb-3">
@@ -91,7 +92,10 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="image_url" class="form-label">Ảnh Sản Phẩm</label>
-                                    <input type="file" class="form-control" id="image_url" name="image_url">
+                                    <input type="file" class="form-control" id="image_url" name="image_url"
+                                        onchange="previewImageUrl(event)">
+                                    <img id="imageUrlPreview" src="" alt="Hình ảnh xem trước" class="mt-2"
+                                        style="display: none; width: 100px;">
                                 </div>
                                 <div class="mb-3">
                                     <label for="editor" class="form-label">Mô Tả</label>
@@ -130,10 +134,11 @@
                                     <div class="form-group d-flex align-items-center">
                                         <label for="image1" class="me-2">Gallery 1</label>
                                         <input type="file" name="images[]" id="image1" class="form-control me-2"
-                                            accept="image/*">
+                                            accept="image/*" onchange="previewGalleryImage(event, this)">
                                         <button type="button" class="btn btn-secondary add-image">Thêm</button>
                                     </div>
                                 </div>
+                                <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
 
                                 <button type="button" id="generateSkuBtn" class="btn btn-rounded btn-secondary">Tạo
                                     SKU</button>
@@ -194,6 +199,23 @@
             const randomSku = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo SKU ngẫu nhiên
             document.getElementById('sku').value = randomSku;
         });
+
+        function previewImageUrl(event) {
+            const imageUrlPreview = document.getElementById('imageUrlPreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageUrlPreview.src = e.target.result;
+                    imageUrlPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imageUrlPreview.src = '';
+                imageUrlPreview.style.display = 'none';
+            }
+        }
     </script>
 
     <script>
@@ -205,7 +227,7 @@
             newInput.classList.add('form-group', 'd-flex', 'align-items-center');
             newInput.innerHTML = `
             <label for="image${newIndex}" class="me-2">Gallery ${newIndex}</label>
-            <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*">
+            <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*" onchange="previewGalleryImage(event, this)">
             <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
         `;
 
@@ -214,7 +236,54 @@
             // Xử lý sự kiện cho nút "Xóa" mới
             newInput.querySelector('.remove-image').addEventListener('click', function() {
                 container.removeChild(newInput);
+                updateGallery(); // Cập nhật lại gallery khi xóa
             });
         });
+
+        function previewGalleryImage(event, input) {
+            const gallery = document.getElementById('gallery');
+            const file = event.target.files[0];
+
+            // Xóa hình ảnh xem trước cũ nếu có
+            const existingImages = gallery.querySelectorAll(`img[data-input-id="${input.id}"]`);
+            existingImages.forEach(img => img.remove());
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'gallery-image me-2 mb-2';
+                    img.style.width = '100px';
+                    img.style.height = 'auto';
+                    img.setAttribute('data-input-id', input.id); // Gán ID trường nhập vào hình ảnh
+                    gallery.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateGallery() {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = ''; // Xóa tất cả hình ảnh hiện có
+
+            const images = document.querySelectorAll('input[type="file"]');
+            images.forEach(input => {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'gallery-image me-2 mb-2';
+                        img.style.width = '100px';
+                        img.style.height = 'auto';
+                        img.setAttribute('data-input-id', input.id); // Gán ID trường nhập vào hình ảnh
+                        gallery.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     </script>
 @endsection

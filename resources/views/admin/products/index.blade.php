@@ -120,15 +120,14 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}"
-                                                    class="btn btn-warning btn-sm rounded-pill mb-2 action-btn"
-                                                    title="Sửa">
-                                                    <i class="bi bi-pencil-square"></i> <span class="btn-text">Sửa</span>
+                                                <a href="{{ route('products.edit', $product->id) }}" class="editRow"
+                                                    title="Sửa" style="margin-right: 10px;">
+                                                    <i class="bi bi-pencil-square text-warning"
+                                                        style="font-size: 1.8em;"></i>
                                                 </a>
-                                                <a href="{{ route('products.show', $product->id) }}"
-                                                    class="btn btn-info btn-sm rounded-pill mb-2 action-btn"
-                                                    title="Chi tiết">
-                                                    <i class="bi bi-info-circle"></i> <span class="btn-text">Chi tiết</span>
+                                                <a href="{{ route('products.show', $product->id) }}" class="editRow"
+                                                    title="Chi tiết" style="margin-right: 10px;">
+                                                    <i class="bi bi-info-circle text-info" style="font-size: 1.8em;"></i>
                                                 </a>
 
                                                 @php
@@ -137,17 +136,15 @@
 
                                                 @if ($hasVariants)
                                                     <a href="{{ route('products.variants.index', $product->id) }}"
-                                                        class="btn btn-success btn-sm rounded-pill action-btn"
-                                                        title="Quản lý Biến Thể">
-                                                        <i class="bi bi-gear"></i> <span class="btn-text">Quản lý Biến
-                                                            Thể</span>
+                                                        class="editRow" title="Quản lý Biến Thể"
+                                                        style="margin-right: 10px;">
+                                                        <i class="bi bi-gear text-success" style="font-size: 1.8em;"></i>
                                                     </a>
                                                 @else
                                                     <a href="{{ route('products.variants.create', $product->id) }}"
-                                                        class="btn btn-primary btn-sm rounded-pill action-btn"
-                                                        title="Thêm Biến Thể">
-                                                        <i class="bi bi-plus-circle"></i> <span class="btn-text">Thêm Biến
-                                                            Thể</span>
+                                                        class="editRow" title="Thêm Biến Thể">
+                                                        <i class="bi bi-plus-circle text-primary"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
                                                 @endif
                                             </td>

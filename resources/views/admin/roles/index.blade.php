@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="card-body mt-4">
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($roles as $role)
+                            @foreach ($roles as $role)
                                 <tr>
                                     <td>{{ $role->id }}</td>
                                     <td>{{ $role->name }}</td>
@@ -39,11 +39,19 @@
                                     <td>{{ $role->description }}</td>
                                     <td>{{ $role->created_at }}</td>
                                     <td>
-                                        <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-sm btn-rounded btn-warning"><i class="bi bi-pencil-square"></i>Sửa</a>
-                                        <form action="{{ route('roles.destroy', $role->id) }}" method="POST" class="d-inline">
+                                        <a href="{{ route('roles.edit', $role->id) }}" class="editRow" title="Sửa"
+                                            style="margin-right: 15px;">
+                                            <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
+                                        </a>
+                                        <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                            class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-rounded btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này không?')"><i class="bi bi-trash"></i>Xóa</button>
+                                            <button type="submit" class="delete-btn"
+                                                style="background: none; border: none; padding: 0;" title="Xóa"
+                                                onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này không?')">
+                                                <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>

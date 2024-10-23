@@ -56,9 +56,9 @@
                     <nav class="navigation pagination">
                         <div class="nav-links">
                             @if ($posts->onFirstPage())
-                                <span class="disabled page-numbers">« Previous</span>
+                                <span class="disabled page-numbers">«</span>
                             @else
-                                <a class="page-numbers" href="{{ $posts->previousPageUrl() }}">« Previous</a>
+                                <a class="page-numbers" href="{{ $posts->previousPageUrl() }}">«</a>
                             @endif
 
                             @foreach (range(1, $posts->lastPage()) as $page)
@@ -70,9 +70,9 @@
                             @endforeach
 
                             @if ($posts->hasMorePages())
-                                <a class="page-numbers" href="{{ $posts->nextPageUrl() }}">Next »</a>
+                                <a class="page-numbers" href="{{ $posts->nextPageUrl() }}">»</a>
                             @else
-                                <span class="disabled page-numbers">Next »</span>
+                                <span class="disabled page-numbers">»</span>
                             @endif
                         </div>
                     </nav>

@@ -182,9 +182,9 @@
                     <nav class="navigation pagination mt-3">
                         <div class="nav-links">
                             @if ($products->onFirstPage())
-                                <span class="disabled page-numbers">« Previous</span>
+                                <span class="disabled page-numbers">«</span>
                             @else
-                                <a class="page-numbers" href="{{ $products->previousPageUrl() }}">« Previous</a>
+                                <a class="page-numbers" href="{{ $products->previousPageUrl() }}">«</a>
                             @endif
 
                             @foreach (range(1, $products->lastPage()) as $page)
@@ -196,9 +196,9 @@
                             @endforeach
 
                             @if ($products->hasMorePages())
-                                <a class="page-numbers" href="{{ $products->nextPageUrl() }}">Next »</a>
+                                <a class="page-numbers" href="{{ $products->nextPageUrl() }}">»</a>
                             @else
-                                <span class="disabled page-numbers">Next »</span>
+                                <span class="disabled page-numbers">»</span>
                             @endif
                         </div>
                     </nav>
@@ -206,10 +206,12 @@
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
-                                <form role="search" method="get" class="kobolg-product-search" action="{{ route('product.search') }}">
+                            <form role="search" method="get" class="kobolg-product-search"
+                                action="{{ route('product.search') }}">
 
                                 <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="{{ request()->get('s') }}" name="s" type="search">
+                                    placeholder="Search products…" value="{{ request()->get('s') }}" name="s"
+                                    type="search">
                                 <button type="submit" value="Search">Search</button>
                             </form>
                         </div>
