@@ -1,8 +1,9 @@
 @extends('client.master')
 
-@section('title', 'Trang Chủ')
+@section('title', 'Zaia Enterprise | Điện thoại, Laptop, Phụ kiện chính hãng giá tốt nhất')
 
 @section('content')
+
     <div class="fullwidth-template">
         <div class="slide-home-01">
             <div class="container">
@@ -12,12 +13,12 @@
 
             </div>
         </div>
-
         {{-- content --}}
         <div class="section-003 section-002">
 
             <!-- GGI 1 -->
             <div class="container">
+
                 <div class="row">
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="kobolg-banner style-01">
@@ -78,8 +79,7 @@
                 <div class="kobolg-heading style-01">
                     <div class="heading-inner">
                         <h3 class="title">Nổi Bật</h3>
-                        <div class="subtitle">Made with care for your little ones, our products are perfect for every
-                            occasion. Check it out.</div>
+                        <div class="subtitle">Danh sách những sản phẩm được khách hàng quan tâm và mua nhiều </div>
                     </div>
                 </div>
 
@@ -196,10 +196,9 @@
             <div class="container">
                 <div class="kobolg-heading style-01">
                     <div class="heading-inner">
-                        <h3 class="title">New Arrival</h3>
+                        <h3 class="title">Sản phẩm mới</h3>
                         <div class="subtitle">
-                            Made with care for your little ones, our products are perfect for every occasion. Check it
-                            out.
+                            Các sản phẩm mới ra mắt và đang được mọi người săn đón.
                         </div>
                     </div>
                 </div>

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -46,42 +47,60 @@ use Illuminate\Support\Facades\Route;
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 
+
+
+
 // Route cho trang chưa đăng nhập
 Route::prefix('shop')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-    Route::post('/register', [RegisterController::class, 'register'])->name('register');
+    Route::get('/login',                   [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login',                  [LoginController::class, 'login']);
+    Route::post('/logout',                 [LoginController::class, 'logout'])->name('logout');
+    Route::post('/register',               [RegisterController::class, 'register'])->name('register');
 
-    Route::get('/login/google', [LoginGoogleController::class, 'redirectToGoogle'])->name('login.google');
-    Route::get('/login/google/callback', [LoginGoogleController::class, 'handleGoogleCallback']);
-    Route::get('/login/facebook', [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
+    Route::get('/login/google',            [LoginGoogleController::class, 'redirectToGoogle'])->name('login.google');
+    Route::get('/login/google/callback',   [LoginGoogleController::class, 'handleGoogleCallback']);
+    Route::get('/login/facebook',          [LoginFacebookController::class, 'redirectToFacebook'])->name('login.facebook');
     Route::get('/login/facebook/callback', [LoginFacebookController::class, 'handleFacebookCallback']);
 
-    Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
-    Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
+    Route::get('forgot-password',          [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('forgot-password',         [ForgotPasswordController::class, 'sendResetLink'])->name('password.email');
+    Route::get('reset-password/{token}',   [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password',          [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
 
     // Các route không yêu cầu đăng nhập
-    Route::get('/products', [ProductController::class, 'index'])->name('client.products.index');
-    Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
+    Route::get('products',                  [ProductController::class, 'index'])->name('client.products.index');
+    Route::get('products/chi-tiet/{slug}',  [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
+    Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
+    Route::post('products/import',          [AdminProductController::class, 'import'])->name('products.import');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
 
 
 
-    Route::get('/blog', [PostController::class, 'index'])->name('client.posts.index');
+    Route::get('/blog',            [PostController::class, 'index'])->name('client.posts.index');
+    Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/search', [PostController::class, 'search'])->name('search');
 
 
-    Route::get('/contact', [ContactController::class, 'index'])->name('client.contact.index');
+    Route::get('/contact',         [ContactController::class, 'index'])->name('client.contact.index');
 
     // Route để lấy danh mục cho menu
     Route::get('/menu-categories', [MenuController::class, 'getCategoriesForMenu'])->name('menu.categories');
+
+    // Route cho trang profile
+    Route::get('/profile',                      [UserController::class, 'viewProfile'])->name('profile.show');
+    Route::get('/profile/edit',                 [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile/update/{id}',         [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/edit-password',        [UserController::class, 'editPassword'])->name('profile.edit-password');
+    Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
+
 });
+
+
+
 
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -90,13 +109,13 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
-
-
+    // Promotions
+    Route::resource('promotions', PromotionController::class);
 
     // Route cho vai trò
-    Route::resource('roles', RoleController::class);
-    Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');
-    Route::post('roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
+    Route::resource('roles',            RoleController::class);
+    Route::get('roles-trash',                [RoleController::class, 'trash'])->name('roles.trash');
+    Route::post('roles/{id}/restore',        [RoleController::class, 'restore'])->name('roles.restore');
     Route::delete('roles/{id}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.forceDelete');
 
     //route trang profile
@@ -191,7 +210,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-    // Route cho chức năng tìm kiếm
-    Route::get('/search', [SearchController::class, 'search'])->name('search');
-    Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
+    // // Route cho chức năng tìm kiếm
+    // Route::get('/search',       [SearchController::class, 'search'])->name('search');
+    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('autocomplete');
 });

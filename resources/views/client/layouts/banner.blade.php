@@ -4,7 +4,7 @@
 
     @foreach ($banners as $banner)
         <div class="slide-wrap">
-            <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->title }}">
+            <img src="{{ asset('storage/' . $banner->image) }}" >
             <div class="slide-info">
                 <div class="slide-inner">
                     <h5>{{ $banner->title }}</h5> <!-- More space below the title -->

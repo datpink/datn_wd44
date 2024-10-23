@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Imports\ProductsImport;
 use App\Models\Brand;
 use App\Models\Catalogue;
 use App\Models\Gallery;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -199,4 +202,43 @@ class ProductController extends Controller
             return back()->with('errors', $th->getMessage());
         }
     }
+    public function import(Request $request)
+{
+    // Kiểm tra xem đã có file hay chưa
+    if ($request->hasFile('file')) {
+        // Lưu file vào thư mục tạm trong storage
+        $path = $request->file('file')->store('temp');
+        $filePath = storage_path('app/public/' . $path);
+
+        // Kiểm tra xem file đã được lưu thành công hay chưa
+        if (!Storage::exists($path)) {
+            return redirect()->back()->with('error', 'Không thể lưu tệp vào thư mục tạm.');
+        }
+
+        // In ra đường dẫn tệp để kiểm tra
+        Log::info('File path: ' . $filePath);
+
+        // Thực hiện import và trích xuất ảnh
+        try {
+            // Kiểm tra xem file có tồn tại trước khi import
+            if (!file_exists($filePath)) {
+                return redirect()->back()->with('error', 'File không tồn tại: ' . $filePath);
+            }
+
+            Excel::import(new ProductsImport($filePath), $filePath);
+
+            // Xóa file sau khi sử dụng
+            Storage::delete($path);
+
+            return redirect()->back()->with('success', 'Import sản phẩm và trích xuất hình ảnh thành công!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Có lỗi khi nhập sản phẩm: ' . $e->getMessage());
+        }
+    }
+
+    return redirect()->back()->with('error', 'Vui lòng chọn tệp để nhập.');
+}
+
+
+
 }

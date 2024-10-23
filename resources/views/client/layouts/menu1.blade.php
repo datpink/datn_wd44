@@ -18,16 +18,17 @@
                 <form role="search" method="get" class="form-search block-search-form kobolg-live-search-form">
                     <div class="form-content search-box results-search">
                         <div class="inner">
-                            <input autocomplete="off" class="searchfield txt-livesearch input" name="" value="" placeholder="Search here..." type="text">
+                            <input autocomplete="off" class="searchfield txt-livesearch input" name="" value="" placeholder="Tìm kiếm..." type="text">
                             <div id="suggestions-box"></div> <!-- Thêm div này để chứa gợi ý -->
                         </div>
                     </div>
+                    
                     <input name="post_type" value="product" type="hidden">
                     <input name="taxonomy" value="product_cat" type="hidden">
                     <div class="category">
                         <select title="catalogues" name="catalogue_slug" id="" class="category-search-option"
                             tabindex="-1" style="display: none;">
-                            <option value="0">All Categories</option>
+                            <option value="0">Tất cả danh mục</option>
                             @foreach ($menuCatalogues as $catalogue)
                                 <option value="{{ $catalogue->slug }}">{{ $catalogue->name }}</option>
                             @endforeach
@@ -57,34 +58,3 @@
         </div>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Sự kiện khi người dùng nhập vào ô tìm kiếm
-        $('.searchfield').on('input', function() {
-            var query = $(this).val();
-            if (query.length > 2) {
-                // Gửi yêu cầu AJAX tới route autocomplete
-                $.ajax({
-                    url: "{{ route('autocomplete') }}",
-                    data: { query: query },
-                    success: function(data) {
-                        // Xóa kết quả gợi ý cũ trong phần #suggestions-box
-                        $('#suggestions-box').empty();
-                        // Thêm các kết quả gợi ý mới
-                        data.forEach(function(item) {
-                            $('#suggestions-box').append('<div>' + item + '</div>');
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        // Xử lý lỗi khi có sự cố từ phía server
-                        console.log("Có lỗi xảy ra: " + error);
-                    }
-                });
-            } else {
-                // Xóa kết quả gợi ý nếu không có từ khóa
-                $('#suggestions-box').empty();
-            }
-        });
-    });
-</script>

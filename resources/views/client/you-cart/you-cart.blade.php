@@ -7,7 +7,7 @@
     </div>
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
-            <h3 class="minicart-title">Your Cart<span class="minicart-number-items">3</span>
+            <h3 class="minicart-title">Giỏ hàng của bạn<span class="minicart-number-items">3</span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
                 <li class="kobolg-mini-cart-item mini_cart_item">

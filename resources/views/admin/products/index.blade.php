@@ -17,7 +17,36 @@
                                 </a>
                             </div>
                         </div>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="card-body">
+                            <!-- Form upload file Excel -->
+                            <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data"
+                                class="mb-3">
+                                @csrf
+                                <div class="row g-2">
+                                    <div class="col-auto">
+                                        <input type="file" name="file" id="file" class="form-control" required>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-primary">Import Sản Phẩm</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Form tìm kiếm sản phẩm -->
                             <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
@@ -30,6 +59,8 @@
                                     </div>
                                 </div>
                             </form>
+
+                            <!-- Bảng danh sách sản phẩm -->
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -41,8 +72,8 @@
                                         <th>Giá</th>
                                         <th>Kích thước</th>
                                         <th>Trạng thái</th>
-                                        <th>Nổi bật</th> <!-- Thêm cột Nổi bật -->
-                                        <th>Tình trạng</th> <!-- Thêm cột Tình trạng -->
+                                        <th>Nổi bật</th>
+                                        <th>Tình trạng</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
@@ -89,12 +120,15 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
+                                                <a href="{{ route('products.edit', $product->id) }}"
+                                                    class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
                                                     <i class="bi bi-pencil-square"></i> Sửa
                                                 </a>
-                                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-info btn-sm rounded-pill" title="Chi tiết">
-                                                    <i class="bi bi-info-circle"></i> Show
+                                                <a href="{{ route('products.show', $product->id) }}"
+                                                    class="btn btn-info btn-sm rounded-pill mb-2" title="Chi tiết">
+                                                    <i class="bi bi-info-circle"></i> Chi tiết
                                                 </a>
+
                                                 <!-- Kiểm tra xem sản phẩm đã có biến thể chưa -->
                                                 @php
                                                     $hasVariants = $product->variants->isNotEmpty(); // Kiểm tra có biến thể
@@ -102,13 +136,14 @@
 
                                                 @if ($hasVariants)
                                                     <a href="{{ route('products.variants.index', $product->id) }}"
-                                                        class="btn btn-info btn-rounded">
-                                                        Quản lý Biến Thể
+                                                        class="btn btn-success btn-sm rounded-pill"
+                                                        title="Quản lý Biến Thể">
+                                                        <i class="bi bi-gear"></i> Quản lý Biến Thể
                                                     </a>
                                                 @else
                                                     <a href="{{ route('products.variants.create', $product->id) }}"
-                                                        class="btn btn-info btn-rounded">
-                                                        Thêm Biến Thể
+                                                        class="btn btn-primary btn-sm rounded-pill" title="Thêm Biến Thể">
+                                                        <i class="bi bi-plus-circle"></i> Thêm Biến Thể
                                                     </a>
                                                 @endif
                                             </td>
