@@ -43,7 +43,7 @@
                                             <td>{{ $value->name }}</td>
                                             <td>
                                                 <a href="{{ route('attributes.attribute_values.edit', [$attribute->id, $value->id]) }}" class="editRow" style="margin-right: 20px;" title="Sửa">
-                                                    <i class="bi bi-pencil text-warning" style="font-size: 1.8em;"></i>
+                                                    <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                                 </a>
                                                 <form action="{{ route('attributes.attribute_values.destroy', [$attribute->id, $value->id]) }}" method="POST" class="d-inline-block delete-form">
                                                     @csrf
