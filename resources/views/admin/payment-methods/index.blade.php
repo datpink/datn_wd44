@@ -71,17 +71,20 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('payment-methods.edit', $paymentMethod) }}"
-                                                        class="btn btn-warning btn-rounded">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                        class="editRow" title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('payment-methods.destroy', $paymentMethod) }}"
                                                         method="POST" style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-rounded delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

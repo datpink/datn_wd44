@@ -184,9 +184,9 @@
                     <nav class="navigation pagination mt-3">
                         <div class="nav-links">
                             @if ($products->onFirstPage())
-                                <span class="disabled page-numbers">« Previous</span>
+                                <span class="disabled page-numbers">«</span>
                             @else
-                                <a class="page-numbers" href="{{ $products->previousPageUrl() }}">« Previous</a>
+                                <a class="page-numbers" href="{{ $products->previousPageUrl() }}">«</a>
                             @endif
 
                             @foreach (range(1, $products->lastPage()) as $page)
@@ -198,9 +198,9 @@
                             @endforeach
 
                             @if ($products->hasMorePages())
-                                <a class="page-numbers" href="{{ $products->nextPageUrl() }}">Next »</a>
+                                <a class="page-numbers" href="{{ $products->nextPageUrl() }}">»</a>
                             @else
-                                <span class="disabled page-numbers">Next »</span>
+                                <span class="disabled page-numbers">»</span>
                             @endif
                         </div>
                     </nav>
@@ -208,11 +208,14 @@
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
-                            <form role="search" method="get" class="search-form" action="{{ route('product.search') }}">
-                                <input class="search-field" placeholder="Nhập từ khóa tìm kiếm sản phẩm…" value="{{ request()->get('s') }}" name="s" type="search">
-                                <button type="submit" class="search-submit"><span class="fa fa-search" aria-hidden="true"></span></button>
+                            <form role="search" method="get" class="search-form"
+                                action="{{ route('product.search') }}">
+                                <input class="search-field" placeholder="Nhập từ khóa tìm kiếm sản phẩm…"
+                                    value="{{ request()->get('s') }}" name="s" type="search">
+                                <button type="submit" class="search-submit"><span class="fa fa-search"
+                                        aria-hidden="true"></span></button>
                             </form>
-                            
+
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
                             <h2 class="widgettitle">Filter By Price<span class="arrow"></span></h2>
@@ -221,19 +224,15 @@
                                     // dd($maxDiscountPrice);
                                 @endphp
                                 <div class="price_slider_wrapper">
-                                    <div data-label-reasult="Range:" 
-                                         data-min="0" 
-                                         data-max="{{ $maxDiscountPrice }}" 
-                                         data-unit="₫" 
-                                         class="price_slider" 
-                                         data-value-min="0"
-                                         data-value-max="{{ $maxDiscountPrice }}">
+                                    <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
+                                        data-unit="₫" class="price_slider" data-value-min="0"
+                                        data-value-max="{{ $maxDiscountPrice }}">
                                     </div>
-                            
+
                                     <div class="price_slider_amount">
                                         <button type="submit" class="button">Filter</button>
                                         <div class="price_label">
-                                            Price: <span class="from" id="priceFrom"></span> — 
+                                            Price: <span class="from" id="priceFrom"></span> —
                                             <span class="to" id="priceTo"></span>
                                         </div>
                                     </div>

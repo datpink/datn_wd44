@@ -119,8 +119,9 @@
                                                     </tbody>
                                                 </table>
                                             </form>
-                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Xem nhanh</a>
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                class="button yith-wcqv-button" data-product_id="{{ $product->id }}">Xem
+                                                nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -156,7 +157,8 @@
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
                                                     <a href="#"
-                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng</a>
+                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ
+                                                        hàng</a>
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
@@ -176,10 +178,9 @@
                     <nav class="navigation pagination mt-3">
                         <div class="nav-links">
                             @if ($productByCatalogues->onFirstPage())
-                                <span class="disabled page-numbers">« Previous</span>
+                                <span class="disabled page-numbers">«</span>
                             @else
-                                <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«
-                                    Previous</a>
+                                <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«</a>
                             @endif
 
                             @foreach (range(1, $productByCatalogues->lastPage()) as $page)
@@ -192,9 +193,9 @@
                             @endforeach
 
                             @if ($productByCatalogues->hasMorePages())
-                                <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">Next »</a>
+                                <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">»</a>
                             @else
-                                <span class="disabled page-numbers">Next »</span>
+                                <span class="disabled page-numbers">»</span>
                             @endif
                         </div>
                     </nav>

@@ -92,19 +92,22 @@
 
                                             <td class="title-column" style="width: 20%;">
                                                 <!-- Nút sửa bài viết -->
-                                                <a href="{{ route('posts.edit', $post->id) }}"
-                                                    class="btn rounded-pill btn-warning">
-                                                    <i class="bi bi-pencil-square"></i> Sửa
+                                                <a href="{{ route('posts.edit', $post->id) }}" class="editRow"
+                                                    title="Sửa" style="margin-right: 15px;">
+                                                    <i class="bi bi-pencil-square text-warning"
+                                                        style="font-size: 1.8em;"></i>
                                                 </a>
 
                                                 <!-- Form để xóa bài viết -->
                                                 <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                                    class="d-inline-block delete-form">
+                                                    class="d-inline-block delete-form"
+                                                    onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này không?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger rounded-pill delete-btn"
+                                                    <button type="submit" class="delete-btn"
+                                                        style="background: none; border: none; padding: 0;"
                                                         title="Xóa bài viết">
-                                                        <i class="bi bi-trash"></i> Xóa
+                                                        <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                     </button>
                                                 </form>
                                             </td>

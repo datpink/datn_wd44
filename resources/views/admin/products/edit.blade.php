@@ -69,10 +69,13 @@
                                 <!-- Hình ảnh sản phẩm -->
                                 <div class="form-group">
                                     <label for="image_url">Hình ảnh</label>
-                                    <input type="file" name="image_url" id="image_url" class="form-control"><br>
+                                    <input type="file" name="image_url" id="image_url" class="form-control"
+                                        onchange="previewImageUrl(event)"><br>
+
                                     @if ($product->image_url && \Storage::exists($product->image_url))
-                                        <img src="{{ \Storage::url($product->image_url) }}" alt="{{ $product->name }}"
-                                            style="max-width: 100px; height: auto;">
+                                        <img id="imageUrlPreview" src="{{ \Storage::url($product->image_url) }}"
+                                            alt="{{ $product->name }}" style="max-width: 100px; height: auto;"
+                                            class="mt-2">
                                     @else
                                         <p>Không có ảnh</p>
                                     @endif
@@ -97,7 +100,8 @@
 
                                 <div class="form-group">
                                     <label for="discount_price">Giá Khuyến Mãi</label>
-                                    <input type="text" name="discount_price" id="discount_price" class="form-control" value="{{ old('discount_price', $product->discount_price) }}">
+                                    <input type="text" name="discount_price" id="discount_price" class="form-control"
+                                        value="{{ old('discount_price', $product->discount_price) }}">
                                 </div>
 
                                 <!-- SKU -->
@@ -158,21 +162,19 @@
                                 <div id="image-inputs">
                                     @foreach ($product->galleries as $index => $gallery)
                                         <div class="form-group d-flex align-items-center">
-                                            <label for="image{{ $index + 1 }}" class="me-2">Hình ảnh
-                                                {{ $index + 1 }}</label>
-                                            <input type="file" name="images[]" id="image{{ $index + 1 }}"
-                                                class="form-control me-2" accept="image/*">
+                                            <label for="image{{ $index + 1 }}" class="me-2">Hình ảnh {{ $index + 1 }}</label>
+                                            <input type="file" name="images[]" id="image{{ $index + 1 }}" class="form-control me-2" accept="image/*" onchange="previewGalleryImage(event, this)">
                                             <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
-                                            <input type="hidden" name="existing_images[]"
-                                                value="{{ $gallery->image_url }}">
-                                            <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
-                                                style="width: 100px; height: auto; margin-left: 10px;">
+                                            <input type="hidden" name="existing_images[]" value="{{ $gallery->image_url }}">
+                                            <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh" style="width: 100px; height: auto; margin-left: 10px;" data-input-id="image{{ $index + 1 }}" class="gallery-image">
                                         </div>
                                     @endforeach
                                 </div>
+                                {{-- <button type="button" class="btn btn-secondary add-image">Thêm</button> --}}
+                                <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
 
                                 <div class="form-group d-flex align-items-center">
-                                    <button type="button" class="btn btn-rounded btn-secondary add-image">Thêm Hình
+                                    <button type="button" class="btn btn-rounded btn-secondary add-image" style="margin-right: 15px;">Thêm Hình
                                         Ảnh</button>
                                     <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
                                 </div>
@@ -190,6 +192,24 @@
     </script>
 
     <script>
+        function previewImageUrl(event) {
+            const imageUrlPreview = document.getElementById('imageUrlPreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageUrlPreview.src = e.target.result;
+                    imageUrlPreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Nếu không có tệp nào được chọn, sẽ giữ nguyên hình ảnh cũ
+                imageUrlPreview.src = '';
+                imageUrlPreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+            }
+        }
+
         function ChangeToSlug() {
             var productName, slug;
 
@@ -230,32 +250,90 @@
     </script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const addImageButton = document.querySelector('.add-image');
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addImageButton = document.querySelector('.add-image');
 
-            // Sự kiện cho nút Thêm
-            if (addImageButton) {
-                addImageButton.addEventListener('click', function() {
-                    const container = document.getElementById('image-inputs');
-                    const newIndex = container.children.length + 1; // Tính số lượng trường hiện tại
+        // Sự kiện cho nút Thêm
+        if (addImageButton) {
+            addImageButton.addEventListener('click', function() {
+                const container = document.getElementById('image-inputs');
+                const newIndex = container.children.length + 1; // Tính số lượng trường hiện tại
 
-                    const newInput = document.createElement('div');
-                    newInput.classList.add('form-group', 'd-flex', 'align-items-center');
-                    newInput.innerHTML = `
+                const newInput = document.createElement('div');
+                newInput.classList.add('form-group', 'd-flex', 'align-items-center');
+                newInput.innerHTML = `
                     <label for="image${newIndex}" class="me-2">Hình ảnh ${newIndex}</label>
-                    <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*">
+                    <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*" onchange="previewGalleryImage(event, this)">
                     <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
                 `;
 
-                    container.appendChild(newInput);
+                container.appendChild(newInput);
 
-                    // Xử lý sự kiện cho nút "Xóa"
-                    newInput.querySelector('.remove-image').addEventListener('click', function() {
-                        container.removeChild(newInput);
-                    });
+                // Xử lý sự kiện cho nút "Xóa"
+                newInput.querySelector('.remove-image').addEventListener('click', function() {
+                    container.removeChild(newInput);
+                    updateGallery(); // Cập nhật lại gallery khi xóa
                 });
+            });
+        }
+    });
+
+    function previewGalleryImage(event, input) {
+        const file = event.target.files[0];
+
+        // Tìm hình ảnh tương ứng với trường nhập này
+        const img = document.querySelector(`img[data-input-id="${input.id}"]`);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (img) {
+                    img.src = e.target.result; // Cập nhật src của hình ảnh với hình mới
+                }
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Nếu không có file, giữ nguyên hình ảnh cũ
+            if (img) {
+                const hiddenInput = input.closest('.form-group').querySelector('input[type="hidden"]');
+                img.src = hiddenInput.value; // Đặt lại src về hình ảnh cũ nếu không có file mới
+            }
+        }
+    }
+
+    function updateGallery() {
+        const gallery = document.getElementById('gallery');
+        gallery.innerHTML = ''; // Xóa tất cả hình ảnh hiện có
+
+        const images = document.querySelectorAll('input[type="file"]');
+        images.forEach(input => {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'gallery-image me-2 mb-2';
+                    img.style.width = '100px';
+                    img.style.height = 'auto';
+                    img.setAttribute('data-input-id', input.id); // Gán ID trường nhập vào hình ảnh
+                    gallery.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Kiểm tra hình ảnh hiện có từ input ẩn
+                const existingImage = input.closest('.form-group').querySelector('input[type="hidden"]').value;
+                if (existingImage) {
+                    const img = document.createElement('img');
+                    img.src = existingImage; // Sử dụng đường dẫn hình ảnh hiện có
+                    img.className = 'gallery-image me-2 mb-2';
+                    img.style.width = '100px';
+                    img.style.height = 'auto';
+                    gallery.appendChild(img);
+                }
             }
         });
-    </script>
+    }
+</script>
 @endsection
