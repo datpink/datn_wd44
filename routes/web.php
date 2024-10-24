@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\SearchController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -115,11 +116,14 @@ Route::prefix('shop')->group(function () {
     Route::post('/profile/update/{id}',         [UserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/profile/edit-password',        [UserController::class, 'editPassword'])->name('profile.edit-password');
     Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
-
 });
 
 
 
+    // GIỏ hàng
+    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    
 
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -161,7 +165,6 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //  route reply comment post
     Route::get('comments/{comment}/reply/{reply}/edit', [CommentReplyController::class, 'editReply'])->name('comments.reply.edit');
     Route::put('comments/{comment}/reply/{reply}', [CommentReplyController::class, 'updateReply'])->name('comments.reply.update');
-
 
 
     // Route Order
@@ -229,5 +232,4 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-
 });
