@@ -93,7 +93,7 @@
                                                         <span class="text-muted">Đã xóa</span>
                                                     @else --}}
                                                     <a href="{{ route('users.edit', $user->id) }}" class="editRow" title="Sửa">
-                                                        <i class="bi bi-pencil text-warning" style="font-size: 1.8em;"></i>
+                                                        <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                                     </a>
                                                     {{-- <form action="{{ route('users.destroy', $user->id) }}"
                                                             method="POST" style="display:inline;">
