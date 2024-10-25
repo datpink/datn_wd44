@@ -11,6 +11,7 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/client/assets/images/logo.png') }}" />
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Title -->
     <title>Quên mật khẩu</title>
@@ -24,29 +25,48 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-center mb-4">
-                    <img src="{{ asset('theme/client/assets/images/logozaia.png') }}" alt="Logo" style="width: 100px;" />
+                    <img src="{{ asset('theme/client/assets/images/logozaia.png') }}" alt="Logo"
+                        style="width: 100px;" />
                     <h2 class="h4">Quên mật khẩu</h2>
                 </div>
 
-                <!-- Hiển thị thông báo trạng thái -->
                 @if (session('status'))
-                    <div class="alert alert-success">
-                        {{ session('status') }}
-                    </div>
+                    <script>
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: '{{ session('status') }}',
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            timer: 2500
+                        });
+                    </script>
                 @endif
 
-                <!-- Hiển thị lỗi nếu có -->
                 @if ($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </div>
+                    <script>
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: '<ul class="list-unstyled">' +
+                                @foreach ($errors->all() as $error)
+                                    '<li>{{ $error }}</li>' +
+                                @endforeach
+                            '</ul>',
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            timer: 2500
+                        });
+                    </script>
                 @endif
+
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Nhập email của bạn" required>
+                    <input type="email" name="email" class="form-control" id="email"
+                        placeholder="Nhập email của bạn" required>
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Gửi</button>

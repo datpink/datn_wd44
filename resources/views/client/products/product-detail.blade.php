@@ -630,6 +630,9 @@
 @endsection
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Phần mô tả sản phẩm
@@ -842,60 +845,101 @@
 
         // Khi nhấn "Thêm vào giỏ hàng"
         document.getElementById('add-to-cart').addEventListener('click', function(e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    const productId = '{{ $product->id }}'; // ID sản phẩm gốc
-    const quantity = document.getElementById('quantity').value;
-    const productImage = '{{ \Storage::url($product->image_url) }}'; // Ảnh sản phẩm gốc
+            const productId = '{{ $product->id }}'; // ID sản phẩm gốc
+            const quantity = document.getElementById('quantity').value;
+            const productImage = '{{ \Storage::url($product->image_url) }}'; // Ảnh sản phẩm gốc
 
-    // Kiểm tra xem sản phẩm có biến thể hay không
-    if (variants.length > 0) {
-        // Sản phẩm có biến thể
-        if (selectedStorage && selectedColor) {
-            const variantId = document.getElementById('selected-variant-id').value; // ID biến thể đã chọn
+            // Kiểm tra xem sản phẩm có biến thể hay không
+            if (variants.length > 0) {
+                // Sản phẩm có biến thể
+                if (selectedStorage && selectedColor) {
+                    const variantId = document.getElementById('selected-variant-id')
+                        .value; // ID biến thể đã chọn
 
-            $.ajax({
-                url: '{{ route('cart.add') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    product_id: productId,
-                    variant_id: variantId,
-                    quantity: quantity,
-                    selected_storage: selectedStorage,
-                    selected_color: selectedColor,
-                    product_image: productImage, // Gửi ảnh sản phẩm
-                },
-                success: function(response) {
-                    alert(response.message);
-                },
-                error: function(xhr) {
-                    alert('Có lỗi xảy ra, vui lòng thử lại!');
+                    $.ajax({
+                        url: '{{ route('cart.add') }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            product_id: productId,
+                            variant_id: variantId,
+                            quantity: quantity,
+                            selected_storage: selectedStorage,
+                            selected_color: selectedColor,
+                            product_image: productImage, // Gửi ảnh sản phẩm
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                position: 'top',
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: response.message,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 1500
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                position: 'top',
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại!',
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 1500
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'warning',
+                        title: 'Chưa chọn đầy đủ',
+                        text: 'Vui lòng chọn cả dung lượng và màu sắc!',
+                        showConfirmButton: false,
+                        timerProgressBar: true,
+                        timer: 1500
+                    });
                 }
-            });
-        } else {
-            alert("Vui lòng chọn cả dung lượng và màu sắc!");
-        }
-    } else {
-        // Sản phẩm không có biến thể (đơn thể)
-        $.ajax({
-            url: '{{ route('cart.add') }}',
-            method: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                product_id: productId,
-                quantity: quantity,
-                product_image: productImage, // Gửi ảnh sản phẩm
-            },
-            success: function(response) {
-                alert(response.message)
-            },
-            error: function(xhr) {
-                alert('Có lỗi xảy ra, vui lòng thử lại!');
+            } else {
+                // Sản phẩm không có biến thể (đơn thể)
+                $.ajax({
+                    url: '{{ route('cart.add') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        product_id: productId,
+                        quantity: quantity,
+                        product_image: productImage, // Gửi ảnh sản phẩm
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: response.message,
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            timer: 1500
+                        });
+                    },
+                    error: function(xhr) {
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Có lỗi xảy ra, vui lòng thử lại!',
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            timer: 1500
+                        });
+                    }
+                });
             }
         });
-    }
-});
 
     });
 </script>
