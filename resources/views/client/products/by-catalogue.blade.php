@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Danh sách sản phẩm ')
+@section('title', 'Sản phẩm ')
 
 @section('content')
 
@@ -93,13 +93,7 @@
                                     <div class="product-inner images">
                                         <div class="product-thumb">
                                             <a class="thumb-link" href="#">
-                                                @if ($product->image_url && \Storage::exists($product->image_url))
-                                                    <img class="img-responsive"
-                                                        src="{{ \Storage::url($product->image_url) }}"
-                                                        alt="{{ $product->name }}" width="600" height="778">
-                                                @else
-                                                    Không có ảnh
-                                                @endif
+                                                <img class="img-responsive" src="{{ $product->image_url }}">
                                             </a>
                                             <div class="flash">
                                                 @if ($product->condition === 'new')
@@ -126,12 +120,12 @@
                                                 </table>
                                             </form>
                                             <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Quick View</a>
+                                                data-product_id="{{ $product->id }}">Xem nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
-                                            <div class="star-rating">
-                                                <span style="width: {{ $product->rating * 20 }}%">Rated <strong
+                                                <div class="star-rating">
+                                                    <span style="width: {{ $product->rating * 20 }}%">Rated <strong
                                                             class="rating">{{ $product->rating }}</strong> out of 5</span>
                                                 </div>
                                                 <span class="review">({{ $product->reviews_count }})</span>
@@ -162,16 +156,15 @@
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
                                                     <a href="#"
-                                                        class="button product_type_variable add_to_cart_button">Select
-                                                        options</a>
+                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng</a>
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                        <a href="#" class="add_to_wishlist">Thêm vào yêu thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
+                                                    <a href="#" class="compare button">So sánh</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -211,8 +204,8 @@
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
                             <form class="kobolg-product-search">
                                 <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="" name="s" type="search">
-                                <button type="submit" value="Search">Search</button>
+                                    placeholder="Tìm kiếm sản phẩm…" value="" name="s" type="search">
+                                <button type="submit" value="Search">Tìm kiếm</button>
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
@@ -232,7 +225,8 @@
 
                             </form> --}}
                             <form method="get" action="" id="priceFilterForm">
-                                <input type="hidden" name="parentCataloguesID" id="parentCataloguesID" value="{{ $parentCataloguesID }}">
+                                <input type="hidden" name="parentCataloguesID" id="parentCataloguesID"
+                                    value="{{ $parentCataloguesID }}">
                                 <div class="price_slider_wrapper">
                                     <div data-label-reasult="Range:" data-min="0" data-max="{{ $maxDiscountPrice }}"
                                         data-unit="$" class="price_slider" data-value-min="0"
@@ -329,7 +323,7 @@
                                                             <div class="product-inner images">
                                                                 <div class="product-thumb">
                                                                     <a class="thumb-link" href="#">
-                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                     </a>
                                                                     <div class="flash">
                                                                         ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
@@ -434,7 +428,7 @@
                             </div>
                         </div>
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
-                            <h2 class="widgettitle">Filter By Size<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
                             <ul class="kobolg-widget-layered-nav-list">
                                 <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
                                     <a rel="nofollow" href="#">XS</a>
@@ -471,7 +465,7 @@
                             </ul>
                         </div>
                         <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Product categories<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
                             <ul class="product-categories">
                                 <li class="cat-item cat-item-22"><a href="#">Camera</a>
                                     <span class="count">(11)</span>

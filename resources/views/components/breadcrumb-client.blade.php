@@ -1,30 +1,34 @@
 @php
     $currentRoute = request()->route()->getName();
     $breadcrumbs = [
-        ['name' => 'Home', 'url' => route('client.index')],
+        ['name' => 'Trang Chủ', 'url' => route('client.index')],
     ];
 
     switch ($currentRoute) {
         case 'client.products.index':
-            $breadcrumbs[] = ['name' => 'Product', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => ''];
+            break;
+
+        case 'client.productByCatalogues':
+            $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => ''];
             break;
 
         case 'client.posts.index':
-            $breadcrumbs[] = ['name' => 'Post', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => ''];
             break;
 
         case 'client.contact.index':
-            $breadcrumbs[] = ['name' => 'Contact', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
             break;
 
         case 'login':
-            $breadcrumbs[] = ['name' => 'Login', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Đăng Nhập', 'url' => ''];
             break;
 
-        // case 'client.products.show':
-        //     $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
-        //     $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
-        //     break;
+        case 'client.products.product-detail':
+            $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
+            $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
+            break;
 
     }
 @endphp

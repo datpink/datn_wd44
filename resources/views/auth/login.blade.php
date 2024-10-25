@@ -51,11 +51,11 @@
                                         <div class="form-row d-flex justify-content-between align-items-center">
                                             <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
                                                 <input class="kobolg-form__input kobolg-form__input-checkbox"
-                                                       name="rememberme" type="checkbox" id="rememberme" value="forever">
+                                                    name="rememberme" type="checkbox" id="rememberme" value="forever">
                                                 <span>Giữ đăng nhập</span>
                                             </label>
                                             <p class="kobolg-LostPassword lost_password mb-0">
-                                                <a href="{{ route('password.request')}}">Quên mật khẩu?</a>
+                                                <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
                                             </p>
                                         </div>
                                         <p class="form-row">
@@ -73,13 +73,17 @@
 
 
                                     <div class="text-center mt-2 mb-3">
-                                        <a href="{{ route('login.google') }}" class="btn-light social-button" style="margin-right: 70px;">
-                                            <img src="{{ asset('images/search.png') }}" alt="Google" style="width: 30px; height: 30px;">
+                                        <a href="{{ route('login.google') }}" class="btn-light social-button"
+                                            style="margin-right: 70px;">
+                                            <img src="{{ asset('images/search.png') }}" alt="Google"
+                                                style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Google</span>
                                         </a>
 
-                                        <a href="{{ route('login.facebook') }}" class="btn-light social-button" style="margin-right: 5px;">
-                                            <img src="{{ asset('images/facebook.png') }}" alt="Facebook" style="width: 30px; height: 30px;">
+                                        <a href="{{ route('login.facebook') }}" class="btn-light social-button"
+                                            style="margin-right: 5px;">
+                                            <img src="{{ asset('images/facebook.png') }}" alt="Facebook"
+                                                style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Facebook</span>
                                         </a>
                                     </div>
@@ -88,17 +92,20 @@
                                 </div>
                                 <div class="u-column2 col-2">
                                     <h2>Register</h2>
-                                    <form method="POST" action="{{ route('register') }}" class="kobolg-form kobolg-form-register register">
+                                    <form method="POST" action="{{ route('register') }}"
+                                        class="kobolg-form kobolg-form-register register">
                                         @csrf
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
-                                            <label for="reg_email">Email addresses&nbsp;<span class="required">*</span></label>
+                                            <label for="reg_email">Địa Chỉ Email&nbsp;<span
+                                                    class="required">*</span></label>
                                             <input type="email" class="kobolg-Input kobolg-Input--text input-text"
                                                 name="email" id="reg_email" autocomplete="email" required>
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
                                             <label for="reg_name">Name&nbsp;<span class="required">*</span></label>
-                                            <input type="text" class="kobolg-Input kobolg-Input--text input-text" name="name" id="reg_name" required>
+                                            <input type="text" class="kobolg-Input kobolg-Input--text input-text"
+                                                name="name" id="reg_name" required>
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
@@ -108,17 +115,20 @@
                                         </p>
 
                                         <div class="kobolg-privacy-policy-text">
-                                            <p>Your personal data will be used to support your experience throughout this
-                                                website, to manage access to your account, and for other purposes described
-                                                in our <a href="#" class="kobolg-privacy-policy-link"
-                                                    target="_blank">privacy policy</a>.</p>
+                                            <p>Dữ liệu cá nhân của bạn sẽ được sử dụng để hỗ trợ trải nghiệm của bạn trên
+                                                toàn bộ trang web này, để quản lý
+                                                quyền truy cập vào tài khoản của bạn và cho các mục đích khác được mô tả
+                                                trong phần của chúng tôi.
+                                                <a href="#" class="kobolg-privacy-policy-link" target="_blank">chính
+                                                    sách bảo mật</a>.
+                                            </p>
                                         </div>
 
                                         <p class="kobolg-FormRow form-row">
                                             <input type="hidden" id="kobolg-register-nonce" name="kobolg-register-nonce"
                                                 value="45fae70a87">
                                             <button type="submit" class="kobolg-Button button" name="register"
-                                                value="Register">Register</button>
+                                                value="Register">Đăng ký</button>
                                         </p>
                                     </form>
                                 </div>
@@ -131,13 +141,13 @@
     </main>
     <style>
         .social-button {
-        text-decoration: none;
-        color: inherit;
-        transition: background-color 0.3s;
-    }
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.3s;
+        }
 
-    .social-button:hover {
-        background-color: transparent;
-    }
+        .social-button:hover {
+            background-color: transparent;
+        }
     </style>
 @endsection

@@ -18,11 +18,12 @@
                 <form role="search" method="get" class="form-search block-search-form kobolg-live-search-form">
                     <div class="form-content search-box results-search">
                         <div class="inner">
-                            <input autocomplete="off" class="searchfield txt-livesearch input" name="" value="" placeholder="Tìm kiếm..." type="text">
+                            <input autocomplete="off" class="searchfield txt-livesearch input" name=""
+                                value="" placeholder="Tìm kiếm..." type="text">
                             <div id="suggestions-box"></div> <!-- Thêm div này để chứa gợi ý -->
                         </div>
                     </div>
-                    
+
                     <input name="post_type" value="product" type="hidden">
                     <input name="taxonomy" value="product_cat" type="hidden">
                     <div class="category">
@@ -34,7 +35,7 @@
                             @endforeach
 
                         </select>
-                    </div> 
+                    </div>
                     <button type="submit" class="btn-submit">
                         <span class="flaticon-search"></span>
                     </button>

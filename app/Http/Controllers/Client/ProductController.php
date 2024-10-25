@@ -7,6 +7,7 @@ use App\Models\Catalogue;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -17,21 +18,30 @@ class ProductController extends Controller
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
 
+        // Update image URLs using Storage::url
+        foreach ($products as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
 
+        // return response()->json(['products' => $products]);
         return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
     }
 
     public function show($slug)
     {
-        // Lấy sản phẩm theo slug
+        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
         $product = Product::where('slug', $slug)
-        ->with(['variants' => function($query) {
-            $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
-        }])            ->firstOrFail(); 
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->where('status', 'active')
+                        ->with('attributeValues.attribute');
+                }
+            ])
+            ->firstOrFail();
 
         return view('client.products.product-detail', compact('product'));
     }
-
     public function getVariantPrice(Request $request)
     {
         // Lấy thông tin biến thể dựa trên ID
@@ -87,6 +97,10 @@ class ProductController extends Controller
             ->paginate(10);
 
         // dd($productByCatalogues);
+        foreach ($productByCatalogues as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
+
 
 
         return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID'));
@@ -99,7 +113,7 @@ class ProductController extends Controller
         $maxPrice = $request->query('max_price');
         $parentCataloguesID = $request->query('parentCataloguesID');
         // dd($parentCataloguesID);
-        
+
         // Kiểm tra và ép kiểu nếu cần
         $minPrice = (float) $minPrice;
         $maxPrice = (float) $maxPrice;

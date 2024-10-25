@@ -38,7 +38,7 @@
                             <label for="image">Hình ảnh:</label>
                             <input type="file" class="form-control mb-3" id="image" name="image" accept="image/*">
                             @if ($banner->image)
-                                <small>Hình hiện tại: <img src="{{ asset('storage/' . $banner->image) }}" alt="Current Image" style="width: 150px; height: auto;"></small>
+                                <small>Hình hiện tại: <img src="{{ asset('storage/' . $banner->image) }}" alt="" style="width: 150px; height: auto;"></small>
                             @endif
                         </div>
 
