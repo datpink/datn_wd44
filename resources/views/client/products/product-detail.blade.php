@@ -3,10 +3,323 @@
 @section('title', $product->name . ' - Zaia Enterprise')
 
 @section('content')
-
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
-
     @include('components.breadcrumb-client')
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Phần mô tả sản phẩm
+            var content = document.getElementById("description-content");
+            var toggleLink = document.getElementById("toggle-link");
+            var icon = toggleLink.querySelector(".toggle-icon");
+
+            // Kiểm tra nếu nội dung vượt quá giới hạn chiều cao
+            if (content.scrollHeight > content.clientHeight) {
+                toggleLink.style.display = "inline-flex"; // Hiển thị link "Xem thêm"
+            }
+
+            // Thêm sự kiện click cho link "Xem thêm"
+            toggleLink.addEventListener("click", function() {
+                if (content.classList.contains("content-collapsed")) {
+                    content.classList.remove("content-collapsed");
+                    content.classList.add("content-expanded");
+                    icon.classList.add("icon-up"); // Xoay mũi tên hướng lên
+                    this.innerHTML = '<i class="fa fa-chevron-up toggle-icon"></i> Thu gọn nội dung';
+                } else {
+                    content.classList.remove("content-expanded");
+                    content.classList.add("content-collapsed");
+                    icon.classList.remove("icon-up"); // Mũi tên trở lại hướng xuống
+                    this.innerHTML = '<i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung';
+                }
+            });
+
+            // Phần giỏ hàng
+            let selectedStorage = null;
+            let selectedColor = null;
+            let selectedSize = null;
+            let selectedStorageButton = null;
+            let selectedColorButton = null;
+            let selectedSizeButton = null;
+
+            // Giá gốc của sản phẩm (giá cơ bản)
+            const originalPrice = parseFloat("{{ $product->price }}");
+            const priceElement = document.getElementById('product-price');
+
+            // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
+            const variants = {!! json_encode(
+                $product->variants->map(function ($variant) {
+                        return [
+                            'price' => $variant->price,
+                            'attributes' => $variant->attributeValues->map(function ($attributeValue) {
+                                return [
+                                    'name' => $attributeValue->attribute->name,
+                                    'value' => $attributeValue->name,
+                                ];
+                            }),
+                        ];
+                    })->toArray(),
+            ) !!};
+
+            // Hiển thị giá
+            function updatePrice() {
+                let totalPrice = originalPrice;
+                let minPrice = originalPrice; // Giá tối thiểu khởi tạo là giá gốc
+                let maxPrice = originalPrice; // Giá tối đa khởi tạo là giá gốc
+                let isVariantSelected = false;
+
+                // Nếu không có biến thể nào
+                if (variants.length === 0) {
+                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(originalPrice);
+                    return;
+                }
+
+                // Tính toán giá tối thiểu và tối đa từ danh sách biến thể
+                variants.forEach(variant => {
+                    const variantPrice = variant.price;
+                    if (variantPrice < minPrice) {
+                        minPrice = variantPrice; // Cập nhật giá tối thiểu
+                    }
+                    if (variantPrice > maxPrice) {
+                        maxPrice = variantPrice; // Cập nhật giá tối đa
+                    }
+                });
+
+                // Tìm biến thể lưu trữ được chọn và cộng giá nếu có
+                if (selectedStorage) {
+                    const foundStorageVariant = variants.find(variant =>
+                        variant.attributes.some(attr => attr.name === 'Storage' && attr.value ===
+                            selectedStorage)
+                    );
+                    if (foundStorageVariant) {
+                        totalPrice += foundStorageVariant.price - originalPrice; // Cộng thêm giá biến thể lưu trữ
+                        isVariantSelected = true;
+                    }
+                }
+
+                // Tìm biến thể màu sắc được chọn và cộng giá nếu có
+                if (selectedColor) {
+                    const foundColorVariant = variants.find(variant =>
+                        variant.attributes.some(attr => attr.name === 'Color' && attr.value === selectedColor)
+                    );
+                    if (foundColorVariant) {
+                        totalPrice += foundColorVariant.price - originalPrice; // Cộng thêm giá biến thể màu sắc
+                        isVariantSelected = true;
+                    }
+                }
+
+                // Tìm biến thể kích thước được chọn và cộng giá nếu có
+                if (selectedSize) {
+                    const foundSizeVariant = variants.find(variant =>
+                        variant.attributes.some(attr => attr.name === 'Size' && attr.value === selectedSize)
+                    );
+                    if (foundSizeVariant) {
+                        totalPrice += foundSizeVariant.price - originalPrice; // Cộng thêm giá biến thể kích thước
+                        isVariantSelected = true;
+                    }
+                }
+
+                // Hiển thị giá
+                if (!isVariantSelected && minPrice === maxPrice) {
+                    // Nếu không có biến thể được chọn và giá min = max, hiển thị giá đơn lẻ
+                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(originalPrice);
+                } else if (!isVariantSelected) {
+                    // Nếu không có biến thể được chọn, hiển thị giá min và max
+                    priceElement.innerHTML = `${new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(minPrice)} - ${new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(maxPrice)}`;
+                } else {
+                    // Nếu có biến thể được chọn, hiển thị giá tổng
+                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(totalPrice);
+                }
+            }
+
+            // Sử dụng event delegation để lắng nghe sự kiện click
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('variant-btn')) {
+                    const storage = event.target.getAttribute('data-dung-luong');
+                    const color = event.target.getAttribute('data-mau-sac');
+                    const size = event.target.getAttribute('data-size');
+
+                    // Kiểm tra nếu là nút dung lượng
+                    if (storage) {
+                        if (selectedStorage === storage) {
+                            resetButton(selectedStorageButton);
+                            selectedStorage = null;
+                            selectedStorageButton = null;
+                        } else {
+                            if (selectedStorageButton) resetButton(selectedStorageButton);
+                            selectedStorage = storage;
+                            selectedStorageButton = event.target;
+                            selectButton(selectedStorageButton);
+                        }
+                    }
+
+                    // Kiểm tra nếu là nút màu sắc
+                    if (color) {
+                        if (selectedColor === color) {
+                            resetButton(selectedColorButton);
+                            selectedColor = null;
+                            selectedColorButton = null;
+                        } else {
+                            if (selectedColorButton) resetButton(selectedColorButton);
+                            selectedColor = color;
+                            selectedColorButton = event.target;
+                            selectButton(selectedColorButton);
+                        }
+                    }
+
+                    // Kiểm tra nếu là nút kích thước
+                    if (size) {
+                        if (selectedSize === size) {
+                            resetButton(selectedSizeButton);
+                            selectedSize = null;
+                            selectedSizeButton = null;
+                        } else {
+                            if (selectedSizeButton) resetButton(selectedSizeButton);
+                            selectedSize = size;
+                            selectedSizeButton = event.target;
+                            selectButton(selectedSizeButton);
+                        }
+                    }
+
+                    // Cập nhật giá dựa trên các lựa chọn hiện tại
+                    updatePrice();
+                }
+            });
+
+            // Hàm để đặt lại trạng thái của nút về mặc định
+            function resetButton(button) {
+                if (button) {
+                    button.style.backgroundColor = 'white'; // Màu nền trắng
+                    button.style.border = '1px solid black'; // Viền đen
+                }
+            }
+
+            // Hàm để cập nhật trạng thái của nút khi được chọn
+            function selectButton(button) {
+                if (button) {
+                    button.style.backgroundColor = 'white'; // Màu nền trắng
+                    button.style.border = '2px solid red'; // Viền đỏ
+                }
+            }
+
+            // Khi nhấn "Thêm vào giỏ hàng"
+            document.getElementById('add-to-cart').addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const productId = '{{ $product->id }}'; // ID sản phẩm gốc
+                const quantity = document.getElementById('quantity').value;
+                const productImage = '{{ \Storage::url($product->image_url) }}'; // Ảnh sản phẩm gốc
+
+                // Kiểm tra xem sản phẩm có biến thể hay không
+                if (variants.length > 0) {
+                    // Sản phẩm có biến thể
+                    if (selectedStorage && selectedColor) {
+                        const variantId = document.getElementById('selected-variant-id')
+                            .value; // ID biến thể đã chọn
+
+                        $.ajax({
+                            url: '{{ route('cart.add') }}',
+                            method: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                product_id: productId,
+                                variant_id: variantId,
+                                quantity: quantity,
+                                selected_storage: selectedStorage,
+                                selected_color: selectedColor,
+                                product_image: productImage, // Gửi ảnh sản phẩm
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    position: 'top',
+                                    icon: 'success',
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                    timer: 1500
+                                });
+                            },
+                            error: function(xhr) {
+                                Swal.fire({
+                                    position: 'top',
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Có lỗi xảy ra, vui lòng thử lại!',
+                                    showConfirmButton: false,
+                                    timerProgressBar: true,
+                                    timer: 1500
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            position: 'top',
+                            icon: 'warning',
+                            title: 'Chưa chọn đầy đủ',
+                            text: 'Vui lòng chọn cả dung lượng và màu sắc!',
+                            showConfirmButton: false,
+                            timerProgressBar: true,
+                            timer: 1500
+                        });
+                    }
+                } else {
+                    // Sản phẩm không có biến thể (đơn thể)
+                    $.ajax({
+                        url: '{{ route('cart.add') }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            product_id: productId,
+                            quantity: quantity,
+                            product_image: productImage, // Gửi ảnh sản phẩm
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                position: 'top',
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: response.message,
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 1500
+                            });
+                        },
+                        error: function(xhr) {
+                            Swal.fire({
+                                position: 'top',
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Có lỗi xảy ra, vui lòng thử lại!',
+                                showConfirmButton: false,
+                                timerProgressBar: true,
+                                timer: 1500
+                            });
+                        }
+                    });
+                }
+            });
+
+        });
+    </script>
+
     <style>
         .variant-btn {
             height: 50px;
@@ -123,6 +436,17 @@
             transform: rotate(180deg);
             /* Mũi tên hướng lên */
         }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .discount-price {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-left: 8px;
+        }
     </style>
 
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
@@ -180,17 +504,27 @@
                                 </div>
                                 <div class="summary entry-summary">
                                     <div class="flash">
-                                        <span class="onnew"><span class="text">New</span></span>
+                                        <span class="onnew">
+                                            <span class="text">New</span>
+                                        </span>
                                     </div>
                                     <h1 class="product_title entry-title">{{ $product->name }}</h1>
+
                                     <p class="price">
-                                        <span class="kobolg-Price-amount amount">
-                                            <span class="kobolg-Price-currencySymbol"></span>
-                                            <span id="product-price" class="kobolg-Price-amount amount">
+                                        <span class="old-price">
+                                            <span class="kobolg-Price-amount amount">
                                                 {{ number_format($product->price, 0, ',', '.') }}đ
                                             </span>
                                         </span>
+                                        -
+                                        <span class="discount-price">
+                                            <span class="kobolg-Price-amount amount">
+                                                {{ number_format($product->discount_price, 0, ',', '.') }}đ
+                                            </span>
+                                        </span>
                                     </p>
+
+
                                     <br>
                                     <div class="product-variants">
                                         <div class="product-attributes">
@@ -269,11 +603,12 @@
 
                                     <div id="error-message" style="color: red;"></div>
 
+                                    <br>
+
                                     <p class="stock in-stock">
                                         Thương hiệu:
                                         <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
                                     </p>
-
                                     <div class="kobolg-product-details__short-description">
                                         <p>{{ $product->tomtat }}</p>
                                     </div>
@@ -336,7 +671,6 @@
                                                 class="fa fa-google-plus"></i></a>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                         <div class="kobolg-tabs kobolg-tabs-wrapper">
@@ -624,322 +958,323 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-md-12 col-sm-12 dreaming_related-product">
+                    <div class="block-title">
+                        <h2 class="product-grid-title">
+                            <span>Related Products</span>
+                        </h2>
+                    </div>
+                    <div class="owl-slick owl-products equal-container better-height"
+                        data-slick="{&quot;arrows&quot;:false,&quot;slidesMargin&quot;:30,&quot;dots&quot;:true,&quot;infinite&quot;:false,&quot;slidesToShow&quot;:4}"
+                        data-responsive="[{&quot;breakpoint&quot;:480,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;30&quot;}}]">
+                        <div
+                            class="product-item style-01 post-27 product type-product status-publish has-post-thumbnail product_cat-table product_cat-new-arrivals product_cat-lamp product_tag-table product_tag-sock  instock shipping-taxable purchasable product-type-variable has-default-attributes ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="0">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro101-1-600x778.jpg') }}"
+                                            alt="Mac 27 Inch" width="600" height="778">
+                                    </a>
+                                    <div class="flash"><span class="onnew"><span class="text">New</span></span></div>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_variable add_to_cart_button">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="0">Mac 27 Inch</a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>60.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="product-item style-01 post-30 product type-product status-publish has-post-thumbnail product_cat-light product_cat-bed product_cat-specials product_tag-light product_tag-table product_tag-sock last instock featured downloadable shipping-taxable purchasable product-type-simple  ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="0">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro41-1-600x778.jpg') }}"
+                                            alt="White Watches" width="600" height="778">
+                                    </a>
+                                    <div class="flash">
+                                        <span class="onnew"><span class="text">New</span></span>
+                                    </div>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_variable add_to_cart_button">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="0">White Watches</a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>134.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="product-item style-01 post-35 product type-product status-publish has-post-thumbnail product_cat-chair product_cat-new-arrivals product_cat-lamp product_tag-light product_tag-hat product_tag-sock first instock shipping-taxable purchasable product-type-simple  ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="0">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro151-1-600x778.jpg') }}"
+                                            alt="Cellphone Factory" width="600" height="778">
+                                    </a>
+                                    <div class="flash">
+                                        <span class="onsale"><span class="number">-11%</span></span>
+                                        <span class="onnew"><span class="text">New</span></span>
+                                    </div>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_variable add_to_cart_button">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="0">Cellphone Factory</a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><del><span class="kobolg-Price-amount amount"><span
+                                                    class="kobolg-Price-currencySymbol">$</span>89.00</span></del>
+                                        <ins><span class="kobolg-Price-amount amount"><span
+                                                    class="kobolg-Price-currencySymbol">$</span>79.00</span></ins></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="product-item style-01 post-25 product type-product status-publish has-post-thumbnail product_cat-light product_cat-chair product_cat-specials product_tag-light product_tag-sock  instock sale featured shipping-taxable purchasable product-type-simple ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="-1">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro13-1-600x778.jpg') }}"
+                                            alt="Meta Watches                                                "
+                                            width="600" height="778">
+                                    </a>
+                                    <div class="flash">
+                                        <span class="onnew"><span class="text">New</span></span>
+                                    </div>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_variable add_to_cart_button">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="-1">Meta Watches </a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>109.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="product-item style-01 post-93 product type-product status-publish has-post-thumbnail product_cat-light product_cat-table product_cat-new-arrivals product_tag-table product_tag-sock last instock shipping-taxable purchasable product-type-simple ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="-1">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro181-2-600x778.jpg') }}"
+                                            alt="Red Mouse" width="600" height="778">
+                                    </a>
+                                    <div class="flash">
+                                        <span class="onnew"><span class="text">New</span></span>
+                                    </div>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_variable add_to_cart_button">Add
+                                                to
+                                                cart</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="-1">City
+                                            life jumpers</a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>98.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="product-item style-01 post-22 product type-product status-publish has-post-thumbnail product_cat-table product_cat-bed product_cat-lamp product_tag-table product_tag-hat product_tag-sock first instock featured downloadable shipping-taxable purchasable product-type-simple ">
+                            <div class="product-inner tooltip-left">
+                                <div class="product-thumb">
+                                    <a class="thumb-link" href="#" tabindex="-1">
+                                        <img class="img-responsive"
+                                            src="{{ asset('theme/client/assets/images/apro171-1-600x778.jpg') }}"
+                                            alt="Photo Camera" width="600" height="778">
+                                    </a>
+                                    <div class="flash">
+                                        <span class="onnew"><span class="text">New</span></span>
+                                    </div>
+                                    <form class="variations_form cart">
+                                        <table class="variations">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="value">
+                                                        <select title="box_style" data-attributetype="box_style"
+                                                            data-id="pa_color" class="attribute-select "
+                                                            name="attribute_pa_color"
+                                                            data-attribute_name="attribute_pa_color"
+                                                            data-show_option_none="yes" tabindex="-1">
+                                                            <option data-type="" data-pa_color="" value="">Choose
+                                                                an
+                                                                option
+                                                            </option>
+                                                            <option data-width="30" data-height="30" data-type="color"
+                                                                data-pa_color="#ff63cb" value="pink"
+                                                                class="attached enabled">Pink
+                                                            </option>
+                                                            <option data-width="30" data-height="30" data-type="color"
+                                                                data-pa_color="#a825ea" value="purple"
+                                                                class="attached enabled">Purple
+                                                            </option>
+                                                            <option data-width="30" data-height="30" data-type="color"
+                                                                data-pa_color="#db2b00" value="red"
+                                                                class="attached enabled">Red
+                                                            </option>
+                                                        </select>
+                                                        <div class="data-val attribute-pa_color"
+                                                            data-attributetype="box_style"><a class="change-value color"
+                                                                href="#" style="background: #ff63cb;"
+                                                                data-value="pink"></a><a class="change-value color"
+                                                                href="#" style="background: #a825ea;"
+                                                                data-value="purple"></a><a class="change-value color"
+                                                                href="#" style="background: #db2b00;"
+                                                                data-value="red"></a></div>
+                                                        <a class="reset_variations" href="#" tabindex="-1"
+                                                            style="visibility: hidden;">Clear</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                    <div class="group-button">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            </div>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <div class="add-to-cart">
+                                            <a href="#"
+                                                class="button product_type_variable add_to_cart_button">Select
+                                                options</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info equal-elem">
+                                    <h3 class="product-name product_title">
+                                        <a href="#" tabindex="-1">Photo Camera</a>
+                                    </h3>
+                                    <div class="rating-wapper nostar">
+                                        <div class="star-rating"><span style="width:0%">Rated <strong
+                                                    class="rating">0</strong> out of 5</span></div>
+                                        <span class="review">(0)</span>
+                                    </div>
+                                    <span class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>105.00</span> – <span
+                                            class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol">$</span>110.00</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Phần mô tả sản phẩm
-        var content = document.getElementById("description-content");
-        var toggleLink = document.getElementById("toggle-link");
-        var icon = toggleLink.querySelector(".toggle-icon");
-
-        // Kiểm tra nếu nội dung vượt quá giới hạn chiều cao
-        if (content.scrollHeight > content.clientHeight) {
-            toggleLink.style.display = "inline-flex"; // Hiển thị link "Xem thêm"
-        }
-
-        // Thêm sự kiện click cho link "Xem thêm"
-        toggleLink.addEventListener("click", function() {
-            if (content.classList.contains("content-collapsed")) {
-                content.classList.remove("content-collapsed");
-                content.classList.add("content-expanded");
-                icon.classList.add("icon-up"); // Xoay mũi tên hướng lên
-                this.innerHTML = '<i class="fa fa-chevron-up toggle-icon"></i> Thu gọn nội dung';
-            } else {
-                content.classList.remove("content-expanded");
-                content.classList.add("content-collapsed");
-                icon.classList.remove("icon-up"); // Mũi tên trở lại hướng xuống
-                this.innerHTML = '<i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung';
-            }
-        });
-
-        // Phần giỏ hàng
-        let selectedStorage = null;
-        let selectedColor = null;
-        let selectedSize = null;
-        let selectedStorageButton = null;
-        let selectedColorButton = null;
-        let selectedSizeButton = null;
-
-        // Giá gốc của sản phẩm (giá cơ bản)
-        const originalPrice = parseFloat("{{ $product->price }}");
-        const priceElement = document.getElementById('product-price');
-
-        // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
-        const variants = {!! json_encode(
-            $product->variants->map(function ($variant) {
-                    return [
-                        'price' => $variant->price,
-                        'attributes' => $variant->attributeValues->map(function ($attributeValue) {
-                            return [
-                                'name' => $attributeValue->attribute->name,
-                                'value' => $attributeValue->name,
-                            ];
-                        }),
-                    ];
-                })->toArray(),
-        ) !!};
-
-        // Hiển thị giá
-        function updatePrice() {
-            let totalPrice = originalPrice;
-            let minPrice = originalPrice; // Giá tối thiểu khởi tạo là giá gốc
-            let maxPrice = originalPrice; // Giá tối đa khởi tạo là giá gốc
-            let isVariantSelected = false;
-
-            // Nếu không có biến thể nào
-            if (variants.length === 0) {
-                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(originalPrice);
-                return;
-            }
-
-            // Tính toán giá tối thiểu và tối đa từ danh sách biến thể
-            variants.forEach(variant => {
-                const variantPrice = variant.price;
-                if (variantPrice < minPrice) {
-                    minPrice = variantPrice; // Cập nhật giá tối thiểu
-                }
-                if (variantPrice > maxPrice) {
-                    maxPrice = variantPrice; // Cập nhật giá tối đa
-                }
-            });
-
-            // Tìm biến thể lưu trữ được chọn và cộng giá nếu có
-            if (selectedStorage) {
-                const foundStorageVariant = variants.find(variant =>
-                    variant.attributes.some(attr => attr.name === 'Storage' && attr.value ===
-                        selectedStorage)
-                );
-                if (foundStorageVariant) {
-                    totalPrice += foundStorageVariant.price - originalPrice; // Cộng thêm giá biến thể lưu trữ
-                    isVariantSelected = true;
-                }
-            }
-
-            // Tìm biến thể màu sắc được chọn và cộng giá nếu có
-            if (selectedColor) {
-                const foundColorVariant = variants.find(variant =>
-                    variant.attributes.some(attr => attr.name === 'Color' && attr.value === selectedColor)
-                );
-                if (foundColorVariant) {
-                    totalPrice += foundColorVariant.price - originalPrice; // Cộng thêm giá biến thể màu sắc
-                    isVariantSelected = true;
-                }
-            }
-
-            // Tìm biến thể kích thước được chọn và cộng giá nếu có
-            if (selectedSize) {
-                const foundSizeVariant = variants.find(variant =>
-                    variant.attributes.some(attr => attr.name === 'Size' && attr.value === selectedSize)
-                );
-                if (foundSizeVariant) {
-                    totalPrice += foundSizeVariant.price - originalPrice; // Cộng thêm giá biến thể kích thước
-                    isVariantSelected = true;
-                }
-            }
-
-            // Hiển thị giá
-            if (!isVariantSelected && minPrice === maxPrice) {
-                // Nếu không có biến thể được chọn và giá min = max, hiển thị giá đơn lẻ
-                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(originalPrice);
-            } else if (!isVariantSelected) {
-                // Nếu không có biến thể được chọn, hiển thị giá min và max
-                priceElement.innerHTML = `${new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        }).format(minPrice)} - ${new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        }).format(maxPrice)}`;
-            } else {
-                // Nếu có biến thể được chọn, hiển thị giá tổng
-                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(totalPrice);
-            }
-        }
-
-        // Sử dụng event delegation để lắng nghe sự kiện click
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('variant-btn')) {
-                const storage = event.target.getAttribute('data-dung-luong');
-                const color = event.target.getAttribute('data-mau-sac');
-                const size = event.target.getAttribute('data-size');
-
-                // Kiểm tra nếu là nút dung lượng
-                if (storage) {
-                    if (selectedStorage === storage) {
-                        resetButton(selectedStorageButton);
-                        selectedStorage = null;
-                        selectedStorageButton = null;
-                    } else {
-                        if (selectedStorageButton) resetButton(selectedStorageButton);
-                        selectedStorage = storage;
-                        selectedStorageButton = event.target;
-                        selectButton(selectedStorageButton);
-                    }
-                }
-
-                // Kiểm tra nếu là nút màu sắc
-                if (color) {
-                    if (selectedColor === color) {
-                        resetButton(selectedColorButton);
-                        selectedColor = null;
-                        selectedColorButton = null;
-                    } else {
-                        if (selectedColorButton) resetButton(selectedColorButton);
-                        selectedColor = color;
-                        selectedColorButton = event.target;
-                        selectButton(selectedColorButton);
-                    }
-                }
-
-                // Kiểm tra nếu là nút kích thước
-                if (size) {
-                    if (selectedSize === size) {
-                        resetButton(selectedSizeButton);
-                        selectedSize = null;
-                        selectedSizeButton = null;
-                    } else {
-                        if (selectedSizeButton) resetButton(selectedSizeButton);
-                        selectedSize = size;
-                        selectedSizeButton = event.target;
-                        selectButton(selectedSizeButton);
-                    }
-                }
-
-                // Cập nhật giá dựa trên các lựa chọn hiện tại
-                updatePrice();
-            }
-        });
-
-        // Hàm để đặt lại trạng thái của nút về mặc định
-        function resetButton(button) {
-            if (button) {
-                button.style.backgroundColor = 'white'; // Màu nền trắng
-                button.style.border = '1px solid black'; // Viền đen
-            }
-        }
-
-        // Hàm để cập nhật trạng thái của nút khi được chọn
-        function selectButton(button) {
-            if (button) {
-                button.style.backgroundColor = 'white'; // Màu nền trắng
-                button.style.border = '2px solid red'; // Viền đỏ
-            }
-        }
-
-        // Khi nhấn "Thêm vào giỏ hàng"
-        document.getElementById('add-to-cart').addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const productId = '{{ $product->id }}'; // ID sản phẩm gốc
-            const quantity = document.getElementById('quantity').value;
-            const productImage = '{{ \Storage::url($product->image_url) }}'; // Ảnh sản phẩm gốc
-
-            // Kiểm tra xem sản phẩm có biến thể hay không
-            if (variants.length > 0) {
-                // Sản phẩm có biến thể
-                if (selectedStorage && selectedColor) {
-                    const variantId = document.getElementById('selected-variant-id')
-                        .value; // ID biến thể đã chọn
-
-                    $.ajax({
-                        url: '{{ route('cart.add') }}',
-                        method: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            product_id: productId,
-                            variant_id: variantId,
-                            quantity: quantity,
-                            selected_storage: selectedStorage,
-                            selected_color: selectedColor,
-                            product_image: productImage, // Gửi ảnh sản phẩm
-                        },
-                        success: function(response) {
-                            Swal.fire({
-                                position: 'top',
-                                icon: 'success',
-                                title: 'Thành công!',
-                                text: response.message,
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                                timer: 1500
-                            });
-                        },
-                        error: function(xhr) {
-                            Swal.fire({
-                                position: 'top',
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Có lỗi xảy ra, vui lòng thử lại!',
-                                showConfirmButton: false,
-                                timerProgressBar: true,
-                                timer: 1500
-                            });
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        position: 'top',
-                        icon: 'warning',
-                        title: 'Chưa chọn đầy đủ',
-                        text: 'Vui lòng chọn cả dung lượng và màu sắc!',
-                        showConfirmButton: false,
-                        timerProgressBar: true,
-                        timer: 1500
-                    });
-                }
-            } else {
-                // Sản phẩm không có biến thể (đơn thể)
-                $.ajax({
-                    url: '{{ route('cart.add') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        product_id: productId,
-                        quantity: quantity,
-                        product_image: productImage, // Gửi ảnh sản phẩm
-                    },
-                    success: function(response) {
-                        Swal.fire({
-                            position: 'top',
-                            icon: 'success',
-                            title: 'Thành công!',
-                            text: response.message,
-                            showConfirmButton: false,
-                            timerProgressBar: true,
-                            timer: 1500
-                        });
-                    },
-                    error: function(xhr) {
-                        Swal.fire({
-                            position: 'top',
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Có lỗi xảy ra, vui lòng thử lại!',
-                            showConfirmButton: false,
-                            timerProgressBar: true,
-                            timer: 1500
-                        });
-                    }
-                });
-            }
-        });
-
-    });
-</script>

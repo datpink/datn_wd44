@@ -28,6 +28,18 @@
     </script>
 @endif
 
+<style>
+    .kobolg-mini-cart-item a {
+        display: inline-block;
+        max-width: 300px;
+        /* Điều chỉnh kích thước phù hợp với giao diện của bạn */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+    }
+</style>
+
 
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
