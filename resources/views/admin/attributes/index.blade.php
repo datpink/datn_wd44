@@ -36,7 +36,7 @@
                                                     <i class="bi bi-info-circle text-warning" style="font-size: 1.8em;"></i>
                                                 </a>
                                                 <a href="{{ route('attributes.edit', $attribute->id) }}" class="editRow" style="margin-right: 20px;" title="Sửa">
-                                                    <i class="bi bi-pencil text-success" style="font-size: 1.8em;"></i>
+                                                    <i class="bi bi-pencil-square text-success" style="font-size: 1.8em;"></i>
                                                 </a>
                                                 <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;" class="delete-form">
                                                     @csrf
