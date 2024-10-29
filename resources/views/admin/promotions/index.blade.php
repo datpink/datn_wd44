@@ -60,7 +60,7 @@
                                             <tr>
                                                 <td>{{ $promotion->id }}</td>
                                                 <td>{{ $promotion->code }}</td>
-                                                <td>{{ $promotion->discount_value }}%</td>
+                                                <td>{{ fmod($promotion->discount_value, 1) == 0 ? number_format($promotion->discount_value, 0) : number_format($promotion->discount_value, 2) }}%</td>
                                                 <td>
                                                     @if ($promotion->status == 'active')
                                                         <span class="badge bg-success">Kích hoạt</span>
