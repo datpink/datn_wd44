@@ -18,7 +18,7 @@
             break;
 
         case 'client.contact.index':
-            $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Contact', 'url' => ''];
             break;
 
         case 'login':

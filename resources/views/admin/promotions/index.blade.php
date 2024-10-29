@@ -72,17 +72,21 @@
                                                 <td>{{ $promotion->end_date }}</td>
                                                 <td>{{ $promotion->updated_at ?? 'Trống' }}</td>
                                                 <td>
-                                                    <a href="{{ route('promotions.edit', $promotion->id) }}"
-                                                        class="btn btn-warning btn-rounded btn-sm">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('promotions.edit', $promotion->id) }}" class="editRow"
+                                                        title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
+
                                                     <form action="{{ route('promotions.destroy', $promotion->id) }}"
                                                         method="POST" class="d-inline delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-rounded btn-sm delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

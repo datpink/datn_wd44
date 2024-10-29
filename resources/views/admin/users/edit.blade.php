@@ -60,18 +60,22 @@
 
                         <div class="form-group mb-3">
                             <label for="image">Hình Ảnh:</label>
-                            <input type="file" name="image" id="image" class="form-control">
+                            <input type="file" name="image" id="image" class="form-control-file">
                             @if ($user->image)
-                                <img src="{{ asset('storage/' . $user->image) }}" alt="{{ $user->name }}"
-                                    class="img-thumbnail mt-2" style="max-width: 150px;">
+                                <img id="imageUrlPreview" src="{{ asset('storage/' . $user->image) }}"
+                                    alt="{{ $user->name }}" class="img-thumbnail mt-2" style="max-width: 150px;">
                                 <p class="form-text">Hình ảnh hiện tại</p>
+                            @else
+                                <img id="imageUrlPreview" src="" alt="Hình ảnh xem trước" class="img-thumbnail mt-2"
+                                    style="display: none; max-width: 150px;">
                             @endif
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="status">Trạng Thái:</label>
                             <select name="status" id="status" class="form-control" required>
-                                <option value="unlocked" {{ $user->status === 'unlocked' ? 'selected' : '' }}>Mở Khóa</option>
+                                <option value="unlocked" {{ $user->status === 'unlocked' ? 'selected' : '' }}>Mở Khóa
+                                </option>
                                 <option value="locked" {{ $user->status === 'locked' ? 'selected' : '' }}>Bị Khóa</option>
                             </select>
                         </div>
@@ -85,10 +89,30 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button type="submit" class="btn rounded-pill btn-primary">Cập Nhật Người Dùng</button>
+                        <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập Nhật Người Dùng</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function previewImageUrl(event) {
+            const imageUrlPreview = document.getElementById('imageUrlPreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageUrlPreview.src = e.target.result;
+                    imageUrlPreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Giữ hình ảnh hiện tại nếu không có tệp nào được chọn
+                imageUrlPreview.src = ''; // Xóa ảnh xem trước nếu không có tệp
+                imageUrlPreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+            }
+        }
+    </script>
 @endsection

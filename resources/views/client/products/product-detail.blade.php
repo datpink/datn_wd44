@@ -1,24 +1,16 @@
 @extends('client.master')
-@section('title', $product->name . ' - Zaia Enterprise')
+@section('title', $product->name.' - Zaia Enterprise' )
 
 @section('content')
 
-    @include('components.breadcrumb-client')
-    <style>
-        .variant-btn {
-            height: 50px;
-            background-color: white;
-
-            border: 1px solid black;
-            color: black;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-
-        .variant-btn:hover {
-            border: 2px solid red;
-        }
-    </style>
+    <div class="banner-wrapper no_background">
+        <div class="banner-wrapper-inner">
+            <nav class="kobolg-breadcrumb container"><a href="index-2.html">Home</a><i class="fa fa-angle-right"></i><a
+                    href="#">Shop</a>
+                <i class="fa fa-angle-right"></i>Single Product
+            </nav>
+        </div>
+    </div>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
             <div class="row">
@@ -37,30 +29,36 @@
                                         </a>
                                         <div class="flex-viewport">
                                             <figure class="kobolg-product-gallery__wrapper">
-                                                @if ($product->galleries->isNotEmpty())
-                                                    @foreach ($product->galleries as $gallery)
-                                                        <div class="kobolg-product-gallery__image">
-                                                            <img src="{{ \Storage::url($gallery->image_url) }}"
-                                                                alt="{{ $product->name }}"
-                                                                style="max-width: 70%; margin: 0 auto; height: auto;">
-                                                        </div>
-                                                    @endforeach
-                                                @else
-                                                    <div class="kobolg-product-gallery__image">
+                                                <div class="kobolg-product-gallery__image">
+                                                    @if ($product->image_url && \Storage::exists($product->image_url))
+                                                        <img src="{{ \Storage::url($product->image_url) }}"
+                                                            alt="{{ $product->name }}"
+                                                            style="max-width: 100px; height: auto;">
+                                                    @else
                                                         <p>Không có ảnh</p>
-                                                    </div>
-                                                @endif
+                                                    @endif
+
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="assets/images/apro134-1.jpg" alt="img">
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="assets/images/apro132-1.jpg" class="" alt="img">
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="assets/images/apro133-1.jpg" class="" alt="img">
+                                                </div>
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            @if ($product->galleries->isNotEmpty())
-                                                @foreach ($product->galleries as $gallery)
-                                                    <li>
-                                                        <img src="{{ \Storage::url($gallery->image_url) }}" alt="Thumbnail"
-                                                            style="width: 100px; height: auto;">
-                                                    </li>
-                                                @endforeach
-                                            @endif
+                                            <li><img src="assets/images/apro131-2-100x100.jpg" alt="img">
+                                            </li>
+                                            <li><img src="assets/images/apro134-1-100x100.jpg" alt="img">
+                                            </li>
+                                            <li><img src="assets/images/apro132-1-100x100.jpg" alt="img">
+                                            </li>
+                                            <li><img src="assets/images/apro133-1-100x100.jpg" alt="img">
+                                            </li>
                                         </ol>
                                     </div>
                                 </div>
@@ -78,246 +76,59 @@
                                         </span>
                                     </p>
                                     <br>
-                                    <div class="product-variants">
-                                        <div class="product-attributes">
-                                            <!-- Dung lượng -->
-                                            <div class="attribute-group">
-                                                <h4>Dung lượng:</h4>
-                                                @php
-                                                    $dungLuongVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Storage') {
-                                                                $dungLuongVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($dungLuongVariants) > 0)
-                                                    @foreach ($dungLuongVariants as $dungLuong => $variants)
-                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->img_url }}">
-                                                            <!-- Đảm bảo img_url được lấy từ CSDL -->
-                                                            @if (!empty($variants[0]->img_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ $variants[0]->img_url }}"
-                                                                    alt="{{ $dungLuong }}" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $dungLuong }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có dung lượng nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
-
-                                            <!-- Màu sắc -->
-                                            <div class="attribute-group">
-                                                <h4>Màu sắc:</h4>
-                                                @php
-                                                    $mauSacVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Color') {
-                                                                $mauSacVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($mauSacVariants) > 0)
-                                                    @foreach ($mauSacVariants as $mauSac => $variants)
-                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->image_url }}">
-                                                            @if (!empty($variants[0]->image_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ \Storage::url($variants[0]->image_url) }}"
-                                                                    alt="{{ $mauSac }}" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $mauSac }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có màu sắc nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-
+                                    @foreach ($product->variants as $variant)
+                                        <button class="variant-btn" data-id="{{ $variant->id }}"
+                                            data-price="{{ $variant->price }}">
+                                            {{ $variant->variant_name }}
+                                        </button>
+                                    @endforeach
                                     <div id="error-message" style="color: red;"></div>
 
-
-
+                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                                     <script>
                                         document.addEventListener('DOMContentLoaded', function() {
-                                            let selectedStorage = null;
-                                            let selectedColor = null;
-                                            let selectedStorageButton = null;
-                                            let selectedColorButton = null;
-                                            const priceElement = document.getElementById('product-price');
+                                            const variantButtons = document.querySelectorAll('.variant-btn');
+                                            const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
+                                            let selectedButton = null;
 
-                                            // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
-                                            let storageData = {
-                                                name: null,
-                                                price: null
-                                            };
-                                            let colorData = {
-                                                name: null
-                                            };
+                                            // Xử lý sự kiện click trên từng nút biến thể
+                                            variantButtons.forEach(button => {
+                                                // Thiết lập màu nền ban đầu cho các button
+                                                button.style.backgroundColor = '#f4cdd1';
+                                                button.style.border = 'none';
+                                                button.style.color = 'black';
 
-                                            // Lấy danh sách biến thể từ PHP
-                                            const variants = {!! json_encode(
-                                                $product->variants->map(function ($variant) {
-                                                    return [
-                                                        'price' => $variant->price,
-                                                        'attributes' => $variant->attributeValues->map(function ($attributeValue) {
-                                                            return [
-                                                                'name' => $attributeValue->attribute->name,
-                                                                'value' => $attributeValue->name,
-                                                            ];
-                                                        }),
-                                                    ];
-                                                }),
-                                            ) !!};
+                                                button.addEventListener('click', function() {
+                                                    if (selectedButton === this) {
+                                                        // Nếu click lại vào nút đã chọn, trở về trạng thái ban đầu
+                                                        selectedButton.style.backgroundColor = '#f4cdd1';
+                                                        selectedButton.style.border = 'none';
+                                                        selectedButton.style.color = 'black';
+                                                        selectedButton = null;
 
-                                            // Giá gốc của sản phẩm
-                                            // const originalPrice = "{{ number_format($product->price, 0, ',', '.') }}đ";
-                                            const originalPrice = {{ number_format($product->price, 0, ',', '.') }}đ;
-
-
-                                            // Kiểm tra nếu không có biến thể
-                                            if (!variants || variants.length === 0) {
-                                                priceElement.innerHTML = originalPrice;
-                                                console.log('No variants available. Showing original product price.');
-                                                return;
-                                            }
-                                            // Lọc giá dựa trên dung lượng (Storage)
-                                            const storageVariants = variants.filter(variant =>
-                                                variant.attributes.some(attr => attr.name === 'Storage')
-                                            );
-
-                                            // Tìm giá nhỏ nhất và lớn nhất
-                                            const minPrice = Math.min(...storageVariants.map(variant => variant.price));
-                                            const maxPrice = Math.max(...storageVariants.map(variant => variant.price));
-
-                                            // Hiển thị giá mặc định nhỏ nhất - lớn nhất
-                                            function showDefaultPrice() {
-                                                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(maxPrice) + '';
-                                            }
-
-                                            // Hiển thị giá mặc định khi trang được tải
-                                            showDefaultPrice();
-
-                                            // Sử dụng event delegation để lắng nghe sự kiện click
-                                            document.addEventListener('click', function(event) {
-                                                if (event.target.classList.contains('variant-btn')) {
-                                                    const storage = event.target.getAttribute('data-dung-luong');
-                                                    const color = event.target.getAttribute('data-mau-sac');
-
-                                                    // Kiểm tra nếu là nút dung lượng
-                                                    if (storage) {
-                                                        console.log('Selected storage:', storage);
-                                                        if (selectedStorage === storage) {
-                                                            // Khi bỏ chọn dung lượng, đặt lại giá về mặc định
-                                                            resetButton(selectedStorageButton);
-                                                            selectedStorage = null;
-                                                            selectedStorageButton = null;
-                                                            storageData.name = null;
-                                                            storageData.price = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn dung lượng
-                                                        } else {
-                                                            if (selectedStorageButton) resetButton(selectedStorageButton);
-                                                            selectedStorage = storage;
-                                                            selectedStorageButton = event.target;
-                                                            selectButton(selectedStorageButton);
-
-                                                            // Lưu tên dung lượng và giá của dung lượng đã chọn
-                                                            const foundStorageVariant = storageVariants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Storage' && attr
-                                                                    .value === selectedStorage)
-                                                            );
-                                                            if (foundStorageVariant) {
-                                                                storageData.name = selectedStorage;
-                                                                storageData.price = foundStorageVariant.price;
-                                                                console.log('Storage selected:', storageData.name, 'Price:', storageData
-                                                                    .price);
-                                                            }
-                                                        }
-                                                    }
-
-                                                    // Kiểm tra nếu là nút màu sắc
-                                                    if (color) {
-                                                        console.log('Selected color:', color);
-                                                        if (selectedColor === color) {
-                                                            // Khi bỏ chọn màu sắc, đặt lại giá về mặc định
-                                                            resetButton(selectedColorButton);
-                                                            selectedColor = null;
-                                                            selectedColorButton = null;
-                                                            colorData.name = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn màu sắc
-                                                        } else {
-                                                            if (selectedColorButton) resetButton(selectedColorButton);
-                                                            selectedColor = color;
-                                                            selectedColorButton = event.target;
-                                                            selectButton(selectedColorButton);
-
-                                                            // Lưu tên màu sắc đã chọn
-                                                            colorData.name = selectedColor;
-                                                            console.log('Color selected:', colorData.name);
-                                                        }
-                                                    }
-
-                                                    // Chỉ cập nhật giá khi cả dung lượng và màu sắc được chọn
-                                                    if (storageData.name && colorData.name) {
-                                                        // Cập nhật giá chỉ dựa trên dung lượng
-                                                        priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                            style: 'currency',
-                                                            currency: 'VND'
-                                                        }).format(storageData.price) + '';
-                                                        console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData
-                                                            .name, 'Price:', storageData.price);
+                                                        // Đặt lại giá gốc
+                                                        $('#product-price').text(originalPrice);
                                                     } else {
-                                                        // Khi chưa chọn đủ hoặc bỏ chọn dung lượng/màu sắc, hiển thị giá mặc định
-                                                        showDefaultPrice();
+                                                        // Nếu có nút khác đang được chọn, reset lại nút đó
+                                                        if (selectedButton) {
+                                                            selectedButton.style.backgroundColor = '#f4cdd1';
+                                                            selectedButton.style.border = 'none';
+                                                            selectedButton.style.color = 'black';
+                                                        }
+
+                                                        // Chọn nút hiện tại và thay đổi style
+                                                        selectedButton = this;
+                                                        selectedButton.style.backgroundColor = '#fff';
+                                                        selectedButton.style.border = '2px solid #bc2f3e';
+                                                        selectedButton.style.color = '#bc2f3e';
+
+                                                        // Thay đổi giá theo biến thể
+                                                        $('#product-price').text(this.dataset.price);
                                                     }
-                                                }
+                                                });
                                             });
-
-                                            // Hàm để đặt lại trạng thái của nút về mặc định
-                                            function resetButton(button) {
-                                                if (button) {
-                                                    button.style.backgroundColor = 'white'; // Màu nền trắng
-                                                    button.style.border = '1px solid black'; // Viền đen
-                                                }
-                                            }
-
-                                            // Hàm để cập nhật trạng thái của nút khi được chọn
-                                            function selectButton(button) {
-                                                if (button) {
-                                                    button.style.backgroundColor = 'white'; // Màu nền trắng
-                                                    button.style.border = '2px solid red'; // Viền đỏ
-                                                }
-                                            }
                                         });
                                     </script>
-
                                     <p class="stock in-stock">
                                         Thương hiệu:
                                         <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
@@ -326,7 +137,6 @@
                                     <div class="kobolg-product-details__short-description">
                                         <p>{{ $product->tomtat }}</p>
                                     </div>
-
                                     <form class="variations_form cart">
                                         <div class="single_variation_wrap">
                                             <div class="kobolg-variation single_variation"></div>
@@ -336,15 +146,15 @@
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
                                                         <input type="text" data-step="1" min="0" max=""
-                                                            name="quantity[25]" value="1" title="Qty"
+                                                            name="quantity[25]" value="0" title="Qty"
                                                             class="input-qty input-text qty text" size="4"
-                                                            pattern="[0-9]*" inputmode="numeric">
+                                                            pattern="[0-9]*" inputmode="numeric" id="quantity">
                                                         <a class="btn-number qtyplus quantity-plus" href="#">+</a>
                                                     </div>
                                                 </div>
                                                 <button type="submit"
                                                     class="single_add_to_cart_button button alt kobolg-variation-selection-needed">
-                                                    Thêm vào giỏ hàng
+                                                    Add to cart
                                                 </button>
                                             </div>
                                         </div>
@@ -395,7 +205,7 @@
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Thông tin bổ sung</a>
+                                    <a href="#tab-additional_information">Additional information</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
                                     aria-controls="tab-reviews">
@@ -404,15 +214,44 @@
                             </ul>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--description panel entry-content kobolg-tab"
                                 id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
-                                <h2>Mô tả</h2>
-                                <div class="col-md-12">
-                                    {!! $product->description !!}
+                                <h2>Description</h2>
+                                <div class="container-table">
+                                    <div class="container-cell">
+                                        <h2 class="az_custom_heading">{!! $product->description !!}
+                                            luctus</p>
+                                    </div>
+                                    <div class="container-cell">
+                                        <div class="az_single_image-wrapper az_box_border_grey">
+                                            <img src="assets/images/single-pro1.jpg"
+                                                class="az_single_image-img attachment-full" alt="img">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container-table">
+                                    <div class="container-cell">
+                                        <div class="az_single_image-wrapper az_box_border_grey">
+                                            <img src="assets/images/single-pro2.jpg"
+                                                class="az_single_image-img attachment-full" alt="img">
+                                        </div>
+                                    </div>
+                                    <div class="container-cell">
+                                        <h2 class="az_custom_heading">
+                                            Potenti praesent molestie<br>
+                                            at viverra</h2>
+                                        <p>This generator uses a dictionary of Latin words to construct
+                                            passages of Lorem Ipsum text that meet your desired length. The
+                                            sentence and paragraph durations and punctuation dispersal are
+                                            calculated using Gaussian distribution, based on statistical
+                                            analysis of real world texts. This ensures that the generated
+                                            Lorem Ipsum text is unique, free of repetition and also
+                                            resembles readable text as much as possible.</p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
                                 aria-labelledby="tab-title-additional_information">
-                                <h2>Thông tin bổ sung</h2>
+                                <h2>Additional information</h2>
                                 <table class="shop_attributes">
                                     <tbody>
                                         <tr>
@@ -426,7 +265,7 @@
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--reviews panel entry-content kobolg-tab"
                                 id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
-                                <div id="reviews" class="kobolg-Reviews">
+                                <div id="reviews" class="kobolg-Reviews col-md-6 mx-auto">
                                     <div id="comments">
                                         <h2 class="kobolg-Reviews-title">Đánh giá</h2>
                                         <p class="kobolg-noreviews">Chưa có đánh giá nào</p>
@@ -478,7 +317,7 @@
                                                         <textarea id="comment" name="comment" cols="45" rows="8" required=""></textarea>
                                                     </p><input name="wpml_language_code" value="en" type="hidden">
                                                     <p class="form-submit"><input name="submit" id="submit"
-                                                            class="submit" value="Submit" type="submit"> <input
+                                                            class="submit" value="Đánh Giá" type="submit"> <input
                                                             name="comment_post_ID" value="27" id="comment_post_ID"
                                                             type="hidden">
                                                         <input name="comment_parent" id="comment_parent" value="0"
@@ -494,7 +333,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col-md-12 col-sm-12 dreaming_related-product">
+                <div class="col-md-12 col-sm-12 dreaming_related-product">
                     <div class="block-title">
                         <h2 class="product-grid-title">
                             <span>Related Products</span>
@@ -508,8 +347,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro101-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro101-1-600x778.jpg"
                                             alt="Mac 27 Inch" width="600" height="778">
                                     </a>
                                     <div class="flash"><span class="onnew"><span class="text">New</span></span></div>
@@ -549,8 +387,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro41-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro41-1-600x778.jpg"
                                             alt="White Watches" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -592,8 +429,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro151-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro151-1-600x778.jpg"
                                             alt="Cellphone Factory" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -638,8 +474,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro13-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro13-1-600x778.jpg"
                                             alt="Meta Watches                                                "
                                             width="600" height="778">
                                     </a>
@@ -682,8 +517,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro181-2-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro181-2-600x778.jpg"
                                             alt="Red Mouse" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -726,8 +560,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro171-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro171-1-600x778.jpg"
                                             alt="Photo Camera" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -824,8 +657,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro141-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro141-1-600x778.jpg"
                                             alt="Smart Monitor" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -866,8 +698,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="0">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro31-1-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro31-1-600x778.jpg"
                                             alt="Blue Smartphone" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -908,8 +739,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link kobolg-product-gallery__image" href="#" tabindex="0">
-                                        <img class="img-responsive wp-post-image"
-                                            src="{{ asset('theme/client/assets/images/apro83-1-600x778.jpg') }}"
+                                        <img class="img-responsive wp-post-image" src="assets/images/apro83-1-600x778.jpg"
                                             alt="Glasses – Red" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -950,8 +780,7 @@
                             <div class="product-inner tooltip-left">
                                 <div class="product-thumb">
                                     <a class="thumb-link" href="#" tabindex="-1">
-                                        <img class="img-responsive"
-                                            src="{{ asset('theme/client/assets/images/apro302-600x778.jpg') }}"
+                                        <img class="img-responsive" src="assets/images/apro302-600x778.jpg"
                                             alt="Circle Watches" width="600" height="778">
                                     </a>
                                     <div class="flash">
@@ -988,9 +817,8 @@
                             </div>
                         </div>
                     </div>
-                </div> --}}
+                </div>
             </div>
         </div>
     </div>
 @endsection
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

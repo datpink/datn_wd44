@@ -33,9 +33,14 @@
 
                     <form action="{{ route('banners.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control" id="image" name="image" required>
+                            <input type="file" class="form-control" id="image" name="image" accept="image/*"
+                                onchange="previewImage(event)" required>
+
+                            <img id="imagePreview" src="" alt="Hình ảnh xem trước"
+                                style="max-width: 150px; height: auto; display: none;" class="mt-2">
+
                             @if ($errors->has('image'))
                                 <ul>
                                     <li class="text-danger mb-1">{{ $errors->first('image') }}</li>
@@ -45,7 +50,8 @@
 
                         <div class="form-group mb-3">
                             <label for="title">Tiêu đề:</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ old('title') }}" placeholder="Nhập tiêu đề">
+                            <input type="text" class="form-control" id="title" name="title"
+                                value="{{ old('title') }}" placeholder="Nhập tiêu đề">
                             @if ($errors->has('title'))
                                 <ul>
                                     <li class="text-danger mb-1">{{ $errors->first('title') }}</li>
@@ -55,7 +61,8 @@
 
                         <div class="form-group mb-3">
                             <label for="description">Mô tả:</label>
-                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="3" placeholder="Nhập mô tả">{{ old('description') }}</textarea>
+                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                                rows="3" placeholder="Nhập mô tả">{{ old('description') }}</textarea>
                             @if ($errors->has('description'))
                                 <ul>
                                     <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
@@ -65,12 +72,14 @@
 
                         <div class="form-group mb-3">
                             <label for="button_text">Văn bản nút:</label>
-                            <input type="text" class="form-control" id="button_text" name="button_text" value="{{ old('button_text') }}" placeholder="Nhập văn bản nút">
+                            <input type="text" class="form-control" id="button_text" name="button_text"
+                                value="{{ old('button_text') }}" placeholder="Nhập văn bản nút">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="button_link">Liên kết nút:</label>
-                            <input type="url" class="form-control" id="button_link" name="button_link" value="{{ old('button_link') }}" placeholder="Nhập liên kết nút">
+                            <input type="url" class="form-control" id="button_link" name="button_link"
+                                value="{{ old('button_link') }}" placeholder="Nhập liên kết nút">
                         </div>
 
                         <div class="form-group mb-3">
@@ -108,4 +117,23 @@
             });
         </script>
     @endif
+
+    <script>
+        function previewImage(event) {
+            const imagePreview = document.getElementById('imagePreview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = ''; // Xóa ảnh xem trước
+                imagePreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+            }
+        }
+    </script>
 @endsection

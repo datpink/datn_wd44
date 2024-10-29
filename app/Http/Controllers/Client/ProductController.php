@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Product;
+use App\Models\ProductComment;
+use App\Models\ProductCommentReply;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -29,19 +32,15 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
+        // Lấy sản phẩm theo slug
         $product = Product::where('slug', $slug)
-            ->with([
-                'galleries',
-                'variants' => function ($query) {
-                    $query->where('status', 'active')
-                        ->with('attributeValues.attribute');
-                }
-            ])
-            ->firstOrFail();
+        ->with(['variants' => function($query) {
+            $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
+        }])            ->firstOrFail(); 
 
         return view('client.products.product-detail', compact('product'));
     }
+
     public function getVariantPrice(Request $request)
     {
         // Lấy thông tin biến thể dựa trên ID
@@ -177,5 +176,107 @@ class ProductController extends Controller
     // Return the search results to a view
     return view('client.products.product-search-results', compact('products','maxDiscountPrice'));
 }
+    public function storeComment(Request $request, $productId)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:500',
+        ]);
 
+        ProductComment::create([
+            'product_id' => $productId,
+            'user_id' => Auth::id(),
+            'comment' => $request->input('comment'),
+        ]);
+
+        return redirect()->back()->with('success', 'Bình luận của bạn đã được thêm!');
+    }
+
+    // Phương thức lưu phản hồi bình luận
+    public function storeReply(Request $request, $commentId)
+    {
+        $request->validate([
+            'reply' => 'required|string|max:500',
+        ]);
+
+        ProductCommentReply::create([
+            'product_comment_id' => $commentId,
+            'user_id' => Auth::id(),
+            'reply' => $request->input('reply'),
+        ]);
+
+        return redirect()->back()->with('success', 'Phản hồi của bạn đã được thêm!');
+    }
+    // Cập nhật bình luận
+    public function updateComment(Request $request, $productId, $commentId)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:500',
+        ]);
+
+        $comment = ProductComment::findOrFail($commentId);
+
+        // Kiểm tra xem bình luận có thuộc về người dùng hiện tại hay không
+        if ($comment->user_id != Auth::id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền chỉnh sửa bình luận này.');
+        }
+
+        $comment->update([
+            'comment' => $request->input('comment'),
+        ]);
+
+        return redirect()->back()->with('success', 'Bình luận đã được cập nhật!');
+    }
+    // Xóa bình luận
+    public function deleteComment($productId, $commentId)
+    {
+        $comment = ProductComment::findOrFail($commentId);
+
+        // Kiểm tra quyền sở hữu bình luận
+        if ($comment->user_id != Auth::id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền xóa bình luận này.');
+        }
+
+        // Xóa các phản hồi liên quan đến bình luận
+        ProductCommentReply::where('product_comment_id', $commentId)->delete();
+
+        // Xóa bình luận
+        $comment->delete();
+
+        return redirect()->back()->with('success', 'Bình luận và các phản hồi đã được xóa!');
+    }
+
+    // Cập nhật phản hồi
+    public function updateReply(Request $request, $commentId, $replyId)
+    {
+        $request->validate([
+            'reply' => 'required|string|max:500',
+        ]);
+
+        $reply = ProductCommentReply::findOrFail($replyId);
+
+        // Kiểm tra quyền sở hữu phản hồi
+        if ($reply->user_id != Auth::id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền chỉnh sửa phản hồi này.');
+        }
+
+        $reply->update([
+            'reply' => $request->input('reply'),
+        ]);
+
+        return redirect()->back()->with('success', 'Phản hồi đã được cập nhật!');
+    }
+
+    // Xóa phản hồi
+    public function deleteReply($commentId, $replyId)
+    {
+        $reply = ProductCommentReply::findOrFail($replyId);
+
+        // Kiểm tra quyền sở hữu phản hồi
+        if ($reply->user_id != Auth::id()) {
+            return redirect()->back()->with('error', 'Bạn không có quyền xóa phản hồi này.');
+        }
+
+        $reply->delete();
+        return redirect()->back()->with('success', 'Phản hồi đã được xóa!');
+    }
 }

@@ -175,3 +175,89 @@
         </div>
     </div><!-- .widget-area -->
 </div>
+<!-- Đoạn mã JavaScript cho Ajax -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#search-input').on('input', function() {
+        let query = $(this).val();
+
+        if (query.length > 2) {
+            $.ajax({
+                url: "/api/search/suggestions",  // URL đến route API gợi ý
+                data: { query: query },
+                success: function(data) {
+                    let suggestionsHtml = '';
+
+                    // Gợi ý sản phẩm
+                    if (data.products.length) {
+                        suggestionsHtml += '<h4>Sản phẩm</h4><ul>';
+                        data.products.forEach(product => {
+                            suggestionsHtml += `<li><a href="/product/${product.id}">${product.name}</a></li>`;
+                        });
+                        suggestionsHtml += '</ul>';
+                    }
+
+                    // Gợi ý bài viết
+                    if (data.posts.length) {
+                        suggestionsHtml += '<h4>Bài viết</h4><ul>';
+                        data.posts.forEach(post => {
+                            suggestionsHtml += `<li><a href="/post/${post.id}">${post.title}</a></li>`;
+                        });
+                        suggestionsHtml += '</ul>';
+                    }
+
+                    // Hiển thị gợi ý
+                    $('#suggestions').html(suggestionsHtml).show();
+                },
+                error: function() {
+                    $('#suggestions').hide();  // Ẩn gợi ý khi có lỗi
+                }
+            });
+        } else {
+            $('#suggestions').hide();  // Ẩn gợi ý nếu không có từ khóa
+        }
+    });
+
+    // Ẩn gợi ý khi người dùng nhấn ra ngoài ô tìm kiếm
+    $(document).click(function(e) {
+        if (!$(e.target).closest('.search-form').length) {
+            $('#suggestions').hide();
+        }
+    });
+});
+</script>
+<style>
+    .suggestions-box {
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+}
+
+.suggestions-box h4 {
+    margin: 0;
+    padding: 5px;
+    background-color: #f1f1f1;
+    font-weight: bold;
+}
+
+.suggestions-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions-box ul li {
+    padding: 5px;
+}
+
+.suggestions-box ul li:hover {
+    background-color: #e9e9e9;
+}
+
+</style>

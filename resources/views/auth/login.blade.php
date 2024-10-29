@@ -115,13 +115,10 @@
                                         </p>
 
                                         <div class="kobolg-privacy-policy-text">
-                                            <p>Dữ liệu cá nhân của bạn sẽ được sử dụng để hỗ trợ trải nghiệm của bạn trên
-                                                toàn bộ trang web này, để quản lý
-                                                quyền truy cập vào tài khoản của bạn và cho các mục đích khác được mô tả
-                                                trong phần của chúng tôi.
-                                                <a href="#" class="kobolg-privacy-policy-link" target="_blank">chính
-                                                    sách bảo mật</a>.
-                                            </p>
+                                            <p>Your personal data will be used to support your experience throughout this
+                                                website, to manage access to your account, and for other purposes described
+                                                in our <a href="#" class="kobolg-privacy-policy-link"
+                                                    target="_blank">privacy policy</a>.</p>
                                         </div>
 
                                         <p class="kobolg-FormRow form-row">

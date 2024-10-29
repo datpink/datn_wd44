@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\SearchController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -75,6 +76,16 @@ Route::prefix('shop')->group(function () {
     Route::get('/products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::post('products/import',          [AdminProductController::class, 'import'])->name('products.import');
     Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
+    Route::post('product/{product}/comment', [ProductController::class, 'storeComment'])->name('client.storeComment');
+    Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
+    // Route sửa và xóa bình luận
+    Route::put('product/{product}/comment/{comment}/edit', [ProductController::class, 'updateComment'])->name('client.updateComment');
+    Route::delete('product/{product}/comment/{comment}/delete', [ProductController::class, 'deleteComment'])->name('client.deleteComment');
+
+    // Route sửa và xóa phản hồi
+    Route::put('comment/{comment}/reply/{reply}/edit', [ProductController::class, 'updateReply'])->name('client.updateReply');
+    Route::delete('comment/{comment}/reply/{reply}/delete', [ProductController::class, 'deleteReply'])->name('client.deleteReply');
+
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
@@ -82,11 +93,18 @@ Route::prefix('shop')->group(function () {
 
 
     Route::get('/blog',            [PostController::class, 'index'])->name('client.posts.index');
-    Route::get('post/{id}',        [PostController::class, 'show'])->name('post.show');
-    Route::get('/search',          [PostController::class, 'search'])->name('search');
+    Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/search', [PostController::class, 'search'])->name('search');
+    Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
+    Route::post('/post/comments/{id}', [PostController::class, 'storeComment'])->name('comments.store');
+    // Route::post('/posts/{post}/comments', [PostController::class, 'storeComment'])->name('posts.storeComment');
 
-    // Route::get('/search', [SearchController::class, 'search'])->name('client.search');
-    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('client.autocomplete');
+
+    Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    Route::get('/privacy-policy', function () {
+        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
+    })->name('privacy.policy');
 
     Route::get('/contact',         [ContactController::class, 'index'])->name('client.contact.index');
 
@@ -99,9 +117,13 @@ Route::prefix('shop')->group(function () {
     Route::post('/profile/update/{id}',         [UserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/profile/edit-password',        [UserController::class, 'editPassword'])->name('profile.edit-password');
     Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
-
 });
 
+
+
+    // GIỏ hàng
+    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
 
@@ -145,7 +167,6 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //  route reply comment post
     Route::get('comments/{comment}/reply/{reply}/edit', [CommentReplyController::class, 'editReply'])->name('comments.reply.edit');
     Route::put('comments/{comment}/reply/{reply}', [CommentReplyController::class, 'updateReply'])->name('comments.reply.update');
-
 
 
     // Route Order
@@ -213,5 +234,4 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
-
 });

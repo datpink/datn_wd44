@@ -75,8 +75,9 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
+<<<<<<< HEAD
                             <input type="file" class=" mb-3 form-control @error('image') is-invalid @enderror"
                                 name="image" id="image">
                             @if ($post->image && \Storage::exists($post->image))
@@ -84,7 +85,18 @@
                                     style="max-width: 300px; height: auto;">
                             @else
                                 Không có ảnh
+=======
+                            <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
+                                name="image" id="image" onchange="previewPostImage(event)">
+
+                            @if ($post->image && \Storage::exists($post->image))
+                                <img id="postImagePreview" src="{{ \Storage::url($post->image) }}"
+                                    alt="{{ $post->name }}" style="max-width: 300px; height: auto;" class="mt-2">
+                            @else
+                                <p id="noImageText">Không có ảnh</p>
+>>>>>>> 367895534ba99fc4b201cd2386407890322b644b
                             @endif
+
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -132,6 +144,27 @@
                 .replace(/\s+/g, '-') // Thay thế khoảng trắng thành dấu gạch ngang
                 .replace(/-+/g, '-'); // Thay thế nhiều dấu gạch ngang thành một
             document.getElementById('slug').value = slug;
+        }
+
+        function previewPostImage(event) {
+            const postImagePreview = document.getElementById('postImagePreview');
+            const noImageText = document.getElementById('noImageText');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    postImagePreview.src = e.target.result;
+                    postImagePreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                    noImageText.style.display = 'none'; // Ẩn thông báo "Không có ảnh"
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Nếu không có tệp nào được chọn
+                postImagePreview.src = ''; // Xóa ảnh xem trước
+                postImagePreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+                noImageText.style.display = 'block'; // Hiện thông báo "Không có ảnh" nếu không có ảnh
+            }
         }
     </script>
 @endsection
