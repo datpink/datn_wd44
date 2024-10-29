@@ -89,18 +89,20 @@
                                                 <td>{{ $catalogue->created_at ? $catalogue->created_at->format('d-m-Y') : 'Chưa có' }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('catalogues.edit', $catalogue) }}"
-                                                        class="btn btn-warning btn-rounded">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('catalogues.edit', $catalogue) }}" class="editRow"
+                                                        style="margin-right: 10px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('catalogues.destroy', $catalogue) }}"
                                                         method="POST" style="display:inline;" class="delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-rounded delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

@@ -46,9 +46,11 @@
                                             <form action="{{ route('categories.restore', $category->id) }}" method="POST"
                                                 style="display:inline;" class="restore-form">
                                                 @csrf
-                                                <button type="submit"
-                                                    class="btn btn-outline-success rounded-pill btn-sm restore-btn">
-                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                <button type="submit" class="restore-btn"
+                                                    style="background: none; border: none; padding: 0; margin-right: 15px;"
+                                                    title="Khôi phục">
+                                                    <i class="bi bi-arrow-repeat text-success"
+                                                        style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
 
@@ -56,9 +58,9 @@
                                                 method="POST" style="display:inline;" class="force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-outline-danger rounded-pill btn-sm force-delete-btn">
-                                                    <i class="bi bi-trash"></i> Xóa cứng
+                                                <button type="submit" class="force-delete-btn"
+                                                    style="background: none; border: none; padding: 0;" title="Xóa cứng">
+                                                    <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
                                         </td>

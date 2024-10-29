@@ -92,11 +92,10 @@
                                                     {{-- @if ($user->deleted_at)
                                                         <span class="text-muted">Đã xóa</span>
                                                     @else --}}
-                                                        <a href="{{ route('users.edit', $user->id) }}"
-                                                            class="btn rounded-pill btn-warning btn-sm">
-                                                            <i class="fas fa-edit"></i> Sửa
-                                                        </a>
-                                                        {{-- <form action="{{ route('users.destroy', $user->id) }}"
+                                                    <a href="{{ route('users.edit', $user->id) }}" class="editRow" title="Sửa">
+                                                        <i class="bi bi-pencil text-warning" style="font-size: 1.8em;"></i>
+                                                    </a>
+                                                    {{-- <form action="{{ route('users.destroy', $user->id) }}"
                                                             method="POST" style="display:inline;">
                                                             @csrf
                                                             @method('DELETE')
@@ -111,7 +110,8 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center">Không có người dùng nào được tìm thấy.</td>
+                                                <td colspan="4" class="text-center">Không có người dùng nào được tìm
+                                                    thấy.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
@@ -145,4 +145,3 @@
         </script>
     @endif
 @endsection
-

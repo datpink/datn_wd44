@@ -1,12 +1,15 @@
 @extends('client.master')
+
 @section('title', $product->name . ' - Zaia Enterprise')
 
 @section('content')
 
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
+
     @include('components.breadcrumb-client')
     <style>
         .variant-btn {
-            height: 70px;
+            height: 50px;
             background-color: white;
 
             border: 1px solid black;
@@ -17,6 +20,69 @@
 
         .variant-btn:hover {
             border: 2px solid red;
+        }
+
+        .tbnsend {
+            background-color: #fff
+        }
+
+        .comment,
+        .reply {
+            position: relative;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .send-button {
+            background-image: url('https://www.flaticon.com/free-icons/message');
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding-left: 20px;
+            /* Điều chỉnh để phù hợp với kích thước biểu tượng */
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .comment strong,
+        .reply strong {
+            font-size: 14px;
+        }
+
+        .comment span,
+        .reply span {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .comment p,
+        .reply p {
+            margin: 10px 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-right: 5px;
+        }
+
+        /* Khoảng cách giữa các bình luận và phản hồi */
+        .comment {
+            margin-bottom: 20px;
+        }
+
+        .reply {
+            margin-bottom: 10px;
         }
     </style>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
@@ -37,13 +103,23 @@
                                         class="kobolg-product-gallery kobolg-product-gallery--with-images kobolg-product-gallery--columns-4 images">
                                         <a href="#" class="kobolg-product-gallery__trigger">
                                             <img draggable="false" class="emoji" alt="🔍"
-                                                src="https://s.w.org/images/core/emoji/11/svg/1f50d.svg"></a>
+                                                src="https://s.w.org/images/core/emoji/11/svg/1f50d.svg">
+                                        </a>
                                         <div class="flex-viewport">
                                             <figure class="kobolg-product-gallery__wrapper">
-                                                <div class="kobolg-product-gallery__image">
-                                                    @if ($product->image_url && \Storage::exists($product->image_url))
+                                                @if ($product->galleries->isNotEmpty())
+                                                    @foreach ($product->galleries as $gallery)
+                                                        <div class="kobolg-product-gallery__image">
+                                                            <img src="{{ \Storage::url($gallery->image_url) }}"
+                                                                alt="{{ $product->name }}"
+                                                                style="max-width: 70%; margin: 0 auto; height: auto;">
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="kobolg-product-gallery__image">
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
+<<<<<<< HEAD
 <<<<<<< HEAD
                                                             style="max-width: 100px; height: auto;">
 =======
@@ -72,21 +148,28 @@
                                                     <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}"
                                                         class="" alt="img">
                                                 </div>
+=======
+                                                            style="max-width: 70%; margin: 0 auto; height: auto;">
+                                                    </div>
+                                                @endif
+>>>>>>> e238c2759354f48cb500ecfef816b12b92edf75a
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
-                                            <li><img src="{{ asset('theme/client/assets/images/apro131-2-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro134-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro132-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
-                                            <li><img src="{{ asset('theme/client/assets/images/apro133-1-100x100.jpg') }}"
-                                                    alt="img">
-                                            </li>
+                                            @if ($product->galleries->isNotEmpty())
+                                                @foreach ($product->galleries as $gallery)
+                                                    <li>
+                                                        <img src="{{ \Storage::url($gallery->image_url) }}" alt="Thumbnail"
+                                                            style="width: 100px; height: auto;">
+                                                    </li>
+                                                @endforeach
+                                            @else
+                                                <li>
+                                                    <img src="{{ \Storage::url($product->image_url) }}"
+                                                        alt="{{ $product->name }} Thumbnail"
+                                                        style="width: 100px; height: auto;">
+                                                </li>
+                                            @endif
                                         </ol>
                                     </div>
                                 </div>
@@ -128,77 +211,71 @@
                                     <div class="product-variants">
                                         <div class="product-attributes">
                                             <!-- Dung lượng -->
-                                            <div class="attribute-group">
-                                                <h4>Dung lượng:</h4>
-                                                @php
-                                                    $dungLuongVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Storage') {
-                                                                $dungLuongVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($dungLuongVariants) > 0)
-                                                    @foreach ($dungLuongVariants as $dungLuong => $variants)
-                                                        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->img_url }}">
-                                                            <!-- Đảm bảo img_url được lấy từ CSDL -->
-                                                            @if (!empty($variants[0]->img_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ $variants[0]->img_url }}"
-                                                                    alt="{{ $dungLuong }}" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $dungLuong }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có dung lượng nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
+@php
+$dungLuongVariants = [];
+foreach ($product->variants as $variant) {
+    foreach ($variant->attributeValues as $attributeValue) {
+        if ($attributeValue->attribute->name === 'Storage') {
+            $dungLuongVariants[$attributeValue->name][] = $variant;
+        }
+    }
+}
+@endphp
+@if (count($dungLuongVariants) > 0)
+<div class="attribute-group">
+    <h4>Dung lượng:</h4>
+    @foreach ($dungLuongVariants as $dungLuong => $variants)
+        <button class="variant-btn" data-dung-luong="{{ $dungLuong }}"
+            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
+            data-img-url="{{ $variants[0]->img_url }}">
+            @if (!empty($variants[0]->img_url))
+                <img src="{{ $variants[0]->img_url }}"
+                    alt="{{ $dungLuong }}" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @else
+                <img src="{{ \Storage::url($product->image_url) }}"
+                    alt="No Image" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @endif
+            {{ $dungLuong }}
+        </button>
+    @endforeach
+</div>
+@endif
 
-                                            <!-- Màu sắc -->
-                                            <div class="attribute-group">
-                                                <h4>Màu sắc:</h4>
-                                                @php
-                                                    $mauSacVariants = [];
-                                                    foreach ($product->variants as $variant) {
-                                                        foreach ($variant->attributeValues as $attributeValue) {
-                                                            if ($attributeValue->attribute->name === 'Color') {
-                                                                $mauSacVariants[$attributeValue->name][] = $variant;
-                                                            }
-                                                        }
-                                                    }
-                                                @endphp
-                                                @if (count($mauSacVariants) > 0)
-                                                    @foreach ($mauSacVariants as $mauSac => $variants)
-                                                        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
-                                                            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
-                                                            data-img-url="{{ $variants[0]->img_url }}">
-                                                            @if (!empty($variants[0]->img_url))
-                                                                <!-- Kiểm tra nếu có ảnh -->
-                                                                <img src="{{ $variants[0]->img_url }}"
-                                                                    alt="{{ $mauSac }}" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @else
-                                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                                    alt="No Image" width="50" height="50"
-                                                                    style="margin-right: 5px;">
-                                                            @endif
-                                                            {{ $mauSac }}
-                                                        </button>
-                                                    @endforeach
-                                                @else
-                                                    <p>Không có màu sắc nào cho sản phẩm này.</p>
-                                                @endif
-                                            </div>
+<!-- Màu sắc -->
+@php
+$mauSacVariants = [];
+foreach ($product->variants as $variant) {
+    foreach ($variant->attributeValues as $attributeValue) {
+        if ($attributeValue->attribute->name === 'Color') {
+            $mauSacVariants[$attributeValue->name][] = $variant;
+        }
+    }
+}
+@endphp
+@if (count($mauSacVariants) > 0)
+<div class="attribute-group">
+    <h4>Màu sắc:</h4>
+    @foreach ($mauSacVariants as $mauSac => $variants)
+        <button class="variant-btn" data-mau-sac="{{ $mauSac }}"
+            data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}đ"
+            data-img-url="{{ $variants[0]->image_url }}">
+            @if (!empty($variants[0]->image_url))
+                <img src="{{ \Storage::url($variants[0]->image_url) }}"
+                    alt="{{ $mauSac }}" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @else
+                <img src="{{ \Storage::url($product->image_url) }}"
+                    alt="No Image" width="35px" height="35px"
+                    style="margin-right: 5px;">
+            @endif
+            {{ $mauSac }}
+        </button>
+    @endforeach
+</div>
+@endif
+
                                         </div>
                                     </div>
 
@@ -210,20 +287,16 @@
                                         document.addEventListener('DOMContentLoaded', function() {
                                             let selectedStorage = null;
                                             let selectedColor = null;
+                                            let selectedSize = null;
                                             let selectedStorageButton = null;
                                             let selectedColorButton = null;
+                                            let selectedSizeButton = null;
+
+                                            // Giá gốc của sản phẩm (giá cơ bản)
+                                            const originalPrice = parseFloat("{{ $product->price }}");
                                             const priceElement = document.getElementById('product-price');
 
-                                            // Lưu dữ liệu dung lượng và màu sắc cho các bước tiếp theo (thêm giỏ hàng, thanh toán)
-                                            let storageData = {
-                                                name: null,
-                                                price: null
-                                            };
-                                            let colorData = {
-                                                name: null
-                                            };
-
-                                            // Lấy danh sách biến thể từ PHP
+                                            // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
                                             const variants = {!! json_encode(
                                                 $product->variants->map(function ($variant) {
                                                     return [
@@ -238,110 +311,144 @@
                                                 }),
                                             ) !!};
 
-                                            // Giá gốc của sản phẩm
-                                            const originalPrice = '{{ number_format($product->price, 0, ',', '.') }}đ';
+                                            // Hiển thị giá
+                                            function updatePrice() {
+                                                let totalPrice = originalPrice;
+                                                let minPrice = originalPrice; // Giá tối thiểu khởi tạo là giá gốc
+                                                let maxPrice = originalPrice; // Giá tối đa khởi tạo là giá gốc
+                                                let isVariantSelected = false;
 
-                                            // Kiểm tra nếu không có biến thể
-                                            if (!variants || variants.length === 0) {
-                                                priceElement.innerHTML = originalPrice;
-                                                console.log('No variants available. Showing original product price.');
-                                                return;
+                                                // Nếu không có biến thể nào
+                                                if (variants.length === 0) {
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(originalPrice);
+                                                    return;
+                                                }
+
+                                                // Tính toán giá tối thiểu và tối đa từ danh sách biến thể
+                                                variants.forEach(variant => {
+                                                    const variantPrice = variant.price;
+                                                    if (variantPrice < minPrice) {
+                                                        minPrice = variantPrice; // Cập nhật giá tối thiểu
+                                                    }
+                                                    if (variantPrice > maxPrice) {
+                                                        maxPrice = variantPrice; // Cập nhật giá tối đa
+                                                    }
+                                                });
+
+                                                // Tìm biến thể lưu trữ được chọn và cộng giá nếu có
+                                                if (selectedStorage) {
+                                                    const foundStorageVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Storage' && attr.value ===
+                                                            selectedStorage)
+                                                    );
+                                                    if (foundStorageVariant) {
+                                                        totalPrice += foundStorageVariant.price - originalPrice; // Cộng thêm giá biến thể lưu trữ
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Tìm biến thể màu sắc được chọn và cộng giá nếu có
+                                                if (selectedColor) {
+                                                    const foundColorVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Color' && attr.value === selectedColor)
+                                                    );
+                                                    if (foundColorVariant) {
+                                                        totalPrice += foundColorVariant.price - originalPrice; // Cộng thêm giá biến thể màu sắc
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Tìm biến thể kích thước được chọn và cộng giá nếu có
+                                                if (selectedSize) {
+                                                    const foundSizeVariant = variants.find(variant =>
+                                                        variant.attributes.some(attr => attr.name === 'Size' && attr.value === selectedSize)
+                                                    );
+                                                    if (foundSizeVariant) {
+                                                        totalPrice += foundSizeVariant.price - originalPrice; // Cộng thêm giá biến thể kích thước
+                                                        isVariantSelected = true;
+                                                    }
+                                                }
+
+                                                // Hiển thị giá
+                                                if (!isVariantSelected && minPrice === maxPrice) {
+                                                    // Nếu không có biến thể được chọn và giá min = max, hiển thị giá đơn lẻ
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(originalPrice);
+                                                } else if (!isVariantSelected) {
+                                                    // Nếu không có biến thể được chọn, hiển thị giá min và max
+                                                    priceElement.innerHTML = `${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(minPrice)} - ${new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(maxPrice)}`;
+                                                } else {
+                                                    // Nếu có biến thể được chọn, hiển thị giá tổng
+                                                    priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(totalPrice);
+                                                }
                                             }
-                                            // Lọc giá dựa trên dung lượng (Storage)
-                                            const storageVariants = variants.filter(variant =>
-                                                variant.attributes.some(attr => attr.name === 'Storage')
-                                            );
 
-                                            // Tìm giá nhỏ nhất và lớn nhất
-                                            const minPrice = Math.min(...storageVariants.map(variant => variant.price));
-                                            const maxPrice = Math.max(...storageVariants.map(variant => variant.price));
-
-                                            // Hiển thị giá mặc định nhỏ nhất - lớn nhất
-                                            function showDefaultPrice() {
-                                                priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(minPrice) + ' - ' + new Intl.NumberFormat('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                }).format(maxPrice) + '';
-                                            }
-
-                                            // Hiển thị giá mặc định khi trang được tải
-                                            showDefaultPrice();
 
                                             // Sử dụng event delegation để lắng nghe sự kiện click
                                             document.addEventListener('click', function(event) {
                                                 if (event.target.classList.contains('variant-btn')) {
                                                     const storage = event.target.getAttribute('data-dung-luong');
                                                     const color = event.target.getAttribute('data-mau-sac');
+                                                    const size = event.target.getAttribute('data-size');
 
                                                     // Kiểm tra nếu là nút dung lượng
                                                     if (storage) {
-                                                        console.log('Selected storage:', storage);
                                                         if (selectedStorage === storage) {
-                                                            // Khi bỏ chọn dung lượng, đặt lại giá về mặc định
                                                             resetButton(selectedStorageButton);
                                                             selectedStorage = null;
                                                             selectedStorageButton = null;
-                                                            storageData.name = null;
-                                                            storageData.price = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn dung lượng
                                                         } else {
                                                             if (selectedStorageButton) resetButton(selectedStorageButton);
                                                             selectedStorage = storage;
                                                             selectedStorageButton = event.target;
                                                             selectButton(selectedStorageButton);
-
-                                                            // Lưu tên dung lượng và giá của dung lượng đã chọn
-                                                            const foundStorageVariant = storageVariants.find(variant =>
-                                                                variant.attributes.some(attr => attr.name === 'Storage' && attr
-                                                                    .value === selectedStorage)
-                                                            );
-                                                            if (foundStorageVariant) {
-                                                                storageData.name = selectedStorage;
-                                                                storageData.price = foundStorageVariant.price;
-                                                                console.log('Storage selected:', storageData.name, 'Price:', storageData
-                                                                    .price);
-                                                            }
                                                         }
                                                     }
 
                                                     // Kiểm tra nếu là nút màu sắc
                                                     if (color) {
-                                                        console.log('Selected color:', color);
                                                         if (selectedColor === color) {
-                                                            // Khi bỏ chọn màu sắc, đặt lại giá về mặc định
                                                             resetButton(selectedColorButton);
                                                             selectedColor = null;
                                                             selectedColorButton = null;
-                                                            colorData.name = null;
-                                                            showDefaultPrice(); // Đặt lại giá mặc định khi bỏ chọn màu sắc
                                                         } else {
                                                             if (selectedColorButton) resetButton(selectedColorButton);
                                                             selectedColor = color;
                                                             selectedColorButton = event.target;
                                                             selectButton(selectedColorButton);
-
-                                                            // Lưu tên màu sắc đã chọn
-                                                            colorData.name = selectedColor;
-                                                            console.log('Color selected:', colorData.name);
                                                         }
                                                     }
 
-                                                    // Chỉ cập nhật giá khi cả dung lượng và màu sắc được chọn
-                                                    if (storageData.name && colorData.name) {
-                                                        // Cập nhật giá chỉ dựa trên dung lượng
-                                                        priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
-                                                            style: 'currency',
-                                                            currency: 'VND'
-                                                        }).format(storageData.price) + '';
-                                                        console.log('Final selected:', 'Storage:', storageData.name, 'Color:', colorData
-                                                            .name, 'Price:', storageData.price);
-                                                    } else {
-                                                        // Khi chưa chọn đủ hoặc bỏ chọn dung lượng/màu sắc, hiển thị giá mặc định
-                                                        showDefaultPrice();
+                                                    // Kiểm tra nếu là nút kích thước
+                                                    if (size) {
+                                                        if (selectedSize === size) {
+                                                            resetButton(selectedSizeButton);
+                                                            selectedSize = null;
+                                                            selectedSizeButton = null;
+                                                        } else {
+                                                            if (selectedSizeButton) resetButton(selectedSizeButton);
+                                                            selectedSize = size;
+                                                            selectedSizeButton = event.target;
+                                                            selectButton(selectedSizeButton);
+                                                        }
                                                     }
+
+                                                    // Cập nhật giá dựa trên các lựa chọn hiện tại
+                                                    updatePrice();
                                                 }
                                             });
 
@@ -360,6 +467,9 @@
                                                     button.style.border = '2px solid red'; // Viền đỏ
                                                 }
                                             }
+
+                                            // Hiển thị giá gốc khi trang được tải
+                                            updatePrice();
                                         });
                                     </script>
 
@@ -382,7 +492,7 @@
                                                     <div class="control">
                                                         <a class="btn-number qtyminus quantity-minus" href="#">-</a>
                                                         <input type="text" data-step="1" min="0" max=""
-                                                            name="quantity[25]" value="0" title="Qty"
+                                                            name="quantity[25]" value="1" title="Qty"
                                                             class="input-qty input-text qty text" size="4"
                                                             pattern="[0-9]*" inputmode="numeric">
                                                         <a class="btn-number qtyplus quantity-plus" href="#">+</a>
@@ -460,75 +570,306 @@
                             <ul class="tabs dreaming-tabs" role="tablist">
                                 <li class="description_tab active" id="tab-title-description" role="tab"
                                     aria-controls="tab-description">
-                                    <a href="#tab-description">Description</a>
+                                    <a href="#tab-description">Mô tả</a>
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Additional information</a>
+                                    <a href="#tab-additional_information">Bình luận
+                                        ({{ $product->comments->count() }})</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
                                     aria-controls="tab-reviews">
-                                    <a href="#tab-reviews">Reviews (0)</a>
+                                    <a href="#tab-reviews">Đánh giá (0)</a>
                                 </li>
                             </ul>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--description panel entry-content kobolg-tab"
                                 id="tab-description" role="tabpanel" aria-labelledby="tab-title-description">
-                                <h2>Description</h2>
-                                <div class="col-md-8 justify-content-center align-items-center text-center">
-                                    {!! $product->description !!}
+                                <h2 class="text-center">Mô tả</h2>
+                                <div class="col-md-6 mx-auto">
+                                    <div id="description-content" class="content-collapsed">
+                                        {!! $product->description !!}
+                                    </div>
+                                    <a id="toggle-link" class="toggle-link" href="javascript:void(0);"
+                                        style="display: none;">
+                                        <i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung
+                                    </a>
                                 </div>
-                                {{-- <div class="container-table">
-                                    <div class="container-cell">
-                                        <div class="az_single_image-wrapper az_box_border_grey">
-                                            <img src="{{ asset('theme/client/assets/images/single-pro2.jpg') }}"
-                                                class="az_single_image-img attachment-full" alt="img">
-                                        </div>
-                                    </div>
-                                    <div class="container-cell">
-                                        <h2 class="az_custom_heading">
-                                            Potenti praesent molestie<br>
-                                            at viverra</h2>
-                                        <p>This generator uses a dictionary of Latin words to construct
-                                            passages of Lorem Ipsum text that meet your desired length. The
-                                            sentence and paragraph durations and punctuation dispersal are
-                                            calculated using Gaussian distribution, based on statistical
-                                            analysis of real world texts. This ensures that the generated
-                                            Lorem Ipsum text is unique, free of repetition and also
-                                            resembles readable text as much as possible.</p>
-                                    </div>
-                                </div> --}}
                             </div>
+
+
+                            <style>
+                                /* Thu gọn nội dung */
+                                .content-collapsed {
+                                    max-height: 100px;
+                                    /* Chiều cao ban đầu */
+                                    overflow: hidden;
+                                    position: relative;
+                                    transition: max-height 0.3s ease;
+                                }
+
+                                /* Nội dung mở rộng */
+                                .content-expanded {
+                                    max-height: none;
+                                    /* Hiển thị toàn bộ */
+                                }
+
+                                /* Link "Xem thêm" */
+                                .toggle-link {
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    margin-top: 10px;
+                                    font-weight: bold;
+                                    color: #007bff;
+                                    /* Màu sắc liên kết */
+                                    cursor: pointer;
+                                    text-decoration: none;
+                                }
+
+                                .toggle-icon {
+                                    margin-right: 5px;
+                                    transition: transform 0.3s ease;
+                                    /* Hiệu ứng chuyển động của mũi tên */
+                                }
+
+                                .icon-up {
+                                    transform: rotate(180deg);
+                                    /* Mũi tên hướng lên */
+                                }
+                            </style>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    var content = document.getElementById("description-content");
+                                    var toggleLink = document.getElementById("toggle-link");
+                                    var icon = toggleLink.querySelector(".toggle-icon");
+
+                                    // Kiểm tra nếu nội dung vượt quá giới hạn chiều cao
+                                    if (content.scrollHeight > content.clientHeight) {
+                                        toggleLink.style.display = "inline-flex"; // Hiển thị link "Xem thêm"
+                                    }
+
+                                    // Thêm sự kiện click cho link "Xem thêm"
+                                    toggleLink.addEventListener("click", function() {
+                                        if (content.classList.contains("content-collapsed")) {
+                                            content.classList.remove("content-collapsed");
+                                            content.classList.add("content-expanded");
+                                            icon.classList.add("icon-up"); // Xoay mũi tên hướng lên
+                                            this.innerHTML = '<i class="fa fa-chevron-up toggle-icon"></i> Thu gọn nội dung';
+                                        } else {
+                                            content.classList.remove("content-expanded");
+                                            content.classList.add("content-collapsed");
+                                            icon.classList.remove("icon-up"); // Mũi tên trở lại hướng xuống
+                                            this.innerHTML = '<i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung';
+                                        }
+                                    });
+                                });
+                            </script>
+
+
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
                                 id="tab-additional_information" role="tabpanel"
                                 aria-labelledby="tab-title-additional_information">
-                                <h2>Additional information</h2>
-                                <table class="shop_attributes">
-                                    <tbody>
-                                        <tr>
-                                            <th>Color</th>
-                                            <td>
-                                                <p>Blue, Pink, Red, Yellow</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+
+                                <h2>Bình luận ({{ $product->comments->count() }})</h2>
+
+                                <!-- Hiển thị danh sách bình luận -->
+                                <div class="comments-section">
+                                    @foreach ($product->comments as $comment)
+                                        <div class="comment">
+                                            <!-- Hiển thị tên người dùng và ngày đăng bình luận -->
+                                            <p><strong>{{ $comment->user->name }}</strong>
+                                                <span>{{ $comment->created_at->format('d/m/Y') }}</span>
+                                            </p>
+
+                                            <!-- Nội dung bình luận -->
+                                            <div id="comment-content-{{ $comment->id }}">
+                                                <p>{{ $comment->comment }}</p>
+                                            </div>
+
+                                            <!-- Nút menu thả xuống -->
+
+                                            @if ($comment->user_id == Auth::id())
+                                                <!-- Nút menu thả xuống -->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary dropdown-toggle"
+                                                        onclick="toggleDropdown({{ $comment->id }})" type="button"
+                                                        id="dropdownMenuButton{{ $comment->id }}"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                    </button>
+                                                    <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}"
+                                                        style="display:none;"
+                                                        aria-labelledby="dropdownMenuButton{{ $comment->id }}">
+                                                        <button class="dropdown-item"
+                                                            onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
+                                                        <form
+                                                            action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="dropdown-item" type="submit"
+                                                                onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            <!-- Form chỉnh sửa bình luận ẩn -->
+                                            <div id="edit-comment-form-{{ $comment->id }}" style="display: none;">
+                                                <form
+                                                    action="{{ route('client.updateComment', [$product->id, $comment->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <textarea name="comment" required>{{ $comment->comment }}</textarea>
+                                                    <button type="submit">Lưu thay đổi</button>
+                                                    <button type="button"
+                                                        onclick="toggleEditForm({{ $comment->id }})">Hủy</button>
+                                                </form>
+                                            </div>
+
+                                            <!-- Hiển thị các phản hồi -->
+                                            @foreach ($comment->replies as $reply)
+                                                <div class="reply">
+                                                    <p><strong>{{ $reply->user->name }}</strong>
+                                                        <span>{{ $reply->created_at->format('d/m/Y') }}</span>
+                                                    </p>
+
+                                                    <div id="reply-content-{{ $reply->id }}">
+                                                        <p>{{ $reply->reply }}</p>
+                                                    </div>
+
+                                                    <!-- Nút menu thả xuống cho phản hồi -->
+                                                    @if ($reply->user_id == Auth::id())
+                                                        <!-- Nút menu thả xuống cho phản hồi -->
+                                                        <div class="dropdown">
+                                                            <button class=" dropdown-toggle"
+                                                                onclick="toggleDropdownReply({{ $reply->id }})"
+                                                                type="button"
+                                                                id="dropdownMenuButtonReply{{ $reply->id }}"
+                                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                            </button>
+                                                            <div class="dropdown-menu"
+                                                                id="customDropdownReply-{{ $reply->id }}"
+                                                                style="display:none;"
+                                                                aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
+                                                                <button class="dropdown-item"
+                                                                    onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
+                                                                <form
+                                                                    action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}"
+                                                                    method="POST" style="display:inline;">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button class="dropdown-item" type="submit"
+                                                                        onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                    <!-- Form chỉnh sửa phản hồi ẩn -->
+                                                    <div id="edit-reply-form-{{ $reply->id }}" style="display: none;">
+                                                        <form
+                                                            action="{{ route('client.updateReply', [$comment->id, $reply->id]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <textarea name="reply" required>{{ $reply->reply }}</textarea>
+                                                            <button type="submit">Lưu thay đổi</button>
+                                                            <button type="button"
+                                                                onclick="toggleEditFormReply({{ $reply->id }})">Hủy</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            <!-- Form thêm phản hồi -->
+                                            @auth
+                                                <form action="{{ route('client.storeReply', $comment->id) }}" method="POST">
+                                                    @csrf
+                                                    <textarea name="reply" required placeholder="Phản hồi của bạn"></textarea>
+                                                    <button type="submit" class="tbnsend"> <img
+                                                            src="{{ asset('theme/client/assets/images/send.png') }}"
+                                                            width="39px" alt=""></button>
+                                                </form>
+                                            @endauth
+                                        </div>
+                                    @endforeach
+
+                                    <!-- Form thêm bình luận -->
+                                    @auth
+                                        <form action="{{ route('client.storeComment', $product->id) }}" method="POST">
+                                            @csrf
+                                            <textarea name="comment" required placeholder="Bình luận của bạn"></textarea>
+                                            <button type="submit" class="tbnsend"> <img
+                                                    src="{{ asset('theme/client/assets/images/send.png') }}" width="39px"
+                                                    alt=""></button>
+                                        </form>
+                                    @endauth
+                                </div>
+
+                                <!-- JavaScript để bật tắt form chỉnh sửa -->
+                                <script>
+                                    function toggleDropdown(commentId) {
+                                        var dropdown = document.getElementById("customDropdown-" + commentId);
+                                        if (dropdown.style.display === "none") {
+                                            dropdown.style.display = "block";
+                                        } else {
+                                            dropdown.style.display = "none";
+                                        }
+                                    }
+
+                                    function toggleDropdownReply(replyId) {
+                                        var dropdown = document.getElementById("customDropdownReply-" + replyId);
+                                        if (dropdown.style.display === "none") {
+                                            dropdown.style.display = "block";
+                                        } else {
+                                            dropdown.style.display = "none";
+                                        }
+                                    }
+
+
+                                    function toggleEditForm(commentId) {
+                                        var content = document.getElementById('comment-content-' + commentId);
+                                        var form = document.getElementById('edit-comment-form-' + commentId);
+                                        if (form.style.display === "none") {
+                                            form.style.display = "block";
+                                            content.style.display = "none";
+                                        } else {
+                                            form.style.display = "none";
+                                            content.style.display = "block";
+                                        }
+                                    }
+
+                                    function toggleEditFormReply(replyId) {
+                                        var content = document.getElementById('reply-content-' + replyId);
+                                        var form = document.getElementById('edit-reply-form-' + replyId);
+                                        if (form.style.display === "none") {
+                                            form.style.display = "block";
+                                            content.style.display = "none";
+                                        } else {
+                                            form.style.display = "none";
+                                            content.style.display = "block";
+                                        }
+                                    }
+                                </script>
                             </div>
                             <div class="kobolg-Tabs-panel kobolg-Tabs-panel--reviews panel entry-content kobolg-tab"
                                 id="tab-reviews" role="tabpanel" aria-labelledby="tab-title-reviews">
-                                <div id="reviews" class="kobolg-Reviews">
+                                <div id="reviews" class="kobolg-Reviews col-md-6 mx-auto">
                                     <div id="comments">
-                                        <h2 class="kobolg-Reviews-title">Reviews</h2>
-                                        <p class="kobolg-noreviews">There are no reviews yet.</p>
+                                        <h2 class="kobolg-Reviews-title">Đánh giá</h2>
+                                        <p class="kobolg-noreviews">Chưa có đánh giá nào</p>
                                     </div>
                                     <div id="review_form_wrapper">
                                         <div id="review_form">
                                             <div id="respond" class="comment-respond">
-                                                <span id="reply-title" class="comment-reply-title">Be the first to review
-                                                    “T-shirt with skirt”</span>
+                                                <span id="reply-title" class="comment-reply-title">
+                                                    Hãy là người đầu tiên đánh giá</span>
                                                 <form id="commentform" class="comment-form">
-                                                    <p class="comment-notes"><span id="email-notes">Your email addresses
-                                                            will not be published.</span>
-                                                        Required fields are marked <span class="required">*</span></p>
+                                                    <p class="comment-notes"><span id="email-notes">Địa chỉ email của bạn
+                                                            sẽ không được công bố.</span>
+                                                        Các trường bắt buộc được đánh dấu <span class="required">*</span>
+                                                    </p>
                                                     <p class="comment-form-author">
                                                         <label for="author">Name&nbsp;<span
                                                                 class="required">*</span></label>
@@ -540,8 +881,8 @@
                                                         <input id="email" name="email" value=""
                                                             size="30" required="" type="email">
                                                     </p>
-                                                    <div class="comment-form-rating"><label for="rating">Your
-                                                            rating</label>
+                                                    <div class="comment-form-rating"><label for="rating">Đánh
+                                                            giá</label>
                                                         <p class="stars">
                                                             <span>
                                                                 <a class="star-1" href="#">1</a>
@@ -561,12 +902,12 @@
                                                             <option value="1">Very poor</option>
                                                         </select>
                                                     </div>
-                                                    <p class="comment-form-comment"><label for="comment">Your
-                                                            review&nbsp;<span class="required">*</span></label>
+                                                    <p class="comment-form-comment"><label for="comment">Đánh giá của
+                                                            bạn&nbsp;<span class="required">*</span></label>
                                                         <textarea id="comment" name="comment" cols="45" rows="8" required=""></textarea>
                                                     </p><input name="wpml_language_code" value="en" type="hidden">
                                                     <p class="form-submit"><input name="submit" id="submit"
-                                                            class="submit" value="Submit" type="submit"> <input
+                                                            class="submit" value="Đánh Giá" type="submit"> <input
                                                             name="comment_post_ID" value="27" id="comment_post_ID"
                                                             type="hidden">
                                                         <input name="comment_parent" id="comment_parent" value="0"
@@ -582,7 +923,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 col-sm-12 dreaming_related-product">
+                {{-- <div class="col-md-12 col-sm-12 dreaming_related-product">
                     <div class="block-title">
                         <h2 class="product-grid-title">
                             <span>Related Products</span>
@@ -1076,9 +1417,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

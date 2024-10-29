@@ -120,71 +120,73 @@ class ProductController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $productId)
-    {
-        try {
-            DB::beginTransaction();
+{
+    try {
+        DB::beginTransaction();
 
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'slug' => 'required|string|max:255|unique:products,slug,' . $productId,
-                'sku' => 'nullable|string|max:255',
-                'price' => 'required|numeric',
-                'discount_price' => 'nullable|numeric', // Xác thực discount_price
-                'weight' => 'nullable|numeric',
-                'description' => 'nullable|string',
-                'dimensions' => 'nullable|string|max:255',
-                'is_featured' => 'nullable|boolean',
-                'condition' => 'required|in:new,used,refurbished',
-                'tomtat' => 'nullable|string',
-                // Các quy tắc xác thực khác
-            ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:products,slug,' . $productId,
+            'sku' => 'nullable|string|max:255',
+            'price' => 'required|numeric',
+            'discount_price' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'description' => 'nullable|string',
+            'dimensions' => 'nullable|string|max:255',
+            'is_featured' => 'nullable|boolean',
+            'condition' => 'required|in:new,used,refurbished',
+            'tomtat' => 'nullable|string',
+            // Các quy tắc xác thực khác
+        ]);
 
-            $product = Product::findOrFail($productId);
+        $product = Product::findOrFail($productId);
 
-            // Cập nhật thông tin sản phẩm
-            $product->update([
-                'name' => $request->name,
-                'slug' => $request->slug,
-                'sku' => $request->sku,
-                'price' => $request->price,
-                'discount_price' => $request->discount_price,
-                'weight' => $request->weight,
-                'dimensions' => $request->dimensions,
-                'is_active' => $request->is_active,
-                'is_featured' => $request->has('is_featured'),
-                'condition' => $request->condition,
-                'brand_id' => $request->brand_id,
-                'description' => $request->description,
-                'catalogue_id' => $request->catalogue_id,
-                'tomtat' => $request->tomtat,
-            ]);
+        // Cập nhật thông tin sản phẩm
+        $product->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'sku' => $request->sku,
+            'price' => $request->price,
+            'discount_price' => $request->discount_price,
+            'weight' => $request->weight,
+            'dimensions' => $request->dimensions,
+            'is_active' => $request->is_active,
+            'is_featured' => $request->has('is_featured'),
+            'condition' => $request->condition,
+            'brand_id' => $request->brand_id,
+            'description' => $request->description,
+            'catalogue_id' => $request->catalogue_id,
+            'tomtat' => $request->tomtat,
+        ]);
 
-            // Xử lý hình ảnh chính
-            if ($request->hasFile("image_url")) {
-                $imagePath = Storage::put('images', $request->image_url);
-                $product->update(['image_url' => $imagePath]);
-            }
+        // Xử lý hình ảnh chính
+        if ($request->hasFile("image_url")) {
+            $imagePath = Storage::put('images', $request->image_url);
+            $product->update(['image_url' => $imagePath]);
+        }
 
-            // Xử lý hình ảnh từ bảng galleries
-            if ($request->hasFile('images')) {
-                // Xóa tất cả hình ảnh cũ
-                $product->galleries()->delete();
+        // Xử lý hình ảnh từ bảng galleries
+        if ($request->hasFile('images')) {
+            // Xóa tất cả hình ảnh cũ
+            $product->galleries()->delete();
 
-                // Thêm hình ảnh mới
-                foreach ($request->file('images') as $image) {
-                    if ($image) {
-                        $imagePath = Storage::put('galleries', $image);
-                        Gallery::create([
-                            'product_id' => $product->id,
-                            'image_url' => $imagePath,
-                        ]);
-                    }
+            // Thêm hình ảnh mới
+            foreach ($request->file('images') as $image) {
+                if ($image) {
+                    $imagePath = Storage::put('galleries', $image);
+                    Gallery::create([
+                        'product_id' => $product->id,
+                        'image_url' => $imagePath,
+                    ]);
                 }
-            } else {
-                // Nếu không có hình ảnh mới, giữ lại hình ảnh cũ
-                if ($request->has('existing_images')) {
-                    foreach ($request->existing_images as $existingImage) {
-                        if ($existingImage) {
+            }
+        } else {
+            // Nếu không có hình ảnh mới, giữ lại hình ảnh cũ
+            if ($request->has('existing_images')) {
+                foreach ($request->existing_images as $existingImage) {
+                    if ($existingImage) {
+                        // Kiểm tra xem hình ảnh đã tồn tại trong bảng galleries chưa
+                        if (!Gallery::where('product_id', $product->id)->where('image_url', $existingImage)->exists()) {
                             Gallery::create([
                                 'product_id' => $product->id,
                                 'image_url' => $existingImage,
@@ -193,15 +195,15 @@ class ProductController extends Controller
                     }
                 }
             }
-
-            DB::commit();
-            return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            // \Log::error('Update product error: ' . $th->getMessage());
-            return back()->with('errors', $th->getMessage());
         }
+
+        DB::commit();
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công.');
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return back()->with('errors', $th->getMessage());
     }
+}
     public function import(Request $request)
 {
     // Kiểm tra xem đã có file hay chưa

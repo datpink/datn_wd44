@@ -16,6 +16,10 @@
                                    class="btn btn-primary btn-rounded d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
+                                <a href="{{ route('products.index') }}"
+                                    class="btn btn-secondary mt-2 btn-rounded d-flex align-items-center">
+                                    <i class="bi bi-arrow-left me-2"></i> Trở về
+                                </a>
                             </div>
                         </div>
 
@@ -53,9 +57,8 @@
                                                     <form action="{{ route('variants.updateStatus', $variant->id) }}" method="POST" style="display:inline-block;">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button type="submit" class="btn rounded-pill btn-sm {{ $variant->status == 'active' ? 'btn-warning' : 'btn-success' }}">
-                                                            <i class="bi {{ $variant->status == 'active' ? 'bi-x-circle' : 'bi-check-circle' }}"></i>
-                                                            {{ $variant->status == 'active' ? 'Không Kích Hoạt' : 'Kích Hoạt' }}
+                                                        <button type="submit" class="btn rounded-pill btn-sm" style="background: none; border: none; padding: 0;">
+                                                            <i class="bi {{ $variant->status == 'active' ? 'bi-x-circle text-warning' : 'bi-check-circle text-success' }}" style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

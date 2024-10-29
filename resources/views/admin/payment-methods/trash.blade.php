@@ -42,32 +42,41 @@
                                         <td>{{ $paymentMethod->name }}</td>
                                         <td>{{ $paymentMethod->description ?? 'Không có mô tả' }}</td>
                                         <td>
-                                            <span class="badge
+                                            <span
+                                                class="badge
                                                 {{ $paymentMethod->status === 'active' ? 'bg-success' : 'bg-warning' }}">
                                                 {{ ucfirst($paymentMethod->status) }}
                                             </span>
                                         </td>
-                                        <td>{{ $paymentMethod->deleted_at ? $paymentMethod->deleted_at->format('d-m-Y') : 'Chưa xóa' }}</td>
+                                        <td>{{ $paymentMethod->deleted_at ? $paymentMethod->deleted_at->format('d-m-Y') : 'Chưa xóa' }}
+                                        </td>
                                         <td>
-                                            <form action="{{ route('payment-methods.restore', $paymentMethod->id) }}" method="POST" style="display:inline;" class="restore-form">
+                                            <form action="{{ route('payment-methods.restore', $paymentMethod->id) }}"
+                                                method="POST" style="display:inline;" class="restore-form">
                                                 @csrf
-                                                <button type="button" class="btn btn-outline-success rounded-pill btn-sm restore-btn">
-                                                    <i class="bi bi-arrow-repeat"></i> Khôi phục
+                                                <button type="submit" class="restore-btn"
+                                                    style="background: none; border: none; padding: 0; margin-right: 15px;"
+                                                    title="Khôi phục">
+                                                    <i class="bi bi-arrow-repeat text-success"
+                                                        style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
 
-                                            <form action="{{ route('payment-methods.forceDelete', $paymentMethod->id) }}" method="POST" style="display:inline;" class="force-delete-form">
+                                            <form action="{{ route('payment-methods.forceDelete', $paymentMethod->id) }}"
+                                                method="POST" style="display:inline;" class="force-delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-outline-danger rounded-pill btn-sm force-delete-btn">
-                                                    <i class="bi bi-trash"></i> Xóa cứng
+                                                <button type="submit" class="force-delete-btn"
+                                                    style="background: none; border: none; padding: 0;" title="Xóa cứng">
+                                                    <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">Không có phương thức thanh toán nào trong thùng rác.</td>
+                                        <td colspan="6" class="text-center">Không có phương thức thanh toán nào trong
+                                            thùng rác.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

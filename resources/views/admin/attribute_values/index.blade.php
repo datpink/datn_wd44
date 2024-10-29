@@ -42,14 +42,14 @@
                                             <td>{{ $value->id }}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>
-                                                <a href="{{ route('attributes.attribute_values.edit', [$attribute->id, $value->id]) }}" class="btn btn-warning btn-sm rounded-pill">
-                                                    <i class="bi bi-pencil me-1"></i> Sửa
+                                                <a href="{{ route('attributes.attribute_values.edit', [$attribute->id, $value->id]) }}" class="editRow" style="margin-right: 20px;" title="Sửa">
+                                                    <i class="bi bi-pencil text-warning" style="font-size: 1.8em;"></i>
                                                 </a>
                                                 <form action="{{ route('attributes.attribute_values.destroy', [$attribute->id, $value->id]) }}" method="POST" class="d-inline-block delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill">
-                                                        <i class="bi bi-trash me-1"></i> Xóa
+                                                    <button type="submit" class="delete-btn" style="background: none; border: none; padding: 0;" title="Xóa">
+                                                        <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                     </button>
                                                 </form>
                                             </td>
