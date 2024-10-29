@@ -28,7 +28,7 @@
     </script>
 @endif
 
-<style>
+{{-- <style>
     .kobolg-mini-cart-item a {
         display: inline-block;
         max-width: 300px;
@@ -38,7 +38,7 @@
         text-overflow: ellipsis;
         vertical-align: middle;
     }
-</style>
+</style> --}}
 
 
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
@@ -73,7 +73,7 @@
                             </a>
                             <span class="quantity">{{ $item['quantity'] }} × <span
                                     class="kobolg-Price-amount amount"><span
-                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($item['price'], 2) }}</span></span>
+                                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($item['price'], 2) }}</span></span>
                         </li>
                         @php $subtotal += $item['quantity'] * $item['price']; @endphp
                     @endforeach
@@ -83,10 +83,10 @@
             </ul>
             <p class="kobolg-mini-cart__total total"><strong>Subtotal:</strong>
                 <span class="kobolg-Price-amount amount"><span
-                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($subtotal ?? 0, 2) }}</span>
+                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($subtotal ?? 0, 2) }}</span>
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
-                <a href="cart.html" class="button kobolg-forward">View Cart</a>
+                <a href="{{ route('cart.view')}}" class="button kobolg-forward">View Cart</a>
                 <a href="checkout.html" class="button checkout kobolg-forward">Checkout</a>
             </p>
         </div>

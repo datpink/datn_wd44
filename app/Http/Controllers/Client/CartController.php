@@ -12,6 +12,12 @@ use function Laravel\Prompts\alert;
 
 class CartController extends Controller
 {
+
+    public function view(){
+        return view('client.you-cart.viewcart');
+    }
+
+
     public function add(Request $request)
     {
         $productId = $request->input('product_id');
