@@ -13,7 +13,8 @@ use function Laravel\Prompts\alert;
 class CartController extends Controller
 {
 
-    public function view(){
+    public function view()
+    {
         return view('client.you-cart.viewcart');
     }
 
@@ -87,23 +88,25 @@ class CartController extends Controller
 
 
 
-    public function remove($id)
+    public function remove(Request $request)
     {
-        // Lấy giỏ hàng từ session
-        $cart = session()->get('cart');
+        $id = $request->input('id');
+        $cart = session()->get('cart', []);
 
-        // Kiểm tra xem sản phẩm có trong giỏ hàng không
-        if (isset($cart[$id])) {
-            // Xóa sản phẩm khỏi giỏ hàng
+        if (array_key_exists($id, $cart)) {
             unset($cart[$id]);
-            session()->put('cart', array_values($cart)); // Cập nhật giỏ hàng vào session
+            session()->put('cart', $cart);
 
-            // Chuyển hướng về trang giỏ hàng với thông báo
-            // in ra thông báo thành công
-            return response()->json(['message' => 'Đã xóa']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Đã xóa sản phẩm khỏi giỏ hàng.'
+            ]);
         }
 
-        return response()->json(['message' => 'Lỗi']);
+        return response()->json([
+            'success' => false,
+            'message' => 'Không tìm thấy sản phẩm trong giỏ hàng.'
+        ], 404);
     }
 
 
