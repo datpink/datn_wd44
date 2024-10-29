@@ -119,8 +119,9 @@
                                                     </tbody>
                                                 </table>
                                             </form>
-                                            <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Quick View</a>
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                class="button yith-wcqv-button" data-product_id="{{ $product->id }}">Xem
+                                                nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -156,8 +157,8 @@
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
                                                     <a href="#"
-                                                        class="button product_type_variable add_to_cart_button">Select
-                                                        options</a>
+                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ
+                                                        hàng</a>
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">

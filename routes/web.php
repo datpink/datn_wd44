@@ -96,11 +96,19 @@ Route::prefix('shop')->group(function () {
     Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
     Route::get('/search', [PostController::class, 'search'])->name('search');
     Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
+<<<<<<< HEAD
     Route::post('/post/comments/{id}', [PostController::class, 'storeComment'])->name('comments.store');
     // Route::post('/posts/{post}/comments', [PostController::class, 'storeComment'])->name('posts.storeComment');
+=======
+
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
 
 
     Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    Route::get('/privacy-policy', function () {
+        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
+    })->name('privacy.policy');
 
     Route::get('/privacy-policy', function () {
         return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
@@ -123,6 +131,10 @@ Route::prefix('shop')->group(function () {
 
     // GIỏ hàng
     Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+<<<<<<< HEAD
+=======
+    Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 

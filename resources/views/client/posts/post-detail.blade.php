@@ -105,6 +105,7 @@
                     <div id="comments" class="comments-area">
                         <div id="respond" class="comment-respond">
                             <h3 id="reply-title" class="comment-reply-title">Để lại một bình luận</h3>
+<<<<<<< HEAD
                             <form id="commentform" method="POST" action="{{ route('comments.store', ['id' => $post->id]) }}">
                                 @csrf
                                 <p class="comment-notes">
@@ -123,6 +124,21 @@
                                 <p class="form-submit">
                                     <input name="submit" id="submit" class="submit" value="Đăng bình luận" type="submit">
                                 </p>
+=======
+                            <form id="commentform" class="comment-form">
+                                <p class="comment-notes"><span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span> 
+                                    Các trường bắt buộc được đánh dấu<span class="required">*</span></p>
+                                <p class="comment-reply-content"><input name="author" id="name"
+                                        class="input-form name" placeholder="Name*" type="text"></p>
+                                <p class="comment-reply-content"><input name="email" id="email"
+                                        class="input-form email" placeholder="Email*" type="text"></p>
+                                <p class="comment-form-comment">
+                                    <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true"
+                                        placeholder="Nhập bình luận của bạn vào đây..."></textarea>
+                                </p><input name="wpml_language_code" value="en" type="hidden">
+                                <p class="form-submit"><input name="submit" id="submit" class="submit"
+                                        value="Đăng bình luận" type="submit"></p>
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                             </form>
                         </div><!-- #respond -->
                     </div><!-- #comments -->

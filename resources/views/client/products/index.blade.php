@@ -123,8 +123,9 @@
                                                     </tbody>
                                                 </table>
                                             </form>
-                                            <a href="#" class="button yith-wcqv-button"
-                                                data-product_id="{{ $product->id }}">Quick View</a>
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                class="button yith-wcqv-button" data-product_id="{{ $product->id }}">Xem
+                                                nhanh</a>
                                         </div>
                                         <div class="product-info">
                                             <div class="rating-wapper nostar">
@@ -209,7 +210,8 @@
                                 action="{{ route('product.search') }}">
 
                                 <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="{{ request()->get('s') }}" name="s" type="search">
+                                    placeholder="Search products…" value="{{ request()->get('s') }}" name="s"
+                                    type="search">
                                 <button type="submit" value="Search">Search</button>
                             </form>
                         </div>

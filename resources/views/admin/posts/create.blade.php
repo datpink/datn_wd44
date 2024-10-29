@@ -75,8 +75,12 @@
 
                         <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control-file @error('image') is-invalid @enderror"
-                                name="image" id="image">
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" name="image"
+                                id="image" onchange="previewImage(event)">
+
+                            <img id="imagePreview" src="" alt="Hình ảnh xem trước"
+                                style="max-width: 300px; height: auto; display: none;" class="mt-2">
+
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

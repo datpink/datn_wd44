@@ -40,7 +40,10 @@
                                 name="image" id="image" accept="image/*" onchange="previewPostImage(event)">
 
                             @if ($banner->image)
-                                <small>Hình hiện tại: <img src="{{ asset('storage/' . $banner->image) }}" alt="Current Image" style="width: 150px; height: auto;"></small>
+                                <img id="currentImage" src="{{ asset('storage/' . $banner->image) }}" alt=""
+                                    style="width: 150px; height: auto;" class="mt-2">
+                            @else
+                                <p id="noImageText">Không có ảnh</p>
                             @endif
 
                             <img id="newImagePreview" src="" alt="Hình ảnh xem trước"

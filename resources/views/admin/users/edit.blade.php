@@ -60,7 +60,9 @@
 
                         <div class="form-group mb-3">
                             <label for="image">Hình Ảnh:</label>
-                            <input type="file" name="image" id="image" class="form-control-file">
+                            <input type="file" name="image" id="image" class="form-control"
+                                onchange="previewImageUrl(event)">
+
                             @if ($user->image)
                                 <img id="imageUrlPreview" src="{{ asset('storage/' . $user->image) }}"
                                     alt="{{ $user->name }}" class="img-thumbnail mt-2" style="max-width: 150px;">

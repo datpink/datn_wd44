@@ -54,15 +54,18 @@
                                                 name="image" accept="image/*"
                                                 style="top: 0; left: 0; width: 150px; height: 150px; opacity: 0;">
                                             <button type="button" class="btn btn-danger mt-2" style="width: 150px;"
-                                                onclick="document.getElementById('image').click();">Change Image</button>
+                                                onclick="document.getElementById('image').click();">Thay đổi hình
+                                                ảnh</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between mt-4">
-                                <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow">Save Changes</button>
-                                <a href="{{ route('profile.show') }}" class="btn btn-outline-danger btn-lg rounded-pill shadow">Back</a>
+                                <button type="submit" class="btn btn-danger btn-lg rounded-pill shadow">Lưu thay
+                                    đổi</button>
+                                <a href="{{ route('profile.show') }}"
+                                    class="btn btn-outline-danger btn-lg rounded-pill shadow">Quay lại</a>
                             </div>
                         </form>
                     </div>

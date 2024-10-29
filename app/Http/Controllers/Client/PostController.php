@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+=======
+use App\Models\Post;
+use Illuminate\Http\Request;
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
 
 class PostController extends Controller
 {
@@ -39,6 +44,7 @@ class PostController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('posts.id', $id)
             ->firstOrFail();
+<<<<<<< HEAD
         $post1 = Post::with('comments')->findOrFail($id);
         return view('client.posts.post-detail', compact('post','post1'));
     }
@@ -65,6 +71,12 @@ class PostController extends Controller
     return redirect()->back()->with('success', 'Bình luận của bạn đã được thêm!');
 
     }
+=======
+
+        return view('client.posts.post-detail', compact('post'));
+    }
+
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
     // Tìm kiếm bài viết
     public function search(Request $request)
     {
@@ -75,9 +87,14 @@ class PostController extends Controller
             ->orWhere('posts.tomtat', 'LIKE', "%{$query}%")
             ->orWhere('posts.slug', 'LIKE', "%{$query}%")
             ->paginate(9); // Thêm phân trang nếu cần
+<<<<<<< HEAD
 
     return view('client.posts.search-results', compact('posts'));
 }
+=======
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
 
+        return view('client.posts.search-results', compact('posts'));
+    }
 }
 

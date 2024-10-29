@@ -31,15 +31,40 @@ class ProductController extends Controller
     }
 
     public function show($slug)
-    {
-        // Lấy sản phẩm theo slug
-        $product = Product::where('slug', $slug)
-        ->with(['variants' => function($query) {
-            $query->where('status', 'active'); // Chỉ lấy biến thể có status là active
-        }])            ->firstOrFail(); 
+{
+    // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
+    $product = Product::where('slug', $slug)
+        ->with([
+            'galleries',
+            'variants' => function ($query) {
+                $query->where('status', 'active')
+                    ->with('attributeValues.attribute');
+            }
+        ])
+        ->firstOrFail();
 
-        return view('client.products.product-detail', compact('product'));
-    }
+    // Lấy các biến thể cụ thể dựa trên thuộc tính
+    $storageVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    $colorVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    $sizeVariants = $product->variants->filter(function ($variant) {
+        return $variant->attributeValues->contains(function ($attributeValue) {
+            return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
+        });
+    });
+
+    // Truyền các biến thể vào view
+    return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
+}
 
     public function getVariantPrice(Request $request)
     {

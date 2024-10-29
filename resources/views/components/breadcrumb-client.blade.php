@@ -18,7 +18,11 @@
             break;
 
         case 'client.contact.index':
-            $breadcrumbs[] = ['name' => 'Contact', 'url' => ''];
+            $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
+            break;
+
+        case 'privacy.policy':
+            $breadcrumbs[] = ['name' => 'Chính Sách Bảo Mật', 'url' => ''];
             break;
 
         case 'login':

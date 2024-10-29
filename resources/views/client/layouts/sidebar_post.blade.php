@@ -28,6 +28,7 @@
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
             <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
+<<<<<<< HEAD
                 <article
                     class="post-195 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-table category-life-style tag-light tag-life-style">
                     <div class="post-item-inner">
@@ -59,9 +60,33 @@
                             <div class="block-title">
                                 <h2 class="post-title"><a href="#">The
                                         child is sleeping on the bed</a></h2>
+=======
+                @foreach ($latestPosts as $post)
+                    <article
+                        class="post-{{ $post->id }} post type-post status-publish format-standard has-post-thumbnail hentry">
+                        <div class="post-item-inner">
+                            <div class="post-thumb">
+                                <a href="{{ route('post.show', $post->id) }}">
+                                    @if ($post->image && \Storage::exists($post->image))
+                                        <img src="{{ \Storage::url($post->image) }}"
+                                            class="img-responsive attachment-83x83 size-83x83" alt="{{ $post->title }}"
+                                            width="83" height="83">
+                                    @else
+                                        Không có ảnh
+                                    @endif
+                                </a>
                             </div>
-                            <div class="date">December 19, 2018</div>
+                            <div class="post-info">
+                                <div class="block-title">
+                                    <h2 class="post-title">
+                                        <a href="{{ route('post.show', $post->id) }}">{{ $post->title }}</a>
+                                    </h2>
+                                </div>
+                                <div class="date">{{ $post->created_at->format('F d, Y') }}</div>
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
+                            </div>
                         </div>
+<<<<<<< HEAD
                     </div>
                 </article>
                 <article
@@ -100,6 +125,11 @@
                         </div>
                     </div>
                 </article>
+=======
+                    </article>
+                @endforeach
+
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
             </div>
         </div>
         <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
@@ -175,6 +205,7 @@
         </div>
     </div><!-- .widget-area -->
 </div>
+<<<<<<< HEAD
 <!-- Đoạn mã JavaScript cho Ajax -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -261,3 +292,5 @@ $(document).ready(function() {
 }
 
 </style>
+=======
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee

@@ -98,7 +98,7 @@
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
-                                        <a class="thumb-link" href="#" tabindex="0">
+                                        <a class="thumb-link" href="{{ route('client.products.product-detail', $product->slug) }}" tabindex="0">
                                             @if ($product->image_url && \Storage::exists($product->image_url))
                                                 <img src="{{ \Storage::url($product->image_url) }}"
                                                     alt="{{ $product->name }}" width="270PX" height="350px">
@@ -112,7 +112,7 @@
                                                 <span class="onnew"><span class="text">New</span></span>
                                             @endif
                                         </div>
-                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button yith-wcqv-button">Quick View</a>
                                     </div>
                                     <div class="product-info">
                                         <div class="rating-wapper nostar">
@@ -524,10 +524,20 @@
                             <article class="post-item post-grid rows-space-0">
                                 <div class="post-inner blog-grid">
                                     <div class="post-thumb">
+<<<<<<< HEAD
                                         <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
                                             <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
                                                 class="img-responsive attachment-370x330 size-370x330"
                                                 width="370" height="330">
+=======
+                                        <a href="{{ route('post.show', $post->id) }}" tabindex="0">
+                                            @if ($post->image && \Storage::exists($post->image))
+                                                <img src="{{ \Storage::url($post->image) }}"class="img-responsive attachment-370x330 size-370x330"
+                                                    alt="{{ $post->name }}" width="370px" height="330px">
+                                            @else
+                                                Không có ảnh
+                                            @endif
+>>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                                         </a>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             <span>{{ $post->created_at->format('d') }}</span>
