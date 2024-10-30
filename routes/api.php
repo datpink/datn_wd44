@@ -23,3 +23,4 @@ Route::get('shop/products/filter-by-price', [ProductController::class, 'filterBy
 
 Route::get('/shop/products',                  [ProductController::class, 'orderByPriceApi']);
 Route::get('/shop/products/filter-by-color',                  [ProductController::class, 'filterByColor']);
+Route::get('/shop/products/filter-by-storage',                  [ProductController::class, 'filterByStorage']);

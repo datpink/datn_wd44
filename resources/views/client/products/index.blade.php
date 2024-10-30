@@ -496,7 +496,7 @@
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count"></span> </a>
+                                        <span class="count">(*)</span> </a>
                                 @endforeach
 
                             </div>
@@ -505,6 +505,7 @@
                         <script>
                             document.addEventListener('DOMContentLoaded', function(e) {
                                 const colorGroup = document.querySelectorAll('.term-color');
+
                                 // console.log(colorGroup);
 
                                 colorGroup.forEach(function(color) {
@@ -607,42 +608,129 @@
 
 
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
-                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
+                            <h2 class="widgettitle">Lọc theo dung lượng<span class="arrow"></span></h2>
                             <ul class="kobolg-widget-layered-nav-list">
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XS</a>
-                                    <span class="count">(1)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">S</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">M</a>
-                                    <span class="count">(2)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">L</a>
-                                    <span class="count">(3)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XL</a>
-                                    <span class="count">(1)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XXL</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">3XL</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">4XL</a>
-                                    <span class="count">(3)</span>
-                                </li>
+                                @foreach ($variant_storage_values as $storage_value)
+                                    <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                        <a rel="nofollow" href="" class="term-storage"
+                                            data-attribute_storage_id="{{ $storage_value->id }}">{{ $storage_value->name }}</a>
+                                        <span class="count">(*)</span>
+
+                                    </li>
+                                @endforeach
+
                             </ul>
                         </div>
+
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function(e) {
+                                const storageGroup = document.querySelectorAll('.term-storage');
+
+                                // console.log(storageGroup);
+
+                                storageGroup.forEach(function(storage) {
+
+                                    storage.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        const attributeStorageId = this.getAttribute('data-attribute_storage_id');
+                                        // console.log(attributeStorageId);
+
+                                        axios.get('/api/shop/products/filter-by-storage', {
+                                                params: {
+                                                    attribute_storage_value_id: attributeStorageId
+                                                }
+                                            })
+                                            .then((res) => {
+                                                // console.log(res);
+                                                // Xóa danh sách cũ
+                                                const productList = document.getElementById('product-list');
+                                                productList.innerHTML = ''; // Xóa danh sách cũ
+                                                console.log(productList);
+
+
+                                                // Kiểm tra nếu có sản phẩm trong phản hồi
+                                                if (res.data.data.length > 0) {
+                                                    // Tạo một biến để chứa HTML của tất cả các sản phẩm
+                                                    let productsHTML = '';
+
+                                                    res.data.data.forEach(product => {
+                                                        // Tạo nội dung HTML cho sản phẩm mới
+                                                        productsHTML += `
+                                                            <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
+                                                            data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
+                                                            <div class="product-inner images">
+                                                                <div class="product-thumb">
+                                                                    <a class="thumb-link" href="#">
+                                                                        ${product.image_url ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                    </a>
+                                                                    <div class="flash">
+                                                                        ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
+                                                                    </div>
+                                                                    <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
+                                                                </div>
+                                                                <div class="product-info">
+                                                                    <div class="rating-wapper nostar">
+                                                                        <div class="star-rating">
+                                                                            <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
+                                                                        </div>
+                                                                        <span class="review">(${product.ratings_count})</span>
+                                                                    </div>
+                                                                    <h3 class="product-name product_title">
+                                                                        <a href="/products/${product.id}">${product.name}</a>
+                                                                    </h3>
+                                                                    <span class="price">
+                                                                        <span class="kobolg-Price-amount amount text-danger">
+                                                                            <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
+                                                                        </span>
+                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
+                                                                    </span>
+                                                                    <div class="kobolg-product-details__short-description">
+                                                                        <p>${product.tomtat}</p>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="group-button">
+                                                                    <div class="group-button-inner">
+                                                                        <div class="add-to-cart">
+                                                                            <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                        </div>
+                                                                        <div class="yith-wcwl-add-to-wishlist">
+                                                                            <div class="yith-wcwl-add-button show">
+                                                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="kobolg product compare-button">
+                                                                            <a href="#" class="compare button">Compare</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        `;
+                                                    });
+
+                                                    // Cập nhật danh sách sản phẩm mới vào DOM
+                                                    productList.innerHTML = productsHTML;
+
+                                                } else {
+                                                    productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
+                                                }
+
+                                            }).catch((err) => {
+                                                console.log(err);
+
+                                            })
+                                    })
+
+                                })
+
+                            })
+                        </script>
+
+
+
+
+
                         <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
                             <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
                             <ul class="product-categories">
