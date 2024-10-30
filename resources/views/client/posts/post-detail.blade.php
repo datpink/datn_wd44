@@ -81,25 +81,52 @@
                             </div>
                         </div>
                     </article>
+                    <!-- Hiển thị bình luận -->
+                    <div id="comments" class="comments-area">
+                        <h3>Bình luận</h3>
+                        @if ($post->comments->count())
+                            <ul class="comment-list">
+                                @foreach ($post->comments as $comment)
+                                    <li>
+                                        <div class="comment-body">
+                                            <h4 class="comment-author">{{ $comment->user_id }}</h4>
+                                            <p class="comment-content">{{ $comment->content }}</p>
+                                            <p class="comment-meta">{{ $comment->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @else
+                            <p>Chưa có bình luận nào.</p>
+                        @endif
+                    </div>
+
+                    <!-- Form bình luận -->
                     <div id="comments" class="comments-area">
                         <div id="respond" class="comment-respond">
                             <h3 id="reply-title" class="comment-reply-title">Để lại một bình luận</h3>
-                            <form id="commentform" class="comment-form">
-                                <p class="comment-notes"><span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span> 
-                                    Các trường bắt buộc được đánh dấu<span class="required">*</span></p>
-                                <p class="comment-reply-content"><input name="author" id="name"
-                                        class="input-form name" placeholder="Name*" type="text"></p>
-                                <p class="comment-reply-content"><input name="email" id="email"
-                                        class="input-form email" placeholder="Email*" type="text"></p>
+                            <form id="commentform" method="POST" action="{{ route('post.comments.store', $post->id) }}">
+                                @csrf
+                                <p class="comment-notes">
+                                    <span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span> 
+                                    Các trường bắt buộc được đánh dấu<span class="required">*</span>
+                                </p>
+                                <p class="comment-reply-content">
+                                    <input name="author" id="name" class="input-form name" placeholder="Name*" type="text" required>
+                                </p>
+                                <p class="comment-reply-content">
+                                    <input name="email" id="email" class="input-form email" placeholder="Email*" type="email" required>
+                                </p>
                                 <p class="comment-form-comment">
-                                    <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true"
-                                        placeholder="Nhập bình luận của bạn vào đây..."></textarea>
-                                </p><input name="wpml_language_code" value="en" type="hidden">
-                                <p class="form-submit"><input name="submit" id="submit" class="submit"
-                                        value="Đăng bình luận" type="submit"></p>
+                                    <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true" placeholder="Nhập bình luận của bạn vào đây..." required></textarea>
+                                </p>
+                                <p class="form-submit">
+                                    <input name="submit" id="submit" class="submit" value="Đăng bình luận" type="submit">
+                                </p>
                             </form>
                         </div><!-- #respond -->
                     </div><!-- #comments -->
+                    
                 </div>
                 @include('client.layouts.sidebar_post')
 

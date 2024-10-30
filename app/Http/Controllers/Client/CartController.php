@@ -88,6 +88,7 @@ class CartController extends Controller
 
 
 
+
     public function remove(Request $request)
     {
         $id = $request->input('id');

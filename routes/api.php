@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Client\ProductController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('shop/products/filter-by-price', [ProductController::class, 'filterByPrice']);
+Route::get('/search/suggestions', [SearchController::class, 'getSuggestions'])->name('search.suggestions');
