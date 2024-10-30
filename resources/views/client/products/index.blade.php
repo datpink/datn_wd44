@@ -374,7 +374,7 @@
         </li>
     `;
                                                     productLists.innerHTML +=
-                                                        productHTML; // Thêm sản phẩm vào danh sách
+                                                    productHTML; // Thêm sản phẩm vào danh sách
                                                 });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);

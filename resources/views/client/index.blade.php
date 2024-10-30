@@ -544,8 +544,7 @@
                                                     href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="{{ route('post.show', $post->id) }}"
-                                                    tabindex="0">{{ $post->comments_count }}</a>
+                                                <a href="#" tabindex="0">{{ $post->comments_count }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">

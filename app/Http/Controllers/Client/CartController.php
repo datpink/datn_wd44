@@ -86,7 +86,6 @@ class CartController extends Controller
 
 
 
-
     public function remove($id)
     {
         // Lấy giỏ hàng từ session
