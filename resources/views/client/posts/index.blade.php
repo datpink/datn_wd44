@@ -19,11 +19,11 @@
                                     <div class="post-thumb">
                                         <td>
                                             @if ($post->image && \Storage::exists($post->image))
-                                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
-                                                    style="max-width: 100%; height: auto; margin:0 auto">
-                                            @else
-                                                Không có ảnh
-                                            @endif
+                                            <img src="{{ \Storage::url($post->image) }}"
+                                                alt="{{ $post->name }}" style="max-width: 100%; height: auto; margin:0 auto">
+                                        @else
+                                            Không có ảnh
+                                        @endif
 
                                         </td>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}">

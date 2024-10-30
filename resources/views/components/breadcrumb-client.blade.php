@@ -29,6 +29,14 @@
             $breadcrumbs[] = ['name' => 'Đăng Nhập', 'url' => ''];
             break;
 
+        case 'cart.view':
+            $breadcrumbs[] = ['name' => 'Giỏ Hàng', 'url' => ''];
+            break;
+
+        case 'about.index':
+            $breadcrumbs[] = ['name' => 'About', 'url' => ''];
+            break;
+
         case 'client.products.product-detail':
             $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
             $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];

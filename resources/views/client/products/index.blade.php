@@ -234,14 +234,12 @@
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
                                                     <del>
-                                                        <span
-                                                            class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, 2) }}
+                                                        <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, ($product->price == floor($product->price) ? 0 : 2)) }}
                                                     </del>
                                                 </span>
                                                 @if ($product->discount_price)
                                                     <span class="kobolg-Price-amount amount old-price">
-                                                        <span
-                                                            class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price ?? $product->price, 2) }}
+                                                        <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price, ($product->discount_price == floor($product->discount_price) ? 0 : 2)) }}
                                                     </span>
                                                 @endif
                                             </span>
@@ -467,7 +465,7 @@
                                                         </li>
                                                     `;
                                                     productLists.innerHTML +=
-                                                        productHTML; // Thêm sản phẩm vào danh sách
+                                                    productHTML; // Thêm sản phẩm vào danh sách
                                                 });
                                             } else {
                                                 console.error('Dữ liệu không phải là một mảng:', res.data.products);
