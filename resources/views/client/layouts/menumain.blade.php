@@ -37,7 +37,8 @@
                     <ul id="menu-primary-menu" class="clone-main-menu kobolg-clone-mobile-menu kobolg-nav main-menu">
                         <li id="menu-item-230"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Trang Chủ</a>
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.index') }}">Trang
+                                Chủ</a>
                             <span class="toggle-submenu"></span>
                         </li>
 
@@ -211,17 +212,13 @@
                             <ul role="menu" class="submenu">
                                 <li id="menu-item-987"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-987">
-                                    <a class="kobolg-menu-item-title" title="About" href="about.html">About</a>
+                                    <a class="kobolg-menu-item-title" title="About"
+                                        href="{{ route('client.about.index') }}">About</a>
                                 </li>
                                 <li id="menu-item-988"
                                     class="menu-item menu-item-type-custom menu-item-object-custom menu-item-988">
                                     <a class="kobolg-menu-item-title" title="Contact"
-                                        href="{{ route('client.contact.index') }}">Contact</a>
-                                </li>
-                                <li id="menu-item-990"
-                                    class="menu-item menu-item-type-custom menu-item-object-custom menu-item-990">
-                                    <a class="kobolg-menu-item-title" title="Page 404" href="404.html">Page
-                                        404</a>
+                                        href="{{ route('contact.index') }}">Contact</a>
                                 </li>
                             </ul>
                         </li>

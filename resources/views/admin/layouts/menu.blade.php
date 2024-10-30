@@ -146,6 +146,20 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-archive"></i>
+                        <span class="menu-text">Liên hệ</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('admin.contact.index') }}">Danh Sách Liên Hệ</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 {{-- <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-archive"></i>
