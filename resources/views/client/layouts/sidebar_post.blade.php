@@ -28,39 +28,6 @@
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
             <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
-<<<<<<< HEAD
-                <article
-                    class="post-195 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-table category-life-style tag-light tag-life-style">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost1-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">Not
-                                        your ordinary baby service.</a></h2>
-                            </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
-                <article
-                    class="post-192 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-fashion category-multi category-life-style tag-light tag-fashion tag-multi">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost5-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        child is sleeping on the bed</a></h2>
-=======
                 @foreach ($latestPosts as $post)
                     <article
                         class="post-{{ $post->id }} post type-post status-publish format-standard has-post-thumbnail hentry">
@@ -83,53 +50,11 @@
                                     </h2>
                                 </div>
                                 <div class="date">{{ $post->created_at->format('F d, Y') }}</div>
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                             </div>
                         </div>
-<<<<<<< HEAD
-                    </div>
-                </article>
-                <article
-                    class="post-189 post type-post status-publish format-video has-post-thumbnail hentry category-table category-life-style tag-multi tag-life-style post_format-post-format-video">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost9-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        light is hugging the dog on the room</a></h2>
-                            </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
-                <article
-                    class="post-186 post type-post status-publish format-standard has-post-thumbnail hentry category-light category-life-style tag-life-style">
-                    <div class="post-item-inner">
-                        <div class="post-thumb">
-                            <a href="#">
-                                <img src="{{ asset('theme/client/assets/images/blogpost4-83x83.jpg') }}"
-                                    class="img-responsive attachment-83x83 size-83x83" alt="img" width="83"
-                                    height="83"> </a>
-                        </div>
-                        <div class="post-info">
-                            <div class="block-title">
-                                <h2 class="post-title"><a href="#">The
-                                        child is swimming with a buoy</a></h2>
-                            </div>
-                            <div class="date">December 19, 2018</div>
-                        </div>
-                    </div>
-                </article>
-=======
                     </article>
                 @endforeach
 
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
             </div>
         </div>
         <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
@@ -205,92 +130,3 @@
         </div>
     </div><!-- .widget-area -->
 </div>
-<<<<<<< HEAD
-<!-- Đoạn mã JavaScript cho Ajax -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    $('#search-input').on('input', function() {
-        let query = $(this).val();
-
-        if (query.length > 2) {
-            $.ajax({
-                url: "/api/search/suggestions",  // URL đến route API gợi ý
-                data: { query: query },
-                success: function(data) {
-                    let suggestionsHtml = '';
-
-                    // Gợi ý sản phẩm
-                    if (data.products.length) {
-                        suggestionsHtml += '<h4>Sản phẩm</h4><ul>';
-                        data.products.forEach(product => {
-                            suggestionsHtml += `<li><a href="/product/${product.id}">${product.name}</a></li>`;
-                        });
-                        suggestionsHtml += '</ul>';
-                    }
-
-                    // Gợi ý bài viết
-                    if (data.posts.length) {
-                        suggestionsHtml += '<h4>Bài viết</h4><ul>';
-                        data.posts.forEach(post => {
-                            suggestionsHtml += `<li><a href="/post/${post.id}">${post.title}</a></li>`;
-                        });
-                        suggestionsHtml += '</ul>';
-                    }
-
-                    // Hiển thị gợi ý
-                    $('#suggestions').html(suggestionsHtml).show();
-                },
-                error: function() {
-                    $('#suggestions').hide();  // Ẩn gợi ý khi có lỗi
-                }
-            });
-        } else {
-            $('#suggestions').hide();  // Ẩn gợi ý nếu không có từ khóa
-        }
-    });
-
-    // Ẩn gợi ý khi người dùng nhấn ra ngoài ô tìm kiếm
-    $(document).click(function(e) {
-        if (!$(e.target).closest('.search-form').length) {
-            $('#suggestions').hide();
-        }
-    });
-});
-</script>
-<style>
-    .suggestions-box {
-    border: 1px solid #ddd;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: #fff;
-    display: none;
-    position: absolute;
-    z-index: 1000;
-    width: 100%;
-}
-
-.suggestions-box h4 {
-    margin: 0;
-    padding: 5px;
-    background-color: #f1f1f1;
-    font-weight: bold;
-}
-
-.suggestions-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.suggestions-box ul li {
-    padding: 5px;
-}
-
-.suggestions-box ul li:hover {
-    background-color: #e9e9e9;
-}
-
-</style>
-=======
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee

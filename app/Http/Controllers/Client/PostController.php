@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-=======
-use App\Models\Post;
-use Illuminate\Http\Request;
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
 
 class PostController extends Controller
 {
@@ -44,39 +39,33 @@ class PostController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('posts.id', $id)
             ->firstOrFail();
-<<<<<<< HEAD
         $post1 = Post::with('comments')->findOrFail($id);
         return view('client.posts.post-detail', compact('post','post1'));
     }
-    public function storeComment(Request $request, $posttId)
+    public function storeComment(Request $request, $id)
 {
-
-    // Xác thực dữ liệu từ form
     $request->validate([
         'author' => 'required|string|max:255',
         'email' => 'required|email',
         'comment' => 'required|string',
     ]);
 
-    $post = Post::findOrFail($posttId);
+    $post = Post::findOrFail($id);
 
-    // Lưu bình luận mới vào database
-    Comment::create([
-        'post_id' => $posttId,
-        'user_id' => Auth::id(),  // Thay 'user_id' bằng 'author' nếu lưu tên người dùng
-        'email' => $request->input('email'),
-        'content' => $request->input('comment'),
-    ]);
+   Comment::create([
+    'post_id' => $post->id,
+    'user_id' => auth()->id(), // Hoặc giá trị khác để đặt user_id
+    'author_name' => $request->input('author'),
+    'email' => $request->input('email'),
+    'content' => $request->input('comment'),
+]);
 
-    return redirect()->back()->with('success', 'Bình luận của bạn đã được thêm!');
+    
 
-    }
-=======
+    // Điều hướng đúng về trang chi tiết bài viết
+    return redirect()->route('post.show', ['id' => $post->id])->with('success', 'Bình luận đã được gửi!');
+}
 
-        return view('client.posts.post-detail', compact('post'));
-    }
-
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
     // Tìm kiếm bài viết
     public function search(Request $request)
     {
@@ -87,14 +76,8 @@ class PostController extends Controller
             ->orWhere('posts.tomtat', 'LIKE', "%{$query}%")
             ->orWhere('posts.slug', 'LIKE', "%{$query}%")
             ->paginate(9); // Thêm phân trang nếu cần
-<<<<<<< HEAD
 
     return view('client.posts.search-results', compact('posts'));
 }
-=======
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
-
-        return view('client.posts.search-results', compact('posts'));
-    }
 }
 

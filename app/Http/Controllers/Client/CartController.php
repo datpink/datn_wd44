@@ -12,12 +12,6 @@ use function Laravel\Prompts\alert;
 
 class CartController extends Controller
 {
-<<<<<<< HEAD
-    public function add(Request $request)
-    {
-        $productId = $request->input('product_id');
-        $variantId = $request->input('variant_id', null); // Đặt giá trị mặc định là null nếu không có
-=======
 
     public function view(){
         return view('client.you-cart.viewcart');
@@ -28,7 +22,6 @@ class CartController extends Controller
     {
         $productId = $request->input('product_id');
         $variantId = $request->input('variant_id', null); // Giá trị mặc định là null nếu không có
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
         $quantity = $request->input('quantity');
         $selectedStorage = $request->input('selected_storage');
         $selectedColor = $request->input('selected_color');
@@ -51,16 +44,12 @@ class CartController extends Controller
         // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
         $existingItemKey = null; // Khóa sản phẩm nếu đã tồn tại
         foreach ($cart as $key => $item) {
-<<<<<<< HEAD
-            if ($item['id'] == $productId && $item['options']['variant_id'] == $variantId) {
-=======
             if (
                 $item['id'] == $productId &&
                 $item['options']['variant_id'] == $variantId &&
                 $item['options']['storage'] == $selectedStorage &&
                 $item['options']['color'] == $selectedColor
             ) {
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                 $existingItemKey = $key;
                 break;
             }
@@ -70,11 +59,7 @@ class CartController extends Controller
         if ($existingItemKey !== null) {
             $cart[$existingItemKey]['quantity'] += $quantity; // Cộng thêm số lượng
         } else {
-<<<<<<< HEAD
-            // Nếu chưa tồn tại, tạo item giỏ hàng
-=======
             // Nếu chưa tồn tại, tạo item giỏ hàng mới
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
             $item = [
                 'id' => $productId,
                 'name' => $product->name,
@@ -101,10 +86,6 @@ class CartController extends Controller
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
     public function remove($id)
     {
         // Lấy giỏ hàng từ session
@@ -118,16 +99,10 @@ class CartController extends Controller
 
             // Chuyển hướng về trang giỏ hàng với thông báo
             // in ra thông báo thành công
-<<<<<<< HEAD
-        }
-
-        return redirect()->back()->with('error', 'Sản phẩm không tồn tại trong giỏ hàng.');
-=======
             return response()->json(['message' => 'Đã xóa']);
         }
 
         return response()->json(['message' => 'Lỗi']);
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
     }
 
 

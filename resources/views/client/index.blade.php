@@ -524,12 +524,6 @@
                             <article class="post-item post-grid rows-space-0">
                                 <div class="post-inner blog-grid">
                                     <div class="post-thumb">
-<<<<<<< HEAD
-                                        <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
-                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-responsive attachment-370x330 size-370x330"
-                                                width="370" height="330">
-=======
                                         <a href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             @if ($post->image && \Storage::exists($post->image))
                                                 <img src="{{ \Storage::url($post->image) }}"class="img-responsive attachment-370x330 size-370x330"
@@ -537,7 +531,6 @@
                                             @else
                                                 Không có ảnh
                                             @endif
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                                         </a>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             <span>{{ $post->created_at->format('d') }}</span>

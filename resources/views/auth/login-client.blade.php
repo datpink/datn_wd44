@@ -1,4 +1,4 @@
-4<div class="menu-item block-user block-dreaming kobolg-dropdown">
+<div class="menu-item block-user block-dreaming kobolg-dropdown">
     <a class="block-link" href="#">
         <span class="flaticon-profile"></span>
     </a>
