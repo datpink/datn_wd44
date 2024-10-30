@@ -5,9 +5,38 @@
 @section('content')
 
     <style>
-        body {
-            margin-top: 20px;
-            background: #eee;
+        .custom-alert {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .custom-alert .alert-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .custom-alert .alert-message {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .custom-alert .btn {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .custom-alert .btn:hover {
+            background-color: #0056b3;
+            border-color: #004d99;
         }
 
         .ui-w-40 {
@@ -188,8 +217,11 @@
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Không',
                     customClass: {
-                        confirmButton: 'custom-confirm-button',
-                        cancelButton: 'custom-cancel-button'
+                        container: 'custom-alert',
+                        title: 'alert-title',
+                        content: 'alert-message',
+                        confirmButton: 'btn custom-confirm-button',
+                        cancelButton: 'btn custom-cancel-button'
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -214,7 +246,7 @@
                                         showConfirmButton: false
                                     });
                                     this.closest('tr')
-                                .remove(); // Xóa hàng tương ứng trong bảng giỏ hàng
+                                        .remove(); // Xóa hàng tương ứng trong bảng giỏ hàng
                                     updateCartTotal(); // Cập nhật tổng giỏ hàng
                                 } else {
                                     Swal.fire({

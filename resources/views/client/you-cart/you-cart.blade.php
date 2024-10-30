@@ -27,6 +27,40 @@
 @endif
 
 <style>
+    .custom-alert {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        text-align: center;
+    }
+
+    .custom-alert .alert-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .custom-alert .alert-message {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .custom-alert .btn {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 8px 16px;
+        border-radius: 4px;
+    }
+
+    .custom-alert .btn:hover {
+        background-color: #0056b3;
+        border-color: #004d99;
+    }
+
     .kobolg-mini-cart-item a {
         display: inline-block;
         max-width: 300px;
@@ -107,7 +141,14 @@
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
                 timer: 3500,
-                showConfirmButton: true
+                showConfirmButton: true,
+                customClass: {
+                    container: 'custom-alert',
+                    title: 'alert-title',
+                    content: 'alert-message',
+                    confirmButton: 'btn custom-confirm-button',
+                    cancelButton: 'btn custom-cancel-button'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const productId = form.querySelector('input[name="id"]').value;
@@ -133,7 +174,7 @@
                                     showConfirmButton: false
                                 });
                                 form.closest('.kobolg-mini-cart-item')
-                            .remove(); // Xóa sản phẩm khỏi danh sách
+                                    .remove(); // Xóa sản phẩm khỏi danh sách
                                 updateCartTotal(); // Cập nhật tổng giỏ hàng
                             } else {
                                 Swal.fire({
