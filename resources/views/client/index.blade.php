@@ -127,14 +127,12 @@
                                         <span class="price">
                                             <span class="kobolg-Price-amount amount text-danger">
                                                 <del>
-                                                    <span
-                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, 2) }}
+                                                    <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, ($product->price == floor($product->price) ? 0 : 2)) }}
                                                 </del>
                                             </span>
                                             @if ($product->discount_price)
                                                 <span class="kobolg-Price-amount amount old-price">
-                                                    <span
-                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price ?? $product->price, 2) }}
+                                                    <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price, ($product->discount_price == floor($product->discount_price) ? 0 : 2)) }}
                                                 </span>
                                             @endif
                                         </span>
@@ -544,8 +542,7 @@
                                                     href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="{{ route('post.show', $post->id) }}"
-                                                    tabindex="0">{{ $post->comments_count }}</a>
+                                                <a href="#" tabindex="0">{{ $post->comments_count }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">

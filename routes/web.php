@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
-use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentReplyController;
 use App\Http\Controllers\Admin\OrderController;
@@ -30,7 +29,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\SearchController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,10 +94,15 @@ Route::prefix('shop')->group(function () {
     Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
     Route::get('/search', [PostController::class, 'search'])->name('search');
     Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
+    Route::post('/post/{id}/comments', [PostController::class, 'storeComment'])->name('post.comments.store');    
+    Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
 
 
-    // Route::get('/search', [SearchController::class, 'search'])->name('client.search');
-    // Route::get('/autocomplete', [SearchController::class, 'autocomplete'])->name('client.autocomplete');
+    // Route::get('/search', [SearchController::class, 'search'])->name('search');
+
+    Route::get('/privacy-policy', function () {
+        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
+    })->name('privacy.policy');
 
     Route::get('/privacy-policy', function () {
         return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
@@ -122,6 +125,7 @@ Route::prefix('shop')->group(function () {
 
     // GIỏ hàng
     Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+
     Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 

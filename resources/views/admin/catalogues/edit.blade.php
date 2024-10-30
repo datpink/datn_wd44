@@ -22,60 +22,56 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('catalogues.update', $catalogue) }}" method="POST"
-                        enctype="multipart/form-data">
+                    <form action="{{ route('catalogues.update', $catalogue) }}" method="POST" enctype="multipart/form-data"
+                        id="catalogueForm">
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group">
-                            <label for="name">Tên danh mục:</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
-                                name="name" value="{{ old('name', $catalogue->name) }}" required>
-                            @error('name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="card-body">
+                            <div class="was-validated">
+                                <label for="name" class="form-label">Tên danh mục:</label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                    value="{{ old('name', $catalogue->name) }}" required>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="slug">Slug:</label>
-                            <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug"
-                                name="slug" value="{{ old('slug', $catalogue->slug) }}" required>
-                            @error('slug')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="card-body">
+                            <div class="was-validated">
+                                <label for="slug" class="form-label">Slug:</label>
+                                <input type="text" name="slug" id="slug" class="form-control"
+                                    value="{{ old('slug', $catalogue->slug) }}" required>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="status">Trạng thái:</label>
-                            <select class="form-control @error('status') is-invalid @enderror" id="status" name="status"
-                                required>
-                                <option value="active" {{ $catalogue->status === 'active' ? 'selected' : '' }}>Kích hoạt
-                                </option>
-                                <option value="inactive" {{ $catalogue->status === 'inactive' ? 'selected' : '' }}>Không
-                                    kích hoạt</option>
-                            </select>
-                            @error('status')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="card-body">
+                            <div class="was-validated">
+                                <label for="status" class="form-label">Trạng thái:</label>
+                                <select name="status" id="status" class="form-control" required>
+                                    <option value="active" {{ $catalogue->status === 'active' ? 'selected' : '' }}>Kích hoạt
+                                    </option>
+                                    <option value="inactive" {{ $catalogue->status === 'inactive' ? 'selected' : '' }}>Không
+                                        kích hoạt</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image"
-                                name="image" onchange="previewImage(event)">
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="card-body">
+                            <div class="was-validated">
+                                <label for="image" class="form-label">Hình ảnh:</label>
+                                <input type="file" name="image" id="image" class="form-control"
+                                    onchange="previewImage(event)">
 
-                            @if ($catalogue->image)
-                                <img id="imagePreview" src="{{ asset('storage/' . $catalogue->image) }}"
-                                    alt="{{ $catalogue->name }}" style="width: 100px; margin-top: 10px;">
-                            @else
-                                <p class="text-danger mt-2">Hình ảnh không tồn tại</p>
-                            @endif
+                                @if ($catalogue->image)
+                                    <img id="imagePreview" src="{{ asset('storage/' . $catalogue->image) }}"
+                                        alt="{{ $catalogue->name }}" style="width: 100px; margin-top: 10px;">
+                                @else
+                                    <p class="text-danger mt-2">Hình ảnh không tồn tại</p>
+                                @endif
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập nhật</button>
+                        <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3" disabled>Cập
+                            nhật</button>
                     </form>
                 </div>
             </div>
@@ -98,6 +94,26 @@
                 imagePreview.src = '{{ asset('storage/' . $catalogue->image) }}';
             }
         }
+
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const slug = document.getElementById('slug').value.trim();
+            const status = document.getElementById('status').value;
+
+            const submitButton = document.getElementById('submitButton');
+
+            // Kiểm tra xem có trường nào trống không
+            if (name && slug && status) {
+                submitButton.disabled = false; // Kích hoạt nút nếu tất cả các trường có giá trị
+            } else {
+                submitButton.disabled = true; // Khóa nút nếu có trường trống
+            }
+        }
+
+        // Thêm sự kiện input cho các trường
+        document.getElementById('name').addEventListener('input', validateForm);
+        document.getElementById('slug').addEventListener('input', validateForm);
+        document.getElementById('status').addEventListener('change', validateForm);
     </script>
 
     @if (session()->has('success'))
