@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('shop/products/filter-by-price', [ProductController::class, 'filterByPrice']);
 
 Route::get('/shop/products',                  [ProductController::class, 'orderByPriceApi']);
+Route::get('/shop/products/filter-by-color',                  [ProductController::class, 'filterByColor']);

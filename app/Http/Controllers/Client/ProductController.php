@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Catalogue;
 use App\Models\Product;
 use App\Models\ProductComment;
@@ -17,23 +19,19 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         // Lấy query gốc từ bảng Product
-        $query = Product::where('is_active', 1);
+        $query = Product::with("variants.attributeValues")->where('is_active', 1);
 
-        // Xử lý sắp xếp
-        $orderby = $request->input('orderby');
-        if ($orderby) {
-            switch ($orderby) {
-                case 'price-asc':
-                    $query->orderBy('price', 'asc');
-                    break;
-                case 'price-desc':
-                    $query->orderBy('price', 'desc');
-                    break;
-                default:
-                    $query->orderBy('id', 'desc');
-                    break;
-            }
-        }
+        // $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+        // ->whereHas('variants.attributeValues', function ($query) {
+        //     $query->where('attribute_values.id', 1); // Lọc các sản phẩm có attribute_value_id = 1
+        // })
+        // ->paginate(6);
+
+        // dd($products);
+        $variants = Attribute::with('attributeValues')->get();
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
+        // dd($variant_values);
+
         // Sau khi sắp xếp, phân trang
         $products = $query->paginate(6);
         // dd($products);
@@ -45,13 +43,8 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
-
-        // Kiểm tra xem yêu cầu có phải là AJAX
-        if ($request->ajax()) {
-            return response()->json(['data' => $product]);
-        }
-
-        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
+        // dd($products);
+        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice', 'variant_values'));
     }
 
     public function orderByPriceApi(Request $request)
@@ -90,6 +83,19 @@ class ProductController extends Controller
             'maxDiscountPrice' => Product::max('discount_price'),
         ]);
     }
+
+    public function filterByColor(Request $request)
+    {
+        $attributeValueId = $request->input('attribute_value_id');
+        $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+            ->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+                $query->where('attribute_values.id', $attributeValueId); // Lọc các sản phẩm có attribute_value_id = 1
+            })->get();
+            
+
+        return response()->json(['data' => $products]);
+    }
+
 
 
     public function show($slug)
