@@ -135,6 +135,10 @@
                         <div class="main-contain-summary">
                             <div class="contain-left has-gallery">
                                 <div class="single-left">
+<<<<<<< HEAD
+
+=======
+>>>>>>> ebfdf2730dfa3b5a3812e9809978d158202a03fe
                                     <div
                                         class="kobolg-product-gallery kobolg-product-gallery--with-images kobolg-product-gallery--columns-4 images">
                                         <a href="#" class="kobolg-product-gallery__trigger">
@@ -155,9 +159,40 @@
                                                     <div class="kobolg-product-gallery__image">
                                                         <img src="{{ \Storage::url($product->image_url) }}"
                                                             alt="{{ $product->name }}"
+<<<<<<< HEAD
+<<<<<<< HEAD
+                                                            style="max-width: 100px; height: auto;">
+=======
+                                                            style="max-width: 70% ;margin:0 auto; height: 100% auto;">
+>>>>>>> ebfdf2730dfa3b5a3812e9809978d158202a03fe
+                                                    @else
+                                                        <p>Không có ảnh</p>
+                                                    @endif
+
+<<<<<<< HEAD
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="assets/images/apro134-1.jpg" alt="img">
+=======
+>>>>>>> ebfdf2730dfa3b5a3812e9809978d158202a03fe
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="{{ asset('theme/client/assets/images/apro134-1.jpg') }}"
+                                                        alt="img">
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="{{ asset('theme/client/assets/images/apro132-1.jpg') }}"
+                                                        class="" alt="img">
+                                                </div>
+                                                <div class="kobolg-product-gallery__image">
+                                                    <img src="{{ asset('theme/client/assets/images/apro133-1.jpg') }}"
+                                                        class="" alt="img">
+                                                </div>
+=======
                                                             style="max-width: 70%; margin: 0 auto; height: auto;">
                                                     </div>
                                                 @endif
+>>>>>>> e238c2759354f48cb500ecfef816b12b92edf75a
                                             </figure>
                                         </div>
                                         <ol class="flex-control-nav flex-control-thumbs">
@@ -183,6 +218,27 @@
                                         <span class="onnew"><span class="text">New</span></span>
                                     </div>
                                     <h1 class="product_title entry-title">{{ $product->name }}</h1>
+<<<<<<< HEAD
+                                    <p class="price"><span class="kobolg-Price-amount amount"><span
+                                                class="kobolg-Price-currencySymbol"> <span
+                                                    class="kobolg-Price-amount amount">
+                                                    {{ number_format($product->price, 0, ',', '.') }}đ</p>
+                                    <p class="stock in-stock">
+                                        Thương hiệu: <span>
+                                            {{ $product->brand ? $product->brand->name : 'Không có' }}</span>
+                                    </p>
+                                    <!-- Danh sách các biến thể -->
+                                    @foreach ($product->variants as $variant)
+                                        <button class="variant-btn" data-id="{{ $variant->id }}"
+                                            data-price="{{ $variant->price }}">
+                                            {{ $variant->variant_name }}
+                                        </button>
+                                    @endforeach
+
+                                    <div class="kobolg-product-details__short-description">
+                                        <p>{{ $product->tomtat }}</p>
+
+=======
                                     <p class="price">
                                         <span class="kobolg-Price-amount amount">
                                             <span class="kobolg-Price-currencySymbol"></span>
@@ -276,6 +332,7 @@
 
                                     <div class="kobolg-product-details__short-description">
                                         <p>{{ $product->tomtat }}</p>
+>>>>>>> ebfdf2730dfa3b5a3812e9809978d158202a03fe
                                     </div>
 
                                     <form class="variations_form cart" id="add-to-cart-form">
@@ -311,6 +368,28 @@
                                     </div>
 
                                     <div class="clear"></div>
+<<<<<<< HEAD
+                                    <a href="#" class="compare button" data-product_id="27" rel="nofollow">Compare</a>
+                                    <div class="product_meta">
+                                        <div class="wcml-dropdown product wcml_currency_switcher">
+                                            <ul>
+                                                <li class="wcml-cs-active-currency">
+                                                    <a class="wcml-cs-item-toggle">USD</a>
+                                                    <ul class="wcml-cs-submenu">
+                                                        <li>
+                                                            <a>EUR</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <span class="sku_wrapper">SKU: <span
+                                                class="sku">{{ $product->sku }}</span></span>
+                                        <span class="posted_in">Categories: <a href="#"
+                                                rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</span>
+                                        <span class="tagged_as">Tags: <a href="#" rel="tag">Game &
+                                                Consoles</a>, <a href="#" rel="tag">Sock</a></span>
+=======
                                     <a href="#" class="compare button" data-product_id="27" rel="nofollow">So
                                         sánh</a>
 
@@ -321,6 +400,7 @@
                                             <a href="#"
                                                 rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>
                                         </span>
+>>>>>>> ebfdf2730dfa3b5a3812e9809978d158202a03fe
                                     </div>
 
                                     <div class="kobolg-share-socials">

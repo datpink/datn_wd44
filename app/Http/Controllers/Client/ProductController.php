@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attribute;
+use App\Models\AttributeValue;
 use App\Models\Catalogue;
 use App\Models\Product;
 use App\Models\ProductComment;
@@ -14,10 +16,26 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Lấy tất cả sản phẩm từ cơ sở dữ liệu
-        $products = Product::paginate(6); // Bạn có thể thêm các điều kiện khác nếu cần
+        // Lấy query gốc từ bảng Product
+        $query = Product::with("variants.attributeValues")->where('is_active', 1);
+
+        // $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+        // ->whereHas('variants.attributeValues', function ($query) {
+        //     $query->where('attribute_values.id', 1); // Lọc các sản phẩm có attribute_value_id = 1
+        // })
+        // ->paginate(6);
+
+        // dd($products);
+        $variants = Attribute::with('attributeValues')->get();
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
+        // dd($variant_values);
+
+        // Sau khi sắp xếp, phân trang
+        $products = $query->paginate(6);
+        // dd($products);
+
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
 
@@ -25,46 +43,96 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
-
-        // return response()->json(['products' => $products]);
-        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice'));
+        // dd($products);
+        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice', 'variant_values'));
     }
 
-    public function show($slug)
-{
-    // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
-    $product = Product::where('slug', $slug)
-        ->with([
-            'galleries',
-            'variants' => function ($query) {
-                $query->where('status', 'active')
-                    ->with('attributeValues.attribute');
+    public function orderByPriceApi(Request $request)
+    {
+        $query = Product::where('is_active', 1);
+
+        // Xử lý sắp xếp
+        $orderby = $request->input('orderby');
+        if ($orderby) {
+            switch ($orderby) {
+                case 'price-asc':
+                    $query->orderBy('discount_price', 'asc');
+                    break;
+                case 'price-desc':
+                    $query->orderBy('discount_price', 'desc');
+                    break;
+                default:
+                    $query->orderBy('id', 'desc');
+                    break;
             }
-        ])
-        ->firstOrFail();
+        }
 
-    // Lấy các biến thể cụ thể dựa trên thuộc tính
-    $storageVariants = $product->variants->filter(function ($variant) {
-        return $variant->attributeValues->contains(function ($attributeValue) {
-            return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
+        // Sau khi sắp xếp, phân trang
+        $products = $query->paginate(6);
+        // $products = $query->get();
+
+        // Cập nhật image URLs sử dụng Storage::url
+        foreach ($products as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
+
+        // Trả về dữ liệu sản phẩm dưới dạng JSON
+        return response()->json([
+            'data' => $products,
+            'minDiscountPrice' => Product::min('discount_price'),
+            'maxDiscountPrice' => Product::max('discount_price'),
+        ]);
+    }
+
+    public function filterByColor(Request $request)
+    {
+        $attributeValueId = $request->input('attribute_value_id');
+        $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+            ->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+                $query->where('attribute_values.id', $attributeValueId); // Lọc các sản phẩm có attribute_value_id = 1
+            })->get();
+            
+
+        return response()->json(['data' => $products]);
+    }
+
+
+
+    public function show($slug)
+    {
+        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
+        $product = Product::where('slug', $slug)
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->where('status', 'active')
+                        ->with('attributeValues.attribute');
+                }
+            ])
+            ->firstOrFail();
+
+        // Lấy các biến thể cụ thể dựa trên thuộc tính
+        $storageVariants = $product->variants->filter(function ($variant) {
+            return $variant->attributeValues->contains(function ($attributeValue) {
+                return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
+            });
         });
-    });
 
-    $colorVariants = $product->variants->filter(function ($variant) {
-        return $variant->attributeValues->contains(function ($attributeValue) {
-            return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
+        $colorVariants = $product->variants->filter(function ($variant) {
+            return $variant->attributeValues->contains(function ($attributeValue) {
+                return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
+            });
         });
-    });
 
-    $sizeVariants = $product->variants->filter(function ($variant) {
-        return $variant->attributeValues->contains(function ($attributeValue) {
-            return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
+        $sizeVariants = $product->variants->filter(function ($variant) {
+            return $variant->attributeValues->contains(function ($attributeValue) {
+                return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
+            });
         });
-    });
 
-    // Truyền các biến thể vào view
-    return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
-}
+        // Truyền các biến thể vào view
+        return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
+    }
 
     public function getVariantPrice(Request $request)
     {
@@ -165,42 +233,42 @@ class ProductController extends Controller
         return response()->json(['products' => $products]);
     }
     public function search(Request $request)
-{
-    // Get the search query from the request
-    $query = $request->input('s');
+    {
+        // Get the search query from the request
+        $query = $request->input('s');
 
-    // Initialize query builder for products
-    $products = Product::query();
+        // Initialize query builder for products
+        $products = Product::query();
 
-    // Add search conditions
-    if ($query) {
-        $products->where(function ($subQuery) use ($query) {
-            $subQuery->where('name', 'LIKE', "%{$query}%")
-                ->orWhere('sku', 'LIKE', "%{$query}%")
-                ->orWhere('description', 'LIKE', "%{$query}%")
-                ->orWhere('catalogue_id', 'LIKE', "%{$query}%")
-                ->orWhere('brand_id', 'LIKE', "%{$query}%")
-                ->orWhere('price', 'LIKE', "%{$query}%")
-                ->orWhere('discount_price', 'LIKE', "%{$query}%")
-                ->orWhere('discount_percentage', 'LIKE', "%{$query}%")
-                ->orWhere('stock', 'LIKE', "%{$query}%")
-                ->orWhere('weight', 'LIKE', "%{$query}%")
-                ->orWhere('dimensions', 'LIKE', "%{$query}%")
-                ->orWhere('ratings_avg', 'LIKE', "%{$query}%");
-        });
+        // Add search conditions
+        if ($query) {
+            $products->where(function ($subQuery) use ($query) {
+                $subQuery->where('name', 'LIKE', "%{$query}%")
+                    ->orWhere('sku', 'LIKE', "%{$query}%")
+                    ->orWhere('description', 'LIKE', "%{$query}%")
+                    ->orWhere('catalogue_id', 'LIKE', "%{$query}%")
+                    ->orWhere('brand_id', 'LIKE', "%{$query}%")
+                    ->orWhere('price', 'LIKE', "%{$query}%")
+                    ->orWhere('discount_price', 'LIKE', "%{$query}%")
+                    ->orWhere('discount_percentage', 'LIKE', "%{$query}%")
+                    ->orWhere('stock', 'LIKE', "%{$query}%")
+                    ->orWhere('weight', 'LIKE', "%{$query}%")
+                    ->orWhere('dimensions', 'LIKE', "%{$query}%")
+                    ->orWhere('ratings_avg', 'LIKE', "%{$query}%");
+            });
+        }
+
+        // Filter only active products
+        $products->where('is_active', 1);
+
+        // Paginate the results
+        $products = $products->paginate(9);
+
+        // Get the maximum discount price from the database
+        $maxDiscountPrice = Product::max('discount_price');
+        // Return the search results to a view
+        return view('client.products.product-search-results', compact('products', 'maxDiscountPrice'));
     }
-
-    // Filter only active products
-    $products->where('is_active', 1);
-
-    // Paginate the results
-    $products = $products->paginate(9);
-
-    // Get the maximum discount price from the database
-    $maxDiscountPrice = Product::max('discount_price');
-    // Return the search results to a view
-    return view('client.products.product-search-results', compact('products','maxDiscountPrice'));
-}
     public function storeComment(Request $request, $productId)
     {
         $request->validate([
