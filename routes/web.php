@@ -30,6 +30,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\CheckoutController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -133,6 +134,10 @@ Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.
 Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
+
+// thanh toán
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 
 // Đăng xuất ở admin

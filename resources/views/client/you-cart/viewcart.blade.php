@@ -84,7 +84,7 @@
                                 @foreach (session('cart') as $key => $item)
                                     <tr>
                                         <td class="text-center align-middle px-0">
-                                            <input type="checkbox"></input>
+                                            <input type="checkbox">
                                         </td>
                                         <td class="p-4">
                                             <div class="media align-items-center">
@@ -103,14 +103,14 @@
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4"
                                             data-price="{{ $item['price'] }}">
-                                            ${{ number_format($item['price'], 0, ',', '.') }}
+                                            ₫{{ number_format($item['price'], 0, ',', '.') }}
                                         </td>
                                         <td class="align-middle p-4">
                                             <input type="number" class="form-control text-center quantity"
                                                 value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4 total">
-                                            ${{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}
+                                            ₫{{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}
                                         </td>
                                         <td class="text-center align-middle px-0">
                                             <button type="button" class="btn btn-light remove-from-cart"
@@ -119,12 +119,6 @@
                                     </tr>
                                     @php $subtotal += $item['quantity'] * $item['price']; @endphp
                                 @endforeach
-                                <tr>
-                                    <td colspan="4" class="text-right font-weight-bold">Tổng cộng:</td>
-                                    <td class="text-right font-weight-bold" id="total-price">
-                                        ${{ number_format($subtotal, 0, ',', '.') }}</td>
-                                    <td></td>
-                                </tr>
                             @else
                                 <tr>
                                     <td colspan="5" class="text-center">Giỏ hàng của bạn đang trống.</td>
@@ -142,12 +136,12 @@
                     <div class="d-flex">
                         <div class="text-right mt-4 mr-5">
                             <label class="text-muted font-weight-normal m-0">Discount</label>
-                            <div class="text-large"><strong>$0.00</strong></div>
+                            <div class="text-large"><strong>₫0.00</strong></div>
                         </div>
                         <div class="text-right mt-4">
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
-                            <div class="text-large"><strong
-                                    id="total-price">${{ number_format($subtotal, 0, ',', '.') }}</strong></div>
+                            <div class="text-large"><strong id="total-price">₫
+                                    {{ number_format($subtotal, 0, ',', '.') }}</strong></div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +149,7 @@
                 <div class="float-right">
                     <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3"
                         onclick="window.location.href='{{ route('products.index') }}'">Trở về mua sắm</button>
-                    <button type="button" class="btn btn-lg btn-primary mt-2" onclick="checkout()">Thanh toán</button>
+                    <button type="button" class="btn btn-lg btn-primary mt-2" id="checkout-button">Thanh toán</button>
                 </div>
             </div>
         </div>
@@ -163,10 +157,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Hàm để định dạng tiền tệ
         function formatCurrency(value) {
             return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
 
+        // Cập nhật tổng tiền khi thay đổi số lượng
         function updateTotal(input) {
             const row = input.closest('tr');
             const price = parseFloat(row.querySelector('[data-price]').dataset.price);
@@ -182,27 +178,35 @@
             }
 
             const total = price * quantity;
-            row.querySelector('.total').textContent = `$${formatCurrency(total)}`;
+            row.querySelector('.total').textContent = `₫${formatCurrency(total)}`;
             updateCartTotal();
         }
 
+        // Cập nhật tổng giá chỉ bao gồm các sản phẩm đã chọn
         function updateCartTotal() {
             let subtotal = 0;
-            document.querySelectorAll('.total').forEach(item => {
-                const totalValue = parseFloat(item.textContent.replace('$', '').replace('.', '').replace(',', ''));
-                if (!isNaN(totalValue)) {
-                    subtotal += totalValue;
+            document.querySelectorAll('#cart-table tbody tr').forEach(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    const totalValue = parseFloat(row.querySelector('.total').textContent.replace('₫', '').replace(
+                        /\./g, ''));
+                    if (!isNaN(totalValue)) {
+                        subtotal += totalValue;
+                    }
                 }
             });
-            document.getElementById('total-price').textContent = `$${formatCurrency(subtotal)}`;
+            document.getElementById('total-price').textContent = `₫${formatCurrency(subtotal)}`;
         }
 
-        function checkout() {
-            window.location.href = "{{ route('cart.view') }}";
-        }
+        // Thêm sự kiện cho tất cả checkbox
+        document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateCartTotal);
+        });
 
+        // Khởi động hàm tính tổng khi trang được tải
         document.addEventListener('DOMContentLoaded', updateCartTotal);
 
+        // Hàm xóa sản phẩm khỏi giỏ hàng
         document.querySelectorAll('.remove-from-cart').forEach(button => {
             button.addEventListener('click', function(event) {
                 event.preventDefault();
@@ -212,17 +216,9 @@
                     title: 'Xác nhận',
                     text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                     icon: 'warning',
-                    timer: 3500,
                     showCancelButton: true,
                     confirmButtonText: 'Có',
-                    cancelButtonText: 'Không',
-                    customClass: {
-                        container: 'custom-alert',
-                        title: 'alert-title',
-                        content: 'alert-message',
-                        confirmButton: 'btn custom-confirm-button',
-                        cancelButton: 'btn custom-cancel-button'
-                    }
+                    cancelButtonText: 'Không'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(`{{ url('cart/remove/') }}/${productId}`, {
@@ -245,9 +241,8 @@
                                         timer: 1500,
                                         showConfirmButton: false
                                     });
-                                    this.closest('tr')
-                                        .remove(); // Xóa hàng tương ứng trong bảng giỏ hàng
-                                    updateCartTotal(); // Cập nhật tổng giỏ hàng
+                                    this.closest('tr').remove();
+                                    updateCartTotal();
                                 } else {
                                     Swal.fire({
                                         icon: 'error',
@@ -263,6 +258,59 @@
                 });
             });
         });
+
+        document.getElementById('checkout-button').addEventListener('click', function() {
+    const selectedProducts = [];
+
+    document.querySelectorAll('#cart-table tbody tr').forEach(row => {
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (checkbox && checkbox.checked) {
+            const productId = row.querySelector('.remove-from-cart').getAttribute('data-id');
+            const quantity = row.querySelector('.quantity').value;
+
+            selectedProducts.push({
+                id: productId,
+                quantity: quantity
+            });
+        }
+    });
+
+    // Kiểm tra xem có sản phẩm nào đã được chọn không
+    if (selectedProducts.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Chưa chọn sản phẩm',
+            text: 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.'
+        });
+        return;
+    }
+
+    // Gửi dữ liệu qua route checkout.index bằng POST request
+    fetch("{{ route('checkout.index') }}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": "{{ csrf_token() }}"
+        },
+        body: JSON.stringify({ products: selectedProducts })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.href = data.redirect_url; // Chuyển đến trang thanh toán
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi chuyển sang trang thanh toán.'
+            });
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
     </script>
+
+
 
 @endsection

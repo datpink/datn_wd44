@@ -1384,6 +1384,7 @@
                                 data: {
                                     _token: '{{ csrf_token() }}',
                                     product_id: productId,
+                                    price: currentPrice,
                                     quantity: quantity,
                                     product_image: productImage,
                                 },
