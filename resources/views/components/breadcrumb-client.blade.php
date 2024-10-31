@@ -1,8 +1,6 @@
 @php
     $currentRoute = request()->route()->getName();
-    $breadcrumbs = [
-        ['name' => 'Trang Chủ', 'url' => route('client.index')],
-    ];
+    $breadcrumbs = [['name' => 'Trang Chủ', 'url' => route('client.index')]];
 
     switch ($currentRoute) {
         case 'client.products.index':
@@ -17,7 +15,7 @@
             $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => ''];
             break;
 
-        case 'client.contact.index':
+        case 'contact.index':
             $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
             break;
 
@@ -33,7 +31,7 @@
             $breadcrumbs[] = ['name' => 'Giỏ Hàng', 'url' => ''];
             break;
 
-        case 'about.index':
+        case 'client.about.index': // Cập nhật cho trang About
             $breadcrumbs[] = ['name' => 'About', 'url' => ''];
             break;
 
@@ -41,20 +39,19 @@
             $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
             $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
             break;
-
     }
 @endphp
 
 <div class="banner-wrapper has_background">
     <img src="{{ asset('theme/client/assets/images/banner-for-all2.jpg') }}"
-         class="img-responsive attachment-1920x447 size-1920x447" alt="img">
+        class="img-responsive attachment-1920x447 size-1920x447" alt="img">
     <div class="banner-wrapper-inner">
         <h1 class="page-title container">{{ end($breadcrumbs)['name'] }}</h1>
         <div role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs container">
             <ul class="trail-items breadcrumb">
                 @foreach ($breadcrumbs as $breadcrumb)
                     <li class="trail-item {{ $loop->last ? 'trail-end active' : '' }}">
-                        @if($breadcrumb['url'])
+                        @if ($breadcrumb['url'])
                             <a href="{{ $breadcrumb['url'] }}"><span>{{ $breadcrumb['name'] }}</span></a>
                         @else
                             <span>{{ $breadcrumb['name'] }}</span>

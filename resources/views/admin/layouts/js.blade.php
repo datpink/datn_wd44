@@ -23,12 +23,26 @@
     });
 
     // Chặn F12 (mở console)
-    document.onkeydown = function(e) {
-        if (e.key == 'F12') {
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
             e.preventDefault();
-            return false;
         }
-    };
+    });
+
+    // Chặn Ctrl+U (Xem nguồn trang)
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+        }
+    });
+
+    // Chặn F11 (Chế độ toàn màn hình)
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F11') {
+            e.preventDefault();
+        }
+    });
 </script>
+
 
 
