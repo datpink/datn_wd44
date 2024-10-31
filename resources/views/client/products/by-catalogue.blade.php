@@ -156,7 +156,7 @@
                                         <div class="group-button">
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
-                                                    <a href="#"
+                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                         class="button product_type_variable add_to_cart_button">Thêm vào giỏ
                                                         hàng</a>
                                                 </div>
