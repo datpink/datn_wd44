@@ -1,3 +1,4 @@
+
 @if (session('success'))
     <script>
         Swal.fire({
@@ -85,8 +86,7 @@
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
-                Giỏ hàng của bạn <span
-                    class="minicart-number-items">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+                Giỏ hàng của bạn <span class="minicart-number-items">{{ session('cart') ? count(session('cart')) : 0 }}</span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
                 @if (session('cart'))
@@ -128,27 +128,25 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function updateCartCount(count) {
+        document.querySelector('.count').textContent = count;
+        document.querySelector('.minicart-number-items').textContent = count;
+    }
+
     document.querySelectorAll('.remove_from_cart_button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
             const form = this.closest('.remove-form');
 
-            // Hiển thị thông báo xác nhận trước khi xóa
             Swal.fire({
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
-                timer: 3500,
                 showConfirmButton: true,
-                customClass: {
-                    container: 'custom-alert',
-                    title: 'alert-title',
-                    content: 'alert-message',
-                    confirmButton: 'btn custom-confirm-button',
-                    cancelButton: 'btn custom-cancel-button'
-                }
+                timer: 3500,
             }).then((result) => {
                 if (result.isConfirmed) {
                     const productId = form.querySelector('input[name="id"]').value;
@@ -173,9 +171,9 @@
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
-                                form.closest('.kobolg-mini-cart-item')
-                                    .remove(); // Xóa sản phẩm khỏi danh sách
+                                form.closest('.kobolg-mini-cart-item').remove(); // Xóa sản phẩm khỏi danh sách
                                 updateCartTotal(); // Cập nhật tổng giỏ hàng
+                                updateCartCount(data.cartCount); // Cập nhật số lượng giỏ hàng
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -208,3 +206,5 @@
         return x.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 </script>
+
+

@@ -120,7 +120,7 @@
                                                                 <div class="group-button">
                                                                     <div class="group-button-inner">
                                                                         <div class="add-to-cart">
-                                                                            <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                            <a href="" class="button product_type_variable add_to_cart_button">Select options</a>
                                                                         </div>
                                                                         <div class="yith-wcwl-add-to-wishlist">
                                                                             <div class="yith-wcwl-add-button show">
@@ -250,7 +250,7 @@
                                         <div class="group-button">
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
-                                                    <a href="#"
+                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                         class="button product_type_variable add_to_cart_button">Thêm vào giỏ
                                                         hàng</a>
                                                 </div>
@@ -449,7 +449,7 @@
                                                                 <div class="group-button">
                                                                     <div class="group-button-inner">
                                                                         <div class="add-to-cart">
-                                                                            <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button product_type_variable add_to_cart_button">Select options</a>
                                                                         </div>
                                                                         <div class="yith-wcwl-add-to-wishlist">
                                                                             <div class="yith-wcwl-add-button show">
@@ -569,7 +569,7 @@
                                                                 <div class="group-button">
                                                                     <div class="group-button-inner">
                                                                         <div class="add-to-cart">
-                                                                            <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button product_type_variable add_to_cart_button">Select options</a>
                                                                         </div>
                                                                         <div class="yith-wcwl-add-to-wishlist">
                                                                             <div class="yith-wcwl-add-button show">
@@ -690,11 +690,11 @@
                                                                 <div class="group-button">
                                                                     <div class="group-button-inner">
                                                                         <div class="add-to-cart">
-                                                                            <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button product_type_variable add_to_cart_button">Select options</a>
                                                                         </div>
                                                                         <div class="yith-wcwl-add-to-wishlist">
                                                                             <div class="yith-wcwl-add-button show">
-                                                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                                                <a href="{{ route('client.products.product-detail', $product->slug) }}" class="add_to_wishlist">Add to Wishlist</a>
                                                                             </div>
                                                                         </div>
                                                                         <div class="kobolg product compare-button">
