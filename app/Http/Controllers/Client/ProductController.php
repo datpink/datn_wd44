@@ -33,7 +33,9 @@ class ProductController extends Controller
         // dd($products);
         $variants = Attribute::with('attributeValues')->get();
         $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
-        // dd($variant_values);
+
+        $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
+        // dd($variant_storage_values);
 
         // Sau khi sắp xếp, phân trang
         $products = $query->paginate(6);
@@ -47,7 +49,7 @@ class ProductController extends Controller
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
         // dd($products);
-        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice', 'variant_values'));
+        return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice', 'variant_values', 'variant_storage_values'));
     }
 
     public function orderByPriceApi(Request $request)
@@ -93,10 +95,32 @@ class ProductController extends Controller
         $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
             ->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
                 $query->where('attribute_values.id', $attributeValueId); // Lọc các sản phẩm có attribute_value_id = 1
-            })->get();
-            
+            })
+
+            ->get();
+
 
         return response()->json(['data' => $products]);
+    }
+
+
+    public function filterByStorage(Request $request)
+    {
+
+        $attributeStorageValueId = $request->input('attribute_storage_value_id');
+        // return response()->json(['data' => $attributeStorageValueId]);
+
+        $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+            ->whereHas('variants.attributeValues', function ($query) use ($attributeStorageValueId) {
+                $query->where('attribute_values.id', $attributeStorageValueId); // Lọc các sản phẩm có attribute_value_id = 1
+            })
+
+            ->get();
+
+
+        return response()->json([
+            'data' => $products,
+    ]);
     }
 
 
