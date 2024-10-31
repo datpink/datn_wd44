@@ -89,7 +89,7 @@
                                 @foreach ($post->comments as $comment)
                                     <li>
                                         <div class="comment-body">
-                                            <h4 class="comment-author">{{ $comment->user_id }}</h4>
+                                            <h4 class="comment-author">{{ $comment->user->name }}</h4>
                                             <p class="comment-content">{{ $comment->content }}</p>
                                             <p class="comment-meta">{{ $comment->created_at->diffForHumans() }}</p>
                                         </div>
