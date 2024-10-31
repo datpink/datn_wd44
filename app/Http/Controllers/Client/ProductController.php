@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
 use App\Models\Catalogue;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductComment;
 use App\Models\ProductCommentReply;
+use App\Models\ProductReview;
 use App\Models\ProductVariant;
+use App\Models\ReviewResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -371,5 +374,53 @@ class ProductController extends Controller
 
         $reply->delete();
         return redirect()->back()->with('success', 'Phản hồi đã được xóa!');
+    }
+    public function storeReview(Request $request, $productId)
+    {
+        // Xác thực dữ liệu đầu vào
+        $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'review' => 'nullable|string|max:1000',
+        ]);
+    
+        // Kiểm tra xem người dùng đã có đơn hàng hay chưa
+        $hasOrder = Order::where('user_id', Auth::id())
+            ->where('status', 'completed') // hoặc trạng thái phù hợp với yêu cầu
+            ->exists();
+    
+        if (!$hasOrder) {
+            return redirect()->back()->with('error', 'Bạn cần có ít nhất một đơn hàng để đánh giá sản phẩm.');
+        }
+    
+        // Lưu đánh giá
+        ProductReview::create([
+            'product_id' => $productId,
+            'user_id' => Auth::id(),
+            'rating' => $request->input('rating'),
+            'review' => $request->input('review'),
+        ]);
+    
+        return redirect()->back()->with('success', 'Đánh giá của bạn đã được thêm!');
+    }
+    
+    // Phương thức lưu phản hồi đánh giá
+    public function storeResponse(Request $request, $reviewId)
+    {
+        // Kiểm tra xem người dùng có phải là admin không
+        if (!Auth::user()->hasRole('admin')) {
+            return redirect()->back()->with('error', 'Bạn không có quyền phản hồi đánh giá.');
+        }
+
+        $request->validate([
+            'response' => 'required|string|max:1000',
+        ]);
+
+        ReviewResponse::create([
+            'review_id' => $reviewId,
+            'response' => $request->input('response'),
+            'responder_id' => Auth::id(),
+        ]);
+
+        return redirect()->back()->with('success', 'Phản hồi của bạn đã được thêm!');
     }
 }

@@ -84,7 +84,9 @@ Route::prefix('shop')->group(function () {
     // Route sửa và xóa phản hồi
     Route::put('comment/{comment}/reply/{reply}/edit', [ProductController::class, 'updateReply'])->name('client.updateReply');
     Route::delete('comment/{comment}/reply/{reply}/delete', [ProductController::class, 'deleteReply'])->name('client.deleteReply');
-
+    // route review , review respone
+    Route::post('/products/{product}/reviews', [ProductController::class, 'storeReview'])->name('client.storeReview');
+    Route::post('/reviews/{review}/responses', [ProductController::class, 'storeResponse'])->name('client.storeReviewResponse');
 
     // Route::get('product-by-catalogues/{slug}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
     // Route::get('product-by-child/{parentSlug}/{childSlug}', [ProductController::class, 'productByChildCatalogues'])->name('client.productByChildCatalogues');
