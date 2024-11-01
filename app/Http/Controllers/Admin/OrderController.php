@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
 use App\Traits\ManagesOrders;
 use Illuminate\Http\Request;
@@ -94,4 +95,29 @@ class OrderController extends Controller
         return redirect()->route('orders.trash')
             ->with('success', 'Đơn hàng đã được xóa cứng!');
     }
+
+    //Hiển thị danh sách lịch sử đơn hàng
+    public function showOrderHistory($userId)
+    {
+        $userId = Auth::id();
+
+        // Truy vấn lấy danh sách đơn hàng của người dùng với tổng tiền mỗi đơn hàng theo order_id
+        $orders = Order::withSum('items', 'total')
+                       ->where('user_id', $userId)
+                       ->orderBy('created_at', 'desc')
+                       ->get();
+    
+        return view('client.user.order-history', compact('orders'));
+    }
+    public function detailOrderHistory(Order $order)
+{
+    // Lấy thông tin người mua
+    $buyer = $order->user;
+    // Lấy các sản phẩm và biến thể trong đơn hàng
+    $items = $order->items()
+                   ->with('productVariant')
+                   ->get();
+
+    return view('client.user.order-detail', compact('order', 'items', 'buyer'));
+}
 }
