@@ -5,35 +5,33 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
-    public function index(Request $request)
+
+    public function checkout(Request $request)
     {
-        $selectedProducts = $request->input('products');
+        // Lấy danh sách sản phẩm được chọn từ giỏ hàng
+        $items = $request->input('items', []);
 
-        // Lấy thông tin chi tiết sản phẩm từ database dựa trên $selectedProducts
-        $products = Product::whereIn('id', array_column($selectedProducts, 'id'))->get();
+        // Lấy thông tin sản phẩm từ giỏ hàng dựa vào các id đã chọn
+        $selectedItems = [];
+        foreach ($items as $id => $value) {
+            if (session()->has("cart.$id")) {
+                $selectedItems[] = [
+                    'id' => $id,
+                    'name' => session("cart.$id.name"),
+                    'quantity' => session("cart.$id.quantity"),
+                    'price' => session("cart.$id.price"),
+                    'total' => session("cart.$id.price") * session("cart.$id.quantity"),
+                ];
+            }
+        }
 
-        // Truyền dữ liệu sang view checkout
-        return view('checkout.index', compact('products', 'selectedProducts'));
+        // Hiện thị trang thanh toán với danh sách sản phẩm được chọn
+        return view('client.checkout', compact('selectedItems'));
     }
 
-    public function store(Request $request)
-    {
-        // Xử lý logic thanh toán
-        // Kiểm tra thông tin đầu vào, lưu trữ đơn hàng, ...
 
-        // Ví dụ kiểm tra thông tin thanh toán
-        $request->validate([
-            'billing_first_name' => 'required|string|max:255',
-            'billing_email' => 'required|email|max:255',
-            // Thêm các trường khác cần thiết
-        ]);
-
-        // Thực hiện thanh toán, có thể sử dụng PayPal, Stripe hoặc phương thức thanh toán khác
-
-        // Sau khi thành công, chuyển hướng đến trang cảm ơn
-        return redirect()->route('thankyou')->with('success', 'Đơn hàng đã được đặt thành công!');
-    }
 }
