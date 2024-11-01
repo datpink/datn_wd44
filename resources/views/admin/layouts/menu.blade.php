@@ -112,6 +112,9 @@
                             <li>
                                 <a href="{{ route('banners.index') }}">Danh sách Banner</a>
                             </li>
+                            <li>
+                                <a href="{{ route('advertisements.index') }}">Danh sách Quảng Cáo</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

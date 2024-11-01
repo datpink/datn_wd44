@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advertisement;
 use App\Models\Banner;
 use App\Models\Catalogue;
 use App\Models\Post;
@@ -15,6 +16,9 @@ class ClientController extends Controller
         $menuCatalogues = (new MenuController())->getCataloguesForMenu();
         $menuCategories = (new MenuController())->getCategoriesForMenu();
         $banners = Banner::where('status', 'active')->get();
+
+        // Lấy tất cả quảng cáo
+        $advertisements = Advertisement::where('status', 'active')->get();
 
         // Lấy sản phẩm nổi bật
         $featuredProducts = Product::where('is_featured', true)->where('is_active', true)->get();
@@ -30,7 +34,7 @@ class ClientController extends Controller
                             ->select('posts.*', 'users.name as author_name')
                             ->where('is_featured', true)->get();
 
-        return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'featuredProducts', 'productsByCondition', 'featuredPosts'));
+        return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts'));
     }
 
 }

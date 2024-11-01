@@ -138,14 +138,14 @@
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
                                                     <del>
-                                                        <span
-                                                            class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}
+                                                        {{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}<span
+                                                            class="kobolg-Price-currencySymbol">₫</span>
                                                     </del>
                                                 </span>
                                                 @if ($product->discount_price)
                                                     <span class="kobolg-Price-amount amount old-price">
-                                                        <span
-                                                            class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}
+                                                        {{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}<span
+                                                            class="kobolg-Price-currencySymbol">₫</span>
                                                     </span>
                                                 @endif
                                             </span>
@@ -175,30 +175,32 @@
                             @endforeach
                         </ul>
                     </div>
-                    <nav class="navigation pagination mt-3">
-                        <div class="nav-links">
-                            @if ($productByCatalogues->onFirstPage())
-                                <span class="disabled page-numbers">«</span>
-                            @else
-                                <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«</a>
-                            @endif
-
-                            @foreach (range(1, $productByCatalogues->lastPage()) as $page)
-                                @if ($page == $productByCatalogues->currentPage())
-                                    <span class="current page-numbers">{{ $page }}</span>
+                    @if ($productByCatalogues->count() > 0 && $productByCatalogues->lastPage() > 1)
+                        <nav class="navigation pagination mt-3">
+                            <div class="nav-links">
+                                @if ($productByCatalogues->onFirstPage())
+                                    <span class="disabled page-numbers">«</span>
                                 @else
-                                    <a class="page-numbers"
-                                        href="{{ $productByCatalogues->url($page) }}">{{ $page }}</a>
+                                    <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«</a>
                                 @endif
-                            @endforeach
 
-                            @if ($productByCatalogues->hasMorePages())
-                                <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">»</a>
-                            @else
-                                <span class="disabled page-numbers">»</span>
-                            @endif
-                        </div>
-                    </nav>
+                                @foreach (range(1, $productByCatalogues->lastPage()) as $page)
+                                    @if ($page == $productByCatalogues->currentPage())
+                                        <span class="current page-numbers">{{ $page }}</span>
+                                    @else
+                                        <a class="page-numbers"
+                                            href="{{ $productByCatalogues->url($page) }}">{{ $page }}</a>
+                                    @endif
+                                @endforeach
+
+                                @if ($productByCatalogues->hasMorePages())
+                                    <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">»</a>
+                                @else
+                                    <span class="disabled page-numbers">»</span>
+                                @endif
+                            </div>
+                        </nav>
+                    @endif
                 </div>
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
@@ -350,81 +352,81 @@
             </div>
         </div>
     </div>
-@endsection
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const priceFilterForm = document.getElementById('priceFilterForm');
-        const priceFrom = document.getElementById('priceFrom');
-        const priceTo = document.getElementById('priceTo');
-        let productLists = document.querySelector('.kobolg-products .products');
-
-        // Khởi tạo slider
-        const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-            'data-value-min'));
-        const maxPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-            'data-value-max'));
-        const maxDiscountPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-            'data-max'));
-
-        $('.price_slider').slider({
-            range: true,
-            min: 0,
-            max: maxDiscountPrice,
-            values: [minPrice, maxPrice],
-            slide: function(event, ui) {
-                priceFrom.textContent = `$${ui.values[0]}`;
-                priceTo.textContent = `$${ui.values[1]}`;
-            },
-            change: function(event, ui) {
-                // Cập nhật giá trị trong thuộc tính data
-                priceFilterForm.querySelector('.price_slider').setAttribute('data-value-min', ui
-                    .values[0] + '.00');
-                priceFilterForm.querySelector('.price_slider').setAttribute('data-value-max', ui
-                    .values[1] + '.00');
-            }
-        });
-
-        // Cập nhật giá trị hiển thị ban đầu
-        priceFrom.textContent = `$${minPrice}`;
-        priceTo.textContent = `$${maxPrice}`;
-
-        // Bắt sự kiện submit form
-        priceFilterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const minPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
-                'data-value-min');
-            const maxPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
-                'data-value-max');
-            const parentCataloguesID = document.getElementById('parentCataloguesID').value;
-            // console.log('123'+parentCataloguesID);
-
-            let params = {
-                'parentCataloguesID': parentCataloguesID,
-                'min_price': minPrice,
-                'max_price': maxPrice,
-            };
 
 
-            // Gọi API lọc sản phẩm theo khoảng giá
-            axios.get('/api/shop/products/filter-by-price', {
-                    params
-                })
-                .then((res) => {
-                    // console.log(res);
-                    // console.log(productLists);
-                    productLists.innerHTML = '';
-                    // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
-                    // console.log(res.data.data);
-                    // Xử lý danh sách sản phẩm
-                    // Kiểm tra nếu products là một mảng
-                    if (Array.isArray(res.data.products)) {
-                        productLists.innerHTML = ''; // Xóa danh sách sản phẩm cũ
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceFilterForm = document.getElementById('priceFilterForm');
+            const priceFrom = document.getElementById('priceFrom');
+            const priceTo = document.getElementById('priceTo');
+            let productLists = document.querySelector('.kobolg-products .products');
 
-                        // Duyệt qua từng sản phẩm và thêm vào danh sách
-                        res.data.products.forEach(product => {
-                            const productHTML = `
+            // Khởi tạo slider
+            const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-value-min'));
+            const maxPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-value-max'));
+            const maxDiscountPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-max'));
+
+            $('.price_slider').slider({
+                range: true,
+                min: 0,
+                max: maxDiscountPrice,
+                values: [minPrice, maxPrice],
+                slide: function(event, ui) {
+                    priceFrom.textContent = `$${ui.values[0]}`;
+                    priceTo.textContent = `$${ui.values[1]}`;
+                },
+                change: function(event, ui) {
+                    // Cập nhật giá trị trong thuộc tính data
+                    priceFilterForm.querySelector('.price_slider').setAttribute('data-value-min', ui
+                        .values[0] + '.00');
+                    priceFilterForm.querySelector('.price_slider').setAttribute('data-value-max', ui
+                        .values[1] + '.00');
+                }
+            });
+
+            // Cập nhật giá trị hiển thị ban đầu
+            priceFrom.textContent = `$${minPrice}`;
+            priceTo.textContent = `$${maxPrice}`;
+
+            // Bắt sự kiện submit form
+            priceFilterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const minPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
+                    'data-value-min');
+                const maxPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
+                    'data-value-max');
+                const parentCataloguesID = document.getElementById('parentCataloguesID').value;
+                // console.log('123'+parentCataloguesID);
+
+                let params = {
+                    'parentCataloguesID': parentCataloguesID,
+                    'min_price': minPrice,
+                    'max_price': maxPrice,
+                };
+
+
+                // Gọi API lọc sản phẩm theo khoảng giá
+                axios.get('/api/shop/products/filter-by-price', {
+                        params
+                    })
+                    .then((res) => {
+                        // console.log(res);
+                        // console.log(productLists);
+                        productLists.innerHTML = '';
+                        // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
+                        // console.log(res.data.data);
+                        // Xử lý danh sách sản phẩm
+                        // Kiểm tra nếu products là một mảng
+                        if (Array.isArray(res.data.products)) {
+                            productLists.innerHTML = ''; // Xóa danh sách sản phẩm cũ
+
+                            // Duyệt qua từng sản phẩm và thêm vào danh sách
+                            res.data.products.forEach(product => {
+                                const productHTML = `
                                                         <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                                                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                                                             <div class="product-inner images">
@@ -449,9 +451,11 @@
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">
-                                                                            <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
+                                                                            <del>
+                                                                                ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
+                                                                            </del>
                                                                         </span>
-                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
+                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
                                                                     </span>
                                                                     <div class="kobolg-product-details__short-description">
                                                                         <p>${product.tomtat}</p>
@@ -475,23 +479,24 @@
                                                             </div>
                                                         </li>
                                                     `;
-                            productLists.innerHTML +=
-                                productHTML; // Thêm sản phẩm vào danh sách
-                        });
-                    } else {
-                        console.error('Dữ liệu không phải là một mảng:', res.data.products);
-                        productLists.innerHTML =
-                            '<p>Không có sản phẩm nào phù hợp với tiêu chí lọc.</p>';
-                    }
+                                productLists.innerHTML +=
+                                    productHTML; // Thêm sản phẩm vào danh sách
+                            });
+                        } else {
+                            console.error('Dữ liệu không phải là một mảng:', res.data.products);
+                            productLists.innerHTML =
+                                '<p>Không có sản phẩm nào phù hợp với tiêu chí lọc.</p>';
+                        }
 
-                })
-                .catch((error) => {
-                    console.log(error);
+                    })
+                    .catch((error) => {
+                        console.log(error);
 
-                })
+                    })
+
+            })
+
 
         })
-
-
-    })
-</script>
+    </script>
+@endsection

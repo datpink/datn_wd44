@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\admin\AdvertisementController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
@@ -220,7 +221,8 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/{id}/force-delete', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
-
+    // Route resource cho quảng cáo
+    Route::resource('admin/advertisements', AdvertisementController::class);
 
     // //Route product variant
     // Route::resource('product-variants', ProductVariantController::class);

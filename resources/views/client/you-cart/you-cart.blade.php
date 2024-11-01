@@ -1,4 +1,3 @@
-
 @if (session('success'))
     <script>
         Swal.fire({
@@ -86,7 +85,8 @@
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
-                Giỏ hàng của bạn <span class="minicart-number-items">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+                Giỏ hàng của bạn <span
+                    class="minicart-number-items">{{ session('cart') ? count(session('cart')) : 0 }}</span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
                 @if (session('cart'))
@@ -107,9 +107,12 @@
                                     - {{ $item['options']['color'] }} - {{ $item['options']['storage'] }}
                                 @endif
                             </a>
-                            <span class="quantity">{{ $item['quantity'] }} × <span
-                                    class="kobolg-Price-amount amount"><span
-                                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($item['price'], 2) }}</span></span>
+                            <span class="quantity">
+                                {{ $item['quantity'] }} × 
+                                <span class="kobolg-Price-amount amount">
+                                    {{ number_format($item['price'], 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                                </span>
+                            </span>
                         </li>
                         @php $subtotal += $item['quantity'] * $item['price']; @endphp
                     @endforeach
@@ -117,9 +120,11 @@
                     <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
                 @endif
             </ul>
-            <p class="kobolg-mini-cart__total total"><strong>Tổng:</strong>
-                <span class="kobolg-Price-amount amount"><span
-                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($subtotal ?? 0, 2) }}</span>
+            <p class="kobolg-mini-cart__total total">
+                <strong>Tổng:</strong>
+                <span class="kobolg-Price-amount amount">
+                    {{ number_format($subtotal ?? 0, 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                </span>
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
                 <a href="{{ route('cart.view') }}" class="button kobolg-forward">Xem Giỏ hàng</a>
@@ -145,8 +150,14 @@
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
-                showConfirmButton: true,
+                showCancelButton: true,
                 timer: 3500,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không',
+                customClass: {
+                    confirmButton: 'custom-confirm-button',
+                    cancelButton: 'custom-cancel-button'
+                }
             }).then((result) => {
                 if (result.isConfirmed) {
                     const productId = form.querySelector('input[name="id"]').value;
@@ -171,9 +182,11 @@
                                     timer: 1500,
                                     showConfirmButton: false
                                 });
-                                form.closest('.kobolg-mini-cart-item').remove(); // Xóa sản phẩm khỏi danh sách
+                                form.closest('.kobolg-mini-cart-item')
+                                    .remove(); // Xóa sản phẩm khỏi danh sách
                                 updateCartTotal(); // Cập nhật tổng giỏ hàng
-                                updateCartCount(data.cartCount); // Cập nhật số lượng giỏ hàng
+                                updateCartCount(data
+                                    .cartCount); // Cập nhật số lượng giỏ hàng
                             } else {
                                 Swal.fire({
                                     icon: 'error',
@@ -206,5 +219,3 @@
         return x.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 </script>
-
-

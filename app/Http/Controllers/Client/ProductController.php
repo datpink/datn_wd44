@@ -120,7 +120,7 @@ class ProductController extends Controller
 
         return response()->json([
             'data' => $products,
-    ]);
+        ]);
     }
 
 
@@ -213,7 +213,7 @@ class ProductController extends Controller
         $productByCatalogues = Product::with('catalogue')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1)
-            ->paginate(10);
+            ->paginate(6);
 
         // dd($productByCatalogues);
         foreach ($productByCatalogues as $product) {
@@ -252,12 +252,21 @@ class ProductController extends Controller
             $products->whereIn('catalogue_id', $parentCataloguesID);
         }
 
-        $products = $products->get();
-        // dd($products);
-        // dd($minPrice, $maxPrice);
+        // $products = $products->get();
+        // // dd($products);
+        // // dd($minPrice, $maxPrice);
 
 
-        return response()->json(['products' => $products]);
+        // return response()->json(['products' => $products]);
+        // Thêm phân trang
+        $products = $products->paginate(6); // 10 sản phẩm mỗi trang
+
+        return response()->json([
+            'products' => $products->items(),
+            'current_page' => $products->currentPage(),
+            'last_page' => $products->lastPage(),
+            'total' => $products->total(),
+        ]);
     }
     public function search(Request $request)
     {
@@ -289,7 +298,7 @@ class ProductController extends Controller
         $products->where('is_active', 1);
 
         // Paginate the results
-        $products = $products->paginate(9);
+        $products = $products->paginate(6);
 
         // Get the maximum discount price from the database
         $maxDiscountPrice = Product::max('discount_price');
@@ -406,16 +415,16 @@ class ProductController extends Controller
             'rating' => 'required|integer|between:1,5',
             'review' => 'nullable|string|max:1000',
         ]);
-    
+
         // Kiểm tra xem người dùng đã có đơn hàng hay chưa
         $hasOrder = Order::where('user_id', Auth::id())
             ->where('status', 'completed') // hoặc trạng thái phù hợp với yêu cầu
             ->exists();
-    
+
         if (!$hasOrder) {
             return redirect()->back()->with('error', 'Bạn cần có ít nhất một đơn hàng để đánh giá sản phẩm.');
         }
-    
+
         // Lưu đánh giá
         ProductReview::create([
             'product_id' => $productId,
@@ -423,10 +432,10 @@ class ProductController extends Controller
             'rating' => $request->input('rating'),
             'review' => $request->input('review'),
         ]);
-    
+
         return redirect()->back()->with('success', 'Đánh giá của bạn đã được thêm!');
     }
-    
+
     // Phương thức lưu phản hồi đánh giá
     public function storeResponse(Request $request, $reviewId)
     {

@@ -103,14 +103,14 @@
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4"
                                             data-price="{{ $item['price'] }}">
-                                            ₫{{ number_format($item['price'], 0, ',', '.') }}
+                                            {{ number_format($item['price'], 0, ',', '.') }}₫
                                         </td>
                                         <td class="align-middle p-4">
                                             <input type="number" class="form-control text-center quantity"
                                                 value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4 total">
-                                            ₫{{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}
+                                            {{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫
                                         </td>
                                         <td class="text-center align-middle px-0">
                                             <button type="button" class="btn btn-light remove-from-cart"
@@ -136,11 +136,11 @@
                     <div class="d-flex">
                         <div class="text-right mt-4 mr-5">
                             <label class="text-muted font-weight-normal m-0">Discount</label>
-                            <div class="text-large"><strong>₫0.00</strong></div>
+                            <div class="text-large"><strong>0.00₫</strong></div>
                         </div>
                         <div class="text-right mt-4">
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
-                            <div class="text-large"><strong id="total-price">₫
+                            <div class="text-large"><strong id="total-price">
                                     {{ number_format($subtotal, 0, ',', '.') }}</strong></div>
                         </div>
                     </div>
@@ -217,8 +217,13 @@
                     text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                     icon: 'warning',
                     showCancelButton: true,
+                    timer: 3500,
                     confirmButtonText: 'Có',
-                    cancelButtonText: 'Không'
+                    cancelButtonText: 'Không',
+                    customClass: {
+                        confirmButton: 'custom-confirm-button',
+                        cancelButton: 'custom-cancel-button'
+                    }
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch(`{{ url('cart/remove/') }}/${productId}`, {
@@ -260,57 +265,55 @@
         });
 
         document.getElementById('checkout-button').addEventListener('click', function() {
-    const selectedProducts = [];
+            const selectedProducts = [];
 
-    document.querySelectorAll('#cart-table tbody tr').forEach(row => {
-        const checkbox = row.querySelector('input[type="checkbox"]');
-        if (checkbox && checkbox.checked) {
-            const productId = row.querySelector('.remove-from-cart').getAttribute('data-id');
-            const quantity = row.querySelector('.quantity').value;
+            document.querySelectorAll('#cart-table tbody tr').forEach(row => {
+                const checkbox = row.querySelector('input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    const productId = row.querySelector('.remove-from-cart').getAttribute('data-id');
+                    const quantity = row.querySelector('.quantity').value;
 
-            selectedProducts.push({
-                id: productId,
-                quantity: quantity
+                    selectedProducts.push({
+                        id: productId,
+                        quantity: quantity
+                    });
+                }
             });
-        }
-    });
 
-    // Kiểm tra xem có sản phẩm nào đã được chọn không
-    if (selectedProducts.length === 0) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Chưa chọn sản phẩm',
-            text: 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.'
+            // Kiểm tra xem có sản phẩm nào đã được chọn không
+            if (selectedProducts.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Chưa chọn sản phẩm',
+                    text: 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.'
+                });
+                return;
+            }
+
+            // Gửi dữ liệu qua route checkout.index bằng POST request
+            fetch("{{ route('checkout.index') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        products: selectedProducts
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect_url; // Chuyển đến trang thanh toán
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi chuyển sang trang thanh toán.'
+                        });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         });
-        return;
-    }
-
-    // Gửi dữ liệu qua route checkout.index bằng POST request
-    fetch("{{ route('checkout.index') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ products: selectedProducts })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = data.redirect_url; // Chuyển đến trang thanh toán
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Có lỗi xảy ra khi chuyển sang trang thanh toán.'
-            });
-        }
-    })
-    .catch(error => console.error('Error:', error));
-});
-
     </script>
-
-
-
 @endsection
