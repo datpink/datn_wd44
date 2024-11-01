@@ -126,9 +126,24 @@ Route::prefix('shop')->group(function () {
     Route::get('/profile/edit-password', [UserController::class, 'editPassword'])->name('profile.edit-password');
     Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
 
+    //route cho trang lịch sử đơn hàng
+    Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
+    Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
+
 });
 
+Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
 
+// GIỏ hàng
+Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.temporary');
+Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
+Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+
+// thanh toán
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 
 
 // Đăng xuất ở admin
