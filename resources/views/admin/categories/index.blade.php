@@ -83,18 +83,22 @@
                                                 <td>{{ $category->created_at ? $category->created_at->format('d-m-Y') : 'Chưa có' }}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('categories.edit', $category) }}"
-                                                        class="btn btn-warning btn-rounded">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('categories.edit', $category) }}" class="editRow"
+                                                        title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('categories.destroy', $category) }}"
-                                                        method="POST" style="display:inline;" class="delete-form">
+                                                        method="POST" style="display:inline;" class="delete-form"
+                                                        onsubmit="return confirm('Bạn có chắc muốn xóa danh mục này không?');">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button"
-                                                            class="btn btn-danger btn-rounded delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="card-body mt-4">
-                    @if(session('success'))
+                    @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
@@ -36,7 +36,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($permissions as $permission)
+                                @foreach ($permissions as $permission)
                                     <tr>
                                         <td>{{ $permission->id }}</td>
                                         <td>{{ $permission->name }}</td>
@@ -46,14 +46,18 @@
                                         <td>{{ $permission->created_at }}</td>
                                         <td>{{ $permission->updated_at }}</td>
                                         <td>
-                                            <a href="{{ route('permissions.edit', $permission->id) }}" class="btn btn-sm btn-warning rounded-pill">
-                                                <i class="bi bi-pencil-square"></i> Sửa
+                                            <a href="{{ route('permissions.edit', $permission->id) }}" class="editRow"
+                                                title="Sửa" style="margin-right: 15px;">
+                                                <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                             </a>
-                                            <form action="{{ route('permissions.destroy', $permission->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Bạn có chắc muốn xóa quyền này không?');">
+                                            <form action="{{ route('permissions.destroy', $permission->id) }}"
+                                                method="POST" class="d-inline-block"
+                                                onsubmit="return confirm('Bạn có chắc muốn xóa quyền này không?');">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger rounded-pill">
-                                                    <i class="bi bi-trash"></i> Xóa
+                                                <button type="submit" class="delete-btn"
+                                                    style="background: none; border: none; padding: 0;" title="Xóa">
+                                                    <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>
                                         </td>

@@ -177,14 +177,14 @@
                                                         <label for="user" class="mr-2 font-medium">Người dùng:</label>
                                                         <input type="text"
                                                             class="form-control flex-1 border-gray-300 rounded"
-                                                            id="user">
+                                                            id="user" disabled>
                                                     </div>
                                                     <div class="form-group flex items-center">
                                                         <label for="content" class="mr-2 font-medium">Nội dung bình
                                                             luận:</label>
                                                         <input type="text"
                                                             class="form-control flex-1 border-gray-300 rounded"
-                                                            id="content">
+                                                            id="content" disabled>
                                                     </div>
                                                 </div>
                                                 <div class="form-group mt-4">

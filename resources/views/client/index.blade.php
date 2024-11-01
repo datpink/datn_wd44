@@ -20,55 +20,55 @@
             <div class="container">
 
                 <div class="row">
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div class="kobolg-banner style-01">
-                            <div class="banner-inner">
-                                <figure class="banner-thumb">
-                                    <img src="{{ asset('theme/client/assets/images/banner12.jpg') }}"
-                                        class="attachment-full size-full" alt="img">
-                                </figure>
-                                <div class="banner-info">
-                                    <div class="banner-content">
-                                        <div class="title-wrap">
-                                            <div class="banner-label">
-                                                Modern Mobile
+                    @php
+                        $validAdvertisements = $advertisements->filter(function ($advertisement) {
+                            return $advertisement->image &&
+                                $advertisement->title &&
+                                $advertisement->description &&
+                                $advertisement->button_link &&
+                                $advertisement->button_text &&
+                                ($advertisement->position == 1 || $advertisement->position == 2);
+                        });
+                    @endphp
+
+                    @if ($validAdvertisements->count() == 2)
+                        <!-- Kiểm tra xem có đúng 2 quảng cáo hợp lệ -->
+                        @foreach ($validAdvertisements as $advertisement)
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <div class="kobolg-banner style-01">
+                                    <div class="banner-inner">
+                                        <figure class="banner-thumb">
+                                            <img src="{{ asset('storage/' . $advertisement->image) }}"
+                                                class="attachment-full size-full" alt="{{ $advertisement->title }}">
+                                        </figure>
+                                        <div class="banner-info">
+                                            <div class="banner-content">
+                                                <div class="title-wrap">
+                                                    <div class="banner-label">
+                                                        {{ $advertisement->title }}
+                                                    </div>
+                                                    <h6 class="title">
+                                                        {!! $advertisement->description !!}
+                                                    </h6>
+                                                </div>
+                                                <div class="button-wrap">
+                                                    <a class="button" target="_self"
+                                                        href="{{ $advertisement->button_link }}">
+                                                        <span>{{ $advertisement->button_text }}</span>
+                                                    </a>
+                                                </div>
                                             </div>
-                                            <h6 class="title">
-                                                New Collection </h6>
-                                        </div>
-                                        <div class="button-wrap">
-                                            <a class="button" target="_self" href="#"><span>Shop now</span></a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-lg-6">
-                        <div class="kobolg-banner style-01">
-                            <div class="banner-inner">
-                                <figure class="banner-thumb">
-                                    <img src="{{ asset('theme/client/assets/images/banner13.jpg') }}"
-                                        class="attachment-full size-full" alt="img">
-                                </figure>
-                                <div class="banner-info">
-                                    <div class="banner-content">
-                                        <div class="title-wrap">
-                                            <div class="banner-label">
-                                                Headphones
-                                            </div>
-                                            <h6 class="title">
-                                                Best Seller </h6>
-                                        </div>
-                                        <div class="button-wrap">
-                                            <a class="button" target="_self" href="#"><span>Shop now</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <p class="text-center">Không có quảng cáo nào cho vị trí 1 và 2.</p>
+                        <!-- Thông báo nếu không có quảng cáo -->
+                    @endif
                 </div>
+
             </div>
 
         </div>
@@ -98,7 +98,9 @@
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
-                                        <a class="thumb-link" href="#" tabindex="0">
+                                        <a class="thumb-link"
+                                            href="{{ route('client.products.product-detail', $product->slug) }}"
+                                            tabindex="0">
                                             @if ($product->image_url && \Storage::exists($product->image_url))
                                                 <img src="{{ \Storage::url($product->image_url) }}"
                                                     alt="{{ $product->name }}" width="270PX" height="350px">
@@ -112,7 +114,8 @@
                                                 <span class="onnew"><span class="text">New</span></span>
                                             @endif
                                         </div>
-                                        <a href="#" class="button yith-wcqv-button">Quick View</a>
+                                        <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                            class="button yith-wcqv-button">Quick View</a>
                                     </div>
                                     <div class="product-info">
                                         <div class="rating-wapper nostar">
@@ -127,14 +130,14 @@
                                         <span class="price">
                                             <span class="kobolg-Price-amount amount text-danger">
                                                 <del>
-                                                    <span
-                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, 2) }}
+                                                    {{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}<span
+                                                        class="kobolg-Price-currencySymbol">₫</span>
                                                 </del>
                                             </span>
                                             @if ($product->discount_price)
                                                 <span class="kobolg-Price-amount amount old-price">
-                                                    <span
-                                                        class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price ?? $product->price, 2) }}
+                                                    {{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}<span
+                                                        class="kobolg-Price-currencySymbol">₫</span>
                                                 </span>
                                             @endif
                                         </span>
@@ -164,28 +167,46 @@
             <div class="kobolg-banner style-02 left-center">
 
                 <!-- GGI 2 -->
+                @php
+                    $validAdvertisements = $advertisements->filter(function ($advertisement) {
+                        return $advertisement->image &&
+                            $advertisement->title &&
+                            $advertisement->description &&
+                            $advertisement->button_link &&
+                            $advertisement->button_text &&
+                            $advertisement->position == 3;
+                    });
+                @endphp
+
                 <div class="banner-inner">
-                    <figure class="banner-thumb">
-                        <img src="{{ asset('theme/client/assets/images/banner101.jpg') }}" class="attachment-full size-full"
-                            alt="img">
-                    </figure>
-                    <div class="banner-info container">
-                        <div class="banner-content">
-                            <div class="title-wrap">
-                                <div class="banner-label">
-                                    Modern Laptop
+                    @if ($validAdvertisements->count() == 1)
+                        <!-- Kiểm tra xem có đúng 1 quảng cáo hợp lệ -->
+                        @foreach ($validAdvertisements as $advertisement)
+                            <figure class="banner-thumb">
+                                <img src="{{ asset('storage/' . $advertisement->image) }}"
+                                    class="attachment-full size-full" alt="{{ $advertisement->title }}">
+                            </figure>
+                            <div class="banner-info container">
+                                <div class="banner-content">
+                                    <div class="title-wrap">
+                                        <h6 class="title">
+                                            {{ $advertisement->title }}</h6>
+                                    </div>
+                                    <div class="button-wrap">
+                                        <div class="subtitle">
+                                            {!! $advertisement->description !!}
+                                        </div>
+                                        <a class="button" target="_self" href="{{ $advertisement->button_link }}">
+                                            <span>{{ $advertisement->button_text }}</span>
+                                        </a>
+                                    </div>
                                 </div>
-                                <h6 class="title">
-                                    Best Seller </h6>
                             </div>
-                            <div class="button-wrap">
-                                <div class="subtitle">
-                                    Lorem ipsum dolor sit amet consectetur adipiscing elit justo
-                                </div>
-                                <a class="button" target="_self" href="#"><span>Shop now</span></a>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <p class="text-center">Không có quảng cáo nào cho vị trí 3.</p>
+                        <!-- Thông báo nếu không có quảng cáo -->
+                    @endif
                 </div>
 
             </div>
@@ -473,31 +494,44 @@
             <div class="kobolg-banner style-07 left-center">
 
                 <!-- GGI 3  -->
+                @php
+                    $validAdvertisements = $advertisements->filter(function ($advertisement) {
+                        return $advertisement->image &&
+                            $advertisement->title &&
+                            $advertisement->description &&
+                            $advertisement->button_link &&
+                            $advertisement->button_text &&
+                            $advertisement->position == 4;
+                    });
+                @endphp
                 <div class="banner-inner">
-                    <figure class="banner-thumb">
-                        <img src="{{ asset('theme/client/assets/images/banner28.jpg') }}"
-                            class="attachment-full size-full" alt="img">
-                    </figure>
-                    <div class="banner-info container">
-                        <div class="banner-content">
-                            <div class="title-wrap">
-                                <div class="banner-label">
-                                    30 Nov - 03 Dec
+                    @if ($validAdvertisements->count() == 1)
+                        <!-- Kiểm tra xem có đúng 1 quảng cáo hợp lệ -->
+                        @foreach ($validAdvertisements as $advertisement)
+                            <figure class="banner-thumb">
+                                <img src="{{ asset('storage/' . $advertisement->image) }}"
+                                    class="attachment-full size-full" alt="img" {{ $advertisement->title }}>
+                            </figure>
+                            <div class="banner-info container">
+                                <div class="banner-content">
+                                    <div class="title-wrap">
+                                        <h6 class="title">
+                                            {{ $advertisement->title }} </h6>
+                                    </div>
+                                    <div class="button-wrap">
+                                        <div class="subtitle">
+                                            {!! $advertisement->description !!}
+                                        </div>
+                                        <a class="button" target="_self" href="{{ $advertisement->button_link }}">
+                                            <span>{{ $advertisement->button_text }}</span></a>
+                                    </div>
                                 </div>
-                                <h6 class="title">
-                                    New Collection </h6>
                             </div>
-                            <div class="cate">
-                                50% Off / Selected items
-                            </div>
-                            <div class="button-wrap">
-                                <div class="subtitle">
-                                    Mus venenatis habitasse leo malesuada lacus commodo faucibus torquent donec
-                                </div>
-                                <a class="button" target="_self" href="#"><span>Shop now</span></a>
-                            </div>
-                        </div>
-                    </div>
+                        @endforeach
+                    @else
+                        <p class="text-center">Không có quảng cáo nào cho vị trí 4.</p>
+                        <!-- Thông báo nếu không có quảng cáo -->
+                    @endif
                 </div>
 
             </div>
@@ -510,7 +544,8 @@
                     <div class="heading-inner">
                         <h3 class="title">Bài Viết Nổi Bật</h3>
                         <div class="subtitle">
-                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất chỉ với một cú nhấp chuột
+                            Dẫn đầu xu hướng công nghệ - Trải nghiệm mua sắm máy tính và điện thoại chất lượng, giá tốt nhất
+                            chỉ với một cú nhấp chuột
                         </div>
                     </div>
                 </div>
@@ -523,12 +558,15 @@
                             <article class="post-item post-grid rows-space-0">
                                 <div class="post-inner blog-grid">
                                     <div class="post-thumb">
-                                        <a href="{{ route('posts.show', $post->id) }}" tabindex="0">
-                                            <img src="{{ asset('images/' . $post->image) }}" alt="{{ $post->title }}"
-                                                class="img-responsive attachment-370x330 size-370x330"
-                                                width="370" height="330">
+                                        <a href="{{ route('post.show', $post->id) }}" tabindex="0">
+                                            @if ($post->image && \Storage::exists($post->image))
+                                                <img src="{{ \Storage::url($post->image) }}"class="img-responsive attachment-370x330 size-370x330"
+                                                    alt="{{ $post->name }}" width="370px" height="330px">
+                                            @else
+                                                Không có ảnh
+                                            @endif
                                         </a>
-                                        <a class="datebox" href="{{ route('posts.show', $post->id) }}" tabindex="0">
+                                        <a class="datebox" href="{{ route('post.show', $post->id) }}" tabindex="0">
                                             <span>{{ $post->created_at->format('d') }}</span>
                                             <span>{{ $post->created_at->format('M') }}</span>
                                         </a>
@@ -536,7 +574,8 @@
                                     <div class="post-content">
                                         <div class="post-meta">
                                             <div class="post-author">
-                                                By: <a href="#">{{ $post->author_name ?? 'Unknown' }}</a>
+                                                By: <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
                                                 <a href="#" tabindex="0">{{ $post->comments_count }}</a>
@@ -544,7 +583,7 @@
                                         </div>
                                         <div class="post-info equal-elem">
                                             <h2 class="post-title">
-                                                <a href="{{ route('posts.show', $post->id) }}"
+                                                <a href="{{ route('post.show', $post->id) }}"
                                                     tabindex="0">{{ $post->title }}</a>
                                             </h2>
                                             <p>{{ $post->excerpt }}</p>
@@ -571,9 +610,10 @@
                                     <span class="flaticon-rocket-launch"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Worldwide Delivery</h4>
-                                    <div class="desc">With sites in 5 languages, we ship to over 200 countries &amp;
-                                        regions.
+                                    <h4 class="title">Giao hàng toàn cầu</h4>
+                                    <div class="desc">Với các trang web bằng 5 ngôn ngữ, chúng tôi gửi hàng đến hơn 200
+                                        quốc gia &amp;
+                                        các vùng.
                                     </div>
                                 </div>
                             </div>
@@ -586,8 +626,9 @@
                                     <span class="flaticon-truck"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Safe Shipping</h4>
-                                    <div class="desc">Pay with the world’s most popular and secure payment methods.
+                                    <h4 class="title">Vận chuyển an toàn</h4>
+                                    <div class="desc">Thanh toán bằng các phương thức thanh toán an toàn và phổ biến nhất
+                                        thế giới.
                                     </div>
                                 </div>
                             </div>
@@ -600,8 +641,8 @@
                                     <span class="flaticon-reload"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">365 Days Return</h4>
-                                    <div class="desc">Round-the-clock assistance for a smooth shopping experience.</div>
+                                    <h4 class="title">Hoàn trả 365 ngày</h4>
+                                    <div class="desc">Hỗ trợ suốt ngày đêm để có trải nghiệm mua sắm suôn sẻ.</div>
                                 </div>
                             </div>
                         </div>
@@ -613,8 +654,9 @@
                                     <span class="flaticon-telemarketer"></span>
                                 </div>
                                 <div class="content">
-                                    <h4 class="title">Shop Confidence</h4>
-                                    <div class="desc">Our Buyer Protection covers your purchase from click to delivery.
+                                    <h4 class="title">Niềm tin mua sắm</h4>
+                                    <div class="desc">Bảo vệ người mua của chúng tôi bao gồm việc mua hàng của bạn từ
+                                        nhấp chuột đến giao hàng.
                                     </div>
                                 </div>
                             </div>

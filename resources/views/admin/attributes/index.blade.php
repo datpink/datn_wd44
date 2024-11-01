@@ -32,17 +32,17 @@
                                             <td>{{ $attribute->id }}</td>
                                             <td>{{ $attribute->name }}</td>
                                             <td>
-                                                <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="btn btn-sm btn-warning rounded-pill">
-                                                    <i class="bi bi-info-circle me-1"></i> Chi tiết
+                                                <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="editRow" style="margin-right: 20px;" title="Chi tiết">
+                                                    <i class="bi bi-info-circle text-warning" style="font-size: 1.8em;"></i>
                                                 </a>
-                                                <a href="{{ route('attributes.edit', $attribute->id) }}" class="btn btn-sm btn-success rounded-pill">
-                                                    <i class="bi bi-pencil me-1"></i> Sửa
+                                                <a href="{{ route('attributes.edit', $attribute->id) }}" class="editRow" style="margin-right: 20px;" title="Sửa">
+                                                    <i class="bi bi-pencil-square text-success" style="font-size: 1.8em;"></i>
                                                 </a>
                                                 <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger rounded-pill">
-                                                        <i class="bi bi-trash me-1"></i> Xóa
+                                                    <button type="submit" class="delete-btn" style="background: none; border: none; padding: 0;" title="Xóa">
+                                                        <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                     </button>
                                                 </form>
                                             </td>

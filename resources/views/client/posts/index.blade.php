@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Sản phẩm')
+@section('title', 'Bài Viết')
 
 @section('content')
 
@@ -24,7 +24,7 @@
                                         @else
                                             Không có ảnh
                                         @endif
-                                         
+
                                         </td>
                                         <a class="datebox" href="{{ route('post.show', $post->id) }}">
                                             <span>{{ $post->created_at->day }}</span>
@@ -34,10 +34,12 @@
                                     <div class="post-content">
                                         <div class="post-meta">
                                             <div class="post-author">
-                                                By: <a href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
+                                                By: <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
                                             </div>
                                             <div class="post-comment-icon">
-                                                <a href="{{ route('post.show', $post->id) }}">{{ $post->comments_count }}</a>
+                                                <a
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->comments_count }}</a>
                                             </div>
                                         </div>
                                         <div class="post-info equal-elem">
@@ -54,9 +56,9 @@
                     <nav class="navigation pagination">
                         <div class="nav-links">
                             @if ($posts->onFirstPage())
-                                <span class="disabled page-numbers">« Previous</span>
+                                <span class="disabled page-numbers">«</span>
                             @else
-                                <a class="page-numbers" href="{{ $posts->previousPageUrl() }}">« Previous</a>
+                                <a class="page-numbers" href="{{ $posts->previousPageUrl() }}">«</a>
                             @endif
 
                             @foreach (range(1, $posts->lastPage()) as $page)
@@ -68,9 +70,9 @@
                             @endforeach
 
                             @if ($posts->hasMorePages())
-                                <a class="page-numbers" href="{{ $posts->nextPageUrl() }}">Next »</a>
+                                <a class="page-numbers" href="{{ $posts->nextPageUrl() }}">»</a>
                             @else
-                                <span class="disabled page-numbers">Next »</span>
+                                <span class="disabled page-numbers">»</span>
                             @endif
                         </div>
                     </nav>
@@ -82,5 +84,3 @@
         </div>
     </div>
 @endsection
-
-

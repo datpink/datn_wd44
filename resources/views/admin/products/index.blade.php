@@ -120,33 +120,67 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('products.edit', $product->id) }}"
-                                                    class="btn btn-warning btn-sm rounded-pill mb-2" title="Sửa">
-                                                    <i class="bi bi-pencil-square"></i> Sửa
+                                                <a href="{{ route('products.edit', $product->id) }}" class="editRow"
+                                                    title="Sửa" style="margin-right: 10px;">
+                                                    <i class="bi bi-pencil-square text-warning"
+                                                        style="font-size: 1.8em;"></i>
                                                 </a>
-                                                <a href="{{ route('products.show', $product->id) }}"
-                                                    class="btn btn-info btn-sm rounded-pill mb-2" title="Chi tiết">
-                                                    <i class="bi bi-info-circle"></i> Chi tiết
+                                                <a href="{{ route('products.show', $product->id) }}" class="editRow"
+                                                    title="Chi tiết" style="margin-right: 10px;">
+                                                    <i class="bi bi-info-circle text-info" style="font-size: 1.8em;"></i>
                                                 </a>
 
-                                                <!-- Kiểm tra xem sản phẩm đã có biến thể chưa -->
                                                 @php
-                                                    $hasVariants = $product->variants->isNotEmpty(); // Kiểm tra có biến thể
+                                                    $hasVariants = $product->variants->isNotEmpty();
                                                 @endphp
 
                                                 @if ($hasVariants)
                                                     <a href="{{ route('products.variants.index', $product->id) }}"
-                                                        class="btn btn-success btn-sm rounded-pill"
-                                                        title="Quản lý Biến Thể">
-                                                        <i class="bi bi-gear"></i> Quản lý Biến Thể
+                                                        class="editRow" title="Quản lý Biến Thể"
+                                                        style="margin-right: 10px;">
+                                                        <i class="bi bi-gear text-success" style="font-size: 1.8em;"></i>
                                                     </a>
                                                 @else
                                                     <a href="{{ route('products.variants.create', $product->id) }}"
-                                                        class="btn btn-primary btn-sm rounded-pill" title="Thêm Biến Thể">
-                                                        <i class="bi bi-plus-circle"></i> Thêm Biến Thể
+                                                        class="editRow" title="Thêm Biến Thể">
+                                                        <i class="bi bi-plus-circle text-primary"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
                                                 @endif
                                             </td>
+
+                                            <style>
+                                                .action-btn {
+                                                    display: flex;
+                                                    /* Sử dụng flexbox để căn chỉnh nội dung */
+                                                    align-items: center;
+                                                    /* Căn giữa nội dung theo chiều dọc */
+                                                    justify-content: center;
+                                                    /* Căn giữa nội dung theo chiều ngang */
+                                                    width: 150px;
+                                                    /* Đặt chiều rộng cố định */
+                                                    height: 40px;
+                                                    /* Đặt chiều cao cố định */
+                                                    overflow: hidden;
+                                                    /* Ẩn phần nội dung thừa */
+                                                    white-space: nowrap;
+                                                    /* Không cho chữ xuống dòng */
+                                                }
+
+                                                .action-btn .btn-text {
+                                                    margin-left: 5px;
+                                                    /* Khoảng cách giữa biểu tượng và chữ */
+                                                }
+
+                                                @media (max-width: 768px) {
+                                                    .action-btn {
+                                                        width: 100px;
+                                                        /* Điều chỉnh kích thước cho màn hình nhỏ hơn */
+                                                        height: 35px;
+                                                    }
+                                                }
+                                            </style>
+
                                         </tr>
                                     @endforeach
                                 </tbody>

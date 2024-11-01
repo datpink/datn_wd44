@@ -15,7 +15,7 @@
                             </a>
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ route('promotions.update', $promotion->id) }}">
+                            <form method="POST" action="{{ route('promotions.update', $promotion->id) }}" id="promotionForm" class="was-validated">
                                 @csrf
                                 @method('PUT')
 
@@ -28,8 +28,8 @@
                                 <div class="mb-3">
                                     <label for="discount_value" class="form-label">Giá Trị Giảm Giá (%)</label>
                                     <input type="number" class="form-control" id="discount_value" name="discount_value"
-                                        value="{{ old('discount_value', $promotion->discount_value) }}" required
-                                        step="0.01" min="0">
+                                        value="{{ old('discount_value', fmod($promotion->discount_value, 1) == 0 ? number_format($promotion->discount_value, 0) : number_format($promotion->discount_value, 2)) }}"
+                                        required step="0.01" min="0">
                                 </div>
 
                                 <div class="mb-3">
@@ -59,7 +59,7 @@
                                         value="{{ old('end_date', $promotion->end_date) }}" required>
                                 </div>
 
-                                <button type="submit" class="btn rounded-pill btn-primary">Cập nhật</button>
+                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary" disabled>Cập nhật</button>
                             </form>
                         </div>
                     </div>
@@ -67,4 +67,31 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function validateForm() {
+            const code = document.getElementById('code').value.trim();
+            const discountValue = document.getElementById('discount_value').value;
+            const status = document.getElementById('status').value;
+            const startDate = document.getElementById('start_date').value;
+            const endDate = document.getElementById('end_date').value;
+            const submitButton = document.getElementById('submitButton');
+
+            // Kiểm tra xem tất cả các trường bắt buộc có giá trị không
+            if (code && discountValue && status && startDate && endDate) {
+                submitButton.disabled = false; // Kích hoạt nút nếu tất cả các trường có giá trị
+            } else {
+                submitButton.disabled = true; // Khóa nút nếu có trường trống
+            }
+        }
+
+        // Thêm sự kiện input cho các trường
+        document.getElementById('code').addEventListener('input', validateForm);
+        document.getElementById('discount_value').addEventListener('input', validateForm);
+        document.getElementById('status').addEventListener('change', validateForm);
+        document.getElementById('start_date').addEventListener('change', validateForm);
+        document.getElementById('end_date').addEventListener('change', validateForm);
+    </script>
 @endsection

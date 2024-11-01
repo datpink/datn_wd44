@@ -33,7 +33,9 @@
         </div>
         <div class="form-group">
             <label for="image_url">Hình Ảnh</label>
-            <input type="file" name="image_url" class="form-control">
+            <input type="file" name="image_url" class="form-control" accept="image/*" onchange="previewImage(event)">
+            <img id="image-preview" src="" alt="Hình ảnh xem trước"
+                style="max-width: 150px; height: auto; display: none;" class="mt-2">
         </div>
         <div class="form-group">
             <label for="attributes">Chọn Thuộc Tính</label>
@@ -60,5 +62,22 @@
             const randomSku = 'SKU-' + Math.random().toString(36).substr(2, 9).toUpperCase(); // Tạo SKU ngẫu nhiên
             document.getElementById('sku').value = randomSku;
         });
+
+        function previewImage(event) {
+            const imagePreview = document.getElementById('image-preview');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = '';
+                imagePreview.style.display = 'none';
+            }
+        }
     </script>
 @endsection
