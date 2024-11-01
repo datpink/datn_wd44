@@ -97,6 +97,10 @@ Route::prefix('shop')->group(function () {
     Route::get('/profile/edit-password',        [UserController::class, 'editPassword'])->name('profile.edit-password');
     Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
 
+    //route cho trang lịch sử đơn hàng
+    Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
+    Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
+
 });
 
 

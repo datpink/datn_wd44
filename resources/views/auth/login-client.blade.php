@@ -5,7 +5,7 @@
     <ul class="sub-menu">
         @if (Auth::check())
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--orders">
-                <a href="#">Lịch sử đơn hàng</a>
+                <a href="{{ route('order.history', ['userId' => Auth::id()]) }}">Lịch sử đơn hàng</a>
             </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--downloads">
                 <a href="#">Downloads</a>
