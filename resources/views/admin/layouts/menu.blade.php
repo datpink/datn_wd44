@@ -112,6 +112,9 @@
                             <li>
                                 <a href="{{ route('banners.index') }}">Danh sách Banner</a>
                             </li>
+                            <li>
+                                <a href="{{ route('advertisements.index') }}">Danh sách Quảng Cáo</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -143,6 +146,20 @@
                                 <a href="{{ route('promotions.index') }}">Danh Sách Mã Giảm Giá</a>
                             </li>
 
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-archive"></i>
+                        <span class="menu-text">Liên hệ</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('admin.contact.index') }}">Danh Sách Liên Hệ</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

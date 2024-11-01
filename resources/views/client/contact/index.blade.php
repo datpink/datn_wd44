@@ -23,25 +23,26 @@
                         </div>
                         <div class="col-md-6">
                             <div role="form" class="wpcf7">
-                                <form class="wpcf7-form">
-                                    <p><label> Name *<br>
+                                <form id="contactForm" method="POST" action="{{ route('contact.store') }}">
+                                    @csrf
+                                    <p><label> Tên *<br>
                                             <span class="wpcf7-form-control-wrap your-name">
-                                                <input name="your-name" value="" size="40"
+                                                <input name="name" value="" size="40"
                                                     class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required"
-                                                    type="text"></span>
+                                                    type="text" required></span>
                                         </label></p>
                                     <p><label> Email *<br>
                                             <span class="wpcf7-form-control-wrap your-email">
-                                                <input name="your-email" value="" size="40"
+                                                <input name="email" value="" size="40"
                                                     class="wpcf7-form-control wpcf7-text wpcf7-email wpcf7-validates-as-required wpcf7-validates-as-email"
-                                                    type="email"></span>
+                                                    type="email" required></span>
                                         </label></p>
-                                    <p><label> Your Message *<br>
+                                    <p><label> Tin nhắn *<br>
                                             <span class="wpcf7-form-control-wrap your-message">
-                                                <textarea name="your-message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea"></textarea>
+                                                <textarea name="message" cols="40" rows="10" class="wpcf7-form-control wpcf7-textarea" required></textarea>
                                             </span>
                                         </label></p>
-                                    <p><input value="Send" class="wpcf7-form-control wpcf7-submit" type="submit"></p>
+                                    <p><input value="Gửi" class="wpcf7-form-control wpcf7-submit" type="submit"></p>
                                 </form>
                             </div>
                         </div>
@@ -50,5 +51,49 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                return response.json().then(data => {
+                    throw new Error(data.errors.name[0] || 'Có lỗi xảy ra!');
+                });
+            })
+            .then(data => {
+                // Hiện thông báo thành công
+                Swal.fire({
+                    title: 'Thành công!',
+                    text: data.success,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+                this.reset(); // Reset form
+            })
+            .catch(error => {
+                // Hiện thông báo lỗi
+                Swal.fire({
+                    title: 'Có lỗi xảy ra!',
+                    text: error.message,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    </script>
 
 @endsection

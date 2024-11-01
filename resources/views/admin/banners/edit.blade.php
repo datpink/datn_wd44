@@ -36,10 +36,18 @@
 
                         <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control mb-3" id="image" name="image" accept="image/*">
+                            <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
+                                name="image" id="image" accept="image/*" onchange="previewPostImage(event)">
+
                             @if ($banner->image)
-                                <small>Hình hiện tại: <img src="{{ asset('storage/' . $banner->image) }}" alt="" style="width: 150px; height: auto;"></small>
+                                <img id="currentImage" src="{{ asset('storage/' . $banner->image) }}" alt=""
+                                    style="width: 150px; height: auto;" class="mt-2">
+                            @else
+                                <p id="noImageText">Không có ảnh</p>
                             @endif
+
+                            <img id="newImagePreview" src="" alt="Hình ảnh xem trước"
+                                style="max-width: 150px; height: auto; display: none;" class="mt-2">
                         </div>
 
 
@@ -104,4 +112,38 @@
             });
         </script>
     @endif
+
+    <script>
+        function previewPostImage(event) {
+            const newImagePreview = document.getElementById('newImagePreview');
+            const currentImage = document.getElementById('currentImage');
+            const noImageText = document.getElementById('noImageText');
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Cập nhật hình ảnh hiện tại bằng hình ảnh mới
+                    currentImage.src = e.target.result; // Thay thế hình ảnh hiện tại
+                    currentImage.style.display = 'block'; // Hiện hình ảnh mới
+                    noImageText.style.display = 'none'; // Ẩn thông báo "Không có ảnh"
+                    newImagePreview.src = e.target.result; // Cập nhật hình ảnh xem trước
+                    newImagePreview.style.display = 'block'; // Hiện hình ảnh xem trước
+                };
+                reader.readAsDataURL(file);
+            } else {
+                // Nếu không có tệp nào được chọn
+                newImagePreview.src = ''; // Xóa ảnh xem trước
+                newImagePreview.style.display = 'none'; // Ẩn hình ảnh xem trước
+
+                if (currentImage.src) {
+                    currentImage.style.display = 'block'; // Hiện hình ảnh hiện tại nếu có
+                    noImageText.style.display = 'none'; // Ẩn thông báo "Không có ảnh"
+                } else {
+                    noImageText.style.display = 'block'; // Hiện thông báo "Không có ảnh"
+                    currentImage.style.display = 'none'; // Ẩn hình ảnh hiện tại
+                }
+            }
+        }
+    </script>
 @endsection

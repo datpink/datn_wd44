@@ -60,7 +60,7 @@
                                             <tr>
                                                 <td>{{ $promotion->id }}</td>
                                                 <td>{{ $promotion->code }}</td>
-                                                <td>{{ $promotion->discount_value }}%</td>
+                                                <td>{{ fmod($promotion->discount_value, 1) == 0 ? number_format($promotion->discount_value, 0) : number_format($promotion->discount_value, 2) }}%</td>
                                                 <td>
                                                     @if ($promotion->status == 'active')
                                                         <span class="badge bg-success">Kích hoạt</span>
@@ -72,17 +72,21 @@
                                                 <td>{{ $promotion->end_date }}</td>
                                                 <td>{{ $promotion->updated_at ?? 'Trống' }}</td>
                                                 <td>
-                                                    <a href="{{ route('promotions.edit', $promotion->id) }}"
-                                                        class="btn btn-warning btn-rounded btn-sm">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('promotions.edit', $promotion->id) }}" class="editRow"
+                                                        title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
+
                                                     <form action="{{ route('promotions.destroy', $promotion->id) }}"
                                                         method="POST" class="d-inline delete-form">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-rounded btn-sm delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

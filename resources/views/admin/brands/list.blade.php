@@ -75,18 +75,21 @@
                                                 <td>{{ $brand->name }}</td>
                                                 <td>{{ $brand->description }}</td>
                                                 <td>
-                                                    <a href="{{ route('brands.edit', $brand) }}"
-                                                        class="btn btn-warning btn-rounded">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('brands.edit', $brand) }}" class="editRow"
+                                                        title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('brands.destroy', $brand) }}" method="POST"
                                                         style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-danger btn-rounded delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>

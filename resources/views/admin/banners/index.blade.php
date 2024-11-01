@@ -19,7 +19,8 @@
                                     class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
-                                <a href="{{ route('banners.trash') }}" class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
+                                <a href="{{ route('banners.trash') }}"
+                                    class="btn btn-primary btn-rounded d-flex align-items-center mt-3">
                                     <i class="bi bi-trash me-2"></i> Thùng Rác
                                 </a>
                             </div>
@@ -72,17 +73,21 @@
                                                 </td>
 
                                                 <td>
-                                                    <a href="{{ route('banners.edit', $banner) }}"
-                                                        class="btn btn-warning btn-rounded">
-                                                        <i class="bi bi-pencil-square"></i> Sửa
+                                                    <a href="{{ route('banners.edit', $banner) }}" class="editRow"
+                                                        title="Sửa" style="margin-right: 15px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('banners.destroy', $banner) }}" method="POST"
                                                         style="display:inline-block;">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger btn-rounded delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
+                                                        <button type="submit" class="delete-btn"
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>
