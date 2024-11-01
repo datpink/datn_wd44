@@ -30,7 +30,8 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('advertisements.update', $advertisement->id) }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('advertisements.update', $advertisement->id) }}" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -64,33 +65,35 @@
                         <div class="form-group mb-3">
                             <label for="button_text">Nút văn bản:</label>
                             <input type="text" class="form-control" id="button_text" name="button_text"
-                                value="{{ old('button_text', $advertisement->button_text) }}" placeholder="Nhập văn bản nút">
+                                value="{{ old('button_text', $advertisement->button_text) }}"
+                                placeholder="Nhập văn bản nút">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="button_link">Liên kết nút:</label>
                             <input type="text" class="form-control" id="button_link" name="button_link"
-                                value="{{ old('button_link', $advertisement->button_link) }}" placeholder="Nhập liên kết nút">
+                                value="{{ old('button_link', $advertisement->button_link) }}"
+                                placeholder="Nhập liên kết nút">
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="position">Vị trí:</label>
-                            <select class="form-control" id="position" name="position">
-                                <option value="" disabled>Chọn vị trí</option>
-                                <option value="1" {{ old('position', $advertisement->position) == 1 ? 'selected' : '' }}>Vị trí 1</option>
-                                <option value="2" {{ old('position', $advertisement->position) == 2 ? 'selected' : '' }}>Vị trí 2</option>
-                                <option value="3" {{ old('position', $advertisement->position) == 3 ? 'selected' : '' }}>Vị trí 3</option>
-                                <option value="4" {{ old('position', $advertisement->position) == 4 ? 'selected' : '' }}>Vị trí 4</option>
-                            </select>
+                            <input type="number" class="form-control @error('position') is-invalid @enderror"
+                                id="position" name="position" value="{{ old('position', $advertisement->position) }}"
+                                placeholder="Nhập vị trí" min="1" required>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="status">Trạng thái:</label>
                             <select class="form-control" id="status" name="status">
-                                <option value="active" {{ old('status', $advertisement->status) == 'active' ? 'selected' : '' }}>
-                                    Kích hoạt</option>
-                                <option value="inactive" {{ old('status', $advertisement->status) == 'inactive' ? 'selected' : '' }}>
-                                    Vô hiệu hóa</option>
+                                <option value="active"
+                                    {{ old('status', $advertisement->status) == 'active' ? 'selected' : '' }}>
+                                    Kích hoạt
+                                </option>
+                                <option value="inactive"
+                                    {{ old('status', $advertisement->status) == 'inactive' ? 'selected' : '' }}>
+                                    Vô hiệu hóa
+                                </option>
                             </select>
                         </div>
 

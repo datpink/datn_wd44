@@ -13,7 +13,7 @@
 <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyC3nDHy1dARR-Pa_2jjPCjvsOR4bcILYsM'></script>
 <script src="{{ asset('theme/client/assets/js/functions.js') }}"></script>
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-{{-- <script>
+<script>
     // Chặn click chuột phải
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
@@ -39,4 +39,4 @@
             e.preventDefault();
         }
     });
-</script> --}}
+</script>
