@@ -9,9 +9,17 @@
             @foreach ($product->comments as $comment)
                 <div class="comment">
                     <!-- Hiển thị tên người dùng và ngày đăng bình luận -->
-                    <p><strong>{{ $comment->user->name }}</strong>
+                    <div class="mr-3">
+                        @if ($comment->user->image)
+                            <img src="{{ asset('storage/' . $comment->user->image) }}" alt="{{ $comment->user->name }}"
+                                class="rounded-circle" style="width: 25px; height: 25px;">
+                        @else
+                            <img src="{{ asset('path/to/default-image.png') }}" alt="Hình đại diện mặc định"
+                                class="rounded-circle" style="width: 25px; height: 25px;">
+                        @endif
+                        <strong>{{ $comment->user->name }}</strong>
                         <span>{{ $comment->created_at->format('d/m/Y') }}</span>
-                    </p>
+                    </div>
 
                     <!-- Nội dung bình luận -->
                     <div id="comment-content-{{ $comment->id }}">
@@ -30,7 +38,8 @@
                             </button>
                             <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}" style="display:none;"
                                 aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                <button class="dropdown-item" onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
+                                <button class="dropdown-item"
+                                    onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
                                 <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
                                     method="POST" style="display:inline;">
                                     @csrf
@@ -57,9 +66,18 @@
                     <!-- Hiển thị các phản hồi -->
                     @foreach ($comment->replies as $reply)
                         <div class="reply">
-                            <p><strong>{{ $reply->user->name }}</strong>
-                                <span>{{ $reply->created_at->format('d/m/Y') }}</span>
-                            </p>
+                            <div class="mr-3">
+                                @if ($comment->user->image)
+                                    <img src="{{ asset('storage/' . $comment->user->image) }}"
+                                        alt="{{ $comment->user->name }}" class="rounded-circle"
+                                        style="width: 25px; height: 25px;">
+                                @else
+                                    <img src="{{ asset('path/to/default-image.png') }}" alt="Hình đại diện mặc định"
+                                        class="rounded-circle" style="width: 25px; height: 25px;">
+                                @endif
+                                <strong>{{ $comment->user->name }}</strong>
+                                <span>{{ $comment->created_at->format('d/m/Y') }}</span>
+                            </div>
 
                             <div id="reply-content-{{ $reply->id }}">
                                 <p>{{ $reply->reply }}</p>
