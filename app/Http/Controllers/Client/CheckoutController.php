@@ -10,27 +10,26 @@ use Illuminate\Support\Facades\Log;
 class CheckoutController extends Controller
 {
 
-    public function checkout(Request $request)
+    public function showCheckout(Request $request)
     {
-        // Lấy danh sách sản phẩm được chọn từ giỏ hàng
-        $items = $request->input('items', []);
+        // Lấy danh sách ID sản phẩm từ input 'selected_products'
+        $selectedProducts = json_decode($request->input('selected_products'), true);
 
-        // Lấy thông tin sản phẩm từ giỏ hàng dựa vào các id đã chọn
-        $selectedItems = [];
-        foreach ($items as $id => $value) {
-            if (session()->has("cart.$id")) {
-                $selectedItems[] = [
-                    'id' => $id,
-                    'name' => session("cart.$id.name"),
-                    'quantity' => session("cart.$id.quantity"),
-                    'price' => session("cart.$id.price"),
-                    'total' => session("cart.$id.price") * session("cart.$id.quantity"),
-                ];
+        // Kiểm tra nếu không có sản phẩm nào được chọn
+        if (empty($selectedProducts)) {
+            return redirect()->back()->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        }
+
+        // Lấy thông tin chi tiết của các sản phẩm đã chọn
+        $products = [];
+        foreach ($selectedProducts as $productId) {
+            if (session("cart.$productId")) {
+                $products[] = session("cart.$productId");
             }
         }
 
-        // Hiện thị trang thanh toán với danh sách sản phẩm được chọn
-        return view('client.checkout', compact('selectedItems'));
+        // Chuyển đến view thanh toán và truyền dữ liệu các sản phẩm đã chọn
+        return view('client.checkout.index', compact('products'));
     }
 
 

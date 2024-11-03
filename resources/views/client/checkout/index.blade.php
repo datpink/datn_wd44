@@ -148,12 +148,39 @@
                                     <table class="shop_table kobolg-checkout-review-order-table">
                                         <thead>
                                             <tr>
-                                                <th class="product-name">Sản phẩm</th>
+                                                <th class="product-name" colspan="2">Sản phẩm</th>
                                                 <th class="product-total">Tổng</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            // hiển thị sản phẩm đã chọn vào ô checkbox ở đây
+                                            @php $totalAmount = 0; @endphp
+                                            @foreach ($products as $product)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <img src="{{ $product['options']['image'] }}" class="d-block ui-w-40 ui-bordered"
+                                                            alt="{{ $product['name'] }}" style="max-width: 90px; margin: 0 auto;">
+                                                    </td>
+                                                    <td class="p-4">
+                                                        <div class="media align-items-center">
+                                                            <div class="media-body">
+                                                                <a href="#" class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                <small>
+                                                                    @if ($product['options']['color'] || $product['options']['storage'])
+                                                                        Màu: {{ $product['options']['color'] }} - Bộ nhớ: {{ $product['options']['storage'] }}
+                                                                    @endif
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="price-col">
+                                                        @php
+                                                            $lineTotal = $product['price'] * $product['quantity'];
+                                                            $totalAmount += $lineTotal;
+                                                        @endphp
+                                                        <span>{{ number_format($lineTotal, 2, ',', '.') }}₫</span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                         </tbody>
 
 
@@ -162,8 +189,8 @@
                                                 <th>Tổng phụ</th>
                                                 <td>
                                                     <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol">$</span>
-                                                        {{ number_format($selectedProducts->sum(fn($product) => $product['price'] * $product['quantity']), 2) }}
+                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                        {{ number_format($totalAmount, 2, ',', '.') }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -172,8 +199,8 @@
                                                 <td>
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount">
-                                                            <span class="kobolg-Price-currencySymbol">$</span>
-                                                            {{ number_format($selectedProducts->sum(fn($product) => $product['price'] * $product['quantity']), 2) }}
+                                                            <span class="kobolg-Price-currencySymbol">₫</span>
+                                                            {{ number_format($totalAmount, 2, ',', '.') }}
                                                         </span>
                                                     </strong>
                                                 </td>
@@ -198,6 +225,7 @@
                                         </ul>
                                     </div>
                                 </div>
+
                                 <p class="form-row place-order">
                                     <input type="hidden" id="kobolg-checkout-nonce" name="kobolg-checkout-nonce"
                                         value="e896ef098e">
