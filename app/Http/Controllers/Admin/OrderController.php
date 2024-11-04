@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
 use App\Traits\ManagesOrders;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -103,21 +104,32 @@ class OrderController extends Controller
 
         // Truy vấn lấy danh sách đơn hàng của người dùng với tổng tiền mỗi đơn hàng theo order_id
         $orders = Order::withSum('items', 'total')
-                       ->where('user_id', $userId)
-                       ->orderBy('created_at', 'desc')
-                       ->get();
-    
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('client.user.order-history', compact('orders'));
     }
     public function detailOrderHistory(Order $order)
-{
-    // Lấy thông tin người mua
-    $buyer = $order->user;
-    // Lấy các sản phẩm và biến thể trong đơn hàng
-    $items = $order->items()
-                   ->with('productVariant')
-                   ->get();
+    {
+        // Lấy thông tin người mua
+        $buyer = $order->user;
 
-    return view('client.user.order-detail', compact('order', 'items', 'buyer'));
-}
+        // Lấy chi tiết các sản phẩm trong đơn hàng cùng với thông tin biến thể
+        $items = $order->items()->with('productVariant')->get();
+
+        // Lấy các biến thể cho từng sản phẩm trong đơn hàng từ bảng `product_variant_attributes`
+        $productVariantAttributes = DB::table('product_variant_attributes as pva')
+            ->join('attribute_values as av', 'pva.attribute_value_id', '=', 'av.id')
+            ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
+            ->whereIn('pva.product_variant_id', $items->pluck('product_variant_id')->toArray())
+            ->select('pva.product_variant_id', 'a.name as attribute_name', 'av.name as attribute_value') // Đổi 'av.value' thành 'av.name'
+            ->get();
+
+        // Gom nhóm các thuộc tính biến thể theo `product_variant_id`
+        $groupedVariantAttributes = $productVariantAttributes->groupBy('product_variant_id');
+
+        // Trả về view với dữ liệu đơn hàng, bao gồm chi tiết biến thể
+        return view('client.user.order-detail', compact('order', 'items', 'buyer', 'groupedVariantAttributes'));
+    }
 }
