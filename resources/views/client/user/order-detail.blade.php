@@ -51,7 +51,7 @@
                             <tr>
                                 <td>{{ $item->productVariant->variant_name }}</td>
                                 <td>
-                                    <img src="{{ asset('path/to/image/'.$item->productVariant->image) }}" alt="{{ $item->productVariant->name }}" class="img-fluid" style="max-width: 100px;">
+                                    <img src="{{ asset('path/to/image/'.$item->productVariant->image) }}" alt="{{ $item->productVariant->variant_name }}" class="img-fluid" style="max-width: 100px;">
                                 </td>
                                 <td>{{ number_format($item->productVariant->price, 0, ',', '.') }} VND</td>
                                 <td>{{ $item->quantity }}</td>
@@ -83,35 +83,7 @@
         </div>
         <div class="card-body">
             <p><strong>Tổng Tiền Đơn Hàng:</strong> {{ number_format($order->items->sum('total'), 0, ',', '.') }} VND</p>
-            @php
-    $statusClasses = [
-        'processing' => 'bg-primary',
-        'shipped' => 'bg-info',
-        'canceled' => 'bg-danger',
-        'refunded' => 'bg-warning',
-        'delivering' => 'bg-secondary',
-        'delivered' => 'bg-success',
-    ];
-
-    $statusLabels = [
-        'processing' => 'Đang Xử Lý',
-        'shipped' => 'Đã Gửi',
-        'canceled' => 'Đã Hủy',
-        'refunded' => 'Đã Hoàn Tiền',
-        'delivering' => 'Đang Giao',
-        'delivered' => 'Đã Giao',
-    ];
-
-    $statusClass = $statusClasses[$order->status] ?? 'bg-secondary';
-    $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
-@endphp
-
-<p><strong>Trạng Thái:</strong> 
-    <span class="badge {{ $statusClass }}">
-        {{ $statusLabel }}
-    </span>
-</p>
-
+            <p><strong>Trạng Thái:</strong> <span class="badge {{ $order->status == 'Đã Giao' ? 'bg-success' : 'bg-danger' }}">{{ $order->status }}</span></p>
         </div>
     </div>
 </div>

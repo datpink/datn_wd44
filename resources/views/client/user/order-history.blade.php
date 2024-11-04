@@ -16,7 +16,8 @@
                     <h5>Mã Đơn Hàng: #{{ $order->id }}</h5>
                 </div>
                 <div class="card-body">
-                    <p><strong>Ngày Đặt Hàng:</strong> {{ $order->created_at->format('d/m/Y') }}</p>
+                <p><strong>Ngày Đặt Hàng:</strong> {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</p>
+
                     <p><strong>Trạng Thái:</strong> <span class="badge bg-success text-muted">{{ $order->status }}</span></p>
 
                     {{-- Hiển thị tổng tiền của đơn hàng theo order_id --}}
