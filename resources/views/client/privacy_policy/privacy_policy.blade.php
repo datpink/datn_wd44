@@ -63,68 +63,54 @@
         </div>
     </div>
 
+    <style>
+        .policy-card {
+            background-color: #ffffff;
+            /* Màu nền trắng */
+            border-radius: 12px;
+            /* Bo góc */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            /* Đổ bóng nhẹ */
+            padding: 30px;
+            /* Khoảng cách bên trong */
+            margin-bottom: 30px;
+            /* Khoảng cách dưới */
+        }
+
+        .title {
+            font-size: 28px;
+            /* Kích thước tiêu đề chính */
+            font-weight: bold;
+            /* Đậm */
+            margin-bottom: 20px;
+            /* Khoảng cách dưới tiêu đề */
+            color: #333;
+            /* Màu chữ */
+        }
+
+        h2 {
+            font-size: 22px;
+            /* Kích thước tiêu đề phụ */
+            margin-top: 20px;
+            /* Khoảng cách trên */
+            color: #007bff;
+            /* Màu cho tiêu đề phụ */
+        }
+
+        p,
+        ul {
+            font-size: 16px;
+            /* Kích thước chữ cho nội dung */
+            line-height: 1.6;
+            /* Khoảng cách dòng */
+            color: #555;
+            /* Màu chữ cho nội dung */
+        }
+
+        ul {
+            margin-left: 20px;
+            /* Khoảng cách cho danh sách */
+        }
+    </style>
+
 @endsection
-
-<style>
-    .policy-card {
-        background-color: #ffffff;
-        /* Màu nền trắng */
-        border-radius: 12px;
-        /* Bo góc */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        /* Đổ bóng nhẹ */
-        padding: 30px;
-        /* Khoảng cách bên trong */
-        margin-bottom: 30px;
-        /* Khoảng cách dưới */
-    }
-
-    .title {
-        font-size: 28px;
-        /* Kích thước tiêu đề chính */
-        font-weight: bold;
-        /* Đậm */
-        margin-bottom: 20px;
-        /* Khoảng cách dưới tiêu đề */
-        color: #333;
-        /* Màu chữ */
-    }
-
-    h2 {
-        font-size: 22px;
-        /* Kích thước tiêu đề phụ */
-        margin-top: 20px;
-        /* Khoảng cách trên */
-        color: #007bff;
-        /* Màu cho tiêu đề phụ */
-    }
-
-    p,
-    ul {
-        font-size: 16px;
-        /* Kích thước chữ cho nội dung */
-        line-height: 1.6;
-        /* Khoảng cách dòng */
-        color: #555;
-        /* Màu chữ cho nội dung */
-    }
-
-    ul {
-        margin-left: 20px;
-        /* Khoảng cách cho danh sách */
-    }
-
-    a {
-        color: #007bff;
-        /* Màu cho liên kết */
-        text-decoration: underline;
-        /* Gạch chân liên kết */
-    }
-
-    a:hover {
-        text-decoration: none;
-        /* Bỏ gạch chân khi hover */
-        color: #0056b3;
-        /* Màu khi hover */
-    }
-</style>
