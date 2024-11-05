@@ -44,9 +44,9 @@ class Catalogue extends Model
         } else {
             // Xử lý các cấp độ tiếp theo nếu cần
             return $query->where('parent_id', '!=', null)
-                         ->whereHas('parent', function ($q) use ($level) {
-                             $q->where('parent_id', '!=', null);
-                         });
+                ->whereHas('parent', function ($q) use ($level) {
+                    $q->where('parent_id', '!=', null);
+                });
         }
     }
 }
