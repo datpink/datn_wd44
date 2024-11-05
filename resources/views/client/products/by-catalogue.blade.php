@@ -156,7 +156,7 @@
                                         <div class="group-button">
                                             <div class="group-button-inner">
                                                 <div class="add-to-cart">
-                                                    <a href="#"
+                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                         class="button product_type_variable add_to_cart_button">Thêm vào giỏ
                                                         hàng</a>
                                                 </div>
@@ -175,30 +175,32 @@
                             @endforeach
                         </ul>
                     </div>
-                    <nav class="navigation pagination mt-3">
-                        <div class="nav-links">
-                            @if ($productByCatalogues->onFirstPage())
-                                <span class="disabled page-numbers">«</span>
-                            @else
-                                <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«</a>
-                            @endif
-
-                            @foreach (range(1, $productByCatalogues->lastPage()) as $page)
-                                @if ($page == $productByCatalogues->currentPage())
-                                    <span class="current page-numbers">{{ $page }}</span>
+                    @if ($productByCatalogues->count() > 0 && $productByCatalogues->lastPage() > 1)
+                        <nav class="navigation pagination mt-3">
+                            <div class="nav-links">
+                                @if ($productByCatalogues->onFirstPage())
+                                    <span class="disabled page-numbers">«</span>
                                 @else
-                                    <a class="page-numbers"
-                                        href="{{ $productByCatalogues->url($page) }}">{{ $page }}</a>
+                                    <a class="page-numbers" href="{{ $productByCatalogues->previousPageUrl() }}">«</a>
                                 @endif
-                            @endforeach
 
-                            @if ($productByCatalogues->hasMorePages())
-                                <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">»</a>
-                            @else
-                                <span class="disabled page-numbers">»</span>
-                            @endif
-                        </div>
-                    </nav>
+                                @foreach (range(1, $productByCatalogues->lastPage()) as $page)
+                                    @if ($page == $productByCatalogues->currentPage())
+                                        <span class="current page-numbers">{{ $page }}</span>
+                                    @else
+                                        <a class="page-numbers"
+                                            href="{{ $productByCatalogues->url($page) }}">{{ $page }}</a>
+                                    @endif
+                                @endforeach
+
+                                @if ($productByCatalogues->hasMorePages())
+                                    <a class="page-numbers" href="{{ $productByCatalogues->nextPageUrl() }}">»</a>
+                                @else
+                                    <span class="disabled page-numbers">»</span>
+                                @endif
+                            </div>
+                        </nav>
+                    @endif
                 </div>
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
@@ -245,80 +247,186 @@
                             </form>
                         </div>
 
+                        <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
+                            <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
+                            <div class="color-group">
+                                <a class="term-color " href="#">
+                                    <i style="color: #000000"></i>
+                                    <span class="term-name">Black</span>
+                                    <span class="count">(4)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #3155e2"></i>
+                                    <span class="term-name">Blue</span>
+                                    <span class="count">(3)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #49aa51"></i>
+                                    <span class="term-name">Green</span>
+                                    <span class="count">(1)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #ff63cb"></i>
+                                    <span class="term-name">Pink</span>
+                                    <span class="count">(3)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #a825ea"></i>
+                                    <span class="term-name">Purple</span>
+                                    <span class="count">(1)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #db2b00"></i>
+                                    <span class="term-name">Red</span>
+                                    <span class="count">(5)</span> </a>
+                                <a class="term-color " href="#">
+                                    <i style="color: #FFFFFF"></i>
+                                    <span class="term-name">White</span>
+                                    <span class="count">(2)</span> </a>
+                                <a class="term-color " href="#s">
+                                    <i style="color: #e8e120"></i>
+                                    <span class="term-name">Yellow</span>
+                                    <span class="count">(2)</span> </a>
+                            </div>
+                        </div>
+                        <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
+                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
+                            <ul class="kobolg-widget-layered-nav-list">
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">XS</a>
+                                    <span class="count">(1)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">S</a>
+                                    <span class="count">(4)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">M</a>
+                                    <span class="count">(2)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">L</a>
+                                    <span class="count">(3)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">XL</a>
+                                    <span class="count">(1)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">XXL</a>
+                                    <span class="count">(4)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">3XL</a>
+                                    <span class="count">(4)</span>
+                                </li>
+                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
+                                    <a rel="nofollow" href="#">4XL</a>
+                                    <span class="count">(3)</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
+                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
+                            <ul class="product-categories">
+                                <li class="cat-item cat-item-22"><a href="#">Camera</a>
+                                    <span class="count">(11)</span>
+                                </li>
+                                <li class="cat-item cat-item-16"><a href="#">Accessories</a>
+                                    <span class="count">(9)</span>
+                                </li>
+                                <li class="cat-item cat-item-24"><a href="#">Game & Consoles</a>
+                                    <span class="count">(6)</span>
+                                </li>
+                                <li class="cat-item cat-item-27"><a href="#">Life style</a> <span
+                                        class="count">(6)</span></li>
+                                <li class="cat-item cat-item-19"><a href="#">New arrivals</a>
+                                    <span class="count">(7)</span>
+                                </li>
+                                <li class="cat-item cat-item-17"><a href="#">Summer Sale</a>
+                                    <span class="count">(6)</span>
+                                </li>
+                                <li class="cat-item cat-item-26"><a href="#">Specials</a> <span
+                                        class="count">(4)</span></li>
+                                <li class="cat-item cat-item-18"><a href="#">Featured</a> <span
+                                        class="count">(6)</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const priceFilterForm = document.getElementById('priceFilterForm');
-                                const priceFrom = document.getElementById('priceFrom');
-                                const priceTo = document.getElementById('priceTo');
-                                let productLists = document.querySelector('.kobolg-products .products');
 
-                                // Khởi tạo slider
-                                const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-                                    'data-value-min'));
-                                const maxPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-                                    'data-value-max'));
-                                const maxDiscountPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
-                                    'data-max'));
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceFilterForm = document.getElementById('priceFilterForm');
+            const priceFrom = document.getElementById('priceFrom');
+            const priceTo = document.getElementById('priceTo');
+            let productLists = document.querySelector('.kobolg-products .products');
 
-                                $('.price_slider').slider({
-                                    range: true,
-                                    min: 0,
-                                    max: maxDiscountPrice,
-                                    values: [minPrice, maxPrice],
-                                    slide: function(event, ui) {
-                                        priceFrom.textContent = `$${ui.values[0]}`;
-                                        priceTo.textContent = `$${ui.values[1]}`;
-                                    },
-                                    change: function(event, ui) {
-                                        // Cập nhật giá trị trong thuộc tính data
-                                        priceFilterForm.querySelector('.price_slider').setAttribute('data-value-min', ui
-                                            .values[0] + '.00');
-                                        priceFilterForm.querySelector('.price_slider').setAttribute('data-value-max', ui
-                                            .values[1] + '.00');
-                                    }
-                                });
+            // Khởi tạo slider
+            const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-value-min'));
+            const maxPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-value-max'));
+            const maxDiscountPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
+                'data-max'));
 
-                                // Cập nhật giá trị hiển thị ban đầu
-                                priceFrom.textContent = `$${minPrice}`;
-                                priceTo.textContent = `$${maxPrice}`;
+            $('.price_slider').slider({
+                range: true,
+                min: 0,
+                max: maxDiscountPrice,
+                values: [minPrice, maxPrice],
+                slide: function(event, ui) {
+                    priceFrom.textContent = `$${ui.values[0]}`;
+                    priceTo.textContent = `$${ui.values[1]}`;
+                },
+                change: function(event, ui) {
+                    // Cập nhật giá trị trong thuộc tính data
+                    priceFilterForm.querySelector('.price_slider').setAttribute('data-value-min', ui
+                        .values[0] + '.00');
+                    priceFilterForm.querySelector('.price_slider').setAttribute('data-value-max', ui
+                        .values[1] + '.00');
+                }
+            });
 
-                                // Bắt sự kiện submit form
-                                priceFilterForm.addEventListener('submit', function(e) {
-                                    e.preventDefault();
+            // Cập nhật giá trị hiển thị ban đầu
+            priceFrom.textContent = `$${minPrice}`;
+            priceTo.textContent = `$${maxPrice}`;
 
-                                    const minPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
-                                        'data-value-min');
-                                    const maxPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
-                                        'data-value-max');
-                                    const parentCataloguesID = document.getElementById('parentCataloguesID').value;
-                                    // console.log('123'+parentCataloguesID);
+            // Bắt sự kiện submit form
+            priceFilterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-                                    let params = {
-                                        'parentCataloguesID': parentCataloguesID,
-                                        'min_price': minPrice,
-                                        'max_price': maxPrice,
-                                    };
+                const minPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
+                    'data-value-min');
+                const maxPrice = priceFilterForm.querySelector('.price_slider').getAttribute(
+                    'data-value-max');
+                const parentCataloguesID = document.getElementById('parentCataloguesID').value;
+                // console.log('123'+parentCataloguesID);
+
+                let params = {
+                    'parentCataloguesID': parentCataloguesID,
+                    'min_price': minPrice,
+                    'max_price': maxPrice,
+                };
 
 
-                                    // Gọi API lọc sản phẩm theo khoảng giá
-                                    axios.get('/api/shop/products/filter-by-price', {
-                                            params
-                                        })
-                                        .then((res) => {
-                                            // console.log(res);
-                                            // console.log(productLists);
-                                            productLists.innerHTML = '';
-                                            // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
-                                            // console.log(res.data.data);
-                                            // Xử lý danh sách sản phẩm
-                                            // Kiểm tra nếu products là một mảng
-                                            if (Array.isArray(res.data.products)) {
-                                                productLists.innerHTML = ''; // Xóa danh sách sản phẩm cũ
+                // Gọi API lọc sản phẩm theo khoảng giá
+                axios.get('/api/shop/products/filter-by-price', {
+                        params
+                    })
+                    .then((res) => {
+                        // console.log(res);
+                        // console.log(productLists);
+                        productLists.innerHTML = '';
+                        // console.log(res.data); // Kiểm tra toàn bộ cấu trúc phản hồi
+                        // console.log(res.data.data);
+                        // Xử lý danh sách sản phẩm
+                        // Kiểm tra nếu products là một mảng
+                        if (Array.isArray(res.data.products)) {
+                            productLists.innerHTML = ''; // Xóa danh sách sản phẩm cũ
 
-                                                // Duyệt qua từng sản phẩm và thêm vào danh sách
-                                                res.data.products.forEach(product => {
-                                                    const productHTML = `
+                            // Duyệt qua từng sản phẩm và thêm vào danh sách
+                            res.data.products.forEach(product => {
+                                const productHTML = `
                                                         <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                                                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                                                             <div class="product-inner images">
@@ -343,9 +451,11 @@
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">
-                                                                            <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
+                                                                            <del>
+                                                                                ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
+                                                                            </del>
                                                                         </span>
-                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
+                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
                                                                     </span>
                                                                     <div class="kobolg-product-details__short-description">
                                                                         <p>${product.tomtat}</p>
@@ -369,22 +479,22 @@
                                                             </div>
                                                         </li>
                                                     `;
-                                                    productLists.innerHTML +=
-                                                        productHTML; // Thêm sản phẩm vào danh sách
-                                                });
-                                            } else {
-                                                console.error('Dữ liệu không phải là một mảng:', res.data.products);
-                                                productLists.innerHTML =
-                                                    '<p>Không có sản phẩm nào phù hợp với tiêu chí lọc.</p>';
-                                            }
+                                productLists.innerHTML +=
+                                    productHTML; // Thêm sản phẩm vào danh sách
+                            });
+                        } else {
+                            console.error('Dữ liệu không phải là một mảng:', res.data.products);
+                            productLists.innerHTML =
+                                '<p>Không có sản phẩm nào phù hợp với tiêu chí lọc.</p>';
+                        }
 
-                                        })
-                                        .catch((error) => {
-                                            console.log(error);
+                    })
+                    .catch((error) => {
+                        console.log(error);
 
-                                        })
+                    })
 
-                                })
+            })
 
 
                             })

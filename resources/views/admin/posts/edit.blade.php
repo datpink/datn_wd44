@@ -77,18 +77,6 @@
 
                         <div class="form-group mb-3">
                             <label for="image">Hình ảnh:</label>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                            <input type="file" class=" mb-3 form-control @error('image') is-invalid @enderror"
-                                name="image" id="image">
-                            @if ($post->image && \Storage::exists($post->image))
-                                <img src="{{ \Storage::url($post->image) }}" alt="{{ $post->name }}"
-                                    style="max-width: 300px; height: auto;">
-                            @else
-                                Không có ảnh
-=======
-=======
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                             <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
                                 name="image" id="image" onchange="previewPostImage(event)">
 
@@ -97,10 +85,6 @@
                                     alt="{{ $post->name }}" style="max-width: 300px; height: auto;" class="mt-2">
                             @else
                                 <p id="noImageText">Không có ảnh</p>
-<<<<<<< HEAD
->>>>>>> 367895534ba99fc4b201cd2386407890322b644b
-=======
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                             @endif
 
                             @error('image')

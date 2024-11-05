@@ -144,12 +144,14 @@
                                             <span class="price">
                                                 <span class="kobolg-Price-amount amount text-danger">
                                                     <del>
-                                                        <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->price, ($product->price == floor($product->price) ? 0 : 2)) }}
+                                                        {{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}<span
+                                                            class="kobolg-Price-currencySymbol">₫</span>
                                                     </del>
                                                 </span>
                                                 @if ($product->discount_price)
                                                     <span class="kobolg-Price-amount amount old-price">
-                                                        <span class="kobolg-Price-currencySymbol">$</span>{{ number_format($product->discount_price, ($product->discount_price == floor($product->discount_price) ? 0 : 2)) }}
+                                                        {{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}<span
+                                                            class="kobolg-Price-currencySymbol">₫</span>
                                                     </span>
                                                 @endif
                                             </span>
@@ -179,29 +181,32 @@
                             @endforeach
                         </ul>
                     </div>
-                    <nav class="navigation pagination mt-3">
-                        <div class="nav-links">
-                            @if ($products->onFirstPage())
-                                <span class="disabled page-numbers">«</span>
-                            @else
-                                <a class="page-numbers" href="{{ $products->previousPageUrl() }}">«</a>
-                            @endif
-
-                            @foreach (range(1, $products->lastPage()) as $page)
-                                @if ($page == $products->currentPage())
-                                    <span class="current page-numbers">{{ $page }}</span>
+                    @if ($products->count() > 0 && $products->lastPage() > 1)
+                        <nav class="navigation pagination mt-3">
+                            <div class="nav-links">
+                                @if ($products->onFirstPage())
+                                    <span class="disabled page-numbers">«</span>
                                 @else
-                                    <a class="page-numbers" href="{{ $products->url($page) }}">{{ $page }}</a>
+                                    <a class="page-numbers" href="{{ $products->previousPageUrl() }}">«</a>
                                 @endif
-                            @endforeach
 
-                            @if ($products->hasMorePages())
-                                <a class="page-numbers" href="{{ $products->nextPageUrl() }}">»</a>
-                            @else
-                                <span class="disabled page-numbers">»</span>
-                            @endif
-                        </div>
-                    </nav>
+                                @foreach (range(1, $products->lastPage()) as $page)
+                                    @if ($page == $products->currentPage())
+                                        <span class="current page-numbers">{{ $page }}</span>
+                                    @else
+                                        <a class="page-numbers"
+                                            href="{{ $products->url($page) }}">{{ $page }}</a>
+                                    @endif
+                                @endforeach
+
+                                @if ($products->hasMorePages())
+                                    <a class="page-numbers" href="{{ $products->nextPageUrl() }}">»</a>
+                                @else
+                                    <span class="disabled page-numbers">»</span>
+                                @endif
+                            </div>
+                        </nav>
+                    @endif
                 </div>
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
@@ -329,7 +334,7 @@
                                                             <div class="product-inner images">
                                                                 <div class="product-thumb">
                                                                     <a class="thumb-link" href="#">
-                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                        ${product.image_url && product.image_url !== 'null' ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                     </a>
                                                                     <div class="flash">
                                                                         ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
@@ -348,9 +353,11 @@
                                                                     </h3>
                                                                     <span class="price">
                                                                         <span class="kobolg-Price-amount amount text-danger">
-                                                                            <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
+                                                                            <del>
+                                                                                ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
+                                                                            </del>
                                                                         </span>
-                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
+                                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
                                                                     </span>
                                                                     <div class="kobolg-product-details__short-description">
                                                                         <p>${product.tomtat}</p>

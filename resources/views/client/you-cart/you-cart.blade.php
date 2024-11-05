@@ -107,9 +107,12 @@
                                     - {{ $item['options']['color'] }} - {{ $item['options']['storage'] }}
                                 @endif
                             </a>
-                            <span class="quantity">{{ $item['quantity'] }} × <span
-                                    class="kobolg-Price-amount amount"><span
-                                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($item['price'], 2) }}</span></span>
+                            <span class="quantity">
+                                {{ $item['quantity'] }} × 
+                                <span class="kobolg-Price-amount amount">
+                                    {{ number_format($item['price'], 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                                </span>
+                            </span>
                         </li>
                         @php $subtotal += $item['quantity'] * $item['price']; @endphp
                     @endforeach
@@ -117,9 +120,11 @@
                     <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
                 @endif
             </ul>
-            <p class="kobolg-mini-cart__total total"><strong>Tổng:</strong>
-                <span class="kobolg-Price-amount amount"><span
-                        class="kobolg-Price-currencySymbol">₫</span>{{ number_format($subtotal ?? 0, 2) }}</span>
+            <p class="kobolg-mini-cart__total total">
+                <strong>Tổng:</strong>
+                <span class="kobolg-Price-amount amount">
+                    {{ number_format($subtotal ?? 0, 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                </span>
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
                 <a href="{{ route('cart.view') }}" class="button kobolg-forward">Xem Giỏ hàng</a>
@@ -128,26 +133,30 @@
         </div>
     </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function updateCartCount(count) {
+        document.querySelector('.count').textContent = count;
+        document.querySelector('.minicart-number-items').textContent = count;
+    }
+
     document.querySelectorAll('.remove_from_cart_button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
             const form = this.closest('.remove-form');
 
-            // Hiển thị thông báo xác nhận trước khi xóa
             Swal.fire({
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
+                showCancelButton: true,
                 timer: 3500,
-                showConfirmButton: true,
+                confirmButtonText: 'Có',
+                cancelButtonText: 'Không',
                 customClass: {
-                    container: 'custom-alert',
-                    title: 'alert-title',
-                    content: 'alert-message',
-                    confirmButton: 'btn custom-confirm-button',
-                    cancelButton: 'btn custom-cancel-button'
+                    confirmButton: 'custom-confirm-button',
+                    cancelButton: 'custom-cancel-button'
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -176,6 +185,8 @@
                                 form.closest('.kobolg-mini-cart-item')
                                     .remove(); // Xóa sản phẩm khỏi danh sách
                                 updateCartTotal(); // Cập nhật tổng giỏ hàng
+                                updateCartCount(data
+                                    .cartCount); // Cập nhật số lượng giỏ hàng
                             } else {
                                 Swal.fire({
                                     icon: 'error',

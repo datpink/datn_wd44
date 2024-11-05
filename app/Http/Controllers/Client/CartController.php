@@ -15,9 +15,14 @@ class CartController extends Controller
 
     public function view()
     {
+
         return view('client.you-cart.viewcart');
     }
 
+    public function temporary()
+    {
+        return view('client.you-cart.you-cart'); // Render lại view của giỏ hàng tạm
+    }
 
     public function add(Request $request)
     {
@@ -27,6 +32,7 @@ class CartController extends Controller
         $selectedStorage = $request->input('selected_storage');
         $selectedColor = $request->input('selected_color');
         $productImage = $request->input('product_image');
+        $price = $request->input('price'); // Nhận giá sau khi chọn biến thể
 
         // Tìm sản phẩm
         $product = Product::find($productId);
@@ -64,7 +70,7 @@ class CartController extends Controller
             $item = [
                 'id' => $productId,
                 'name' => $product->name,
-                'price' => $product->price,
+                'price' => $price, // Sử dụng giá của biến thể đã chọn
                 'quantity' => $quantity,
                 'options' => [
                     'variant_id' => $variantId,
@@ -82,33 +88,21 @@ class CartController extends Controller
         return response()->json(['message' => 'Đã thêm vào giỏ hàng.']);
     }
 
-
-
-
-
-
-
-
-    public function remove(Request $request)
+    public function removeFromCart($id)
     {
-        $id = $request->input('id');
-        $cart = session()->get('cart', []);
-
-        if (array_key_exists($id, $cart)) {
+        $cart = session()->get('cart');
+        if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Đã xóa sản phẩm khỏi giỏ hàng.'
-            ]);
         }
 
         return response()->json([
-            'success' => false,
-            'message' => 'Không tìm thấy sản phẩm trong giỏ hàng.'
-        ], 404);
+            'success' => true,
+            'message' => 'Sản phẩm đã được xóa khỏi giỏ hàng',
+            'cartCount' => count($cart) // Số lượng sản phẩm sau khi xóa
+        ]);
     }
+
 
 
 }

@@ -11,10 +11,7 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/client/assets/images/logo.png') }}" />
 
-<<<<<<< HEAD
-=======
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
 
     <!-- Title -->
     <title>Quên mật khẩu</title>
@@ -28,12 +25,8 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-center mb-4">
-<<<<<<< HEAD
-                    <img src="{{ asset('theme/client/assets/images/logozaia.png') }}" alt="Logo" style="width: 100px;" />
-=======
                     <img src="{{ asset('theme/client/assets/images/logozaia.png') }}" alt="Logo"
                         style="width: 100px;" />
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                     <h2 class="h4">Quên mật khẩu</h2>
                 </div>
 
@@ -52,18 +45,6 @@
                 @endif
 
                 @if ($errors->any())
-<<<<<<< HEAD
-                    <div class="alert alert-danger">
-                        @foreach ($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
-                    </div>
-                @endif
-
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Nhập email của bạn" required>
-=======
                     <script>
                         Swal.fire({
                             position: 'top',
@@ -86,7 +67,6 @@
                     <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" id="email"
                         placeholder="Nhập email của bạn" required>
->>>>>>> d48c587078eb2a3e569b4258a8a30a767b8842ee
                 </div>
                 <div class="d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary">Gửi</button>
