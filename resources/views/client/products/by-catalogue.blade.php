@@ -247,41 +247,19 @@
                             </form>
                         </div>
 
+                        <input id="catalogues-id" type="hidden" value="{{ $catalogues->id }}">
+                        <input id="child-catalogues-id" type="hidden" value="{{ $childCatalogues }}">
                         <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
                             <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
                             <div class="color-group">
-                                <a class="term-color " href="#">
-                                    <i style="color: #000000"></i>
-                                    <span class="term-name">Black</span>
-                                    <span class="count">(4)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #3155e2"></i>
-                                    <span class="term-name">Blue</span>
-                                    <span class="count">(3)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #49aa51"></i>
-                                    <span class="term-name">Green</span>
-                                    <span class="count">(1)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #ff63cb"></i>
-                                    <span class="term-name">Pink</span>
-                                    <span class="count">(3)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #a825ea"></i>
-                                    <span class="term-name">Purple</span>
-                                    <span class="count">(1)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #db2b00"></i>
-                                    <span class="term-name">Red</span>
-                                    <span class="count">(5)</span> </a>
-                                <a class="term-color " href="#">
-                                    <i style="color: #FFFFFF"></i>
-                                    <span class="term-name">White</span>
-                                    <span class="count">(2)</span> </a>
-                                <a class="term-color " href="#s">
-                                    <i style="color: #e8e120"></i>
-                                    <span class="term-name">Yellow</span>
-                                    <span class="count">(2)</span> </a>
+                                @foreach ($variant_values as $item)
+                                    <a class="term-color " href="" id="variant_values" name="variant_values"
+                                        data-attribute_id="{{ $item->id }}">
+                                        <i style="color: {{ $item->name }}"></i>
+                                        <span class="term-name-color">{{ $item->name }}</span>
+                                        <span class="count">(*)</span> </a>
+                                @endforeach
+
                             </div>
                         </div>
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
@@ -497,61 +475,47 @@
             })
 
 
-                            })
-                        </script>
-
-                        <input id="catalogues-id" type="hidden" value="{{ $catalogues->id }}">
-                        <input id="child-catalogues-id" type="hidden" value="{{ $childCatalogues }}">
-                        <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
-                            <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
-                            <div class="color-group">
-                                @foreach ($variant_values as $item)
-                                    <a class="term-color " href="" id="variant_values" name="variant_values"
-                                        data-attribute_id="{{ $item->id }}">
-                                        <i style="color: {{ $item->name }}"></i>
-                                        <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">(*)</span> </a>
-                                @endforeach
-
-                            </div>
-                        </div>
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function(e) {
-                                const colorGroup = document.querySelectorAll('.term-color');
-                                const parent_id = document.getElementById('catalogues-id');
-                                const child_id = document.getElementById('child-catalogues-id');
-
-                                console.log(parent_id.value);
-
-                                colorGroup.forEach(function(color) {
-
-                                    color.addEventListener('click', function(e) {
-                                        e.preventDefault();
-                                        const attributeId = this.getAttribute('data-attribute_id');
-                                        // console.log(attributeId);
-
-                                        axios.post('/api/shop/products/filter-catalogies-api', {
-                                                parent_id: parent_id.value,
-                                                attribute_id: attributeId,
-                                            })
-
-                                            .then((res) => {
-                                                console.log(res);
-                                                // Xóa danh sách cũ
-                                                const productList = document.getElementById('product-list');
-                                                productList.innerHTML = ''; // Xóa danh sách cũ
-                                                console.log(productList);
+        })
+    </script>
 
 
-                                                // Kiểm tra nếu có sản phẩm trong phản hồi
-                                                if (res.data.data.length > 0) {
-                                                    // Tạo một biến để chứa HTML của tất cả các sản phẩm
-                                                    let productsHTML = '';
 
-                                                    res.data.data.forEach(product => {
-                                                        // Tạo nội dung HTML cho sản phẩm mới
-                                                        productsHTML += `
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+            const colorGroup = document.querySelectorAll('.term-color');
+            const parent_id = document.getElementById('catalogues-id');
+            const child_id = document.getElementById('child-catalogues-id');
+
+            console.log(parent_id.value);
+
+            colorGroup.forEach(function(color) {
+
+                color.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const attributeId = this.getAttribute('data-attribute_id');
+                    // console.log(attributeId);
+
+                    axios.post('/api/shop/products/filter-catalogies-api', {
+                            parent_id: parent_id.value,
+                            attribute_id: attributeId,
+                        })
+
+                        .then((res) => {
+                            console.log(res);
+                            // Xóa danh sách cũ
+                            const productList = document.getElementById('product-list');
+                            productList.innerHTML = ''; // Xóa danh sách cũ
+                            console.log(productList);
+
+
+                            // Kiểm tra nếu có sản phẩm trong phản hồi
+                            if (res.data.data.length > 0) {
+                                // Tạo một biến để chứa HTML của tất cả các sản phẩm
+                                let productsHTML = '';
+
+                                res.data.data.forEach(product => {
+                                    // Tạo nội dung HTML cho sản phẩm mới
+                                    productsHTML += `
                                     <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                                     data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                                     <div class="product-inner images">
@@ -602,91 +566,25 @@
                                     </div>
                                 </li>
                                 `;
-                                                    });
+                                });
 
-                                                    // Cập nhật danh sách sản phẩm mới vào DOM
-                                                    productList.innerHTML = productsHTML;
+                                // Cập nhật danh sách sản phẩm mới vào DOM
+                                productList.innerHTML = productsHTML;
 
-                                                } else {
-                                                    productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
-                                                }
+                            } else {
+                                productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
+                            }
 
-                                            }).catch((err) => {
-                                                console.log(err);
+                        }).catch((err) => {
+                            console.log(err);
 
-                                            })
-                                    })
+                        })
+                })
 
-                                })
+            })
 
-                            })
-                        </script>
-                        <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
-                            <h2 class="widgettitle">Lọc theo kích thước<span class="arrow"></span></h2>
-                            <ul class="kobolg-widget-layered-nav-list">
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XS</a>
-                                    <span class="count">(1)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">S</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">M</a>
-                                    <span class="count">(2)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">L</a>
-                                    <span class="count">(3)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XL</a>
-                                    <span class="count">(1)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">XXL</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">3XL</a>
-                                    <span class="count">(4)</span>
-                                </li>
-                                <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
-                                    <a rel="nofollow" href="#">4XL</a>
-                                    <span class="count">(3)</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
-                            <ul class="product-categories">
-                                <li class="cat-item cat-item-22"><a href="#">Camera</a>
-                                    <span class="count">(11)</span>
-                                </li>
-                                <li class="cat-item cat-item-16"><a href="#">Accessories</a>
-                                    <span class="count">(9)</span>
-                                </li>
-                                <li class="cat-item cat-item-24"><a href="#">Game & Consoles</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-27"><a href="#">Life style</a> <span
-                                        class="count">(6)</span></li>
-                                <li class="cat-item cat-item-19"><a href="#">New arrivals</a>
-                                    <span class="count">(7)</span>
-                                </li>
-                                <li class="cat-item cat-item-17"><a href="#">Summer Sale</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-26"><a href="#">Specials</a> <span
-                                        class="count">(4)</span></li>
-                                <li class="cat-item cat-item-18"><a href="#">Featured</a> <span
-                                        class="count">(6)</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        })
+    </script>
+
+
 @endsection
