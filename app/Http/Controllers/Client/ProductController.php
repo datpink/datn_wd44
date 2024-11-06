@@ -188,7 +188,13 @@ class ProductController extends Controller
         $maxDiscountPrice = Product::max('discount_price');
         $catalogues = Catalogue::where('slug', $parentSlug)->firstOrFail();
         // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
+        // dd($catalogues->id);
+        $variants = Attribute::with('attributeValues')->get();
+        // màu
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
 
+        // dung lượng
+        $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
 
         if ($childSlug) {
             // dd($childCatalogues);
@@ -222,7 +228,74 @@ class ProductController extends Controller
 
 
 
-        return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID'));
+        return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID', 'variants', 'variant_values', 'variant_storage_values', 'catalogues', 'childCatalogues'));
+    }
+
+    public function productByCataloguesApi(Request $request)
+    {
+
+        // return response()->json(['data' => $request->all()]);
+        $attributeValueId = $request->input('attribute_id');
+
+        $parent_id = $request->input('parent_id');
+        $child_id = $request->input('child_id');
+
+        $minDiscountPrice = Product::min('discount_price');
+        $maxDiscountPrice = Product::max('discount_price');
+
+        $catalogues = Catalogue::where('id', $parent_id)->firstOrFail();
+        // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
+
+        $variants = Attribute::with('attributeValues')->get();
+        // màu
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
+
+        // dung lượng
+        $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
+
+        if ($child_id) {
+            // dd($childCatalogues);
+
+            $childCatalogues = Catalogue::where('id', $child_id)
+                ->where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+
+            // dd($childCatalogues);
+            // return response()->json(['datahah' => $childCatalogues]);
+        } else {
+            $childCatalogues = Catalogue::where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+        }
+        $parentCataloguesID = $childCatalogues;
+
+
+        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
+            ->whereIn('catalogue_id', $childCatalogues)
+            ->where('is_active', 1);
+
+
+
+        if ($attributeValueId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+                $query->where('attribute_values.id', $attributeValueId);
+            });
+        }
+
+        $productByCatalogues = $productByCatalogues->get();
+        return response()->json(['data' => $productByCatalogues]);
+
+
+        // dd($productByCatalogues);
+        foreach ($productByCatalogues as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
+
+
+        return response()->json(['data' => $productByCatalogues]);
+
+        // return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID', 'variants', 'variant_values', 'variant_storage_values'));
     }
 
     public function filterByPrice(Request $request)
