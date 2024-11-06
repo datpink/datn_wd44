@@ -444,70 +444,26 @@
                 <div class="col-sm-6 col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Activity</div>
+                            <div class="card-title">Người Mua Gần Đây</div>
                         </div>
                         <div class="card-body">
-
                             <div class="scroll370">
                                 <div class="activity-container">
-                                    <div class="activity-block">
-                                        <div class="activity-user">
-                                            <img src="../theme/admin/assets/images/user.png" alt="Activity User">
+                                    @foreach($recentBuyers as $buyer)
+                                        <div class="activity-block">
+                                            <div class="activity-user">
+                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User"> <!-- Hình ảnh người dùng -->
+                                            </div>
+                                            <div class="activity-details">
+                                                <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
+                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5> <!-- Thời gian thực hiện đơn hàng -->
+                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p> <!-- Số lượng đơn hàng -->
+                                                <span class="badge shade-green">Mới</span>
+                                            </div>
                                         </div>
-                                        <div class="activity-details">
-                                            <h4>Lilly Desmet</h4>
-                                            <h5>3 hours ago</h5>
-                                            <p>Sent invoice ref. #23457</p>
-                                            <span class="badge shade-green">Sent</span>
-                                        </div>
-                                    </div>
-                                    <div class="activity-block">
-                                        <div class="activity-user">
-                                            <img src="../theme/admin/assets/images/user3.png" alt="Activity User">
-                                        </div>
-                                        <div class="activity-details">
-                                            <h4>Jennifer Wilson</h4>
-                                            <h5>7 hours ago</h5>
-                                            <p>Paid invoice ref. #23459</p>
-                                            <span class="badge shade-red">Payments</span>
-                                        </div>
-                                    </div>
-                                    <div class="activity-block">
-                                        <div class="activity-user">
-                                            <img src="../theme/admin/assets/images/user4.png" alt="Activity User">
-                                        </div>
-                                        <div class="activity-details">
-                                            <h4>Elliott Hermans</h4>
-                                            <h5>1 day ago</h5>
-                                            <p>Paid invoice ref. #23473</p>
-                                            <span class="badge shade-green">Paid</span>
-                                        </div>
-                                    </div>
-                                    <div class="activity-block">
-                                        <div class="activity-user">
-                                            <img src="../theme/admin/assets/images/user5.png" alt="Activity User">
-                                        </div>
-                                        <div class="activity-details">
-                                            <h4>Sophie Michiels</h4>
-                                            <h5>3 day ago</h5>
-                                            <p>Paid invoice ref. #26788</p>
-                                            <span class="badge shade-green">Sent</span>
-                                        </div>
-                                    </div>
-                                    <div class="activity-block">
-                                        <div class="activity-user">
-                                            <img src="../theme/admin/assets/images/user2.png" alt="Activity User">
-                                        </div>
-                                        <div class="activity-details">
-                                            <h4>Ilyana Maes</h4>
-                                            <h5>One week ago</h5>
-                                            <p>Paid invoice ref. #34546</p>
-                                            <span class="badge shade-red">Invoice</span>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>

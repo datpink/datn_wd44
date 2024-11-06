@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\PaymentMethod; // Import model PaymentMethod
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
-
     public function showCheckout(Request $request)
     {
         // Lấy danh sách ID sản phẩm từ input 'selected_products'
@@ -28,9 +27,13 @@ class CheckoutController extends Controller
             }
         }
 
-        // Chuyển đến view thanh toán và truyền dữ liệu các sản phẩm đã chọn
-        return view('client.checkout.index', compact('products'));
+        // Lấy thông tin người dùng đã đăng nhập
+        $user = Auth::user();
+
+        // Lấy danh sách phương thức thanh toán từ cơ sở dữ liệu
+        $paymentMethods = PaymentMethod::all();
+
+        // Chuyển đến view thanh toán và truyền dữ liệu
+        return view('client.checkout.index', compact('products', 'user', 'paymentMethods'));
     }
-
-
 }
