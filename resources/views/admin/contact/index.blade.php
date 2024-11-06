@@ -18,8 +18,8 @@
                                 <div class="row g-2">
                                     <div class="col-auto">
                                         <input type="text" id="search" name="search"
-                                               class="form-control form-control-sm" placeholder="Tìm kiếm liên hệ"
-                                               value="{{ request()->search }}">
+                                            class="form-control form-control-sm" placeholder="Tìm kiếm liên hệ"
+                                            value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -54,36 +54,46 @@
                                                         <span class="badge rounded-pill bg-danger">Chưa trả lời</span>
                                                     @endif
                                                 </td>
-                                                <td>{{ $contact->created_at ? $contact->created_at->format('d-m-Y') : 'Chưa có' }}</td>
+                                                <td>{{ $contact->created_at ? $contact->created_at->format('d-m-Y') : 'Chưa có' }}
+                                                </td>
                                                 <td>
-                                                    <a href="#" class="editRow" title="Trả lời" style="margin-right: 15px;"
-                                                       data-bs-toggle="modal" data-bs-target="#replyModal{{ $contact->id }}">
-                                                        <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
+                                                    <a href="#" class="editRow" title="Trả lời"
+                                                        style="margin-right: 15px;" data-bs-toggle="modal"
+                                                        data-bs-target="#replyModal{{ $contact->id }}">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
                                                     </a>
 
                                                     <form action="{{ route('admin.contact.destroy', $contact) }}"
-                                                          method="POST" style="display:inline;" class="delete-form"
-                                                          onsubmit="return confirm('Bạn có chắc muốn xóa liên hệ này không?');">
+                                                        method="POST" style="display:inline;" class="delete-form"
+                                                        onsubmit="return confirm('Bạn có chắc muốn xóa liên hệ này không?');">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="delete-btn"
-                                                                style="background: none; border: none; padding: 0;"
-                                                                title="Xóa">
-                                                            <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
+                                                            style="background: none; border: none; padding: 0;"
+                                                            title="Xóa">
+                                                            <i class="bi bi-trash text-danger"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>
                                             </tr>
 
                                             <!-- Modal trả lời -->
-                                            <div class="modal fade" id="replyModal{{ $contact->id }}" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel{{ $contact->id }}" aria-hidden="true">
+                                            <div class="modal fade" id="replyModal{{ $contact->id }}" tabindex="-1"
+                                                role="dialog" aria-labelledby="replyModalLabel{{ $contact->id }}"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="replyModalLabel{{ $contact->id }}">Trả Lời Liên Hệ</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h5 class="modal-title"
+                                                                id="replyModalLabel{{ $contact->id }}">Trả Lời Liên Hệ
+                                                            </h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                         </div>
-                                                        <form action="{{ route('admin.contact.reply', $contact->id) }}" method="POST">
+                                                        <form action="{{ route('admin.contact.reply', $contact->id) }}"
+                                                            method="POST">
                                                             @csrf
                                                             <div class="modal-body">
                                                                 <div class="form-group">
@@ -92,8 +102,18 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                                <button type="submit" class="btn btn-primary">Gửi Trả Lời</button>
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Đóng</button>
+
+                                                                @if (!$contact->reply)
+                                                                    <!-- Nút "Gửi Trả Lời" chỉ hiển thị khi chưa trả lời -->
+                                                                    <button type="submit" class="btn btn-primary">Gửi Trả
+                                                                        Lời</button>
+                                                                @else
+                                                                    <!-- Hiển thị thông báo thay cho nút khi đã trả lời -->
+                                                                    <button type="button" class="btn btn-primary"
+                                                                        disabled>Đã trả lời</button>
+                                                                @endif
                                                             </div>
                                                         </form>
                                                     </div>
@@ -101,7 +121,8 @@
                                             </div>
                                         @empty
                                             <tr>
-                                                <td colspan="7" class="text-center">Không có liên hệ nào được tìm thấy.</td>
+                                                <td colspan="7" class="text-center">Không có liên hệ nào được tìm thấy.
+                                                </td>
                                             </tr>
                                         @endforelse
                                     </tbody>
