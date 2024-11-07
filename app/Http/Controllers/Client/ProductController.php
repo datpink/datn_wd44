@@ -236,6 +236,7 @@ class ProductController extends Controller
 
         // return response()->json(['data' => $request->all()]);
         $attributeValueId = $request->input('attribute_id');
+        $attributeStorageId = $request->input('attribute_storage_value_id');
 
         $parent_id = $request->input('parent_id');
         $child_id = $request->input('child_id');
@@ -268,6 +269,9 @@ class ProductController extends Controller
                 ->where('status', 'active')
                 ->pluck('id');
         }
+
+
+
         $parentCataloguesID = $childCatalogues;
 
 
@@ -276,12 +280,21 @@ class ProductController extends Controller
             ->where('is_active', 1);
 
 
-
-        if ($attributeValueId) {
+        if ($attributeValueId && $attributeStorageId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId, $attributeStorageId) {
+                $query->where('attribute_values.id', $attributeValueId)
+                    ->orWhere('attribute_values.id', $attributeStorageId);
+            });
+        } elseif ($attributeValueId) {
             $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
                 $query->where('attribute_values.id', $attributeValueId);
             });
+        } elseif ($attributeStorageId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeStorageId) {
+                $query->where('attribute_values.id', $attributeStorageId);
+            });
         }
+
 
         $productByCatalogues = $productByCatalogues->get();
         return response()->json(['data' => $productByCatalogues]);
