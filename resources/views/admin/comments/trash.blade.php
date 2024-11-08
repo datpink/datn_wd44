@@ -115,6 +115,7 @@
                     position: "top",
                     title: 'Bạn có chắc muốn xóa',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -142,6 +143,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timer: 3500
@@ -158,11 +160,12 @@
         <script>
             Swal.fire({
                 position: "top",
+                toast: true,
                 icon: "success",
                 title: "Khôi phục thành công",
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif

@@ -31,7 +31,7 @@
                                 <!-- Biểu tượng sửa -->
                                 <button class="btn btn-link" onclick="toggleEditForm({{ $comment->id }})"
                                     title="Sửa">
-                                    <i class="fas fa-edit" style="font-size: 20px;"></i>
+                                    <i class="fa fa-edit" style="font-size: 20px;"></i>
                                 </button>
 
                                 <!-- Biểu tượng xóa -->
@@ -41,7 +41,7 @@
                                     @method('DELETE')
                                     <button class="btn btn-link" type="button"
                                         onclick="confirmDeleteComment({{ $comment->id }})" title="Xóa">
-                                        <i class="fas fa-trash" style="font-size: 20px;"></i>
+                                        <i class="fa fa-trash" style="font-size: 20px;"></i>
                                     </button>
                                 </form>
                             </div>
@@ -90,7 +90,7 @@
                                         <!-- Biểu tượng sửa -->
                                         <button class="btn btn-link" onclick="toggleEditFormReply({{ $reply->id }})"
                                             title="Sửa">
-                                            <i class="fas fa-edit" style="font-size: 20px;"></i>
+                                            <i class="fa fa-edit" style="font-size: 20px;"></i>
                                         </button>
 
                                         <!-- Biểu tượng xóa -->
@@ -101,7 +101,7 @@
                                             @method('DELETE')
                                             <button class="btn btn-link" type="button"
                                                 onclick="confirmDeleteReply({{ $reply->id }})" title="Xóa">
-                                                <i class="fas fa-trash" style="font-size: 20px;"></i>
+                                                <i class="fa fa-trash" style="font-size: 20px;"></i>
                                             </button>
                                         </form>
                                     </div>
