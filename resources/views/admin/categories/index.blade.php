@@ -5,19 +5,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -138,6 +125,7 @@
                     title: 'Bạn có chắc chắn muốn xóa danh mục này?',
                     icon: 'warning',
                     showCancelButton: true,
+                    toast: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
@@ -162,10 +150,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('deleteCategory') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -175,10 +164,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -188,10 +178,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 3500
             });
         </script>
     @endif

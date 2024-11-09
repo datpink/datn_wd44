@@ -79,36 +79,55 @@
                                 <div class="col2-set" id="customer_details">
                                     <div class="col-1">
                                         @if ($user)
-                                        <div class="kobolg-billing-fields">
-                                            <h3>Thông tin thanh toán</h3>
-                                            <div class="kobolg-billing-fields__field-wrapper">
-                                                <p class="form-row form-row-first validate-required" id="billing_first_name_field" data-priority="10">
-                                                    <label for="billing_first_name">Họ và tên&nbsp;<abbr class="required" title="required">*</abbr></label>
-                                                    <span class="kobolg-input-wrapper">
-                                                        <input type="text" class="input-text" name="billing_first_name" id="billing_first_name" value="{{ $user->name }}" autocomplete="given-name" required>
-                                                    </span>
-                                                </p>
-                                                <p class="form-row form-row-wide addresses-field validate-required" id="billing_addresses_1_field" data-priority="50">
-                                                    <label for="billing_addresses_1">Địa chỉ&nbsp;<abbr class="required" title="required">*</abbr></label>
-                                                    <span class="kobolg-input-wrapper">
-                                                        <input type="text" class="input-text" name="billing_addresses_1" id="billing_addresses_1" value="{{ $user->address ?? '' }}" placeholder="Số nhà và tên đường" data-placeholder="Số nhà và tên đường" required>
-                                                    </span>
-                                                </p>
-                                                <p class="form-row form-row-wide validate-required validate-phone" id="billing_phone_field" data-priority="100">
-                                                    <label for="billing_phone">Số điện thoại&nbsp;<abbr class="required" title="required">*</abbr></label>
-                                                    <span class="kobolg-input-wrapper">
-                                                        <input type="tel" class="input-text" name="billing_phone" id="billing_phone" value="{{ $user->phone ?? '' }}" placeholder="" autocomplete="tel" required>
-                                                    </span>
-                                                </p>
-                                                <p class="form-row form-row-wide validate-required validate-email" id="billing_email_field" data-priority="110">
-                                                    <label for="billing_email">Email&nbsp;<abbr class="required" title="required">*</abbr></label>
-                                                    <span class="kobolg-input-wrapper">
-                                                        <input type="email" class="input-text" name="billing_email" id="billing_email" value="{{ $user->email }}" placeholder="" autocomplete="email username" required>
-                                                    </span>
-                                                </p>
+                                            <div class="kobolg-billing-fields">
+                                                <h3>Thông tin thanh toán</h3>
+                                                <div class="kobolg-billing-fields__field-wrapper">
+                                                    <p class="form-row form-row-first validate-required"
+                                                        id="billing_first_name_field" data-priority="10">
+                                                        <label for="billing_first_name">Họ và tên&nbsp;<abbr
+                                                                class="required" title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="text" class="input-text"
+                                                                name="billing_first_name" id="billing_first_name"
+                                                                value="{{ $user->name }}" autocomplete="given-name"
+                                                                required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide addresses-field validate-required"
+                                                        id="billing_addresses_1_field" data-priority="50">
+                                                        <label for="billing_addresses_1">Địa chỉ&nbsp;<abbr
+                                                                class="required" title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="text" class="input-text"
+                                                                name="billing_addresses_1" id="billing_addresses_1"
+                                                                value="{{ $user->address ?? '' }}"
+                                                                placeholder="Số nhà và tên đường"
+                                                                data-placeholder="Số nhà và tên đường" required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide validate-required validate-phone"
+                                                        id="billing_phone_field" data-priority="100">
+                                                        <label for="billing_phone">Số điện thoại&nbsp;<abbr
+                                                                class="required" title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="tel" class="input-text" name="billing_phone"
+                                                                id="billing_phone" value="{{ $user->phone ?? '' }}"
+                                                                placeholder="" autocomplete="tel" required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide validate-required validate-email"
+                                                        id="billing_email_field" data-priority="110">
+                                                        <label for="billing_email">Email&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="email" class="input-text" name="billing_email"
+                                                                id="billing_email" value="{{ $user->email }}"
+                                                                placeholder="" autocomplete="email username" required>
+                                                        </span>
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endif
+                                        @endif
                                         <div class="kobolg-account-fields">
                                             <p class="form-row form-row-wide create-account kobolg-validated">
                                                 <label class="kobolg-form__label kobolg-form__label-for-checkbox checkbox">
@@ -150,16 +169,20 @@
                                             @foreach ($products as $product)
                                                 <tr>
                                                     <td class="text-center">
-                                                        <img src="{{ $product['options']['image'] }}" class="d-block ui-w-40 ui-bordered"
-                                                            alt="{{ $product['name'] }}" style="max-width: 90px; margin: 0 auto;">
+                                                        <img src="{{ $product['options']['image'] }}"
+                                                            class="d-block ui-w-40 ui-bordered"
+                                                            alt="{{ $product['name'] }}"
+                                                            style="max-width: 90px; margin: 0 auto;">
                                                     </td>
                                                     <td class="p-4">
                                                         <div class="media align-items-center">
                                                             <div class="media-body">
-                                                                <a href="#" class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                <a href="#"
+                                                                    class="d-block text-dark">{{ $product['name'] }}</a>
                                                                 <small>
                                                                     @if ($product['options']['color'] || $product['options']['storage'])
-                                                                        Màu: {{ $product['options']['color'] }} - Bộ nhớ: {{ $product['options']['storage'] }}
+                                                                        Màu: {{ $product['options']['color'] }} - Bộ nhớ:
+                                                                        {{ $product['options']['storage'] }}
                                                                     @endif
                                                                 </small>
                                                             </div>
@@ -170,7 +193,9 @@
                                                             $lineTotal = $product['price'] * $product['quantity'];
                                                             $totalAmount += $lineTotal;
                                                         @endphp
-                                                        <span>{{ number_format($lineTotal, 2, ',', '.') }}₫</span>
+                                                        <span>
+                                                            {{ $lineTotal == floor($lineTotal) ? number_format($lineTotal, 0, ',', '.') : number_format($lineTotal, 2, ',', '.') }}₫
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -183,7 +208,7 @@
                                                 <td>
                                                     <span class="kobolg-Price-amount amount">
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
-                                                        {{ number_format($totalAmount, 2, ',', '.') }}
+                                                        {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -193,7 +218,7 @@
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            {{ number_format($totalAmount, 2, ',', '.') }}
+                                                            {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
                                                         </span>
                                                     </strong>
                                                 </td>
@@ -203,20 +228,30 @@
 
                                     <input type="hidden" name="lang" value="en">
                                     <div id="payment" class="kobolg-checkout-payment">
-                                        <ul class="wc_payment_methods payment_methods methods">
-                                            <div class="payment-methods">
-                                                <h3>Phương thức thanh toán</h3>
-                                                <ul class="wc_payment_methods">
+                                        <div class="payment-methods">
+                                            <h3>Phương thức thanh toán</h3>
+                                            <ul class="wc_payment_methods payment_methods methods">
+                                                @if ($paymentMethods->isNotEmpty())
                                                     @foreach ($paymentMethods as $method)
-                                                        <li class="wc_payment_method payment_method_{{ $method->id }}">
-                                                            <input id="payment_method_{{ $method->id }}" type="radio" class="input-radio"
-                                                                   name="payment_method" value="{{ $method->id }}" 
-                                                                   @if ($loop->first) checked="checked" @endif>
-                                                            <label for="payment_method_{{ $method->id }}">{{ $method->name }}</label>
-                                                        </li>
+                                                        @if ($method->status === 'active')
+                                                            <!-- Kiểm tra trạng thái -->
+                                                            <li
+                                                                class="wc_payment_method payment_method_{{ $method->id }}">
+                                                                <input id="payment_method_{{ $method->id }}"
+                                                                    type="radio" class="input-radio"
+                                                                    name="payment_method" value="{{ $method->id }}"
+                                                                    @if ($loop->first) checked="checked" @endif>
+                                                                <label
+                                                                    for="payment_method_{{ $method->id }}">{{ $method->name }}</label>
+                                                            </li>
+                                                        @endif
                                                     @endforeach
-                                                </ul>
-                                            </div>                                        </ul>
+                                                @else
+                                                    <li class="wc_payment_method">Không có phương thức thanh toán nào khả
+                                                        dụng.</li>
+                                                @endif
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 

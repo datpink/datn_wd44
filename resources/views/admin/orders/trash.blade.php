@@ -6,13 +6,6 @@
     <div class="content-wrapper-scroll">
         <div class="content-wrapper p-4">
 
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <div class="card border-0 rounded shadow-sm">
 
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -22,6 +15,20 @@
                     </a>
                 </div>
                 <div class="card-body">
+
+                    @if (session('success'))
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                position: 'top',
+                                timer: 3500,
+                                toast: true,
+                                title: 'Thành công!',
+                                text: "{{ session('success') }}",
+                                confirmButtonText: 'OK'
+                            });
+                        </script>
+                    @endif
 
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -45,8 +52,8 @@
                                             <form action="{{ route('orders.restore', $order->id) }}" method="POST"
                                                 style="display:inline-block;">
                                                 @csrf
-                                                <button type="submit" onclick="return confirm('Khôi phục lại đơn hàng?')"
-                                                    class="btn btn-outline-success rounded-pill btn-sm">
+                                                <button type="submit" class="btn btn-outline-success rounded-pill btn-sm"
+                                                    onclick="return confirmRestore(event, this);">
                                                     <i class="fas fa-undo"></i> Khôi phục
                                                 </button>
                                             </form>
@@ -55,7 +62,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm"
-                                                    onclick="return confirm('Bạn có chắc chắn muốn xóa cứng không?');">
+                                                    onclick="return confirmDelete(event, this);">
                                                     <i class="fas fa-trash"></i> Xóa cứng
                                                 </button>
                                             </form>
@@ -73,4 +80,50 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function confirmRestore(event, button) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+            const form = button.closest('form');
+            Swal.fire({
+                title: 'Khôi phục lại đơn hàng?',
+                text: "Bạn có chắc chắn muốn khôi phục đơn hàng này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                position: 'top',
+                timer: 3500,
+                toast: true,
+                confirmButtonText: 'Có, khôi phục!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Gửi form nếu người dùng xác nhận
+                }
+            });
+        }
+
+        function confirmDelete(event, button) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định
+            const form = button.closest('form');
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn xóa cứng không?',
+                text: "Hành động này không thể hoàn tác!",
+                icon: 'warning',
+                showCancelButton: true,
+                position: 'top',
+                timer: 3500,
+                toast: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Có, xóa!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Gửi form nếu người dùng xác nhận
+                }
+            });
+        }
+    </script>
 @endsection

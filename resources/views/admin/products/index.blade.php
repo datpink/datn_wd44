@@ -213,6 +213,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timer: 3500
@@ -228,9 +229,10 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
-                timer: 1500
+                timer: 3500
             });
         @endif
     </script>
