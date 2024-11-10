@@ -2,6 +2,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+{{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
+
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
@@ -236,10 +239,11 @@
                                 position: 'top',
                                 icon: 'success',
                                 title: 'Thành công!',
+                                toast: true,
                                 text: response.message,
                                 showConfirmButton: false,
                                 timerProgressBar: true,
-                                timer: 1500
+                                timer: 3500
                             });
 
                             // Gọi AJAX để cập nhật giỏ hàng tạm
@@ -250,10 +254,11 @@
                                 position: 'top',
                                 icon: 'error',
                                 title: 'Oops...',
+                                toast: true,
                                 text: 'Có lỗi xảy ra, vui lòng thử lại!',
                                 showConfirmButton: false,
                                 timerProgressBar: true,
-                                timer: 1500
+                                timer: 3500
                             });
                         }
                     });
@@ -262,10 +267,11 @@
                         position: 'top',
                         icon: 'warning',
                         title: 'Chưa chọn đầy đủ',
+                        toast: true,
                         text: 'Vui lòng chọn cả dung lượng và màu sắc!',
                         showConfirmButton: false,
                         timerProgressBar: true,
-                        timer: 1500
+                        timer: 3500
                     });
                 }
             } else {
@@ -285,10 +291,11 @@
                             position: 'top',
                             icon: 'success',
                             title: 'Thành công!',
+                            toast: true,
                             text: response.message,
                             showConfirmButton: false,
                             timerProgressBar: true,
-                            timer: 1500
+                            timer: 3500
                         });
                         // Gọi AJAX để cập nhật giỏ hàng tạm
                         updateTemporaryCart();
@@ -298,10 +305,11 @@
                             position: 'top',
                             icon: 'error',
                             title: 'Oops...',
+                            toast: true,
                             text: 'Có lỗi xảy ra, vui lòng thử lại!',
                             showConfirmButton: false,
                             timerProgressBar: true,
-                            timer: 1500
+                            timer: 3500
                         });
                     }
                 });
@@ -323,3 +331,43 @@
         }
     });
 </script>
+
+<script>
+    function confirmDeleteReply(replyId) {
+        Swal.fire({
+            position: 'top',
+            title: 'Bạn có chắc chắn muốn xóa phản hồi này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            toast: true,
+            confirmButtonText: 'Ok',
+            cancelButtonText: 'Hủy',
+            timer: 3500
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-reply-form-' + replyId).submit();
+            }
+        });
+    }
+
+    function confirmDeleteComment(commentId) {
+        Swal.fire({
+            position: 'top',
+            title: 'Bạn có chắc chắn muốn xóa bình luận này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok',
+            toast: true,
+            cancelButtonText: 'Hủy',
+            timer: 3500
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('delete-comment-form-' + commentId).submit();
+            }
+        });
+    }
+</script>>

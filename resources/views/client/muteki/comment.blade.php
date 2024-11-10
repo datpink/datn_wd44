@@ -4,54 +4,54 @@
     <h2>Bình luận ({{ $product->comments->count() }})</h2>
 
     <!-- Hiển thị danh sách bình luận -->
-    <div class="col-md-6 mx-auto">
+    <div class="col-md-8 mx-auto">
         <div class="comments-section">
             @foreach ($product->comments as $comment)
                 <div class="comment">
                     <!-- Hiển thị tên người dùng và ngày đăng bình luận -->
-                    <div class="mr-3">
-                        @if ($comment->user->image)
-                            <img src="{{ asset('storage/' . $comment->user->image) }}" alt="{{ $comment->user->name }}"
-                                class="rounded-circle" style="width: 25px; height: 25px;">
-                        @else
-                            <img src="{{ asset('path/to/default-image.png') }}" alt="Hình đại diện mặc định"
-                                class="rounded-circle" style="width: 25px; height: 25px;">
+                    <div class="user-info" style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center;">
+                            @if ($comment->user->image)
+                                <img src="{{ asset('storage/' . $comment->user->image) }}"
+                                    alt="{{ $comment->user->name }}" class="rounded-circle user-pic"
+                                    style="width: 30px; height: 30px; margin-right: 10px;">
+                            @else
+                                <img src="{{ asset('path/to/default-image.png') }}" alt="Hình đại diện mặc định"
+                                    class="rounded-circle user-pic"
+                                    style="width: 30px; height: 30px; margin-right: 10px;">
+                            @endif
+                            <strong>{{ $comment->user->name }}</strong>
+                            <span class="date"
+                                style="margin-left: 10px;">{{ $comment->created_at->format('d/m/Y') }}</span>
+                        </div>
+
+                        <!-- Nút sửa và xóa -->
+                        @if ($comment->user_id == Auth::id())
+                            <div class="action-icons" style="text-align: right;">
+                                <!-- Biểu tượng sửa -->
+                                <button class="btn btn-link" onclick="toggleEditForm({{ $comment->id }})"
+                                    title="Sửa">
+                                    <i class="fa fa-edit" style="font-size: 20px;"></i>
+                                </button>
+
+                                <!-- Biểu tượng xóa -->
+                                <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
+                                    method="POST" style="display:inline;" id="delete-comment-form-{{ $comment->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-link" type="button"
+                                        onclick="confirmDeleteComment({{ $comment->id }})" title="Xóa">
+                                        <i class="fa fa-trash" style="font-size: 20px;"></i>
+                                    </button>
+                                </form>
+                            </div>
                         @endif
-                        <strong>{{ $comment->user->name }}</strong>
-                        <span>{{ $comment->created_at->format('d/m/Y') }}</span>
                     </div>
 
                     <!-- Nội dung bình luận -->
-                    <div id="comment-content-{{ $comment->id }}">
+                    <div class="comment-content" id="comment-content-{{ $comment->id }}" style="margin-top: 5px;">
                         <p>{{ $comment->comment }}</p>
-                    </div>
-
-                    <!-- Nút menu thả xuống -->
-
-                    @if ($comment->user_id == Auth::id())
-                        <!-- Nút menu thả xuống -->
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle"
-                                onclick="toggleDropdown({{ $comment->id }})" type="button"
-                                id="dropdownMenuButton{{ $comment->id }}" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                            </button>
-                            <div class="dropdown-menu" id="customDropdown-{{ $comment->id }}" style="display:none;"
-                                aria-labelledby="dropdownMenuButton{{ $comment->id }}">
-                                <button class="dropdown-item"
-                                    onclick="toggleEditForm({{ $comment->id }})">Sửa</button>
-                                <form action="{{ route('client.deleteComment', [$product->id, $comment->id]) }}"
-                                    method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="dropdown-item" type="submit"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?')">Xóa</button>
-                                </form>
-                            </div>
-                        </div>
-                    @endif
-
-                    <!-- Form chỉnh sửa bình luận ẩn -->
+                    </div> <!-- Form chỉnh sửa bình luận ẩn -->
                     <div id="edit-comment-form-{{ $comment->id }}" style="display: none;">
                         <form action="{{ route('client.updateComment', [$product->id, $comment->id]) }}"
                             method="POST">
@@ -65,47 +65,54 @@
 
                     <!-- Hiển thị các phản hồi -->
                     @foreach ($comment->replies as $reply)
-                        <div class="reply">
-                            <div class="mr-3">
-                                @if ($comment->user->image)
-                                    <img src="{{ asset('storage/' . $comment->user->image) }}"
-                                        alt="{{ $comment->user->name }}" class="rounded-circle"
-                                        style="width: 25px; height: 25px;">
-                                @else
-                                    <img src="{{ asset('path/to/default-image.png') }}" alt="Hình đại diện mặc định"
-                                        class="rounded-circle" style="width: 25px; height: 25px;">
+                        <div class="reply" style="margin-bottom: 15px;">
+                            <!-- Thông tin người dùng -->
+                            <div class="user-info"
+                                style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center;">
+                                    @if ($reply->user->image)
+                                        <img src="{{ asset('storage/' . $reply->user->image) }}"
+                                            alt="{{ $reply->user->name }}" class="rounded-circle user-pic"
+                                            style="width: 30px; height: 30px; margin-right: 10px;">
+                                    @else
+                                        <img src="{{ asset('path/to/default-image.png') }}"
+                                            alt="Hình đại diện mặc định" class="rounded-circle user-pic"
+                                            style="width: 30px; height: 30px; margin-right: 10px;">
+                                    @endif
+                                    <strong>{{ $reply->user->name }}</strong>
+                                    <span class="date"
+                                        style="margin-left: 10px;">{{ $reply->created_at->format('d/m/Y') }}</span>
+                                </div>
+
+                                <!-- Biểu tượng sửa và xóa -->
+                                @if ($reply->user_id == Auth::id())
+                                    <div class="action-icons" style="text-align: right;">
+                                        <!-- Biểu tượng sửa -->
+                                        <button class="btn btn-link" onclick="toggleEditFormReply({{ $reply->id }})"
+                                            title="Sửa">
+                                            <i class="fa fa-edit" style="font-size: 20px;"></i>
+                                        </button>
+
+                                        <!-- Biểu tượng xóa -->
+                                        <form action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}"
+                                            method="POST" style="display:inline;"
+                                            id="delete-reply-form-{{ $reply->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-link" type="button"
+                                                onclick="confirmDeleteReply({{ $reply->id }})" title="Xóa">
+                                                <i class="fa fa-trash" style="font-size: 20px;"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 @endif
-                                <strong>{{ $comment->user->name }}</strong>
-                                <span>{{ $comment->created_at->format('d/m/Y') }}</span>
                             </div>
 
-                            <div id="reply-content-{{ $reply->id }}">
+                            <!-- Nội dung phản hồi -->
+                            <div class="reply-content" id="reply-content-{{ $reply->id }}" style="margin-top: 5px;">
                                 <p>{{ $reply->reply }}</p>
                             </div>
 
-                            <!-- Nút menu thả xuống cho phản hồi -->
-                            @if ($reply->user_id == Auth::id())
-                                <!-- Nút menu thả xuống cho phản hồi -->
-                                <div class="dropdown">
-                                    <button class=" dropdown-toggle" onclick="toggleDropdownReply({{ $reply->id }})"
-                                        type="button" id="dropdownMenuButtonReply{{ $reply->id }}"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                    </button>
-                                    <div class="dropdown-menu" id="customDropdownReply-{{ $reply->id }}"
-                                        style="display:none;"
-                                        aria-labelledby="dropdownMenuButtonReply{{ $reply->id }}">
-                                        <button class="dropdown-item"
-                                            onclick="toggleEditFormReply({{ $reply->id }})">Sửa</button>
-                                        <form action="{{ route('client.deleteReply', [$comment->id, $reply->id]) }}"
-                                            method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="dropdown-item" type="submit"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa phản hồi này không?')">Xóa</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            @endif
                             <!-- Form chỉnh sửa phản hồi ẩn -->
                             <div id="edit-reply-form-{{ $reply->id }}" style="display: none;">
                                 <form action="{{ route('client.updateReply', [$comment->id, $reply->id]) }}"
@@ -120,15 +127,16 @@
                             </div>
                         </div>
                     @endforeach
-
                     <!-- Form thêm phản hồi -->
                     @auth
-                        <form action="{{ route('client.storeReply', $comment->id) }}" method="POST">
+                        <form action="{{ route('client.storeReply', $comment->id) }}" method="POST" class="reply-form">
                             @csrf
-                            <textarea name="reply" required placeholder="Phản hồi của bạn"></textarea>
-                            <button type="submit" class="tbnsend"> <img
-                                    src="{{ asset('theme/client/assets/images/send.png') }}" width="30px"
-                                    alt=""></button>
+                            <div class="reply-input">
+                                <textarea name="reply" required placeholder="Phản hồi của bạn"></textarea>
+                                <button type="submit" class="tbnsend"> <img
+                                        src="{{ asset('theme/client/assets/images/send.png') }}" width="30px"
+                                        alt=""></button>
+                            </div>
                         </form>
                     @endauth
                 </div>
@@ -136,11 +144,14 @@
 
             <!-- Form thêm bình luận -->
             @auth
-                <form action="{{ route('client.storeComment', $product->id) }}" method="POST">
+                <form action="{{ route('client.storeComment', $product->id) }}" method="POST" class="comment-form">
                     @csrf
-                    <textarea name="comment" required placeholder="Bình luận của bạn"></textarea>
-                    <button type="submit" class="tbnsend"> <img src="{{ asset('theme/client/assets/images/send.png') }}"
-                            width="30px" alt=""></button>
+                    <div class="comment-input">
+                        <textarea name="comment" required placeholder="Bình luận của bạn"></textarea>
+                        <button type="submit" class="tbnsend">
+                            <img src="{{ asset('theme/client/assets/images/send.png') }}" width="30px" alt="">
+                        </button>
+                    </div>
                 </form>
             @endauth
         </div>
@@ -150,22 +161,13 @@
     <script>
         function toggleDropdown(commentId) {
             var dropdown = document.getElementById("customDropdown-" + commentId);
-            if (dropdown.style.display === "none") {
-                dropdown.style.display = "block";
-            } else {
-                dropdown.style.display = "none";
-            }
+            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
         }
 
         function toggleDropdownReply(replyId) {
             var dropdown = document.getElementById("customDropdownReply-" + replyId);
-            if (dropdown.style.display === "none") {
-                dropdown.style.display = "block";
-            } else {
-                dropdown.style.display = "none";
-            }
+            dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
         }
-
 
         function toggleEditForm(commentId) {
             var content = document.getElementById('comment-content-' + commentId);
@@ -191,4 +193,110 @@
             }
         }
     </script>
+
+    <style>
+        .comments-section {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-pic {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .date {
+            font-size: 12px;
+            color: #888;
+            margin-left: 5px;
+        }
+
+        .comment-content,
+        .reply-content {
+            margin-top: 10px;
+        }
+
+        .reply {
+            margin-left: 40px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        .reply-form,
+        .comment-form {
+            margin-top: 20px;
+        }
+
+        .reply-input,
+        .comment-input {
+            display: flex;
+            align-items: center;
+            /* Căn giữa theo chiều dọc */
+            gap: 5px;
+            /* Khoảng cách giữa textarea và nút gửi */
+        }
+
+        .reply-input textarea,
+        .comment-input textarea {
+            width: 100%;
+            height: 80px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+            resize: none;
+            /* Ngăn chặn thay đổi kích thước */
+        }
+
+        .tbnsend {
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .tbnsend img {
+            width: 30px;
+        }
+
+        .dropdown-toggle {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            min-width: 150px;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .col-md-8 {
+                width: 100%;
+                padding: 0 10px;
+            }
+        }
+    </style>
 </div>

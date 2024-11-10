@@ -108,9 +108,10 @@
                                 @endif
                             </a>
                             <span class="quantity">
-                                {{ $item['quantity'] }} × 
+                                {{ $item['quantity'] }} ×
                                 <span class="kobolg-Price-amount amount">
-                                    {{ number_format($item['price'], 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                                    {{ number_format($item['price'], 0) }}<span
+                                        class="kobolg-Price-currencySymbol">₫</span>
                                 </span>
                             </span>
                         </li>
@@ -150,6 +151,8 @@
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
+                position: 'top',
+                toast: true,
                 showCancelButton: true,
                 timer: 3500,
                 confirmButtonText: 'Có',
@@ -179,7 +182,8 @@
                                     icon: 'success',
                                     title: 'Đã xóa!',
                                     text: data.message,
-                                    timer: 1500,
+                                    position: 'top',
+                                    toast: true,
                                     showConfirmButton: false
                                 });
                                 form.closest('.kobolg-mini-cart-item')
@@ -192,7 +196,8 @@
                                     icon: 'error',
                                     title: 'Lỗi!',
                                     text: data.message,
-                                    timer: 1500,
+                                    position: 'top',
+                                    toast: true,
                                     showConfirmButton: false
                                 });
                             }

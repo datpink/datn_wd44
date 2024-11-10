@@ -59,4 +59,42 @@
     @endif
 </div>
 
+@section('scripts')
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+@endsection
+
+<style>
+    .custom-card-header {
+        background-color: #007bff;
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 0.5rem;
+    }
+
+    .custom-btn {
+        color: #ffffff;
+        text-decoration: none;
+        width: 100%;
+        text-align: left;
+    }
+
+    .custom-btn:hover {
+        color: #e0e0e0;
+    }
+
+    .custom-btn:focus {
+        outline: none;
+    }
+
+    .custom-btn i {
+        transition: transform 0.2s;
+    }
+
+    .collapse.show+.card-header .custom-btn i {
+        transform: rotate(180deg);
+    }
+</style>
+
 @endsection

@@ -5,13 +5,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <div class="row">
                 <div class="col-sm-12 col-12">
                     <div class="card">
@@ -198,6 +191,9 @@
             </div>
         </div>
     </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script>
         function confirmChangeStatus(orderId) {
             const selectElement = document.querySelector(`#editOrderStatus${orderId} #status`);
@@ -209,4 +205,17 @@
             return true;
         }
     </script>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: 'top',
+                timer: 3500,
+                toast: true,
+                icon: 'success',
+                title: 'Thành công!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
 @endsection

@@ -78,20 +78,26 @@
                 .then(data => {
                     // Hiện thông báo thành công
                     Swal.fire({
+                        position: 'top',
                         title: 'Thành công!',
                         text: data.success,
                         icon: 'success',
-                        confirmButtonText: 'OK'
+                        toast: true,
+                        confirmButtonText: 'OK',
+                        timer: 3500
                     });
                     this.reset(); // Reset form
                 })
                 .catch(error => {
                     // Hiện thông báo lỗi
                     Swal.fire({
+                        position: 'top',
                         title: 'Có lỗi xảy ra!',
                         text: error.message,
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        toast: true,
+                        confirmButtonText: 'OK',
+                        timer: 3500
                     });
                 });
         });

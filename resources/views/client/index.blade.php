@@ -3,6 +3,14 @@
 @section('title', 'Zaia Enterprise | Điện thoại, Laptop, Phụ kiện chính hãng giá tốt nhất')
 
 @section('content')
+    <style>
+        .img{
+            width: 200px;
+            height: auto;
+            margin: 0 auto;
+            min-height: 230px;
+        }
+    </style>
 
     <div class="fullwidth-template">
         <div class="slide-home-01">
@@ -98,16 +106,18 @@
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
-                                        <a class="thumb-link"
+                                        <div class="img"  style="width: 200px; height: auto;" >
+                                            <a class="thumb-link"
                                             href="{{ route('client.products.product-detail', $product->slug) }}"
                                             tabindex="0">
                                             @if ($product->image_url && \Storage::exists($product->image_url))
                                                 <img src="{{ \Storage::url($product->image_url) }}"
-                                                    alt="{{ $product->name }}" width="270PX" height="350px">
+                                                    alt="{{ $product->name }}">
                                             @else
-                                                Không có ảnh
+                                            
                                             @endif
                                         </a>
+                                        </div>
                                         <div class="flash">
                                             @if ($product->condition === 'new')
                                                 <span class="onsale"><span class="number">-18%</span></span>

@@ -88,10 +88,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('restoreCategory') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -101,10 +102,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('forceDeleteCategory') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -114,10 +116,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 3500
             });
         </script>
     @endif
@@ -131,6 +134,7 @@
                     position: "top",
                     title: 'Bạn có chắc chắn muốn khôi phục danh mục này?',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -155,6 +159,7 @@
                     position: "top",
                     title: 'Bạn có chắc chắn muốn xóa cứng danh mục này?',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',

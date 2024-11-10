@@ -5,18 +5,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -133,10 +121,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -146,10 +135,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 3500
             });
         </script>
     @endif
@@ -165,6 +155,7 @@
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
+                    toast: true,
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',

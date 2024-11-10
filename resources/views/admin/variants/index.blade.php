@@ -84,9 +84,10 @@
                 Swal.fire({
                     position: "top",
                     icon: "success",
+                    toast: true,
                     title: "{{ session('success') }}",
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 3500
                 });
             @endif
 
@@ -99,10 +100,12 @@
                     title: 'Bạn có chắc muốn thay đổi trạng thái?',
                     icon: 'warning',
                     showCancelButton: true,
+                    toast: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
-                    cancelButtonText: 'Hủy'
+                    cancelButtonText: 'Hủy',
+                    timer: 3500
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();
