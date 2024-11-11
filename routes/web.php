@@ -32,6 +32,7 @@ use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -257,4 +258,9 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
+    Route::middleware('auth')->group(function () {
+        Route::post('/favorite/{productId}', [FavoriteController::class, 'addFavorite'])->name('favorite.add');
+        Route::delete('/favorite/{productId}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
+    });
+    
 });
