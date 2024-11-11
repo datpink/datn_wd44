@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->roles()->where('name', 'admin')->exists(); // Kiểm tra xem người dùng có vai trò admin không
     }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'favorites');
+    }
 }
