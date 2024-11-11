@@ -143,6 +143,7 @@ Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name
 
 // thanh toán
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
+Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
 
 
 // Đăng xuất ở admin
