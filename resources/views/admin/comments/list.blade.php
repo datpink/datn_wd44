@@ -273,6 +273,7 @@
                         position: "top",
                         title: 'Bạn có chắc muốn xóa',
                         icon: 'warning',
+                        toast: true,
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
@@ -296,6 +297,7 @@
                 Swal.fire({
                     position: "top",
                     icon: "success",
+                    toast: true,
                     title: "Phản hồi thành công",
                     // text: 'Có quần què gì đâu mà phản với chả hồi?',
                     showConfirmButton: false,
@@ -311,6 +313,7 @@
                 Swal.fire({
                     position: "top",
                     icon: "error",
+                    toast: true,
                     title: "Nhập nội dung phản hồi",
                     // text: 'Có quần què gì đâu mà phản với chả hồi?',
                     showConfirmButton: false,
@@ -326,10 +329,11 @@
                 Swal.fire({
                     position: "top",
                     icon: "success",
+                    toast: true,
                     title: "Xóa thành công",
                     showConfirmButton: false,
                     timerProgressBar: true, // Hiển thị thanh thời gian
-                    timer: 1500
+                    timer: 3500
                 });
             </script>
         @endif
@@ -340,6 +344,7 @@
                 Swal.fire({
                     position: "top",
                     icon: "success",
+                    toast: true,
                     title: "Phản hồi đã được cập nhật.",
                     showConfirmButton: false,
                     timerProgressBar: true, // Hiển thị thanh thời gian

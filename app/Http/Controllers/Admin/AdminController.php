@@ -33,19 +33,19 @@ class AdminController extends Controller
         $userCount = User::count();
         $productCount = Product::count();
 
-                // Lấy danh sách người dùng mua hàng gần đây
-                $recentBuyers = Order::with('user')
-                ->select('user_id', DB::raw('COUNT(*) as order_count'), DB::raw('MAX(created_at) as last_order_time'))
-                ->groupBy('user_id')
-                ->orderBy('last_order_time', 'desc')
-                ->take(5)
-                ->get();
-    
-            // Chuyển đổi last_order_time từ chuỗi thành Carbon
-            foreach ($recentBuyers as $buyer) {
-                $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
-            }
-    
+        // Lấy danh sách người dùng mua hàng gần đây
+        $recentBuyers = Order::with('user')
+            ->select('user_id', DB::raw('COUNT(*) as order_count'), DB::raw('MAX(created_at) as last_order_time'))
+            ->groupBy('user_id')
+            ->orderBy('last_order_time', 'desc')
+            ->take(5)
+            ->get();
+
+        // Chuyển đổi last_order_time từ chuỗi thành Carbon
+        foreach ($recentBuyers as $buyer) {
+            $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
+        }
+
 
         return view('admin.index', compact('title', 'recentBuyers', 'catalogueCount', 'orderCount', 'userCount', 'productCount'));
     }

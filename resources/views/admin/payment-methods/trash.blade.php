@@ -104,6 +104,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timerProgressBar: true,
@@ -128,6 +129,7 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
+                    toast: true,
                     cancelButtonText: 'Hủy',
                     timerProgressBar: true,
                     timer: 3500
@@ -147,8 +149,9 @@
                 icon: "success",
                 title: "Khôi phục phương thức thanh toán thành công",
                 showConfirmButton: false,
+                toast: true,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -158,10 +161,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "Xóa cứng phương thức thanh toán thành công",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -171,10 +175,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 3500
             });
         </script>
     @endif

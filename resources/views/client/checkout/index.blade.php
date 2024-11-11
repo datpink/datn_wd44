@@ -189,7 +189,9 @@
                                                             $lineTotal = $product['price'] * $product['quantity'];
                                                             $totalAmount += $lineTotal;
                                                         @endphp
-                                                        <span>{{ number_format($lineTotal, 2, ',', '.') }}₫</span>
+                                                        <span>
+                                                            {{ $lineTotal == floor($lineTotal) ? number_format($lineTotal, 0, ',', '.') : number_format($lineTotal, 2, ',', '.') }}₫
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -202,7 +204,7 @@
                                                 <td>
                                                     <span class="kobolg-Price-amount amount">
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
-                                                        {{ number_format($totalAmount, 2, ',', '.') }}
+                                                        {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -223,7 +225,7 @@
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            {{ number_format($totalAmount, 2, ',', '.') }}
+                                                            {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
                                                         </span>
                                                     </strong>
                                                 </td>
@@ -233,23 +235,30 @@
 
                                     <input type="hidden" name="lang" value="en">
                                     <div id="payment" class="kobolg-checkout-payment">
-                                        <ul class="wc_payment_methods payment_methods methods">
-                                            <div class="payment-methods">
-                                                <h3>Phương thức thanh toán</h3>
-                                                <ul class="wc_payment_methods">
+                                        <div class="payment-methods">
+                                            <h3>Phương thức thanh toán</h3>
+                                            <ul class="wc_payment_methods payment_methods methods">
+                                                @if ($paymentMethods->isNotEmpty())
                                                     @foreach ($paymentMethods as $method)
-                                                        <li class="wc_payment_method payment_method_{{ $method->id }}">
-                                                            <input id="payment_method_{{ $method->id }}" type="radio"
-                                                                class="input-radio" name="payment_method"
-                                                                value="{{ $method->id }}"
-                                                                @if ($loop->first) checked="checked" @endif>
-                                                            <label
-                                                                for="payment_method_{{ $method->id }}">{{ $method->name }}</label>
-                                                        </li>
+                                                        @if ($method->status === 'active')
+                                                            <!-- Kiểm tra trạng thái -->
+                                                            <li
+                                                                class="wc_payment_method payment_method_{{ $method->id }}">
+                                                                <input id="payment_method_{{ $method->id }}"
+                                                                    type="radio" class="input-radio"
+                                                                    name="payment_method" value="{{ $method->id }}"
+                                                                    @if ($loop->first) checked="checked" @endif>
+                                                                <label
+                                                                    for="payment_method_{{ $method->id }}">{{ $method->name }}</label>
+                                                            </li>
+                                                        @endif
                                                     @endforeach
-                                                </ul>
-                                            </div>
-                                        </ul>
+                                                @else
+                                                    <li class="wc_payment_method">Không có phương thức thanh toán nào khả
+                                                        dụng.</li>
+                                                @endif
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 
