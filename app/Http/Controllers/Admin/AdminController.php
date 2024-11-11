@@ -10,6 +10,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class AdminController extends Controller
 {
@@ -30,7 +33,21 @@ class AdminController extends Controller
         $userCount = User::count();
         $productCount = Product::count();
 
-        return view('admin.index', compact('title', 'catalogueCount', 'orderCount', 'userCount', 'productCount'));
+        // Lấy danh sách người dùng mua hàng gần đây
+        $recentBuyers = Order::with('user')
+            ->select('user_id', DB::raw('COUNT(*) as order_count'), DB::raw('MAX(created_at) as last_order_time'))
+            ->groupBy('user_id')
+            ->orderBy('last_order_time', 'desc')
+            ->take(5)
+            ->get();
+
+        // Chuyển đổi last_order_time từ chuỗi thành Carbon
+        foreach ($recentBuyers as $buyer) {
+            $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
+        }
+
+
+        return view('admin.index', compact('title', 'recentBuyers', 'catalogueCount', 'orderCount', 'userCount', 'productCount'));
     }
 
     // Hiển thị thông tin cá nhân của admin

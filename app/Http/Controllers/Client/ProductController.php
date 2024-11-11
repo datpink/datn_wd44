@@ -120,7 +120,7 @@ class ProductController extends Controller
 
         return response()->json([
             'data' => $products,
-    ]);
+        ]);
     }
 
 
@@ -188,7 +188,13 @@ class ProductController extends Controller
         $maxDiscountPrice = Product::max('discount_price');
         $catalogues = Catalogue::where('slug', $parentSlug)->firstOrFail();
         // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
+        // dd($catalogues->id);
+        $variants = Attribute::with('attributeValues')->get();
+        // màu
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
 
+        // dung lượng
+        $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
 
         if ($childSlug) {
             // dd($childCatalogues);
@@ -213,7 +219,7 @@ class ProductController extends Controller
         $productByCatalogues = Product::with('catalogue')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1)
-            ->paginate(10);
+            ->paginate(6);
 
         // dd($productByCatalogues);
         foreach ($productByCatalogues as $product) {
@@ -222,7 +228,87 @@ class ProductController extends Controller
 
 
 
-        return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID'));
+        return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID', 'variants', 'variant_values', 'variant_storage_values', 'catalogues', 'childCatalogues'));
+    }
+
+    public function productByCataloguesApi(Request $request)
+    {
+
+        // return response()->json(['data' => $request->all()]);
+        $attributeValueId = $request->input('attribute_id');
+        $attributeStorageId = $request->input('attribute_storage_value_id');
+
+        $parent_id = $request->input('parent_id');
+        $child_id = $request->input('child_id');
+
+        $minDiscountPrice = Product::min('discount_price');
+        $maxDiscountPrice = Product::max('discount_price');
+
+        $catalogues = Catalogue::where('id', $parent_id)->firstOrFail();
+        // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
+
+        $variants = Attribute::with('attributeValues')->get();
+        // màu
+        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
+
+        // dung lượng
+        $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
+
+        if ($child_id) {
+            // dd($childCatalogues);
+
+            $childCatalogues = Catalogue::where('id', $child_id)
+                ->where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+
+            // dd($childCatalogues);
+            // return response()->json(['datahah' => $childCatalogues]);
+        } else {
+            $childCatalogues = Catalogue::where('parent_id', $catalogues->id)
+                ->where('status', 'active')
+                ->pluck('id');
+        }
+
+
+
+        $parentCataloguesID = $childCatalogues;
+
+
+        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
+            ->whereIn('catalogue_id', $childCatalogues)
+            ->where('is_active', 1);
+
+
+        if ($attributeValueId && $attributeStorageId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId, $attributeStorageId) {
+                $query->where('attribute_values.id', $attributeValueId)
+                    ->orWhere('attribute_values.id', $attributeStorageId);
+            });
+        } elseif ($attributeValueId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+                $query->where('attribute_values.id', $attributeValueId);
+            });
+        } elseif ($attributeStorageId) {
+            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeStorageId) {
+                $query->where('attribute_values.id', $attributeStorageId);
+            });
+        }
+
+
+        $productByCatalogues = $productByCatalogues->get();
+        return response()->json(['data' => $productByCatalogues]);
+
+
+        // dd($productByCatalogues);
+        foreach ($productByCatalogues as $product) {
+            $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
+        }
+
+
+        return response()->json(['data' => $productByCatalogues]);
+
+        // return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID', 'variants', 'variant_values', 'variant_storage_values'));
     }
 
     public function filterByPrice(Request $request)
@@ -252,12 +338,21 @@ class ProductController extends Controller
             $products->whereIn('catalogue_id', $parentCataloguesID);
         }
 
-        $products = $products->get();
-        // dd($products);
-        // dd($minPrice, $maxPrice);
+        // $products = $products->get();
+        // // dd($products);
+        // // dd($minPrice, $maxPrice);
 
 
-        return response()->json(['products' => $products]);
+        // return response()->json(['products' => $products]);
+        // Thêm phân trang
+        $products = $products->paginate(6); // 10 sản phẩm mỗi trang
+
+        return response()->json([
+            'products' => $products->items(),
+            'current_page' => $products->currentPage(),
+            'last_page' => $products->lastPage(),
+            'total' => $products->total(),
+        ]);
     }
     public function search(Request $request)
     {
@@ -289,7 +384,7 @@ class ProductController extends Controller
         $products->where('is_active', 1);
 
         // Paginate the results
-        $products = $products->paginate(9);
+        $products = $products->paginate(6);
 
         // Get the maximum discount price from the database
         $maxDiscountPrice = Product::max('discount_price');
@@ -406,16 +501,16 @@ class ProductController extends Controller
             'rating' => 'required|integer|between:1,5',
             'review' => 'nullable|string|max:1000',
         ]);
-    
+
         // Kiểm tra xem người dùng đã có đơn hàng hay chưa
         $hasOrder = Order::where('user_id', Auth::id())
             ->where('status', 'completed') // hoặc trạng thái phù hợp với yêu cầu
             ->exists();
-    
+
         if (!$hasOrder) {
             return redirect()->back()->with('error', 'Bạn cần có ít nhất một đơn hàng để đánh giá sản phẩm.');
         }
-    
+
         // Lưu đánh giá
         ProductReview::create([
             'product_id' => $productId,
@@ -423,10 +518,10 @@ class ProductController extends Controller
             'rating' => $request->input('rating'),
             'review' => $request->input('review'),
         ]);
-    
+
         return redirect()->back()->with('success', 'Đánh giá của bạn đã được thêm!');
     }
-    
+
     // Phương thức lưu phản hồi đánh giá
     public function storeResponse(Request $request, $reviewId)
     {

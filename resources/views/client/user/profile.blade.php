@@ -60,10 +60,11 @@
     Swal.fire({
         position: 'top',
         icon: 'success',
+        toast: true,
         title: '{{ session('success') }}',
         showConfirmButton: false,
         timerProgressBar: true,
-        timer: 1500
+        timer: 3500
     });
 </script>
 @endif
@@ -74,6 +75,8 @@
         position: 'top',
         icon: 'error',
         title: 'Oops...',
+        toast: true,
+        timer: 3500,
         html: '<ul class="list-unstyled">' +
             @foreach ($errors->all() as $error)
             '<li>{{ $error }}</li>' +

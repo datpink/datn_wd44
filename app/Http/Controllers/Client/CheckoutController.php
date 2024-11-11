@@ -3,37 +3,37 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\PaymentMethod; // Import model PaymentMethod
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
-    public function index(Request $request)
+    public function showCheckout(Request $request)
     {
-        $selectedProducts = $request->input('products');
+        // Lấy danh sách ID sản phẩm từ input 'selected_products'
+        $selectedProducts = json_decode($request->input('selected_products'), true);
 
-        // Lấy thông tin chi tiết sản phẩm từ database dựa trên $selectedProducts
-        $products = Product::whereIn('id', array_column($selectedProducts, 'id'))->get();
+        // Kiểm tra nếu không có sản phẩm nào được chọn
+        if (empty($selectedProducts)) {
+            return redirect()->back()->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+        }
 
-        // Truyền dữ liệu sang view checkout
-        return view('checkout.index', compact('products', 'selectedProducts'));
-    }
+        // Lấy thông tin chi tiết của các sản phẩm đã chọn
+        $products = [];
+        foreach ($selectedProducts as $productId) {
+            if (session("cart.$productId")) {
+                $products[] = session("cart.$productId");
+            }
+        }
 
-    public function store(Request $request)
-    {
-        // Xử lý logic thanh toán
-        // Kiểm tra thông tin đầu vào, lưu trữ đơn hàng, ...
+        // Lấy thông tin người dùng đã đăng nhập
+        $user = Auth::user();
 
-        // Ví dụ kiểm tra thông tin thanh toán
-        $request->validate([
-            'billing_first_name' => 'required|string|max:255',
-            'billing_email' => 'required|email|max:255',
-            // Thêm các trường khác cần thiết
-        ]);
+        // Lấy danh sách phương thức thanh toán từ cơ sở dữ liệu
+        $paymentMethods = PaymentMethod::all();
 
-        // Thực hiện thanh toán, có thể sử dụng PayPal, Stripe hoặc phương thức thanh toán khác
-
-        // Sau khi thành công, chuyển hướng đến trang cảm ơn
-        return redirect()->route('thankyou')->with('success', 'Đơn hàng đã được đặt thành công!');
+        // Chuyển đến view thanh toán và truyền dữ liệu
+        return view('client.checkout.index', compact('products', 'user', 'paymentMethods'));
     }
 }

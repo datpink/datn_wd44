@@ -19,8 +19,8 @@
                                     <li id="menu-item-886"
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
                                         <a class="azeroth-menu-item-title" title="menu"
-                                            href="{{ route('client.productByCatalogues', $catalogue->slug) }}"><span
-                                                class="icon flaticon-technology"></span>{{ $catalogue->name }}</a>
+                                            href="{{ route('client.productByCatalogues', $catalogue->slug) }}">
+                                            <img src="{{ asset('storage/' . $catalogue->image) }}" width="20px" height="20px" class="icon flaticon-console"> {{ $catalogue->name }}</a>
                                     </li>
                                 @endif
                             @endforeach
@@ -63,8 +63,7 @@
                                                                 @if ($child->status === 'active')
                                                                     <!-- Kiểm tra trạng thái cho child -->
                                                                     <li>
-                                                                        <a
-                                                                            href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
+                                                                        <a href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
                                                                     </li>
                                                                 @endif
                                                             @endforeach

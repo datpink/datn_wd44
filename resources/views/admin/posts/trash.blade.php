@@ -6,12 +6,6 @@
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
             <div class="card">
-                {{-- @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if (session('errors'))
-                    <div class="alert alert-danger">{{ session('errors') }}</div>
-                @endif --}}
                 <div class="card-header">
                     <div class="card-title">Thùng Rác Bài Viết</div>
                     <a href="{{ route('posts.index') }}" class="btn btn-secondary btn-rounded">
@@ -84,10 +78,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -97,10 +92,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 3500
             });
         </script>
     @endif
@@ -118,6 +114,7 @@
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
+                    toast: true,
                     cancelButtonText: 'Hủy',
                     timer: 3500
                 }).then((result) => {
@@ -139,6 +136,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timer: 3500

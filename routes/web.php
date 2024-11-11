@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\admin\AdvertisementController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
@@ -125,6 +126,11 @@ Route::prefix('shop')->group(function () {
     Route::post('/profile/update/{id}', [UserController::class, 'updateProfile'])->name('profile.update');
     Route::get('/profile/edit-password', [UserController::class, 'editPassword'])->name('profile.edit-password');
     Route::post('profile/update-password/{id}', [UserController::class, 'updatePassword'])->name('profile.update-password');
+
+    //route cho trang lịch sử đơn hàng
+    Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
+    Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
+
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
@@ -137,8 +143,7 @@ Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name
 
 
 // thanh toán
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 
 
 // Đăng xuất ở admin
@@ -221,7 +226,8 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::post('banners/{id}/restore', [BannerController::class, 'restore'])->name('banners.restore');
     Route::delete('banners/{id}/force-delete', [BannerController::class, 'forceDelete'])->name('banners.forceDelete');
 
-
+    // Route resource cho quảng cáo
+    Route::resource('admin/advertisements', AdvertisementController::class);
 
     // //Route product variant
     // Route::resource('product-variants', ProductVariantController::class);
