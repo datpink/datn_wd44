@@ -110,9 +110,6 @@ Route::prefix('shop')->group(function () {
         return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
     })->name('privacy.policy');
 
-    Route::get('/privacy-policy', function () {
-        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
-    })->name('privacy.policy');
 
     Route::get('/contact', [App\Http\Controllers\Client\ContactController::class, 'index'])->name('contact.index');
     Route::post('/contact', [App\Http\Controllers\Client\ContactController::class, 'store'])->name('contact.store');
@@ -262,5 +259,5 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/favorite/{productId}', [FavoriteController::class, 'addFavorite'])->name('favorite.add');
         Route::delete('/favorite/{productId}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
     });
-    
+
 });

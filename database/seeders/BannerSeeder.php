@@ -19,7 +19,7 @@ class BannerSeeder extends Seeder
             'title' => 'Black Friday Sale',
             'description' => 'Amazing Black Friday Deals on Electronics',
             'button_text' => 'Shop Now',
-            'button_link' => '/shop/electronics',
+            'button_link' => 'http://127.0.0.1:8000',
             'status' => 'active', // Đảm bảo 'active' là chuỗi
         ]);
 
@@ -28,7 +28,7 @@ class BannerSeeder extends Seeder
             'title' => 'Summer Collection 50% Off',
             'description' => 'Get the latest summer trends at half the price!',
             'button_text' => 'Discover More',
-            'button_link' => '/shop/summer',
+            'button_link' => 'http://127.0.0.1:8000',
             'status' => 'active', // Đảm bảo 'active' là chuỗi
         ]);
 
@@ -37,7 +37,7 @@ class BannerSeeder extends Seeder
             'title' => 'New Arrivals',
             'description' => 'Check out the latest fashion and gadgets!',
             'button_text' => 'Browse Now',
-            'button_link' => '/shop/new',
+            'button_link' => 'http://127.0.0.1:8000',
             'status' => 'inactive', // Đảm bảo 'inactive' là chuỗi
         ]);
     }
