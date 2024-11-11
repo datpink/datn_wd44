@@ -43,42 +43,10 @@
                                     <div class="kobolg-form-login-toggle">
                                         <div class="kobolg-info">
                                             Khách hàng quay lại?
-                                            <a href="javascript:void(0);" class="showlogin">Nhấp
+                                            <a href=" {{ route('login') }}" class="showlogin">Nhấp
                                                 vào đây để đăng nhập</a>
                                         </div>
                                     </div>
-                                    <form id="ajaxLoginForm" class="kobolg-form kobolg-form-login login" method="post"
-                                        style="display:none;">
-                                        <p>Nếu bạn đã mua sắm với chúng tôi trước đây, vui lòng nhập thông tin của bạn dưới
-                                            đây. Nếu bạn là khách hàng mới, hãy tiếp tục đến phần Thanh toán & Giao hàng.
-                                        </p>
-                                        <p class="form-row form-row-first">
-                                            <label for="username">Tên người dùng hoặc email&nbsp;<span
-                                                    class="required">*</span></label>
-                                            <input type="text" class="input-text" name="username" id="username"
-                                                autocomplete="username" required>
-                                        </p>
-                                        <p class="form-row form-row-last">
-                                            <label for="password">Mật khẩu&nbsp;<span class="required">*</span></label>
-                                            <input class="input-text" type="password" name="password" id="password"
-                                                autocomplete="current-password" required>
-                                        </p>
-                                        <div class="clear"></div>
-                                        <p class="form-row">
-                                            <button type="submit" class="button" name="login" value="Login">Đăng
-                                                nhập</button>
-                                            <label class="kobolg-form__label kobolg-form__label-for-checkbox inline">
-                                                <input class="kobolg-form__input kobolg-form__input-checkbox"
-                                                    name="rememberme" type="checkbox" id="rememberme" value="forever">
-                                                <span>Nhớ tôi</span>
-                                            </label>
-                                        </p>
-                                        <p class="lost_password">
-                                            <a href="#">Quên mật khẩu?</a>
-                                        </p>
-                                        <div class="clear"></div>
-                                        <div id="loginMessage"></div> <!-- Thông báo thành công hoặc lỗi -->
-                                    </form>
                                 </div>
 
                                 <div class="kobolg-checkout-coupon">
@@ -122,8 +90,8 @@
                                                     </p>
                                                     <p class="form-row form-row-wide addresses-field validate-required"
                                                         data-priority="50">
-                                                        <labe>Địa chỉ&nbsp;<abbr class="required">*</abbr>
-                                                        </labe>
+                                                        <label>Địa chỉ&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
                                                         <span class="kobolg-input-wrapper">
                                                             <input type="text" class="input-text"
                                                                 name="billing_addresses_1"
@@ -154,13 +122,15 @@
                                                     </p>
                                                 </div>
                                             </div>
+                                        @else
+                                            <div class="kobolg-account-fields">
+                                                <p class="hover-red" style="margin-top: 50px; padding-top: 40px">
+                                                    <a href="{{ route('login') }}">Tạo tài khoản</a> <i
+                                                        class="fas fa-arrow-right ml-2"></i>
+                                                </p>
+                                            </div>
                                         @endif
-                                        <div class="kobolg-account-fields">
-                                            <p class="hover-red" style="margin-top: 50px; padding-top: 40px">
-                                                <a href="{{ route('login') }}">Tạo tài khoản</a> <i
-                                                    class="fas fa-arrow-right ml-2"></i>
-                                            </p>
-                                        </div>
+
 
 
 
@@ -236,6 +206,17 @@
                                                     </span>
                                                 </td>
                                             </tr>
+                                            <!-- Dòng giảm giá -->
+                                            <tr class="cart-discount" style="display: none;">
+                                                <th>Giảm giá</th>
+                                                <td>
+                                                    <span class="kobolg-Price-amount amount">
+                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                        -{{ number_format($discount, 2, ',', '.') }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr class="order-total">
                                             <tr class="order-total">
                                                 <th>Tổng cộng</th>
                                                 <td>
@@ -286,6 +267,20 @@
             </div>
         </div>
     </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Lấy các nút và form
 
+            const showCouponButton = document.querySelector('.showcoupon');
+            const couponForm = document.querySelector('.checkout_coupon');
+
+            // Thêm sự kiện nhấp vào nút hiển thị form mã giảm giá
+            if (showCouponButton && couponForm) {
+                showCouponButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    couponForm.style.display = couponForm.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+        });
+    </script>
 @endsection
-
