@@ -140,8 +140,11 @@
                                     <div class="group-button clearfix">
                                         <div class="yith-wcwl-add-to-wishlist">
                                             <div class="yith-wcwl-add-button show">
-                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                <a href="#" class="add_to_wishlist" data-product-id="{{ $product->id }}">
+                                                    {{ auth()->user()->favorites->contains($product->id) ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}
+                                                </a>
                                             </div>
+                                            
                                         </div>
                                         <div class="add-to-cart">
                                             <a href="#" class="button product_type_grouped">View products</a>
@@ -632,3 +635,37 @@
         </div>
     </div>
 @endsection
+<script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.add_to_wishlist').forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                // Lấy product ID từ thuộc tính data
+                const productId = this.getAttribute('data-product-id');
+
+                // Kiểm tra xem hiện tại là thêm hay bỏ yêu thích
+                const isFavorite = this.textContent.trim() === 'Bỏ yêu thích';
+
+                // Gửi yêu cầu AJAX để thêm hoặc bỏ sản phẩm khỏi danh sách yêu thích
+                fetch(`/favorites/${isFavorite ? 'remove' : 'add'}/${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Cập nhật nội dung nút sau khi yêu thích hoặc bỏ yêu thích
+                    this.textContent = isFavorite ? 'Thêm vào yêu thích' : 'Bỏ yêu thích';
+                    alert(data.message); // Hiển thị thông báo phản hồi
+                })
+                .catch(error => console.error('Lỗi:', error));
+            });
+        });
+    });
+</script>
+
+</script>
