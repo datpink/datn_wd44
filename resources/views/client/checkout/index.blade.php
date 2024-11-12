@@ -208,17 +208,21 @@
                                                     </span>
                                                 </td>
                                             </tr>
+
                                             <!-- Dòng giảm giá -->
-                                            <tr class="cart-discount" style="display: none;">
+                                            <!-- Hiển thị giảm giá nếu có -->
+                                            <tr class="cart-discount"
+                                                style="display: {{ session('discount_value') ? 'table-row' : 'none' }};">
                                                 <th>Giảm giá</th>
                                                 <td>
                                                     <span class="kobolg-Price-amount amount">
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
-                                                        -{{ number_format($discount, 2, ',', '.') }}
+                                                        -{{ session('discount_value') ? number_format(session('discount_value'), 0, ',', '.') : 0 }}
                                                     </span>
                                                 </td>
                                             </tr>
-                                            <tr class="order-total">
+
+                                            <!-- Hiển thị tổng cộng -->
                                             <tr class="order-total">
                                                 <th>Tổng cộng</th>
                                                 <td>
@@ -230,6 +234,7 @@
                                                     </strong>
                                                 </td>
                                             </tr>
+
                                         </tfoot>
                                     </table>
 
@@ -290,6 +295,50 @@
                     couponForm.style.display = couponForm.style.display === 'none' ? 'block' : 'none';
                 });
             }
+        });
+        document.querySelector('.checkout_coupon.kobolg-form-coupon').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const couponCode = document.querySelector('#coupon_code').value;
+            fetch('{{ route('applyCoupon') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        coupon_code: couponCode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Kiểm tra sự tồn tại của phần tử trước khi thao tác
+                        const discountElement = document.querySelector('.cart-discount .amount');
+                        if (discountElement) {
+                            // Hiển thị tổng tiền giảm giá
+                            document.querySelector('.cart-discount').style.display = 'table-row';
+                            discountElement.textContent = '-' + new Intl
+                                .NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(data.discount);
+                        }
+
+                        // Kiểm tra sự tồn tại của phần tử tổng cộng trước khi cập nhật
+                        const totalElement = document.querySelector('.cart-total .total-price');
+                        if (totalElement) {
+                            document.querySelector('.cart-total .total-price').textContent = new Intl
+                                .NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(data.final_amount); // Hiển thị tổng tiền sau giảm giá
+                        }
+                    } else {
+                        alert('Mã giảm giá không hợp lệ');
+                    }
+                })
+
+
         });
     </script>
 @endsection
