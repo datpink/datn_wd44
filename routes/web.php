@@ -27,6 +27,11 @@ use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\ProductCommentController;
+use App\Http\Controllers\Admin\ProductCommentReplyController;
+use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\Admin\ReviewResponseController;
+
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
@@ -188,6 +193,29 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //  route reply comment post
     Route::get('comments/{comment}/reply/{reply}/edit', [CommentReplyController::class, 'editReply'])->name('comments.reply.edit');
     Route::put('comments/{comment}/reply/{reply}', [CommentReplyController::class, 'updateReply'])->name('comments.reply.update');
+    Route::resource('product-comments', ProductCommentController::class);
+
+    // Phản hồi bình luận sản phẩm (trả lời cho bình luận sản phẩm)
+    Route::post('product-comments/respond/{id}', [ProductCommentController::class, 'respond'])->name('product-comments.respond');
+    Route::get('product-comments-trash', [ProductCommentController::class, 'trash'])->name('product-comments.trash');
+    Route::patch('product-comments/{id}/restore', [ProductCommentController::class, 'restore'])->name('product-comments.restore');
+    Route::delete('product-comments/{id}/delete-permanently', [ProductCommentController::class, 'deletePermanently'])->name('product-comments.delete-permanently');
+
+    // Quản lý trả lời bình luận sản phẩm
+    Route::get('product-comments/{comment}/reply/{reply}/edit', [ProductCommentReplyController::class, 'editReply'])->name('product-comments.reply.edit');
+    Route::put('product-comments/{comment}/reply/{reply}', [ProductCommentReplyController::class, 'updateReply'])->name('product-comments.reply.update');
+    // Đánh giá
+    Route::resource('product-reviews', ProductReviewController::class);
+
+    // Quản lý đánh giá sản phẩm
+    Route::post('product-reviews/respond/{id}', [ProductReviewController::class, 'respond'])->name('product-reviews.respond');
+    Route::get('product-reviews-trash', [ProductReviewController::class, 'trash'])->name('product-reviews.trash');
+    Route::patch('product-reviews/{id}/restore', [ProductReviewController::class, 'restore'])->name('product-reviews.restore');
+    Route::delete('product-reviews/{id}/delete-permanently', [ProductReviewController::class, 'deletePermanently'])->name('product-reviews.delete-permanently');
+
+    // Quản lý phản hồi đánh giá sản phẩm
+    Route::get('product-reviews/{review}/response/{response}/edit', [ReviewResponseController::class, 'editResponse'])->name('product-reviews.response.edit');
+    Route::put('product-reviews/{review}/response/{response}', [ReviewResponseController::class, 'updateResponse'])->name('product-reviews.response.update');
 
 
     // Route Order

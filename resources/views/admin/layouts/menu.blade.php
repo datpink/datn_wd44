@@ -45,6 +45,16 @@
                                 <a href="{{ route('attributes.index') }}">Thuộc tính</a>
                             </li>
                         </ul>
+                        <ul>
+                            <li>
+                                <a href="{{ route('product-comments.index') }}">Bình luận</a>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <a href="{{ route('product-reviews.index') }}">Đánh giá</a>
+                            </li>
+                        </ul>
                     </div>
                 </li>
 
