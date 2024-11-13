@@ -21,21 +21,24 @@ class AdminController extends Controller
         Auth::logout();
         $request->session()->invalidate(); // Xóa session
         $request->session()->regenerateToken(); // Regenerate CSRF token
-        return redirect()->route('client.index')->withCookie(Cookie::forget('laravel_session'));
+        return redirect()->route('client.index')
+                         ->withCookie(Cookie::forget('laravel_session'));
     }
 
-    // Trang chính của admin
+    // Trang chính của admin`
     public function index()
     {
         $title = 'Trang Quản Trị';
-        $catalogueCount = Catalogue::count();
-        $orderCount = Order::count();
-        $userCount = User::count();
-        $productCount = Product::count();
+
+        $catalogueCount = Catalogue ::count();
+        $orderCount     = Order     ::count();
+        $userCount      = User      ::count();
+        $productCount   = Product   ::count();
 
         // Lấy danh sách người dùng mua hàng gần đây
         $recentBuyers = Order::with('user')
-            ->select('user_id', DB::raw('COUNT(*) as order_count'), DB::raw('MAX(created_at) as last_order_time'))
+            ->select('user_id', DB::raw('COUNT(*) as order_count'),
+                                         DB::raw('MAX(created_at) as last_order_time'))
             ->groupBy('user_id')
             ->orderBy('last_order_time', 'desc')
             ->take(5)
@@ -46,8 +49,14 @@ class AdminController extends Controller
             $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
         }
 
-
-        return view('admin.index', compact('title', 'recentBuyers', 'catalogueCount', 'orderCount', 'userCount', 'productCount'));
+        return view('admin.index', compact(
+                                             'title',
+                                            'recentBuyers',
+                                                       'catalogueCount',
+                                                       'orderCount',
+                                                       'userCount',
+                                                       'productCount'
+                                                      ));
     }
 
     // Hiển thị thông tin cá nhân của admin
@@ -62,6 +71,9 @@ class AdminController extends Controller
     {
         $title = 'Quản Lý Người Dùng';
         $users = User::with('roles')->paginate(10); // Lấy danh sách người dùng kèm theo vai trò của họ
-        return view('admin.users.index', compact('users', 'title'));
+        return view('admin.users.index', compact(
+                                                    'users',
+                                                   'title'
+                                                            ));
     }
 }
