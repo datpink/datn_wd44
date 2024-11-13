@@ -233,16 +233,21 @@ class ProductController extends Controller
 
     public function productByCataloguesApi(Request $request)
     {
+        // dd($request->all());
 
         // return response()->json(['data' => $request->all()]);
         $attributeValueId = $request->input('attribute_id');
         $attributeStorageId = $request->input('attribute_storage_value_id');
 
         $parent_id = $request->input('parent_id');
-        $child_id = $request->input('child_id');
+        $child_id = json_decode($request->input('child_id'), true); // Chuyển đổi chuỗi JSON thành mảng
+
 
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
+
+
+        $orderby = $request->input('orderby');
 
         $catalogues = Catalogue::where('id', $parent_id)->firstOrFail();
         // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
@@ -254,57 +259,78 @@ class ProductController extends Controller
         // dung lượng
         $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
 
-        if ($child_id) {
-            // dd($childCatalogues);
 
-            $childCatalogues = Catalogue::where('id', $child_id)
-                ->where('parent_id', $catalogues->id)
+
+        // Xử lý các danh mục con
+        if ($child_id) {
+            $childCatalogues = Catalogue::whereIn('id', $child_id)
+                ->where('parent_id', $parent_id)
                 ->where('status', 'active')
                 ->pluck('id');
-
-            // dd($childCatalogues);
-            // return response()->json(['datahah' => $childCatalogues]);
         } else {
-            $childCatalogues = Catalogue::where('parent_id', $catalogues->id)
+            $childCatalogues = Catalogue::where('parent_id', $parent_id)
                 ->where('status', 'active')
                 ->pluck('id');
         }
-
-
-
         $parentCataloguesID = $childCatalogues;
-
 
         $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1);
 
 
+        // if ($orderby) {
+        //     switch ($orderby) {
+        //         case 'price-asc':
+        //             $productByCatalogues->orderBy('discount_price', 'asc');
+        //             break;
+        //         case 'price-desc':
+        //             $productByCatalogues->orderBy('discount_price', 'desc');
+        //             break;
+        //         default:
+        //             $productByCatalogues->orderBy('id', 'desc');
+        //             break;
+        //     }
+        // }
+
+        // Áp dụng bộ lọc theo attribute
         if ($attributeValueId && $attributeStorageId) {
-            $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId, $attributeStorageId) {
-                $query->where('attribute_values.id', $attributeValueId)
-                    ->orWhere('attribute_values.id', $attributeStorageId);
+            // Kiểm tra sản phẩm có cả 2 thuộc tính màu và dung lượng trong cùng một biến thể
+            $productByCatalogues->whereHas('variants', function ($query) use ($attributeValueId, $attributeStorageId) {
+                $query->whereHas('attributeValues', function ($query) use ($attributeValueId) {
+                    $query->where('attribute_values.id', $attributeValueId); // Lọc theo màu
+                })
+                    ->whereHas('attributeValues', function ($query) use ($attributeStorageId) {
+                        $query->where('attribute_values.id', $attributeStorageId); // Lọc theo dung lượng
+                    });
             });
         } elseif ($attributeValueId) {
+            // Chỉ lọc theo màu
             $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
                 $query->where('attribute_values.id', $attributeValueId);
             });
         } elseif ($attributeStorageId) {
+            // Chỉ lọc theo dung lượng
             $productByCatalogues->whereHas('variants.attributeValues', function ($query) use ($attributeStorageId) {
                 $query->where('attribute_values.id', $attributeStorageId);
             });
         }
 
 
+
+        // Lọc theo giá nếu có
+        $minPrice = $request->input('price_min');
+        $maxPrice = $request->input('price_max');
+        // dd($minPrice);
+
+        $productByCatalogues->whereBetween('discount_price', [$minPrice, $maxPrice]);
+
+        // Lấy dữ liệu sản phẩm
         $productByCatalogues = $productByCatalogues->get();
-        return response()->json(['data' => $productByCatalogues]);
 
-
-        // dd($productByCatalogues);
         foreach ($productByCatalogues as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
-
 
         return response()->json(['data' => $productByCatalogues]);
 
