@@ -6,13 +6,6 @@
     <div class="content-wrapper-scroll">
         <div class="content-wrapper p-4">
 
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
             <div class="card border-0 rounded shadow-sm">
 
                 <div class="card-header d-flex justify-content-between align-items-center">
@@ -99,6 +92,7 @@
                     position: "top",
                     title: 'Bạn có chắc chắn muốn xóa cứng không?',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -122,6 +116,7 @@
                     position: "top",
                     title: 'Bạn có chắc muốn khôi phục lại danh mục?',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -143,10 +138,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "Khôi phục danh mục thành công",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -156,10 +152,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "Xóa cứng danh mục thành công",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -169,10 +166,12 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "{{ session('error') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 2500
+                timer: 2
+                3500
             });
         </script>
     @endif

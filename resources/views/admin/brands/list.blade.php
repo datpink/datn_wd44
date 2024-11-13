@@ -9,19 +9,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -124,9 +111,10 @@
                 position: "top",
                 icon: "success",
                 title: "Thêm thành công",
+                toast: true,
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -141,6 +129,7 @@
                     title: 'Bạn có chắc muốn xóa',
                     icon: 'warning',
                     showCancelButton: true,
+                    toast: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
@@ -162,10 +151,11 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "Có lỗi xảy ra",
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -175,10 +165,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "Xóa thành công",
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif

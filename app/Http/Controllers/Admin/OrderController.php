@@ -18,17 +18,17 @@ class OrderController extends Controller
     {
         $title = 'Danh Sách Đơn Hàng';
 
-        // Lấy danh sách đơn hàng mới
-        $newOrders = Order::where('is_new', true)->get();
-        $newOrderIds = $newOrders->pluck('id')->toArray(); // Lấy ID đơn hàng mới
-        $newOrdersCount = $newOrders->count(); // Đếm số lượng đơn hàng mới
+        // // Lấy danh sách đơn hàng mới
+        // $newOrders = Order::where('is_new', true)->with('user')->get();
+        // $newOrderIds = $newOrders->pluck('id')->toArray(); // Lấy ID đơn hàng mới
+        // $newOrdersCount = $newOrders->count(); // Đếm số lượng đơn hàng mới
 
         $query = Order::query();
 
-        // Kiểm tra xem có tham số status không
-        if ($request->has('status') && $request->status === 'new') {
-            $query->where('is_new', true); // Lọc chỉ các đơn hàng mới
-        }
+        // // Kiểm tra xem có tham số status không
+        // if ($request->has('status') && $request->status === 'new') {
+        //     $query->where('is_new', true); // Lọc chỉ các đơn hàng mới
+        // }
 
         // Tìm kiếm (nếu có)
         if ($request->has('search')) {
@@ -47,9 +47,8 @@ class OrderController extends Controller
 
         $orders = $query->paginate(10); // Lấy danh sách đơn hàng
 
-        return view("admin.orders.index", compact("orders", "title", "newOrdersCount", "newOrderIds"));
+        return view("admin.orders.index", compact("orders", "title"));
     }
-
 
 
     public function show($id)

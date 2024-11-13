@@ -5,18 +5,6 @@
 @section('content')
     <div class="content-wrapper-scroll">
         <div class="content-wrapper">
-            {{-- @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif --}}
 
             <div class="row">
                 <div class="col-sm-12 col-12">
@@ -102,38 +90,6 @@
                                             </td>
                                         </tr>
                                     @endforeach
-
-                                    {{-- @foreach ($posts as $post)
-                                        <tr>
-                                            <td>{{ $post->id }}</td>
-                                            <td class="title-column" style="width: 18%;">{{ $post->title }}</td>
-                                            <td class="title-column" style="width: 18%;">{{ $post->tomtat }}</td>
-                                            <td>{{ $post->category->name }}</td>
-                                            <td>
-                                                @if ($post->image)
-                                                    <img src="{{ asset('images/' . $post->image) }}"
-                                                        alt="{{ $post->title }}" style="width: 100px">
-                                                @endif
-                                            </td>
-                                            <td>{{ $post->created_at->format('d/m/Y H:i') }}</td>
-
-
-                                            <td class="title-column" style="width: 20%;">
-                                                <!-- Nút sửa bài viết -->
-                                                <a href="{{ route('posts.edit', $post->id) }}"
-                                                    class="btn btn-warning">Sửa</a>
-
-                                                <!-- Form để xóa bài viết -->
-                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                                    class="d-inline-block"
-                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa mềm bài viết này?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-warning">Xóa</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach --}}
                                 </tbody>
                             </table>
                         </div>
@@ -154,10 +110,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif

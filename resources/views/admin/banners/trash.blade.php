@@ -83,10 +83,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('restoreBanner') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -98,8 +99,9 @@
                 icon: "success",
                 title: "{{ session('forceDeleteBanner') }}",
                 showConfirmButton: false,
+                toast: true,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -116,6 +118,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timer: 3500
@@ -138,6 +141,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
+                    toast: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Hủy',
                     timer: 3500

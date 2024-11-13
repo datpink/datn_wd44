@@ -125,6 +125,7 @@
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
                         cancelButtonColor: '#d33',
+                        toast: true,
                         confirmButtonText: 'Có',
                         cancelButtonText: 'Hủy',
                         timerProgressBar: true,
@@ -142,10 +143,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('success') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         @endif
 

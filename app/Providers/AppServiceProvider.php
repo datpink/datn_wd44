@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Http\Controllers\Client\MenuController;
+use App\Http\View\Composers\OrderComposer;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Đăng ký OrderComposer cho header
+        View::composer('admin.layouts.header', OrderComposer::class);
+
         view()->composer('*', function ($view) {
             $menuCatalogues = (new MenuController())->getCataloguesForMenu();
             $view->with('menuCatalogues', $menuCatalogues);

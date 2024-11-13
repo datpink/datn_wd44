@@ -86,6 +86,7 @@
                     position: "top",
                     title: 'Bạn có chắc muốn xóa',
                     icon: 'warning',
+                    toast: true,
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
@@ -111,6 +112,7 @@
                     title: 'Bạn có chắc chắn muốn khôi phục thương hiệu này?',
                     icon: 'warning',
                     showCancelButton: true,
+                    toast: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Có',
@@ -129,10 +131,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "{{ session('restoreBrand') }}",
                 showConfirmButton: false,
                 timerProgressBar: true,
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif
@@ -143,10 +146,11 @@
             Swal.fire({
                 position: "top",
                 icon: "success",
+                toast: true,
                 title: "Đã xóa vĩnh viễn",
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 1500
+                timer: 3500
             });
         </script>
     @endif

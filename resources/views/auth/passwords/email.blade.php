@@ -35,11 +35,12 @@
                         Swal.fire({
                             position: 'top',
                             icon: 'success',
+                            toast: true,
                             title: 'Thành công!',
                             text: '{{ session('status') }}',
                             showConfirmButton: false,
                             timerProgressBar: true,
-                            timer: 2500
+                            timer: 3500
                         });
                     </script>
                 @endif
@@ -50,6 +51,7 @@
                             position: 'top',
                             icon: 'error',
                             title: 'Oops...',
+                            toast: true,
                             html: '<ul class="list-unstyled">' +
                                 @foreach ($errors->all() as $error)
                                     '<li>{{ $error }}</li>' +
@@ -57,7 +59,7 @@
                             '</ul>',
                             showConfirmButton: false,
                             timerProgressBar: true,
-                            timer: 2500
+                            timer: 3500
                         });
                     </script>
                 @endif

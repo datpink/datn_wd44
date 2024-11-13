@@ -3,6 +3,8 @@
 @section('title', 'Đăng Nhập')
 
 @section('content')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
     @include('components.breadcrumb-client')
 
@@ -13,21 +15,6 @@
                     <div class="page-main-content">
                         <div class="kobolg">
                             <div class="kobolg-notices-wrapper">
-                                @if ($errors->any())
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
-
-                                @if (session('status'))
-                                    <div class="alert alert-success">
-                                        {{ session('status') }}
-                                    </div>
-                                @endif
                             </div>
                             <div class="u-columns col2-set" id="customer_login">
                                 <div class="u-column1 col-1">
@@ -119,7 +106,8 @@
                                                 toàn bộ trang web này, để quản lý
                                                 quyền truy cập vào tài khoản của bạn và cho các mục đích khác được mô tả
                                                 trong phần của chúng tôi.
-                                                <a href="{{ route('privacy.policy') }}" class="kobolg-privacy-policy-link">chính
+                                                <a href="{{ route('privacy.policy') }}"
+                                                    class="kobolg-privacy-policy-link">chính
                                                     sách bảo mật</a>.
                                             </p>
                                         </div>
@@ -150,4 +138,35 @@
             background-color: transparent;
         }
     </style>
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Có lỗi xảy ra!',
+                html: '<ul>' +
+                    @foreach ($errors->all() as $error)
+                        '<li>{{ $error }}</li>' +
+                    @endforeach
+                '</ul>',
+                position: 'top',
+                toast: true,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
+
+    @if (session('status'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: '{{ session('status') }}',
+                position: 'top',
+                toast: true,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    @endif
 @endsection
