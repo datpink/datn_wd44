@@ -43,7 +43,7 @@
                             <div class="dropdown-item">
                                 <h5 class="mb-1">Đơn hàng #{{ $order->id }}</h5>
                                 <p class="mb-1">Người mua: {{ $order->user->name }}</p>
-                                <p class="mb-2">Giá: {{ number_format($order->total_price, 0, ',', '.') }} VNĐ</p>
+                                <p class="mb-2">Giá: {{ number_format($order->total_amount, 0, ',', '.') }} VNĐ</p>
                                 <div class="text-end">
                                     <a href="{{ route('orders.show', $order->id) }}" class="btn btn-link">Xem chi tiết</a>
                                 </div>

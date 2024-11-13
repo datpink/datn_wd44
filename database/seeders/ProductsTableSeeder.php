@@ -14,7 +14,7 @@ class ProductsTableSeeder extends Seeder
         $catalogueIds = range(1, 5); // Giả sử có 5 catalogue
         $brandIds = range(1, 5); // Giả sử có 5 brand
 
-        for ($i = 1; $i <= 15; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $products[] = [
                 'catalogue_id' => $catalogueIds[array_rand($catalogueIds)],
                 'brand_id' => $brandIds[array_rand($brandIds)],
