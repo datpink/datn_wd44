@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,5 +21,13 @@ class Promotion extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+    public function userPromotions()
+    {
+        return $this->hasMany(UserPromotion::class);
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_promotions', 'promotion_id', 'user_id');
     }
 }

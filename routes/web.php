@@ -21,6 +21,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Client\DiscountController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
@@ -130,6 +131,9 @@ Route::prefix('shop')->group(function () {
     Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
+    //route cho trang nhập mã giảm giá
+    Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
+    Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
