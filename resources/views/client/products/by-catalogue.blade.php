@@ -50,7 +50,7 @@
                             </form>
                         </div>
                         <form class="kobolg-ordering" method="get" id="orderingForm" action="">
-                            <select title="product_cat" name="orderby" class="orderby">
+                            <select title="" name="orderby" class="orderby">
                                 <option value="price-latest">Sản phẩm mới nhất</option>
                                 <option value="price-asc">Sắp xếp theo giá: từ thấp đến cao</option>
                                 <option value="price-desc">Sắp xếp theo giá: từ cao đến thấp</option>
@@ -333,129 +333,6 @@
                         </div>
 
 
-
-                        {{-- <script>
-                            document.addEventListener('DOMContentLoaded', function(e) {
-                                const storageGroup = document.querySelectorAll('.term-storage');
-
-                                // console.log(storageGroup);
-
-                                storageGroup.forEach(function(storage) {
-
-                                    storage.addEventListener('click', function(e) {
-                                        e.preventDefault();
-                                        const attributeStorageId = this.getAttribute('data-attribute_storage_id');
-                                        // console.log(attributeStorageId);
-
-                                        axios.get('/api/shop/products/filter-by-storage', {
-                                                params: {
-                                                    attribute_storage_value_id: attributeStorageId
-                                                }
-                                            })
-                                            .then((res) => {
-                                                // console.log(res);
-                                                // Xóa danh sách cũ
-                                                const productList = document.getElementById('product-list');
-                                                const paginationNav = document.querySelector(
-                                                    '.navigation.pagination'); // Lấy phần điều hướng phân trang
-                                                productList.innerHTML = ''; // Xóa danh sách cũ
-                                                console.log(productList);
-
-
-                                                // Kiểm tra nếu có sản phẩm trong phản hồi
-                                                if (res.data.data.length > 0) {
-                                                    // Tạo một biến để chứa HTML của tất cả các sản phẩm
-                                                    let productsHTML = '';
-
-                                                    res.data.data.forEach(product => {
-                                                        // Tạo nội dung HTML cho sản phẩm mới
-                                                        productsHTML += `
-                                            <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
-                                            data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
-                                            <div class="product-inner images">
-                                                <div class="product-thumb">
-                                                    <a class="thumb-link" href="#">
-                                                        ${product.image_url ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
-                                                    </a>
-                                                    <div class="flash">
-                                                        ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
-                                                    </div>
-                                                    <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
-                                                </div>
-                                                <div class="product-info">
-                                                    <div class="rating-wapper nostar">
-                                                        <div class="star-rating">
-                                                            <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
-                                                        </div>
-                                                        <span class="review">(${product.ratings_count})</span>
-                                                    </div>
-                                                    <h3 class="product-name product_title">
-                                                        <a href="/products/${product.id}">${product.name}</a>
-                                                    </h3>
-                                                    <span class="price">
-                                                        <span class="kobolg-Price-amount amount text-danger">
-                                                            <del>
-                                                                ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
-                                                            </del>
-                                                        </span>
-                                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
-                                                    </span>
-                                                    <div class="kobolg-product-details__short-description">
-                                                        <p>${product.tomtat}</p>
-                                                    </div>
-                                                </div>
-                                                <div class="group-button">
-                                                    <div class="group-button-inner">
-                                                        <div class="add-to-cart">
-                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button product_type_variable add_to_cart_button">Select options</a>
-                                                        </div>
-                                                        <div class="yith-wcwl-add-to-wishlist">
-                                                            <div class="yith-wcwl-add-button show">
-                                                                <a href="{{ route('client.products.product-detail', $product->slug) }}" class="add_to_wishlist">Add to Wishlist</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="kobolg product compare-button">
-                                                            <a href="#" class="compare button">Compare</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        `;
-                                                    });
-
-                                                    // Cập nhật danh sách sản phẩm mới vào DOM
-                                                    productList.innerHTML = productsHTML;
-
-                                                    // Cập nhật điều hướng phân trang
-                                                    if (res.data.last_page > 1) {
-                                                        paginationNav.style.display =
-                                                            'block'; // Hiện điều hướng phân trang
-                                                    } else {
-                                                        paginationNav.style.display =
-                                                            'none'; // Ẩn điều hướng phân trang
-                                                    }
-
-                                                } else {
-                                                    productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
-                                                    paginationNav.style.display =
-                                                        'none'; // Ẩn điều hướng phân trang
-                                                }
-
-                                            }).catch((err) => {
-                                                console.log(err);
-
-                                            })
-                                    })
-
-                                })
-
-                            })
-                        </script> --}}
-
-
-
-
                         <div id="kobolg_layered_nav-6" class="widget kobolg widget_layered_nav kobolg-widget-layered-nav">
                             <h2 class="widgettitle">Lọc theo dung lượng<span class="arrow"></span></h2>
                             <ul class="kobolg-widget-layered-nav-list">
@@ -507,6 +384,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function(e) {
+            const orderBySelect = document.querySelector('.orderby');
             const colorGroup = document.querySelectorAll('.term-color');
             const storageGroup = document.querySelectorAll('.term-storage');
             const priceRange = document.getElementById('price-range');
@@ -520,8 +398,14 @@
                 color: null,
                 storage: null,
                 price_min: null,
-                price_max: null
+                price_max: null,
+                orderby: 'price-latest'
             };
+
+            orderBySelect.addEventListener('change', function(e) {
+                activeFilters.orderby = this.value; // Lấy giá trị tùy chọn sắp xếp
+                fetchFilteredProducts();
+            })
 
             // Cập nhật bộ lọc giá với slider
             const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
@@ -595,7 +479,8 @@
                         attribute_id: activeFilters.color,
                         attribute_storage_value_id: activeFilters.storage,
                         price_min: activeFilters.price_min, // Gửi giá min
-                        price_max: activeFilters.price_max // Gửi giá max
+                        price_max: activeFilters.price_max, // Gửi giá max
+                        orderby: activeFilters.orderby
                     })
                     .then((res) => {
                         const productList = document.getElementById('product-list');
