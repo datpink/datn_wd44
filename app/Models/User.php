@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Promotion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -58,8 +59,15 @@ class User extends Authenticatable
         return $this->roles()->where('name', 'admin')->exists(); // Kiểm tra xem người dùng có vai trò admin không
     }
 
+    public function promotions()
+{
+    return $this->belongsToMany(Promotion::class, 'user_promotions', 'user_id', 'promotion_id');
+}
+
+
     public function favorites()
     {
         return $this->belongsToMany(Product::class, 'favorites');
     }
+
 }

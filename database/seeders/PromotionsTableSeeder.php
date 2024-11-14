@@ -17,6 +17,7 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-06-01',
                 'end_date'          => '2024-08-31',
+                
             ],
             [
                 'id'                => 2,
@@ -25,6 +26,7 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'inactive',
                 'start_date'        => '2024-12-01',
                 'end_date'          => '2024-12-31',
+                
             ],
             [
                 'id'                => 3,
@@ -33,6 +35,7 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-11-25',
                 'end_date'          => '2024-11-30',
+                
             ],
             [
                 'id'                => 4,
@@ -41,8 +44,9 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-12-31',
                 'end_date'          => '2025-01-31',
+                
             ],
-        ]);
+        ]); 
     }
 }
 

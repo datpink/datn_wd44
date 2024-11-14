@@ -106,14 +106,13 @@
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
-                                        <div class="img" style="width: 200px; height: auto;">
+                                        <div class="img" style="width: 200px; height: auto; margin-top: 10px">
                                             <a class="thumb-link"
                                                 href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">
                                                 @if ($product->image_url && \Storage::exists($product->image_url))
                                                     <img src="{{ \Storage::url($product->image_url) }}"
                                                         alt="{{ $product->name }}">
-                                                @else
                                                 @endif
                                             </a>
                                         </div>
@@ -128,8 +127,10 @@
                                     </div>
                                     <div class="product-info">
                                         <div class="rating-wapper nostar">
-                                            <div class="star-rating"><span style="width:0%">Rated <strong
-                                                        class="rating">0</strong> out of 5</span></div>
+                                            <div class="star-rating">
+                                                <span style="width:0%">Rated <strong class="rating">0</strong> out of
+                                                    5</span>
+                                            </div>
                                             <span class="review">(0)</span>
                                         </div>
                                         <h3 class="product-name product_title">
