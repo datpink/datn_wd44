@@ -20,10 +20,7 @@
                                         @else
                                             Không có ảnh
                                         @endif
-
-
                                     </td>
-
                                 </div>
                             </div>
                         </div>
@@ -48,20 +45,6 @@
                                 <p>{!! $post->content !!}</p>
                             </div>
                             <p>&nbsp;</p>
-                            {{-- <div id="gallery-1" class="gallery galleryid-195 gallery-columns-2 gallery-size-full">
-                                <figure class="gallery-item">
-                                    <div class="gallery-icon landscape">
-                                        <a href="#"><img src="{{ asset('theme/client/assets/images/blog-gallery-1.jpg') }}"
-                                                class="attachment-full size-full" alt="img"></a>
-                                    </div>
-                                </figure>
-                                <figure class="gallery-item">
-                                    <div class="gallery-icon landscape">
-                                        <a href="#"><img src="{{ asset('theme/client/assets/images/blog-gallery-2.jpg') }}"
-                                                class="attachment-full size-full" alt="img"></a>
-                                    </div>
-                                </figure>
-                            </div> --}}
                         </div>
                         <div class="tags"><a href="#" rel="tag">Camera</a>, <a href="#"
                                 rel="tag">Life Style</a></div>
@@ -102,34 +85,32 @@
                     </div>
 
                     <!-- Form bình luận -->
-                    <div id="comments" class="comments-area">
-                        <div id="respond" class="comment-respond">
-                            <h3 id="reply-title" class="comment-reply-title">Để lại một bình luận</h3>
+                    <div id="respond" class="comment-respond">
+                        <h3 id="reply-title" class="comment-reply-title">Để lại một bình luận</h3>
+                        @if (auth()->check())
                             <form id="commentform" method="POST" action="{{ route('post.comments.store', $post->id) }}">
                                 @csrf
-                                <p class="comment-notes">
-                                    <span id="email-notes">Địa chỉ email của bạn sẽ không được công bố.</span> 
-                                    Các trường bắt buộc được đánh dấu<span class="required">*</span>
-                                </p>
+
                                 <p class="comment-reply-content">
-                                    <input name="author" id="name" class="input-form name" placeholder="Name*" type="text" required>
+                                    <input name="author" id="name" class="input-form name" placeholder="Name*"
+                                        type="text" required>
                                 </p>
-                                <p class="comment-reply-content">
-                                    <input name="email" id="email" class="input-form email" placeholder="Email*" type="email" required>
-                                </p>
+
                                 <p class="comment-form-comment">
-                                    <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true" placeholder="Nhập bình luận của bạn vào đây..." required></textarea>
+                                    <textarea class="input-form" id="comment" name="comment" cols="45" rows="6" aria-required="true"
+                                        placeholder="Nhập bình luận của bạn vào đây..." required></textarea>
                                 </p>
                                 <p class="form-submit">
-                                    <input name="submit" id="submit" class="submit" value="Đăng bình luận" type="submit">
+                                    <input name="submit" id="submit" class="submit" value="Đăng bình luận"
+                                        type="submit">
                                 </p>
                             </form>
-                        </div><!-- #respond -->
-                    </div><!-- #comments -->
-                    
+                        @else
+                            <p>Vui lòng <a href="{{ route('login') }}">đăng nhập</a> để bình luận.</p>
+                        @endif
+                    </div><!-- #respond -->
                 </div>
                 @include('client.layouts.sidebar_post')
-
             </div>
         </div>
     </div>

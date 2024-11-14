@@ -73,59 +73,66 @@
                                     <div class="clear"></div>
                                 </form>
                             </div>
-                        </div>
-                        <form name="checkout" method="post" class="checkout kobolg-checkout" action="#"
-                            enctype="multipart/form-data" novalidate="novalidate">
-                            <div class="col2-set" id="customer_details">
-                                <div class="col-1">
-                                    @if ($user)
-                                    <div class="kobolg-billing-fields">
-                                        <h3>Thông tin thanh toán</h3>
-                                        <div class="kobolg-billing-fields__field-wrapper">
-                                            <p class="form-row form-row-first validate-required"
-                                                id="billing_first_name_field" data-priority="10">
-                                                <label for="billing_first_name">Họ và tên&nbsp;<abbr
-                                                        class="required" title="required">*</abbr></label>
-                                                <span class="kobolg-input-wrapper">
-                                                    <input type="text" class="input-text"
-                                                        name="billing_first_name" id="billing_first_name"
-                                                        value="{{ $user->name }}" autocomplete="given-name"
-                                                        required>
-                                                </span>
-                                            </p>
-                                            <p class="form-row form-row-wide addresses-field validate-required"
-                                                id="billing_addresses_1_field" data-priority="50">
-                                                <label for="billing_addresses_1">Địa chỉ&nbsp;<abbr
-                                                        class="required" title="required">*</abbr></label>
-                                                <span class="kobolg-input-wrapper">
-                                                    <input type="text" class="input-text"
-                                                        name="billing_addresses_1" id="billing_addresses_1"
-                                                        value="{{ $user->address ?? '' }}"
-                                                        placeholder="Số nhà và tên đường"
-                                                        data-placeholder="Số nhà và tên đường" required>
-                                                </span>
-                                            </p>
-                                            <p class="form-row form-row-wide validate-required validate-phone"
-                                                id="billing_phone_field" data-priority="100">
-                                                <label for="billing_phone">Số điện thoại&nbsp;<abbr
-                                                        class="required" title="required">*</abbr></label>
-                                                <span class="kobolg-input-wrapper">
-                                                    <input type="tel" class="input-text" name="billing_phone"
-                                                        id="billing_phone" value="{{ $user->phone ?? '' }}"
-                                                        placeholder="" autocomplete="tel" required>
-                                                </span>
-                                            </p>
-                                            <p class="form-row form-row-wide validate-required validate-email"
-                                                id="billing_email_field" data-priority="110">
-                                                <label for="billing_email">Email&nbsp;<abbr class="required"
-                                                        title="required">*</abbr></label>
-                                                <span class="kobolg-input-wrapper">
-                                                    <input type="email" class="input-text" name="billing_email"
-                                                        id="billing_email" value="{{ $user->email }}"
-                                                        placeholder="" autocomplete="email username" required>
-                                                </span>
-                                            </p>
-                                        </div>
+                            <form name="checkout" method="post" class="checkout kobolg-checkout" action="#"
+                                enctype="multipart/form-data">
+                                <div class="col2-set" id="customer_details">
+                                    <div class="col-1">
+                                        @if ($user)
+                                            <div class="kobolg-billing-fields">
+                                                <h3>Thông tin thanh toán</h3>
+                                                <div class="kobolg-billing-fields__field-wrapper">
+                                                    <p class="form-row form-row-wide validate-required" data-priority="10">
+                                                        <label>Họ và tên&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="text" class="input-text"
+                                                                name="billing_first_name" value="{{ $user->name }}"
+                                                                autocomplete="given-name" required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide addresses-field validate-required"
+                                                        data-priority="50">
+                                                        <label>Địa chỉ&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="text" class="input-text"
+                                                                name="billing_addresses_1"
+                                                                value="{{ $user->address ?? '' }}"
+                                                                placeholder="Số nhà và tên đường"
+                                                                data-placeholder="Số nhà và tên đường" required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide validate-required validate-phone"
+                                                        data-priority="100">
+                                                        <label>Số điện thoại&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="tel" class="input-text" name="billing_phone"
+                                                                value="{{ $user->phone ?? '' }}" placeholder=""
+                                                                autocomplete="tel" required>
+                                                        </span>
+                                                    </p>
+                                                    <p class="form-row form-row-wide validate-required validate-email"
+                                                        data-priority="110">
+                                                        <label>Email&nbsp;<abbr class="required"
+                                                                title="required">*</abbr></label>
+                                                        <span class="kobolg-input-wrapper">
+                                                            <input type="email" class="input-text" name="billing_email"
+                                                                value="{{ $user->email }}" placeholder=""
+                                                                autocomplete="email username" required>
+                                                        </span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="kobolg-account-fields">
+                                                <p class="hover-red" style="margin-top: 50px; padding-top: 40px">
+                                                    <a href="{{ route('login') }}">Tạo tài khoản</a> <i
+                                                        class="fas fa-arrow-right ml-2"></i>
+                                                </p>
+                                            </div>
+                                        @endif
+
                                     </div>
                                     @endif
                                     <div class="kobolg-account-fields">
@@ -220,11 +227,37 @@
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
                                                         {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
                                                     </span>
-                                                </strong>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Dòng giảm giá -->
+                                            <!-- Hiển thị giảm giá nếu có -->
+                                            <tr class="cart-discount"
+                                                style="display: {{ session('discount_value') ? 'table-row' : 'none' }};">
+                                                <th>Giảm giá</th>
+                                                <td>
+                                                    <span class="kobolg-Price-amount amount">
+                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                        -{{ session('discount_value') ? number_format(session('discount_value'), 0, ',', '.') : 0 }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Hiển thị tổng cộng -->
+                                            <tr class="order-total">
+                                                <th>Tổng cộng</th>
+                                                <td>
+                                                    <strong>
+                                                        <span class="kobolg-Price-amount amount">
+                                                            <span class="kobolg-Price-currencySymbol">₫</span>
+                                                            {{ $totalAmount == floor($totalAmount) ? number_format($totalAmount, 0, ',', '.') : number_format($totalAmount, 2, ',', '.') }}
+                                                        </span>
+                                                    </strong>
+                                                </td>
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
 
                                 <input type="hidden" name="lang" value="en">
                                 <div id="payment" class="kobolg-checkout-payment">
@@ -267,7 +300,65 @@
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Lấy các nút và form
 
+            const showCouponButton = document.querySelector('.showcoupon');
+            const couponForm = document.querySelector('.checkout_coupon');
+
+            // Thêm sự kiện nhấp vào nút hiển thị form mã giảm giá
+            if (showCouponButton && couponForm) {
+                showCouponButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    couponForm.style.display = couponForm.style.display === 'none' ? 'block' : 'none';
+                });
+            }
+        });
+        document.querySelector('.checkout_coupon.kobolg-form-coupon').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const couponCode = document.querySelector('#coupon_code').value;
+            fetch('{{ route('applyCoupon') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        coupon_code: couponCode
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Kiểm tra sự tồn tại của phần tử trước khi thao tác
+                        const discountElement = document.querySelector('.cart-discount .amount');
+                        if (discountElement) {
+                            // Hiển thị tổng tiền giảm giá
+                            document.querySelector('.cart-discount').style.display = 'table-row';
+                            discountElement.textContent = '-' + new Intl
+                                .NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(data.discount);
+                        }
+
+                        // Kiểm tra sự tồn tại của phần tử tổng cộng trước khi cập nhật
+                        const totalElement = document.querySelector('.cart-total .total-price');
+                        if (totalElement) {
+                            document.querySelector('.cart-total .total-price').textContent = new Intl
+                                .NumberFormat('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                }).format(data.final_amount); // Hiển thị tổng tiền sau giảm giá
+                        }
+                    } else {
+                        alert('Mã giảm giá không hợp lệ');
+                    }
+                })
+
+
+        });
+    </script>
 @endsection

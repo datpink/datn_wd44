@@ -46,7 +46,7 @@ class PostController extends Controller
 {
     $request->validate([
         'author' => 'required|string|max:255',
-        'email' => 'required|email',
+        // 'email' => 'required|email',
         'comment' => 'required|string',
     ]);
 
@@ -56,7 +56,7 @@ class PostController extends Controller
     'post_id' => $post->id,
     'user_id' => auth()->id(), // Hoặc giá trị khác để đặt user_id
     'author_name' => $request->input('author'),
-    'email' => $request->input('email'),
+    // 'email' => $request->input('email'),
     'content' => $request->input('comment'),
 ]);
 

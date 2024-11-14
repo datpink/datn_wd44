@@ -35,8 +35,10 @@ php artisan db:seed --class=PostSeeder
 php artisan db:seed --class=CommentSeeder
 php artisan db:seed --class=BannerSeeder
 php artisan db:seed --class=ContactSeeder
-php artisan db:seed --class=UserPromotionsSeeder
 
+php artisan db:seed --class=UserPromotionsSeeder
+php artisan db:seed --class=AdvertisementsTableSeeder
+php artisan db:seed --class=FavoritesTableSeeder
 
 
 chạy full seeder
