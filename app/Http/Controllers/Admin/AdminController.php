@@ -61,7 +61,10 @@ class AdminController extends Controller
             ->get();
 
         // Chuyển đổi dữ liệu thành mảng
-        $dates = $dailyRevenue->pluck('date')->toArray();
+        $dates = $dailyRevenue->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->format('d-m-Y'); // Định dạng ngày thành dd-mm-yyyy
+        })->toArray();
+
         $totals = $dailyRevenue->pluck('total')->toArray();
         $discounts = $dailyRevenue->pluck('discount')->sum(); // Tính tổng giảm giá
 
