@@ -66,55 +66,67 @@
                         <div class="card-body">
 
                             <!-- Row start -->
-                            <div class="row">
-                                <div class="col-xxl-3 col-sm-4 col-12">
-                                    <div class="reports-summary">
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-primary me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Sales</h6>
-                                                <h5>12 Millions</h5>
+                            <div class="row mt-4">
+                                <div class="col-xxl-12 col-sm-12 col-12">
+
+                                    <div class="card shadow">
+                                        <div class="card-body">
+
+                                            <!-- Row start -->
+                                            <div class="row">
+                                                <div class="col-xxl-3 col-sm-4 col-md-12">
+                                                    <div class="reports-summary">
+                                                        <h5 class="mb-4">Tổng Quan Doanh Thu</h5>
+                                                        <div class="reports-summary-block mb-3">
+                                                            <i class="bi bi-circle-fill text-primary me-2"></i>
+                                                            <div class="d-flex flex-column">
+                                                                <h6>Tổng Doanh Số</h6>
+                                                                <h5 class="text-primary">{{ number_format($totalSales, 2) }}
+                                                                    VNĐ</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="reports-summary-block mb-3">
+                                                            <i class="bi bi-circle-fill text-success me-2"></i>
+                                                            <div class="d-flex flex-column">
+                                                                <h6>Doanh Thu Tổng</h6>
+                                                                <h5 class="text-success">
+                                                                    {{ number_format(array_sum($totals), 2) }} VNĐ</h5>
+                                                            </div>
+                                                        </div>
+                                                        <div class="reports-summary-block mb-3">
+                                                            <i class="bi bi-circle-fill text-danger me-2"></i>
+                                                            <div class="d-flex flex-column">
+                                                                <h6>Doanh Thu Sau Giảm Giá</h6>
+                                                                <h5 class="text-danger">
+                                                                    {{ number_format(array_sum($totals) - $discounts, 2) }}
+                                                                    VNĐ</h5>
+                                                            </div>
+                                                        </div>
+                                                        <button class="btn btn-info w-100">Xem Báo Cáo</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xxl-9 col-sm-8 col-md-12">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="graph-day-selection mt-2" role="group">
+                                                                <button type="button" class="btn active">Today</button>
+                                                                <button type="button" class="btn">Yesterday</button>
+                                                                <button type="button" class="btn">7 days</button>
+                                                                <button type="button" class="btn">15 days</button>
+                                                                <button type="button" class="btn">30 days</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 mt-3">
+                                                            <div id="revenueGraph" style="height: 400px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <!-- Row end -->
+
                                         </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-success me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Earnings</h6>
-                                                <h5>78 Millions</h5>
-                                            </div>
-                                        </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-danger me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Revenue</h6>
-                                                <h5>60 Millions</h5>
-                                            </div>
-                                        </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-warning me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>New Customers</h6>
-                                                <h5>23k</h5>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-info download-reports">View Reports</button>
                                     </div>
-                                </div>
-                                <div class="col-xxl-9 col-sm-8 col-12">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="graph-day-selection mt-2" role="group">
-                                                <button type="button" class="btn active">Today</button>
-                                                <button type="button" class="btn">Yesterday</button>
-                                                <button type="button" class="btn">7 days</button>
-                                                <button type="button" class="btn">15 days</button>
-                                                <button type="button" class="btn">30 days</button>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div id="revenueGraph"></div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                             <!-- Row end -->
@@ -439,4 +451,76 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var options = {
+                        chart: {
+                            height: 317,
+                            type: 'area',
+                            toolbar: {
+                                show: false,
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 3
+                        },
+                        series: [{
+                            name: 'Doanh thu',
+                            data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                        }],
+                        grid: {
+                            borderColor: '#e0e6ed',
+                            strokeDashArray: 5,
+                            xaxis: {
+                                lines: {
+                                    show: true
+                                }
+                            },
+                            yaxis: {
+                                lines: {
+                                    show: false,
+                                }
+                            },
+                            padding: {
+                                top: 0,
+                                right: 0,
+                                bottom: 10,
+                                left: 0
+                            },
+                        },
+                        xaxis: {
+                            categories: @json($dates), // Dữ liệu ngày tháng
+                        },
+                        yaxis: {
+                            labels: {
+                                show: false,
+                            }
+                        },
+                        colors: ['#4267cd', '#32b2fa'],
+                        markers: {
+                            size: 0,
+                            opacity: 0.1,
+                            colors: ['#4267cd', '#32b2fa'],
+                            strokeColor: "#ffffff",
+                            strokeWidth: 2,
+                            hover: {
+                                size: 7,
+                            }
+                        },
+                    }
+
+                    var chart = new ApexCharts(
+                        document.querySelector("#revenueGraph"),
+                        options
+                    );
+
+                    chart.render();
+                });
+            </script>
+
         @endsection

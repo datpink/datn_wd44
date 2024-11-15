@@ -51,6 +51,27 @@ class AdminController extends Controller
         foreach ($recentBuyers as $buyer) {
             $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
         }
+
+        // Lấy doanh thu theo ngày, chỉ tính các đơn hàng đã giao và đã thanh toán
+        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total, SUM(discount_amount) as discount')
+            ->where('status', 'shipped') // Chỉ lấy đơn hàng đã giao
+            ->where('payment_status', 'paid') // Chỉ lấy đơn hàng đã thanh toán
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Chuyển đổi dữ liệu thành mảng
+        $dates = $dailyRevenue->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->format('d-m-Y'); // Định dạng ngày thành dd-mm-yyyy
+        })->toArray();
+
+        $totals = $dailyRevenue->pluck('total')->toArray();
+        $discounts = $dailyRevenue->pluck('discount')->sum(); // Tính tổng giảm giá
+
+        // Tính tổng doanh số
+        $totalSales = Order::where('status', 'shipped')
+            ->where('payment_status', 'paid')
+            ->sum('total_amount');
     
         // Lấy danh sách đơn hàng và các sản phẩm kèm theo
         $orders = Order::with(['user', 'items.productVariant.product']) // Đảm bảo lấy đúng thông tin sản phẩm
@@ -65,6 +86,10 @@ class AdminController extends Controller
             'orderCount',
             'userCount',
             'productCount',
+            'dates',
+            'totals',
+            'totalSales',
+            'discounts'
             'orders'
         ));
     }
