@@ -29,12 +29,12 @@ class AdminController extends Controller
     public function index()
     {
         $title = 'Trang Quản Trị';
-
+    
         $catalogueCount = Catalogue::count();
-        $orderCount = Order::count();
-        $userCount = User::count();
-        $productCount = Product::count();
-
+        $orderCount     = Order::count();
+        $userCount      = User::count();
+        $productCount   = Product::count();
+    
         // Lấy danh sách người dùng mua hàng gần đây
         $recentBuyers = Order::with('user')
             ->select(
@@ -46,7 +46,7 @@ class AdminController extends Controller
             ->orderBy('last_order_time', 'desc')
             ->take(5)
             ->get();
-
+    
         // Chuyển đổi last_order_time từ chuỗi thành Carbon
         foreach ($recentBuyers as $buyer) {
             $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
@@ -72,7 +72,13 @@ class AdminController extends Controller
         $totalSales = Order::where('status', 'shipped')
             ->where('payment_status', 'paid')
             ->sum('total_amount');
-
+    
+        // Lấy danh sách đơn hàng và các sản phẩm kèm theo
+        $orders = Order::with(['user', 'items.productVariant.product']) // Đảm bảo lấy đúng thông tin sản phẩm
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+    
         return view('admin.index', compact(
             'title',
             'recentBuyers',
@@ -84,9 +90,10 @@ class AdminController extends Controller
             'totals',
             'totalSales',
             'discounts'
+            'orders'
         ));
     }
-
+        
     // Hiển thị thông tin cá nhân của admin
     public function profile()
     {

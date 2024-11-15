@@ -249,8 +249,6 @@ class ProductController extends Controller
 
         $orderby = $request->input('orderby');
 
-        $catalogues = Catalogue::where('id', $parent_id)->firstOrFail();
-        // $parentCataloguesID = Catalogue::where('slug', $parentSlug)->pluck('id')->first();
 
         $variants = Attribute::with('attributeValues')->get();
         // màu
@@ -272,26 +270,11 @@ class ProductController extends Controller
                 ->where('status', 'active')
                 ->pluck('id');
         }
-        $parentCataloguesID = $childCatalogues;
 
         $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1);
 
-
-        // if ($orderby) {
-        //     switch ($orderby) {
-        //         case 'price-asc':
-        //             $productByCatalogues->orderBy('discount_price', 'asc');
-        //             break;
-        //         case 'price-desc':
-        //             $productByCatalogues->orderBy('discount_price', 'desc');
-        //             break;
-        //         default:
-        //             $productByCatalogues->orderBy('id', 'desc');
-        //             break;
-        //     }
-        // }
 
         // Áp dụng bộ lọc theo attribute
         if ($attributeValueId && $attributeStorageId) {
@@ -317,13 +300,28 @@ class ProductController extends Controller
         }
 
 
-
         // Lọc theo giá nếu có
         $minPrice = $request->input('price_min');
         $maxPrice = $request->input('price_max');
         // dd($minPrice);
 
         $productByCatalogues->whereBetween('discount_price', [$minPrice, $maxPrice]);
+
+        // Xử lý sắp xếp theo giá
+        if ($orderby) {
+            switch ($orderby) {
+                case 'price-asc':
+                    $productByCatalogues->orderBy('discount_price', 'asc');  // Sắp xếp từ thấp đến cao
+                    break;
+                case 'price-desc':
+                    $productByCatalogues->orderBy('discount_price', 'desc');  // Sắp xếp từ cao đến thấp
+                    break;
+                case 'price-latest':
+                    // Nếu muốn sắp xếp theo sản phẩm mới nhất, bạn có thể sắp xếp theo ngày tạo
+                    $productByCatalogues->orderBy('created_at', 'desc');  // Sắp xếp theo ngày tạo mới nhất
+                    break;
+            }
+        }
 
         // Lấy dữ liệu sản phẩm
         $productByCatalogues = $productByCatalogues->get();
@@ -333,8 +331,6 @@ class ProductController extends Controller
         }
 
         return response()->json(['data' => $productByCatalogues]);
-
-        // return view('client.products.by-catalogue', compact('productByCatalogues', 'minDiscountPrice', 'maxDiscountPrice', 'parentCataloguesID', 'variants', 'variant_values', 'variant_storage_values'));
     }
 
     public function filterByPrice(Request $request)
