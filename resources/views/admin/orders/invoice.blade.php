@@ -48,6 +48,7 @@
     <p><strong>Phone number:</strong> {{ $order->phone_number }}</p>
     <p><strong>Status:</strong> {{ $order->status }}</p>
     <p><strong>Date booked:</strong> {{ $order->created_at->format('d/m/Y H:i') }}</p>
+    <p><strong>Payment Method:</strong> {{ $order->payment_method }}</p>
 
     <table>
         <thead>
@@ -81,6 +82,10 @@
             @endif
         </tfoot>
     </table>
+
+    <footer style="margin-top: 50px">
+        <span>© Presented by ZAIA.</span>
+    </footer>
 
 </body>
 
