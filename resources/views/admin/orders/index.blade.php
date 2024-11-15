@@ -19,12 +19,42 @@
                             <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng"
-                                            value="{{ request()->search }}">
+                                        <input type="text" id="id" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" name="date" class="form-control form-control-sm" value="{{ request()->date }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <select name="date_filter" class="form-select form-select-sm">
+                                            <option value="">Chọn khoảng thời gian</option>
+                                            <option value="yesterday" {{ request()->date_filter === 'yesterday' ? 'selected' : '' }}>Hôm qua</option>
+                                            <option value="this_week" {{ request()->date_filter === 'this_week' ? 'selected' : '' }}>Tuần này</option>
+                                            <option value="last_week" {{ request()->date_filter === 'last_week' ? 'selected' : '' }}>Tuần trước</option>
+                                            <option value="this_month" {{ request()->date_filter === 'this_month' ? 'selected' : '' }}>Tháng này</option>
+                                            <option value="last_month" {{ request()->date_filter === 'last_month' ? 'selected' : '' }}>Tháng trước</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select name="status" class="form-select form-select-sm">
+                                            <option value="">Chọn trạng thái</option>
+                                            <option value="processing" {{ request()->status === 'processing' ? 'selected' : '' }}>Đang xử lý</option>
+                                            <option value="Delivering" {{ request()->status === 'Delivering' ? 'selected' : '' }}>Đang giao hàng</option>
+                                            <option value="shipped" {{ request()->status === 'shipped' ? 'selected' : '' }}>Đã giao hàng</option>
+                                            <option value="canceled" {{ request()->status === 'canceled' ? 'selected' : '' }}>Đã hủy</option>
+                                            <option value="refunded" {{ request()->status === 'refunded' ? 'selected' : '' }}>Hoàn trả</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <select name="payment_status" class="form-select form-select-sm">
+                                            <option value="">Chọn trạng thái thanh toán</option>
+                                            <option value="pending" {{ request()->payment_status === 'pending' ? 'selected' : '' }}>Chưa thanh toán</option>
+                                            <option value="paid" {{ request()->payment_status === 'paid' ? 'selected' : '' }}>Đã thanh toán</option>
+                                            <option value="failed" {{ request()->payment_status === 'failed' ? 'selected' : '' }}>Thanh toán thất bại</option>
+                                        </select>
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                        <a href="{{ route('orders.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </form>
@@ -171,6 +201,14 @@
                                                                 <i class="bi bi-trash text-red"></i>
                                                             </button>
                                                         </form> --}}
+                                                        <!-- Kiểm tra trạng thái đơn hàng -->
+                                                        @if ($order->status === 'shipped')
+                                                            <!-- Thay 'completed' bằng giá trị trạng thái hoàn thành của bạn -->
+                                                            <a href="{{ route('orders.invoice', $order->id) }}"
+                                                                target="_blank" class="exportInvoice">
+                                                                <i class="bi bi-file-earmark-pdf text-blue"></i>
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>

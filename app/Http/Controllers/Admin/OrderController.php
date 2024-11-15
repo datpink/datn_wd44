@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Carbon\Carbon;
+use PDF;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
 use App\Traits\ManagesOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 
 class OrderController extends Controller
 {
@@ -17,18 +20,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh Sách Đơn Hàng';
-
-        // // Lấy danh sách đơn hàng mới
-        // $newOrders = Order::where('is_new', true)->with('user')->get();
-        // $newOrderIds = $newOrders->pluck('id')->toArray(); // Lấy ID đơn hàng mới
-        // $newOrdersCount = $newOrders->count(); // Đếm số lượng đơn hàng mới
-
         $query = Order::query();
-
-        // // Kiểm tra xem có tham số status không
-        // if ($request->has('status') && $request->status === 'new') {
-        //     $query->where('is_new', true); // Lọc chỉ các đơn hàng mới
-        // }
 
         // Tìm kiếm (nếu có)
         if ($request->has('search')) {
@@ -43,6 +35,42 @@ class OrderController extends Controller
                     })
                     ->orWhere('status', 'like', '%' . $search . '%');
             });
+        }
+
+        // Lọc theo ngày
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Lọc theo khoảng thời gian
+        if ($request->has('date_filter') && $request->date_filter) {
+            switch ($request->date_filter) {
+                case 'yesterday':
+                    $query->whereDate('created_at', Carbon::yesterday());
+                    break;
+                case 'this_week':
+                    $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                    break;
+                case 'last_week':
+                    $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]);
+                    break;
+                case 'this_month':
+                    $query->whereMonth('created_at', Carbon::now()->month);
+                    break;
+                case 'last_month':
+                    $query->whereMonth('created_at', Carbon::now()->subMonth()->month);
+                    break;
+            }
+        }
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Lọc theo trạng thái thanh toán
+        if ($request->has('payment_status') && $request->payment_status) {
+            $query->where('payment_status', $request->payment_status);
         }
 
         $orders = $query->paginate(10); // Lấy danh sách đơn hàng
@@ -130,5 +158,16 @@ class OrderController extends Controller
 
         // Trả về view với dữ liệu đơn hàng, bao gồm chi tiết biến thể
         return view('client.user.order-detail', compact('order', 'items', 'buyer', 'groupedVariantAttributes'));
+    }
+
+    public function generateInvoice($id)
+    {
+        $order = Order::with('orderItems.productVariant')->findOrFail($id);
+
+        // Tạo PDF
+        $pdf = PDF::loadView('admin.orders.invoice', compact('order'));
+
+        // Trả về PDF
+        return $pdf->download('invoice_' . $order->id . '.pdf');
     }
 }

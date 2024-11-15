@@ -29,16 +29,26 @@
                             <form method="GET" action="{{ route('comments.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm bình luận"
-                                            value="{{ request()->search }}">
+                                        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm bình luận" value="{{ request()->search }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" name="comment_date" class="form-control form-control-sm" value="{{ request()->comment_date }}">
+                                    </div>
+                                    {{-- <div class="col-auto">
+                                        <input type="date" name="reply_date" class="form-control form-control-sm" value="{{ request()->reply_date }}">
+                                    </div> --}}
+                                    <div class="col-auto">
+                                        <select name="responded" class="form-select form-select-sm">
+                                            <option value="">Tất cả bình luận</option>
+                                            <option value="1" {{ request()->responded === '1' ? 'selected' : '' }}>Đã phản hồi</option>
+                                            <option value="0" {{ request()->responded === '0' ? 'selected' : '' }}>Chưa phản hồi</option>
+                                        </select>
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button" id="filterRemove" class="btn btn-sm btn-warning ">Xóa
-                                            lọc</button>
+                                        <button type="button" id="filterRemove" class="btn btn-sm btn-warning">Xóa lọc</button>
                                     </div>
                                 </div>
                             </form>

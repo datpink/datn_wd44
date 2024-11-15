@@ -441,7 +441,7 @@
                                                 <!-- Thời gian thực hiện đơn hàng -->
                                                 <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
                                                 <!-- Số lượng đơn hàng -->
-                                                <span class="badge shade-green">Mới</span>
+                                                <span class="badge shade-green rounded-pill">Mới</span>
                                             </div>
                                         </div>
                                     @endforeach

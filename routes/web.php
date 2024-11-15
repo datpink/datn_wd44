@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\admin\AdvertisementController;
+use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
@@ -224,9 +224,13 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     // Route Order
     Route::resource('orders', OrderController::class);
+
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+    // Route xuất hóa đơn PDF
+    Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('orders.invoice');
 
     // route payment
     Route::resource('/payment-methods', PaymentMethodController::class);
