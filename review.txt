@@ -8,9 +8,17 @@ chạy lệnh php artisan key:generate
 
 đổi tên name database
 
+pdf
+composer require barryvdh/laravel-DOMPDF_DEFAULT_FONT
+.env
+DOMPDF_DEFAULT_FONT=Arial
+DOMPDF_PAPER_SIZE=A4
+DOMPDF_PAPER_ORIENTATION=portrait
+
 composer require spatie/laravel-permission
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 composer require laravel/socialite
+excel
 composer require maatwebsite/excel
 composer require phpoffice/phpspreadsheet
 

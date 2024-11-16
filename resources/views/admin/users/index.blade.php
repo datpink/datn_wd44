@@ -83,9 +83,9 @@
                                                 </td> <!-- Hình ảnh -->
                                                 <td>
                                                     @if ($user->status === 'locked')
-                                                        <span class="badge bg-danger">Bị Khóa</span>
+                                                        <span class="badge bg-danger rounded-pill">Bị Khóa</span>
                                                     @else
-                                                        <span class="badge bg-success">Mở Khóa</span>
+                                                        <span class="badge bg-success rounded-pill">Mở Khóa</span>
                                                     @endif
                                                 </td>
                                                 <td>

@@ -17,12 +17,21 @@
                             <form method="GET" action="{{ route('admin.contact.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm liên hệ"
-                                            value="{{ request()->search }}">
+                                        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm liên hệ" value="{{ request()->search }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" name="date" class="form-control form-control-sm" value="{{ request()->date }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <select name="reply" class="form-select form-select-sm">
+                                            <option value="">Lọc theo trạng thái trả lời</option>
+                                            <option value="1" {{ request()->reply === '1' ? 'selected' : '' }}>Đã trả lời</option>
+                                            <option value="0" {{ request()->reply === '0' ? 'selected' : '' }}>Chưa trả lời</option>
+                                        </select>
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                        <a href="{{ route('admin.contact.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </form>
