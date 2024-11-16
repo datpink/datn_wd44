@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'default_font' => env('DOMPDF_DEFAULT_FONT', 'Arial'),
-    'paper_size' => env('DOMPDF_PAPER_SIZE', 'A4'),
-    'paper_orientation' => env('DOMPDF_PAPER_ORIENTATION', 'portrait'),
+
+    'default_font' => 'DejaVu Sans',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -24,8 +24,6 @@ return [
     'convert_entities' => true,
 
     'options' => [
-        'isHtml5ParserEnabled' => true,
-        'isRemoteEnabled' => true, // Cho phép tải hình ảnh từ URL
         /**
          * The location of the DOMPDF font directory
          *
