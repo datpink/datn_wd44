@@ -76,14 +76,10 @@
 
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
                     <div class="mt-4">
-                        <label class="text-muted font-weight-normal">Mã Giảm Giá</label>
-                        <input type="text" placeholder="ABC" class="form-control">
+                        <label class="text-muted font-weight-normal"></label>
+                        <input type="hidden" placeholder="ABC" class="form-control">
                     </div>
                     <div class="d-flex">
-                        <div class="text-right mt-4 mr-5">
-                            <label class="text-muted font-weight-normal m-0">Discount</label>
-                            <div class="text-large"><strong>₫0.00</strong></div>
-                        </div>
                         <div class="text-right mt-4">
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
                             <div class="text-large"><strong id="total-price">₫
@@ -99,6 +95,7 @@
                     <form id="checkoutForm" action="{{ route('showCheckout') }}" method="POST" style="display: inline;">
                         @csrf
                         <input type="hidden" id="selected_products" name="selected_products">
+                        <input type="hidden" id="total_amount" name="total_amount"> <!-- input ẩn cho totalAmount -->
                         <button type="button" class="btn btn-lg btn-primary mt-2" onclick="submitCheckout()">Tiến hành
                             thanh toán</button>
                     </form>
@@ -148,7 +145,11 @@
                 }
             });
             document.getElementById('total-price').textContent = `₫${formatCurrency(subtotal)}`;
+
+            // Cập nhật giá trị của input ẩn "total_amount"
+            document.getElementById('total_amount').value = subtotal;
         }
+
 
         function submitCheckout() {
             const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')]
@@ -156,6 +157,7 @@
             document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
             document.getElementById('checkoutForm').submit();
         }
+
 
         document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', updateCartTotal);
