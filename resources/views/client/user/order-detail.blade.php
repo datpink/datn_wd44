@@ -52,7 +52,8 @@
                                         <td>{{ $item->productVariant->variant_name }}</td>
                                         <td>
                                             @if (!empty($item->productVariant->img_url))
-                                                <img src="{{ Storage::url($item->productVariant->img_url) }}" width="35" height="35" alt="Image">
+                                                <img src="{{ Storage::url($item->productVariant->img_url) }}" width="35"
+                                                    height="35" alt="Image">
                                             @else
                                                 <p>Không có ảnh</p>
                                             @endif
@@ -81,44 +82,45 @@
             </div>
         </div>
 
-    <!-- Tổng Cộng -->
-    <div class="card mb-4 shadow border-light">
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">Tổng Cộng</h5>
-        </div>
-        <div class="card-body">
-            <p><strong>Tổng Tiền Đơn Hàng:</strong> {{ number_format($order->items->sum('total'), 0, ',', '.') }} VND</p>
-            @php
-    $statusClasses = [
-        'processing' => 'bg-primary',
-        'shipped' => 'bg-info',
-        'canceled' => 'bg-danger',
-        'refunded' => 'bg-warning',
-        'delivering' => 'bg-secondary',
-        'delivered' => 'bg-success',
-    ];
+        <!-- Tổng Cộng -->
+        <div class="card mb-4 shadow border-light">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Tổng Cộng</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Tổng Tiền Đơn Hàng:</strong> {{ number_format($order->items->sum('total'), 0, ',', '.') }} VND
+                </p>
+                @php
+                    $statusClasses = [
+                        'processing' => 'bg-primary',
+                        'shipped' => 'bg-info',
+                        'canceled' => 'bg-danger',
+                        'refunded' => 'bg-warning',
+                        'delivering' => 'bg-secondary',
+                        'delivered' => 'bg-success',
+                    ];
 
-    $statusLabels = [
-        'processing' => 'Đang Xử Lý',
-        'shipped' => 'Đã Gửi',
-        'canceled' => 'Đã Hủy',
-        'refunded' => 'Đã Hoàn Tiền',
-        'delivering' => 'Đang Giao',
-        'delivered' => 'Đã Giao',
-    ];
+                    $statusLabels = [
+                        'processing' => 'Đang Xử Lý',
+                        'shipped' => 'Đã Gửi',
+                        'canceled' => 'Đã Hủy',
+                        'refunded' => 'Đã Hoàn Tiền',
+                        'delivering' => 'Đang Giao',
+                        'delivered' => 'Đã Giao',
+                    ];
 
-    $statusClass = $statusClasses[$order->status] ?? 'bg-secondary';
-    $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
-@endphp
+                    $statusClass = $statusClasses[$order->status] ?? 'bg-secondary';
+                    $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
+                @endphp
 
-<p><strong>Trạng Thái:</strong> 
-    <span class="badge {{ $statusClass }}">
-        {{ $statusLabel }}
-    </span>
-</p>
+                <p><strong>Trạng Thái:</strong>
+                    <span class="badge {{ $statusClass }}">
+                        {{ $statusLabel }}
+                    </span>
+                </p>
 
+            </div>
         </div>
     </div>
-</div>
 
 @endsection

@@ -35,7 +35,7 @@
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button" id="filterRemove" class="btn btn-sm btn-warning">Xóa
+                                        <button type="button" id="filterRemove" class="btn btn-sm btn-secondary">Xóa
                                             lọc</button>
                                     </div>
                                 </div>
@@ -63,9 +63,9 @@
                                                 <td>{{ fmod($promotion->discount_value, 1) == 0 ? number_format($promotion->discount_value, 0) : number_format($promotion->discount_value, 2) }}%</td>
                                                 <td>
                                                     @if ($promotion->status == 'active')
-                                                        <span class="badge bg-success">Kích hoạt</span>
+                                                        <span class="badge bg-success rounded-pill">Kích hoạt</span>
                                                     @elseif ($promotion->status == 'inactive')
-                                                        <span class="badge bg-danger">Không kích hoạt</span>
+                                                        <span class="badge bg-danger rounded-pill">Không kích hoạt</span>
                                                     @endif
                                                 </td>
                                                 <td>{{ $promotion->start_date }}</td>

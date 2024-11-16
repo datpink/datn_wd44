@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\admin\AdvertisementController;
+use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
@@ -21,12 +21,18 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Client\DiscountController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
 use App\Http\Controllers\Client\ProductController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\ProductCommentController;
+use App\Http\Controllers\Admin\ProductCommentReplyController;
+use App\Http\Controllers\Admin\ProductReviewController;
+use App\Http\Controllers\Admin\ReviewResponseController;
+
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
@@ -128,6 +134,9 @@ Route::prefix('shop')->group(function () {
     Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
+    //route cho trang nhập mã giảm giá
+    Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
+    Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
@@ -188,13 +197,40 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //  route reply comment post
     Route::get('comments/{comment}/reply/{reply}/edit', [CommentReplyController::class, 'editReply'])->name('comments.reply.edit');
     Route::put('comments/{comment}/reply/{reply}', [CommentReplyController::class, 'updateReply'])->name('comments.reply.update');
+    Route::resource('product-comments', ProductCommentController::class);
+
+    // Phản hồi bình luận sản phẩm (trả lời cho bình luận sản phẩm)
+    Route::post('product-comments/respond/{id}', [ProductCommentController::class, 'respond'])->name('product-comments.respond');
+    Route::get('product-comments-trash', [ProductCommentController::class, 'trash'])->name('product-comments.trash');
+    Route::patch('product-comments/{id}/restore', [ProductCommentController::class, 'restore'])->name('product-comments.restore');
+    Route::delete('product-comments/{id}/delete-permanently', [ProductCommentController::class, 'deletePermanently'])->name('product-comments.delete-permanently');
+
+    // Quản lý trả lời bình luận sản phẩm
+    Route::get('product-comments/{comment}/reply/{reply}/edit', [ProductCommentReplyController::class, 'editReply'])->name('product-comments.reply.edit');
+    Route::put('product-comments/{comment}/reply/{reply}', [ProductCommentReplyController::class, 'updateReply'])->name('product-comments.reply.update');
+    // Đánh giá
+    Route::resource('product-reviews', ProductReviewController::class);
+
+    // Quản lý đánh giá sản phẩm
+    Route::post('product-reviews/respond/{id}', [ProductReviewController::class, 'respond'])->name('product-reviews.respond');
+    Route::get('product-reviews-trash', [ProductReviewController::class, 'trash'])->name('product-reviews.trash');
+    Route::patch('product-reviews/{id}/restore', [ProductReviewController::class, 'restore'])->name('product-reviews.restore');
+    Route::delete('product-reviews/{id}/delete-permanently', [ProductReviewController::class, 'deletePermanently'])->name('product-reviews.delete-permanently');
+
+    // Quản lý phản hồi đánh giá sản phẩm
+    Route::get('product-reviews/{review}/response/{response}/edit', [ReviewResponseController::class, 'editResponse'])->name('product-reviews.response.edit');
+    Route::put('product-reviews/{review}/response/{response}', [ReviewResponseController::class, 'updateResponse'])->name('product-reviews.response.update');
 
 
     // Route Order
     Route::resource('orders', OrderController::class);
+
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+    // Route xuất hóa đơn PDF
+    Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('orders.invoice');
 
     // route payment
     Route::resource('/payment-methods', PaymentMethodController::class);

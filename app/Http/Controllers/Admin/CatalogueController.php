@@ -16,6 +16,7 @@ class CatalogueController extends Controller
         $title = 'Danh Sách Danh Mục';
         $query = Catalogue::query();
 
+        // Tìm kiếm theo tên
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('name', 'like', '%' . $search . '%')
@@ -24,7 +25,19 @@ class CatalogueController extends Controller
                 });
         }
 
+        // Lọc theo ngày tạo
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('status', $request->status);
+        }
+
+        // Phân trang và lấy danh sách danh mục
         $catalogues = $query->paginate(10);
+
         return view('admin.catalogues.index', compact('catalogues', 'title'));
     }
 
