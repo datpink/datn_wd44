@@ -33,6 +33,7 @@ use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -110,9 +111,6 @@ Route::prefix('shop')->group(function () {
         return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
     })->name('privacy.policy');
 
-    Route::get('/privacy-policy', function () {
-        return view('client.privacy_policy.privacy_policy'); // Cập nhật đường dẫn tới view
-    })->name('privacy.policy');
 
     Route::get('/contact', [App\Http\Controllers\Client\ContactController::class, 'index'])->name('contact.index');
     Route::post('/contact', [App\Http\Controllers\Client\ContactController::class, 'store'])->name('contact.store');
@@ -151,6 +149,7 @@ Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name
 
 // thanh toán
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
+Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
 
 
 // Đăng xuất ở admin
@@ -265,4 +264,9 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/{id}/restore', [UserController::class, 'restore'])->name('users.restore')->middleware('permission:full|user_edit');
         Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete')->middleware('permission:full|user_edit');
     });
+    Route::middleware('auth')->group(function () {
+        Route::post('/favorite/{productId}', [FavoriteController::class, 'addFavorite'])->name('favorite.add');
+        Route::delete('/favorite/{productId}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
+    });
+
 });

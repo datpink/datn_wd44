@@ -4,7 +4,7 @@
 
 @section('content')
     <style>
-        .img{
+        .img {
             width: 200px;
             height: auto;
             margin: 0 auto;
@@ -106,17 +106,15 @@
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
-                                        <div class="img"  style="width: 200px; height: auto;" >
+                                        <div class="img" style="width: 200px; height: auto; margin-top: 10px">
                                             <a class="thumb-link"
-                                            href="{{ route('client.products.product-detail', $product->slug) }}"
-                                            tabindex="0">
-                                            @if ($product->image_url && \Storage::exists($product->image_url))
-                                                <img src="{{ \Storage::url($product->image_url) }}"
-                                                    alt="{{ $product->name }}">
-                                            @else
-                                            
-                                            @endif
-                                        </a>
+                                                href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                tabindex="0">
+                                                @if ($product->image_url && \Storage::exists($product->image_url))
+                                                    <img src="{{ \Storage::url($product->image_url) }}"
+                                                        alt="{{ $product->name }}">
+                                                @endif
+                                            </a>
                                         </div>
                                         <div class="flash">
                                             @if ($product->condition === 'new')
@@ -129,8 +127,10 @@
                                     </div>
                                     <div class="product-info">
                                         <div class="rating-wapper nostar">
-                                            <div class="star-rating"><span style="width:0%">Rated <strong
-                                                        class="rating">0</strong> out of 5</span></div>
+                                            <div class="star-rating">
+                                                <span style="width:0%">Rated <strong class="rating">0</strong> out of
+                                                    5</span>
+                                            </div>
                                             <span class="review">(0)</span>
                                         </div>
                                         <h3 class="product-name product_title">
@@ -155,8 +155,16 @@
                                     <div class="group-button clearfix">
                                         <div class="yith-wcwl-add-to-wishlist">
                                             <div class="yith-wcwl-add-button show">
-                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                <a href="#" class="add_to_wishlist"
+                                                    data-product-id="{{ $product->id }}">
+                                                    {{-- {{ auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích' }} --}}
+                                                    {{ auth()->check() &&
+                                                    auth()->user()->favorites->contains($product->id)
+                                                        ? 'Bỏ yêu thích'
+                                                        : 'Thêm vào yêu thích' }}
+                                                </a>
                                             </div>
+
                                         </div>
                                         <div class="add-to-cart">
                                             <a href="#" class="button product_type_grouped">View products</a>
@@ -677,4 +685,36 @@
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.add_to_wishlist').forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    // Lấy product ID từ thuộc tính data
+                    const productId = this.getAttribute('data-product-id');
+
+                    // Kiểm tra xem hiện tại là thêm hay bỏ yêu thích
+                    const isFavorite = this.textContent.trim() === 'Bỏ yêu thích';
+
+                    // Gửi yêu cầu AJAX để thêm hoặc bỏ sản phẩm khỏi danh sách yêu thích
+                    fetch(`/favorites/${isFavorite ? 'remove' : 'add'}/${productId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Cập nhật nội dung nút sau khi yêu thích hoặc bỏ yêu thích
+                            this.textContent = isFavorite ? 'Thêm vào yêu thích' :
+                                'Bỏ yêu thích';
+                            alert(data.message); // Hiển thị thông báo phản hồi
+                        })
+                        .catch(error => console.error('Lỗi:', error));
+                });
+            });
+        });
+    </script>
 @endsection

@@ -58,10 +58,18 @@ class User extends Authenticatable
     {
         return $this->roles()->where('name', 'admin')->exists(); // Kiểm tra xem người dùng có vai trò admin không
     }
+
     public function promotions()
 {
     return $this->belongsToMany(Promotion::class, 'user_promotions')
                 ->withPivot('is_used')
                 ->withTimestamps();
 }
+
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Product::class, 'favorites');
+    }
+
 }
