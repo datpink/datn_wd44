@@ -60,7 +60,7 @@
                             </form>
 
                             <div class="table-responsive">
-                                <table class="table v-middle m-0">
+                                <table id="basicExample" class="table v-middle m-0">
                                     <thead>
                                         <tr>
                                             <th>Stt</th>
