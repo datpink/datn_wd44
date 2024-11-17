@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\District;
 use App\Models\PaymentMethod; // Import model PaymentMethod
 use App\Models\Promotion;
+use App\Models\Province;
 use App\Models\Region;
+use App\Models\Ward;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,53 +50,33 @@ class CheckoutController extends Controller
 
         if ($couponCode) {
             // Kiểm tra mã giảm giá từ database hoặc áp dụng logic giảm giá
-            $coupon = Promotion::where('code', $couponCode)->first();
-            if ($coupon && $coupon->status == 'active' && $coupon->start_date <= Carbon::today() && ($coupon->end_date === null || $coupon->end_date >= Carbon::today())) {
-                // Giả sử mã giảm giá sẽ giảm một tỷ lệ phần trăm
+            $coupon = Promotion::where('code', $couponCode)
+                ->where('status', 'active')
+                ->where('start_date', '<=', now())
+                ->where(function ($query) {
+                    $query->whereNull('end_date')
+                        ->orWhere('end_date', '>=', now());
+                })
+                ->first();
+
+            if ($coupon) {
+                // Giảm theo phần trăm
                 $discount = $totalAmount * ($coupon->discount_value / 100);
                 $totalAmount -= $discount;  // Giảm tổng tiền
             }
         }
 
-        // Lấy thông tin miền từ request hoặc session
-        $regionId = $request->input('region');  // Lấy thông tin vùng miền từ input của request
-        // Nếu không có thông tin trong request, bạn có thể lấy từ session:
-        // $regionId = $request->session()->get('region');
+        // Lấy danh sách các tỉnh để hiển thị trong dropdown
+        $provinces = Province::all(['id', 'name']);
 
         // Khai báo mức phí vận chuyển cho các miền
-        $shippingFee = 0;
+        // Giả sử bạn đã gán các tỉnh vào các miền trước đó
+        // Ví dụ: các tỉnh miền Bắc có shippingFee = 30000, miền Trung = 40000, miền Nam = 50000
 
-        // Kiểm tra xem có thông tin vùng miền không
-        if ($regionId) {
-            // Lấy thông tin vùng miền từ cơ sở dữ liệu (sử dụng model Region)
-            $region = Region::find($regionId);
-
-            // Nếu vùng miền tồn tại, áp dụng phí vận chuyển tương ứng
-            if ($region) {
-                switch ($region->id) {
-                    case 'north': // Miền Bắc
-                        $shippingFee = 30000; // 30k
-                        break;
-                    case 'central': // Miền Trung
-                        $shippingFee = 40000; // 40k
-                        break;
-                    case 'south': // Miền Nam
-                        $shippingFee = 50000; // 50k
-                        break;
-                    default:
-                        $shippingFee = 0; // Không tính phí nếu không có vùng miền
-                        break;
-                }
-                $totalAmount += $shippingFee; // Cộng phí vận chuyển vào tổng tiền
-            }
-        }
-
-        // Lấy danh sách các vùng miền từ cơ sở dữ liệu
-        $regions = Region::all(); // Hoặc bạn có thể sử dụng một mảng dữ liệu trong trường hợp chưa có bảng trong DB
-
-        // Chuyển đến view thanh toán và truyền dữ liệu
-        return view('client.checkout.index', compact('products', 'paymentMethods', 'totalAmount', 'user', 'regions', 'discount', 'shippingFee', 'regionId'));
+        // Truyền dữ liệu vào view
+        return view('client.checkout.index', compact('products', 'paymentMethods', 'totalAmount', 'user', 'provinces', 'discount'));
     }
+
 
 
 
@@ -116,7 +99,7 @@ class CheckoutController extends Controller
         if (!$coupon) {
             return response()->json(['status' => 'error', 'message' => 'Mã giảm giá không hợp lệ'], 400);
         }
-        Log::info('Request Input:', $request->all()); // Ghi lại tất cả các input trong request
+        // Log::info('Request Input:', $request->all()); // Ghi lại tất cả các input trong request
         $totalAmount = $request->input('totalAmount');
 
         $totalAmount = $request->totalAmount;
@@ -131,12 +114,56 @@ class CheckoutController extends Controller
 
         // Lưu giá trị giảm giá và tổng tiền sau giảm vào session
         session(['discount_value' => $discountAmount, 'coupon_code' => $coupon->code, 'final_amount' => $finalAmount]);
-        Log::info('Coupon Code:', ['coupon_code' => $discountAmount]);
+        // Log::info('Coupon Code:', ['coupon_code' => $discountAmount]);
         return response()->json([
             'status' => 'success',
             'message' => 'Mã giảm giá hợp lệ',
             'discount' => $discountAmount, // Trả về giá trị giảm giá
             'final_amount' => $finalAmount  // Trả về tổng tiền sau giảm giá
+        ]);
+    }
+
+    public function getDistricts($provinceId)
+    {
+        Log::info('Entered getDistricts function');
+
+        if (!$provinceId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tỉnh không hợp lệ.',
+            ]);
+        }
+
+        $districts = District::where('province_id', $provinceId)
+            ->select('id', 'name')
+            ->get();
+
+        Log::info('Province ID: ' . $districts);
+        return response()->json([
+            'status' => 'success',
+            'districts' => $districts,
+        ]);
+    }
+
+    public function getWards($districtId)
+    {
+        // Kiểm tra `districtId` hợp lệ
+        if (!$districtId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Huyện không hợp lệ.',
+            ]);
+        }
+
+        // Lấy danh sách xã/phường từ cơ sở dữ liệu
+        $wards = Ward::where('district_id', $districtId)
+            ->select('id', 'name')
+            ->get();
+
+        // Trả về phản hồi JSON
+        return response()->json([
+            'status' => 'success',
+            'wards' => $wards,
         ]);
     }
 }
