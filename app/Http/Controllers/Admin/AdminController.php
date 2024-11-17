@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -62,10 +63,12 @@ class AdminController extends Controller
 
         // Chuyển đổi dữ liệu thành mảng
         $dates = $dailyRevenue->pluck('date')->map(function ($date) {
-            return Carbon::parse($date)->format('d-m-Y'); // Định dạng ngày thành dd-mm-yyyy
+            return Carbon::parse($date)->format('d-m-Y');
         })->toArray();
 
         $totals = $dailyRevenue->pluck('total')->toArray();
+
+
         $discounts = $dailyRevenue->pluck('discount')->sum(); // Tính tổng giảm giá
 
         // Tính tổng doanh số
@@ -79,6 +82,49 @@ class AdminController extends Controller
             ->take(5)
             ->get();
 
+
+        // Lấy số lượng đơn hàng theo trạng thái, chỉ lấy "processing" và "shipped" cho danh sách
+        $ordersByStatusForList = Order::select('status', \DB::raw('COUNT(*) as count'))
+            ->whereIn('status', ['processing', 'shipped']) // Chỉ lấy hai trạng thái này cho danh sách
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Đảm bảo đủ tất cả các trạng thái cần thiết
+        $statusesForList = ['processing', 'shipped']; // Chỉ cần trạng thái này cho danh sách
+        $ordersByStatusForList = array_replace(array_fill_keys($statusesForList, 0), $ordersByStatusForList);
+
+        // Lấy số lượng đơn hàng cho tất cả các trạng thái để hiển thị trên biểu đồ
+        $ordersByStatusForChart = Order::select('status', \DB::raw('COUNT(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Đảm bảo đủ tất cả các trạng thái cho biểu đồ
+        $statusesForChart = ['processing', 'Delivering', 'shipped', 'canceled', 'refunded'];
+        $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
+
+
+        // Truy vấn Top 10 sản phẩm bán chạy, bao gồm eager load product
+        $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_variant_id')
+            ->orderByDesc('total_quantity') // Sắp xếp theo số lượng bán
+            ->limit(10) // Lấy 10 sản phẩm bán chạy nhất
+            ->with('productVariant.product') // Eager load quan hệ product từ product_variant
+            ->get();
+
+        // Lấy tên sản phẩm hoặc mã sản phẩm tương ứng với `product_variant_id`
+        $topSellingProductNames = $topSellingProducts->map(function ($item) {
+            // Kiểm tra sự tồn tại của product_variant và product trước khi truy cập thuộc tính name
+            if ($item->productVariant && $item->productVariant->product) {
+                return $item->productVariant->product->name;
+            }
+            return 'Không xác định';
+        });
+
+
+        $topSellingProductQuantities = $topSellingProducts->pluck('total_quantity');
+
         return view('admin.index', compact(
             'title',
             'recentBuyers',
@@ -90,7 +136,12 @@ class AdminController extends Controller
             'totals',
             'totalSales',
             'discounts',
-            'orders'
+            'orders',
+            'ordersByStatusForList',
+            'ordersByStatusForChart',
+            'topSellingProducts',
+            'topSellingProductNames',
+            'topSellingProductQuantities'
         ));
     }
 
