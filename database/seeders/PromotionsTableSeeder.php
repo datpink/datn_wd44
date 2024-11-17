@@ -17,7 +17,10 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-06-01',
                 'end_date'          => '2024-08-31',
-                
+                'type'              => 'percentage', // Giảm theo %
+                'applies_to_order'  => true,  // Áp dụng cho đơn hàng
+                'applies_to_shipping' => false, // Không áp dụng cho phí vận chuyển
+                'min_order_value'   => 100.00,  // Mức tối thiểu để áp dụng mã giảm giá cho đơn hàng
             ],
             [
                 'id'                => 2,
@@ -26,7 +29,10 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'inactive',
                 'start_date'        => '2024-12-01',
                 'end_date'          => '2024-12-31',
-                
+                'type'              => 'fixed_amount', // Giảm giá tiền cố định
+                'applies_to_order'  => true,  // Áp dụng cho đơn hàng
+                'applies_to_shipping' => true, // Áp dụng cho phí vận chuyển
+                'min_order_value'   => 50.00,  // Mức tối thiểu để áp dụng mã giảm giá cho đơn hàng
             ],
             [
                 'id'                => 3,
@@ -35,7 +41,10 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-11-25',
                 'end_date'          => '2024-11-30',
-                
+                'type'              => 'percentage', // Giảm theo %
+                'applies_to_order'  => false, // Không áp dụng cho đơn hàng
+                'applies_to_shipping' => true, // Áp dụng cho phí vận chuyển
+                'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này
             ],
             [
                 'id'                => 4,
@@ -44,9 +53,11 @@ class PromotionsTableSeeder extends Seeder
                 'status'            => 'active',
                 'start_date'        => '2024-12-31',
                 'end_date'          => '2025-01-31',
-                
+                'type'              => 'free_shipping', // Free shipping
+                'applies_to_order'  => false, // Không áp dụng cho đơn hàng
+                'applies_to_shipping' => true, // Áp dụng cho phí vận chuyển
+                'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này
             ],
-        ]); 
+        ]);
     }
 }
-

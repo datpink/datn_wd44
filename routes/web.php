@@ -134,6 +134,10 @@ Route::prefix('shop')->group(function () {
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
+    
+    Route::get('/discount-codes', [DiscountController::class, 'showDiscountCodes'])->name('discountCodes');
+    Route::post('/apply-discount', [DiscountController::class, 'applyDiscount'])->name('applyDiscount');
+
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
