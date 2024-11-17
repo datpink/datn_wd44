@@ -148,9 +148,16 @@ Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
 
+
+
 // thanh toán
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
+
+// Route để xử lý AJAX lấy danh sách huyện
+Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
+Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
+
 
 
 // Đăng xuất ở admin
