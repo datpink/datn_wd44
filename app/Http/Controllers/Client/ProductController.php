@@ -56,6 +56,13 @@ class ProductController extends Controller
     {
         $query = Product::where('is_active', 1);
 
+        $minDiscountPrice = Product::min('discount_price');
+        $maxDiscountPrice = Product::max('discount_price');
+
+        $attributeValueId = $request->input('attribute_id');
+        $attributeStorageId = $request->input('attribute_storage_value_id');
+
+
         // Xử lý sắp xếp
         $orderby = $request->input('orderby');
         if ($orderby) {
@@ -70,6 +77,34 @@ class ProductController extends Controller
                     $query->orderBy('id', 'desc');
                     break;
             }
+        }
+
+        $minPrice = $request->input('price_min');
+        $maxPrice = $request->input('price_max');
+        // dd($minPrice);
+
+        $query->whereBetween('discount_price', [$minPrice, $maxPrice]);
+
+        if ($attributeValueId && $attributeStorageId) {
+            // Kiểm tra sản phẩm có cả 2 thuộc tính màu và dung lượng trong cùng một biến thể
+            $query->whereHas('variants', function ($query) use ($attributeValueId, $attributeStorageId) {
+                $query->whereHas('attributeValues', function ($query) use ($attributeValueId) {
+                    $query->where('attribute_values.id', $attributeValueId); // Lọc theo màu
+                })
+                    ->whereHas('attributeValues', function ($query) use ($attributeStorageId) {
+                        $query->where('attribute_values.id', $attributeStorageId); // Lọc theo dung lượng
+                    });
+            });
+        } elseif ($attributeValueId) {
+            // Chỉ lọc theo màu
+            $query->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+                $query->where('attribute_values.id', $attributeValueId);
+            });
+        } elseif ($attributeStorageId) {
+            // Chỉ lọc theo dung lượng
+            $query->whereHas('variants.attributeValues', function ($query) use ($attributeStorageId) {
+                $query->where('attribute_values.id', $attributeStorageId);
+            });
         }
 
         // Sau khi sắp xếp, phân trang

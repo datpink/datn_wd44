@@ -381,13 +381,42 @@
         </div>
     </div>
 
+    <style>
+        .kobolg-widget-layered-nav-list__item .term-storage:hover {
+            position: relative;
+            color: #28a745;
+            /* Màu chữ khi hover */
+        }
+
+        /* Thêm dấu tích khi hover */
+        .kobolg-widget-layered-nav-list__item .term-storage:hover::after {
+            content: '✔';
+            position: absolute;
+            right: -20px;
+            color: #28a745;
+        }
+
+        /* Thêm dấu tích khi chọn (class .selected) */
+        .term-storage.selected {
+            position: relative;
+            color: #28a745;
+            /* Màu chữ khi đã chọn */
+        }
+
+        .term-storage.selected::after {
+            content: '✔';
+            position: absolute;
+            right: -20px;
+            color: #28a745;
+        }
+    </style>
 
     <script>
         document.addEventListener('DOMContentLoaded', function(e) {
             const orderBySelect = document.querySelector('.orderby');
             const colorGroup = document.querySelectorAll('.term-color');
             const storageGroup = document.querySelectorAll('.term-storage');
-            const priceRange = document.getElementById('price-range');
+            // const priceRange = document.getElementById('price-range');
             const parent_id = document.getElementById('catalogues-id');
             const child_id = document.getElementById('child-catalogues-id');
             const priceFilterForm = document.getElementById('priceFilterForm');
@@ -439,11 +468,18 @@
                 color.addEventListener('click', function(e) {
                     e.preventDefault();
                     const colorId = this.getAttribute('data-attribute_id');
+
+                    // Kiểm tra nếu đã chọn màu này, thì bỏ chọn (đặt thành null)
                     if (activeFilters.color === colorId) {
                         activeFilters.color = null;
+                        this.classList.remove('selected'); // Bỏ dấu tích
                     } else {
+                        // Xóa dấu tích từ các màu khác và chỉ thêm vào màu được chọn
+                        colorGroup.forEach(c => c.classList.remove('selected'));
                         activeFilters.color = colorId;
+                        this.classList.add('selected'); // Thêm dấu tích
                     }
+
                     fetchFilteredProducts();
                 });
             });
@@ -453,24 +489,24 @@
                 storage.addEventListener('click', function(e) {
                     e.preventDefault();
                     const storageId = this.getAttribute('data-attribute_storage_id');
+
+                    // Kiểm tra nếu đã chọn bộ nhớ này, thì bỏ chọn (đặt thành null)
                     if (activeFilters.storage === storageId) {
                         activeFilters.storage = null;
+                        this.classList.remove('selected'); // Bỏ dấu tích
                     } else {
+                        // Xóa dấu tích từ các bộ nhớ khác và chỉ thêm vào bộ nhớ được chọn
+                        storageGroup.forEach(s => s.classList.remove('selected'));
                         activeFilters.storage = storageId;
+                        this.classList.add('selected'); // Thêm dấu tích
                     }
+
                     fetchFilteredProducts();
                 });
             });
 
             // Xử lý sự kiện cho giá
-            if (priceRange) {
-                priceRange.addEventListener('change', function() {
-                    const [minPrice, maxPrice] = this.value.split('-');
-                    activeFilters.price_min = minPrice;
-                    activeFilters.price_max = maxPrice;
-                    fetchFilteredProducts();
-                });
-            }
+
 
             function fetchFilteredProducts() {
                 axios.post('/api/shop/products/filter-catalogies-api', {
