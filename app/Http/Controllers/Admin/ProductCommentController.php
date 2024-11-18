@@ -2,84 +2,61 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Comment;
+use App\Models\ProductComment;
+use App\Models\CommentReply;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProductCommentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $comments = Comment::with(['user', 'post', 'commentReplys.user'])->get();
-        return view('client/products/index', compact('comments'));
-    }
+        $search = $request->input('search');
+        $productComments = ProductComment::with(['user', 'product', 'replies']) // Đổi thành 'replies'
+            ->when($search, function ($query, $search) {
+                $query->where('content', 'LIKE', "%{$search}%");
+            })
+            ->get();
 
-
-    public function respond(Request $request, $id)
-    {
-        try {
-            $validated = $request->validate([
-                'response' => 'required|string',
-            ]);
-
-            $comment = Comment::findOrFail($id);
-            $comment->commentReplys()->create([
-                'reply' => $request->input('response'),
-                'user_id' => auth()->id(), // Lưu người dùng hiện tại
-            ]);
-
-            return redirect()->route('comments.index')->with('respond', 'Phản hồi đã được gửi.');
-        } catch (\Throwable $th) {
-            //throw $th;
-            return redirect()->route('comments.index')->with('respondError', 'Phản hồi đã được gửi.');
-
-        }
+        return view('admin.product_comments.list', compact('productComments'));
     }
 
     public function destroy($id)
     {
-        $comment = Comment::findOrFail($id);
+        $comment = ProductComment::findOrFail($id);
         $comment->delete();
-        return redirect()->route('comments.index')->with('destroyComment', 'Bình luận đã được xóa.');
+
+        return redirect()->route('product-comments.index')->with('destroyComment', true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function respond(Request $request, $id)
     {
-        //
+        try {
+            $request->validate([
+                'response' => 'required|string|max:500'
+            ]);
+            $comment = ProductComment::findOrFail($id);
+            $comment->replies()->create([
+                'user_id' => auth()->id(),
+                'reply' => $request->response,
+            ]);
+
+            return redirect()->route('product-comments.index')->with('respond', 'Phản hồi đã được gửi.');
+        } catch (\Throwable $th) {
+
+            return $th->getMessage();
+            return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function updateReply(Request $request, ProductComment $comment, CommentReply $reply)
     {
-        //
-    }
+        $request->validate([
+            'reply' => 'required|string|max:500'
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $reply->update(['reply' => $request->reply]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return redirect()->route('product-comments.index')->with('updateReply', true);
     }
 }

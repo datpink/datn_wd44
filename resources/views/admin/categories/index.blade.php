@@ -27,12 +27,23 @@
                             <form method="GET" action="{{ route('categories.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm danh mục"
-                                            value="{{ request()->search }}">
+                                        <input type="text" id="search" name="search" class="form-control form-control-sm" placeholder="Tìm kiếm danh mục" value="{{ request()->search }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" name="created_at" class="form-control form-control-sm" value="{{ request()->created_at }}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <select name="status" class="form-select form-select-sm">
+                                            <option value="">Tất cả trạng thái</option>
+                                            <option value="active" {{ request()->status === 'active' ? 'selected' : '' }}>Kích hoạt</option>
+                                            <option value="inactive" {{ request()->status === 'inactive' ? 'selected' : '' }}>Không kích hoạt</option>
+                                        </select>
                                     </div>
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a href="{{ route('categories.index') }}" class="btn btn-sm btn-secondary">Xóa lọc</a>
                                     </div>
                                 </div>
                             </form>

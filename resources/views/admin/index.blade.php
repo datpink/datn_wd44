@@ -17,7 +17,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-red">{{ $catalogueCount }}</h3>
-                            <a href="{{ route('catalogues.index')}}">Danh Mục</a>
+                            <a href="{{ route('catalogues.index') }}">Danh Mục</a>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $orderCount }}</h3>
-                            <a href="{{ route('orders.index')}}">Đơn Hàng</a>
+                            <a href="{{ route('orders.index') }}">Đơn Hàng</a>
                         </div>
                     </div>
                 </div>
@@ -61,67 +61,70 @@
             <!-- Row start -->
             <div class="row">
                 <div class="col-xxl-9  col-sm-12 col-12">
+                    <!-- Row start -->
+                    <div class="row mt-4">
+                        <div class="col-xxl-12 col-sm-12 col-12">
 
-                    <div class="card">
-                        <div class="card-body">
+                            <div class="card">
+                                <div class="card-body">
 
-                            <!-- Row start -->
-                            <div class="row">
-                                <div class="col-xxl-3 col-sm-4 col-12">
-                                    <div class="reports-summary">
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-primary me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Sales</h6>
-                                                <h5>12 Millions</h5>
-                                            </div>
-                                        </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-success me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Earnings</h6>
-                                                <h5>78 Millions</h5>
-                                            </div>
-                                        </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-danger me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>Overall Revenue</h6>
-                                                <h5>60 Millions</h5>
-                                            </div>
-                                        </div>
-                                        <div class="reports-summary-block">
-                                            <i class="bi bi-circle-fill text-warning me-2"></i>
-                                            <div class="d-flex flex-column">
-                                                <h6>New Customers</h6>
-                                                <h5>23k</h5>
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-info download-reports">View Reports</button>
-                                    </div>
-                                </div>
-                                <div class="col-xxl-9 col-sm-8 col-12">
+                                    <!-- Row start -->
                                     <div class="row">
-                                        <div class="col-12">
-                                            <div class="graph-day-selection mt-2" role="group">
-                                                <button type="button" class="btn active">Today</button>
-                                                <button type="button" class="btn">Yesterday</button>
-                                                <button type="button" class="btn">7 days</button>
-                                                <button type="button" class="btn">15 days</button>
-                                                <button type="button" class="btn">30 days</button>
+                                        <div class="col-xxl-3 col-sm-4 col-md-12">
+                                            <div class="reports-summary">
+                                                <h5 class="mb-4">Tổng Quan Doanh Thu</h5>
+                                                <div class="reports-summary-block mb-3">
+                                                    <i class="bi bi-circle-fill text-primary me-2"></i>
+                                                    <div class="d-flex flex-column">
+                                                        <h6>Tổng Doanh Số</h6>
+                                                        <h5 class="text-primary">{{ number_format($totalSales, 0, ',', '.') }}
+                                                            VNĐ</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="reports-summary-block mb-3">
+                                                    <i class="bi bi-circle-fill text-success me-2"></i>
+                                                    <div class="d-flex flex-column">
+                                                        <h6>Doanh Thu Tổng</h6>
+                                                        <h5 class="text-success">
+                                                            {{ number_format(array_sum($totals), 0, ',', '.') }} VNĐ</h5>
+                                                    </div>
+                                                </div>
+                                                <div class="reports-summary-block mb-3">
+                                                    <i class="bi bi-circle-fill text-danger me-2"></i>
+                                                    <div class="d-flex flex-column">
+                                                        <h6>Doanh Thu Sau Giảm Giá</h6>
+                                                        <h5 class="text-danger">
+                                                            {{ number_format(array_sum($totals) - $discounts, 0, ',', '.') }}
+                                                            VNĐ</h5>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-info w-100">Xem Báo Cáo</button>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <div id="revenueGraph"></div>
+                                        <div class="col-xxl-9 col-sm-8 col-md-12">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="graph-day-selection mt-2" role="group">
+                                                        <button type="button" class="btn active">Today</button>
+                                                        <button type="button" class="btn">Yesterday</button>
+                                                        <button type="button" class="btn">7 days</button>
+                                                        <button type="button" class="btn">15 days</button>
+                                                        <button type="button" class="btn">30 days</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 mt-3">
+                                                    <div id="revenueGraph" style="height: 400px;"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <!-- Row end -->
                                 </div>
                             </div>
-                            <!-- Row end -->
 
                         </div>
                     </div>
-
+                    <!-- Row end -->
                 </div>
                 <div class="col-xxl-3  col-sm-12 col-12">
 
@@ -142,6 +145,29 @@
             </div>
             <!-- Row end -->
 
+            <div class="row">
+                <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Sản Phẩm Bán Chạy</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="basic-column-graph-datalables"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Bar Grouped</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="basic-bar-graph-grouped"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Row start -->
             <div class="row">
                 <div class="col-12">
@@ -150,11 +176,11 @@
                             <div class="card-title">Orders</div>
                         </div>
                         <div class="card-body">
-
                             <div class="table-responsive">
                                 <table class="table v-middle">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Customer</th>
                                             <th>Product</th>
                                             <th>User ID</th>
@@ -165,100 +191,68 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/user3.png" class="media-avatar"
-                                                        alt="Bootstrap Gallery">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Ellie Collins</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/food/img3.jpg"
-                                                        class="media-avatar" alt="Admin Themes">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Ginger Snacks</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Arise827</td>
-                                            <td>12/12/2021</td>
-                                            <td>$18.00</td>
-                                            <td>
-                                                <span class="text-green td-status"><i class="bi bi-check-circle"></i>
-                                                    Paid</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge shade-green min-90">Delivered</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/user.png" class="media-avatar"
-                                                        alt="Bootstrap Gallery">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Sophie Nguyen</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/food/img6.jpg"
-                                                        class="media-avatar" alt="Admin Themes">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Guava Sorbet</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Arise253</td>
-                                            <td>18/12/2021</td>
-                                            <td>$32.00</td>
-                                            <td>
-                                                <span class="text-red td-status"><i class="bi bi-x-circle"></i>
-                                                    Failed</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge shade-red min-90">Cancelled</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/user4.png" class="media-avatar"
-                                                        alt="Bootstrap Gallery">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Darcy Ryan</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="media-box">
-                                                    <img src="../theme/admin/assets/images/food/img5.jpg"
-                                                        class="media-avatar" alt="Admin Themes">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">Gooseberry Surprise</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>Arise878</td>
-                                            <td>22/12/2021</td>
-                                            <td>$19.00</td>
-                                            <td>
-                                                <span class="text-blue td-status"><i class="bi bi-clock-history"></i>
-                                                    Awaiting</span>
-                                            </td>
-                                            <td>
-                                                <span class="badge shade-blue min-90">Processing</span>
-                                            </td>
-                                        </tr>
+                                        @foreach ($orders as $order)
+                                            @foreach ($order->items as $item)
+                                                <!-- Lặp qua các sản phẩm trong đơn hàng -->
+                                                <tr>
+                                                    <td>{{ $order->id }}</td>
+
+                                                    <td>
+                                                        <div class="media-box">
+                                                            <div class="media-box-body">
+                                                                <div class="text-truncate">
+                                                                    {{ $order->user->name ?? 'Unknown' }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="media-box">
+                                                            <div class="media-box-body">
+                                                                <div class="text-truncate">
+                                                                    {{ $item->productVariant->product->name ?? 'Unknown Product' }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $order->user_id }}</td>
+                                                    <td>{{ $order->created_at->format('d/m/Y') }}</td>
+                                                    <td>${{ number_format($order->total_amount, 2) }}</td>
+                                                    <td>
+                                                        @if ($order->payment_status === 'pending')
+                                                            <span class="badge rounded-pill bg-warning">Chưa thanh
+                                                                toán</span>
+                                                        @elseif ($order->payment_status === 'paid')
+                                                            <span class="badge rounded-pill bg-success">Đã thanh
+                                                                toán</span>
+                                                        @elseif ($order->payment_status === 'failed')
+                                                            <span class="badge rounded-pill bg-danger">Thanh toán thất
+                                                                bại</span>
+                                                        @else
+                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($order->status === 'processing')
+                                                            <span class="badge rounded-pill bg-info">Đang xử lý</span>
+                                                        @elseif ($order->status === 'Delivering')
+                                                            <span class="badge rounded-pill bg-warning">Đang giao
+                                                                hàng</span>
+                                                        @elseif ($order->status === 'shipped')
+                                                            <span class="badge rounded-pill bg-primary">Đã giao hàng</span>
+                                                        @elseif ($order->status === 'canceled')
+                                                            <span class="badge rounded-pill bg-danger">Đã hủy</span>
+                                                        @elseif ($order->status === 'refunded')
+                                                            <span class="badge rounded-pill bg-secondary">Hoàn trả</span>
+                                                        @else
+                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -353,29 +347,23 @@
                 <div class="col-sm-6 col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Tasks</div>
+                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
                         </div>
                         <div class="card-body">
                             <div id="taskGraph"></div>
                             <ul class="task-list-container">
-                                <li class="task-list-item">
-                                    <div class="task-icon shade-blue">
-                                        <i class="bi bi-clipboard-plus"></i>
-                                    </div>
-                                    <div class="task-info">
-                                        <h5 class="task-title">New</h5>
-                                        <p class="amount-spend">12</p>
-                                    </div>
-                                </li>
-                                <li class="task-list-item">
-                                    <div class="task-icon shade-green">
-                                        <i class="bi bi-clipboard-check"></i>
-                                    </div>
-                                    <div class="task-info">
-                                        <h5 class="task-title">Done</h5>
-                                        <p class="amount-spend">15</p>
-                                    </div>
-                                </li>
+                                @foreach ($ordersByStatusForList as $status => $count)
+                                    <li class="task-list-item">
+                                        <div
+                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
+                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                                        </div>
+                                        <div class="task-info">
+                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
+                                            <p class="amount-spend">{{ $count }}</p>
+                                        </div>
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -393,7 +381,8 @@
                                         <div class="delivery-details">
                                             <span class="badge shade-blue">Sales</span>
                                             <h5>Marie Kieffer</h5>
-                                            <p>Thanks for choosing Apple product, further if you have any questions please
+                                            <p>Thanks for choosing Apple product, further if you have any questions
+                                                please
                                                 contact sales
                                                 team.</p>
                                         </div>
@@ -413,7 +402,8 @@
                                         <div class="delivery-details">
                                             <span class="badge shade-blue">Business</span>
                                             <h5>Teboho Ncube</h5>
-                                            <p>Use an exclusive promo code HKYMM50 and get 50% off on your first order in
+                                            <p>Use an exclusive promo code HKYMM50 and get 50% off on your first order
+                                                in
                                                 the new year.
                                             </p>
                                         </div>
@@ -423,7 +413,8 @@
                                         <div class="delivery-details">
                                             <span class="badge shade-blue">Admin</span>
                                             <h5>Carla Jackson</h5>
-                                            <p>Befor inviting the administrator, you must create a role that can be assigned
+                                            <p>Befor inviting the administrator, you must create a role that can be
+                                                assigned
                                                 to them.
                                             </p>
                                         </div>
@@ -433,7 +424,8 @@
                                         <div class="delivery-details">
                                             <span class="badge shade-red">Security</span>
                                             <h5>Julie Kemp</h5>
-                                            <p>Your security subscription has expired. Please renew the subscription.</p>
+                                            <p>Your security subscription has expired. Please renew the subscription.
+                                            </p>
                                         </div>
                                     </li>
                                 </ul>
@@ -449,16 +441,19 @@
                         <div class="card-body">
                             <div class="scroll370">
                                 <div class="activity-container">
-                                    @foreach($recentBuyers as $buyer)
+                                    @foreach ($recentBuyers as $buyer)
                                         <div class="activity-block">
                                             <div class="activity-user">
-                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User"> <!-- Hình ảnh người dùng -->
+                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
+                                                <!-- Hình ảnh người dùng -->
                                             </div>
                                             <div class="activity-details">
                                                 <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
-                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5> <!-- Thời gian thực hiện đơn hàng -->
-                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p> <!-- Số lượng đơn hàng -->
-                                                <span class="badge shade-green">Mới</span>
+                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
+                                                <!-- Thời gian thực hiện đơn hàng -->
+                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
+                                                <!-- Số lượng đơn hàng -->
+                                                <span class="badge shade-green rounded-pill">Mới</span>
                                             </div>
                                         </div>
                                     @endforeach
@@ -468,4 +463,261 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var options = {
+                        chart: {
+                            height: 317,
+                            type: 'area',
+                            toolbar: {
+                                show: false,
+                            },
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 3
+                        },
+                        series: [{
+                            name: 'Doanh thu',
+                            data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                        }],
+                        grid: {
+                            borderColor: '#e0e6ed',
+                            strokeDashArray: 5,
+                            xaxis: {
+                                lines: {
+                                    show: true
+                                }
+                            },
+                            yaxis: {
+                                lines: {
+                                    show: false,
+                                }
+                            },
+                            padding: {
+                                top: 0,
+                                right: 0,
+                                bottom: 10,
+                                left: 0
+                            },
+                        },
+                        xaxis: {
+                            categories: @json($dates), // Dữ liệu ngày tháng
+                        },
+                        yaxis: {
+                            labels: {
+                                show: false,
+                            }
+                        },
+                        colors: ['#4267cd', '#32b2fa'],
+                        markers: {
+                            size: 0,
+                            opacity: 0.1,
+                            colors: ['#4267cd', '#32b2fa'],
+                            strokeColor: "#ffffff",
+                            strokeWidth: 2,
+                            hover: {
+                                size: 7,
+                            }
+                        },
+                    }
+
+                    var chart = new ApexCharts(
+                        document.querySelector("#revenueGraph"),
+                        options
+                    );
+
+                    chart.render();
+                });
+            </script>
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    // Lấy dữ liệu ordersByStatus từ Laravel và chuyển thành mảng JSON
+                    const ordersByStatusForChart = @json($ordersByStatusForChart);
+
+                    // Tạo dữ liệu cho series và labels từ ordersByStatusForChart
+                    const seriesData = [
+                        ordersByStatusForChart['processing'],
+                        ordersByStatusForChart['Delivering'],
+                        ordersByStatusForChart['shipped'],
+                        ordersByStatusForChart['canceled'],
+                        ordersByStatusForChart['refunded']
+                    ];
+
+                    const labelsData = ['Chờ xử lý', 'Đang giao hàng', 'Hoàn thành', 'Hủy', 'Hoàn tiền'];
+
+                    var options = {
+                        chart: {
+                            height: 300, // Thay đổi chiều cao của biểu đồ
+                            width: '100%',
+                            type: 'radialBar',
+                            toolbar: {
+                                show: false,
+                            },
+                        },
+                        plotOptions: {
+                            radialBar: {
+                                dataLabels: {
+                                    name: {
+                                        fontSize: '12px',
+                                        fontFamily: 'Roboto', // Sử dụng font Roboto
+                                        fontWeight: 'bold',
+                                        fontColor: 'black',
+                                    },
+                                    value: {
+                                        fontSize: '21px',
+                                        fontFamily: 'Roboto', // Sử dụng font Roboto
+                                        fontWeight: 'bold',
+                                        fontColor: 'black',
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Đơn Hàng',
+                                        fontFamily: 'Roboto', // Sử dụng font Roboto
+                                        fontWeight: 'bold',
+                                        formatter: function(w) {
+                                            return w.globals.series.reduce((a, b) => a + b, 0);
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        series: seriesData,
+                        labels: labelsData,
+                        colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00'],
+                    };
+
+                    var chart = new ApexCharts(
+                        document.querySelector("#taskGraph"),
+                        options
+                    );
+                    chart.render();
+                });
+            </script>
+
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var options = {
+                        chart: {
+                            height: 300,
+                            type: 'bar',
+                            dropShadow: {
+                                enabled: true,
+                                opacity: 0.1,
+                                blur: 5,
+                                left: -10,
+                                top: 10
+                            },
+                        },
+                        plotOptions: {
+                            bar: {
+                                dataLabels: {
+                                    position: 'top', // top, center, bottom
+                                },
+                            }
+                        },
+                        series: [{
+                            name: 'Sản phẩm đã bán',
+                            data: @json($topSellingProductQuantities), // Dữ liệu số lượng bán
+                        }],
+                        xaxis: {
+                            categories: @json($topSellingProductNames), // Dữ liệu tên sản phẩm
+                            position: 'top',
+                            labels: {
+                                offsetY: -18,
+                            },
+                            axisBorder: {
+                                show: false
+                            },
+                            axisTicks: {
+                                show: false
+                            },
+                            crosshairs: {
+                                fill: {
+                                    type: 'gradient',
+                                    gradient: {
+                                        colorFrom: '#435EEF',
+                                        colorTo: '#95c5ff',
+                                        stops: [0, 100],
+                                        opacityFrom: 0.4,
+                                        opacityTo: 0.5,
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                offsetY: -35,
+                            }
+                        },
+                        fill: {
+                            gradient: {
+                                shade: 'light',
+                                type: "horizontal",
+                                shadeIntensity: 0.25,
+                                gradientToColors: undefined,
+                                inverseColors: true,
+                                opacityFrom: 1,
+                                opacityTo: 1,
+                                stops: [50, 0, 100, 100]
+                            },
+                        },
+                        yaxis: {
+                            axisBorder: {
+                                show: false
+                            },
+                            axisTicks: {
+                                show: false,
+                            },
+                            labels: {
+                                show: false,
+                                formatter: function(val) {
+                                    return val + " Sản Phẩm";
+                                }
+                            }
+                        },
+                        title: {
+                            floating: true,
+                            offsetY: 320,
+                            align: 'center',
+                            style: {
+                                color: '#2e323c'
+                            }
+                        },
+                        grid: {
+                            borderColor: '#e0e6ed',
+                            strokeDashArray: 5,
+                            xaxis: {
+                                lines: {
+                                    show: true
+                                }
+                            },
+                            yaxis: {
+                                lines: {
+                                    show: false,
+                                }
+                            },
+                            padding: {
+                                top: 0,
+                                right: 0,
+                                bottom: 0,
+                                left: 0
+                            },
+                        },
+                        colors: ['#435EEF', '#2b86f5', '#63a9ff', '#95c5ff', '#c6e0ff'],
+                    }
+
+                    var chart = new ApexCharts(document.querySelector("#basic-column-graph-datalables"), options);
+                    chart.render();
+                });
+            </script>
+
+
+
         @endsection

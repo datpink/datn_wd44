@@ -18,6 +18,7 @@ class PostCommentController extends Controller
         $comments = Comment::with(['user', 'post', 'commentReplys.user']);
         $search = $request->input('search');
 
+        // Tìm kiếm bình luận
         if ($search) {
             $comments->where(function ($query) use ($search) {
                 $query->whereHas('user', function ($q) use ($search) {
@@ -30,7 +31,30 @@ class PostCommentController extends Controller
             });
         }
 
+        // Lọc theo ngày tạo bình luận
+        if ($request->has('comment_date') && $request->comment_date) {
+            $comments->whereDate('created_at', $request->comment_date);
+        }
+
+        // Lọc theo ngày phản hồi
+        if ($request->has('reply_date') && $request->reply_date) {
+            $comments->whereHas('commentReplys', function ($query) use ($request) {
+                $query->whereDate('created_at', $request->reply_date);
+            });
+        }
+
+        // Lọc theo trạng thái phản hồi
+        if ($request->has('responded') && $request->responded !== '') {
+            if ($request->responded === '1') {
+                $comments->whereHas('commentReplys'); // Đã phản hồi
+            } else {
+                $comments->whereDoesntHave('commentReplys'); // Chưa phản hồi
+            }
+        }
+
+        // Phân trang và lấy danh sách bình luận
         $comments = $comments->paginate(10);
+
         return view('admin.comments.list', compact('comments', 'title'));
     }
 
@@ -51,9 +75,9 @@ class PostCommentController extends Controller
 
             return redirect()->route('comments.index')->with('respond', 'Phản hồi đã được gửi.');
         } catch (\Throwable $th) {
-            
+
             return $th->getMessage();
-            return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
+            // return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
         }
     }
 
@@ -78,9 +102,13 @@ class PostCommentController extends Controller
     public function trash()
     {
         $title = 'Thùng Rác';
-        $comments = Comment::with(['user', 'post', 'commentReplys' => function ($query) {
-            $query->withTrashed()->with('user');
-        }])->onlyTrashed()->get();
+        $comments = Comment::with([
+            'user',
+            'post',
+            'commentReplys' => function ($query) {
+                $query->withTrashed()->with('user');
+            }
+        ])->onlyTrashed()->get();
 
         return view('admin.comments.trash', compact('comments', 'title'));
     }

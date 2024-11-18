@@ -59,5 +59,6 @@ class PromotionsTableSeeder extends Seeder
                 'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này
             ],
         ]);
+        ]);
     }
 }
