@@ -38,6 +38,7 @@ use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -157,6 +158,9 @@ Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('
 // Route để xử lý AJAX lấy danh sách huyện
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
+Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
+Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
 
 
 
