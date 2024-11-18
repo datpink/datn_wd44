@@ -92,10 +92,9 @@
                         </option>
                         @endforeach
                     </select>
-
                     <button type="button" class="btn btn-primary mt-2" id="apply-discount-btn">Áp dụng</button>
                 </div>
-                >
+                
 
 
                 <div class="d-flex">

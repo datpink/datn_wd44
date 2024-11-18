@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('promotions', function (Blueprint $table) {
         $table->id();
         $table->string('code');
-        $table->decimal('discount_value', 8, 2);
+        $table->decimal('discount_value', 10, 2);
         $table->enum('status', ['active', 'inactive']);
         $table->date('start_date');
         $table->date('end_date');

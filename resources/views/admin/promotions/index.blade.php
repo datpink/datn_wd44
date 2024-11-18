@@ -67,7 +67,7 @@
                                             @if ($promotion->type == 'percentage')
                                             {{ number_format(round($promotion->discount_value, -1), 0) }}%
                                             @elseif ($promotion->type == 'fixed_amount')
-                                            {{ number_format($promotion->discount_value, 2) }} VND
+                                            {{ number_format($promotion->discount_value, 0) }} VND
                                             @else
                                             Free Shipping
                                             @endif
