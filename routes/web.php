@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\admin\AdvertisementController;
+use App\Http\Controllers\Admin\AdvertisementController;
 use App\Http\Controllers\Admin\AttributeController;
 use App\Http\Controllers\Admin\AttributeValueController;
 use App\Http\Controllers\Admin\BannerController;
@@ -138,6 +138,8 @@ Route::prefix('shop')->group(function () {
     Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
@@ -152,9 +154,16 @@ Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
 
+
+
 // thanh toán
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
+
+// Route để xử lý AJAX lấy danh sách huyện
+Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
+Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
+
 
 
 // Đăng xuất ở admin
@@ -228,9 +237,13 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     // Route Order
     Route::resource('orders', OrderController::class);
+
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+    // Route xuất hóa đơn PDF
+    Route::get('/orders/{id}/invoice', [OrderController::class, 'generateInvoice'])->name('orders.invoice');
 
     // route payment
     Route::resource('/payment-methods', PaymentMethodController::class);

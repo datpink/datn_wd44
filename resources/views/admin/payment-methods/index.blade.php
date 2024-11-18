@@ -65,7 +65,7 @@
                                                 <td>
                                                     <span
                                                         class="badge
-                                                        {{ $paymentMethod->status === 'active' ? 'bg-success' : 'bg-warning' }}">
+                                                        {{ $paymentMethod->status === 'active' ? 'bg-success rounded-pill' : 'bg-warning rounded-pill' }}">
                                                         {{ ucfirst($paymentMethod->status) }}
                                                     </span>
                                                 </td>

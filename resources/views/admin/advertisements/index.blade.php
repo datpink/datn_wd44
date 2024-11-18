@@ -34,7 +34,7 @@
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                     </div>
                                     <div class="col-auto">
-                                        <button type="button" id="filterRemove" class="btn btn-sm btn-warning">Xóa
+                                        <button type="button" id="filterRemove" class="btn btn-sm btn-secondary">Xóa
                                             lọc</button>
                                     </div>
                                 </div>

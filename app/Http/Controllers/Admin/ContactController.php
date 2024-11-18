@@ -10,11 +10,38 @@ use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Danh Sách Liên Hệ';
-        // Lấy danh sách liên hệ từ cơ sở dữ liệu
-        $contacts = Contact::orderBy('created_at', 'desc')->paginate(7);
+        $query = Contact::query();
+
+        // Tìm kiếm theo tên hoặc email
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('message', 'like', "%{$search}%");
+            });
+        }
+
+        // Lọc theo ngày
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Lọc theo trạng thái trả lời
+        if ($request->has('reply') && $request->reply !== '') {
+            if ($request->reply === '1') {
+                $query->whereNotNull('reply');
+            } elseif ($request->reply === '0') {
+                $query->whereNull('reply');
+            }
+        }
+
+        // Lấy danh sách liên hệ, sắp xếp theo ngày và phân trang
+        $contacts = $query->orderBy('created_at', 'desc')->paginate(7);
+
         return view('admin.contact.index', compact('contacts', 'title')); // Truyền biến contacts đến view
     }
 

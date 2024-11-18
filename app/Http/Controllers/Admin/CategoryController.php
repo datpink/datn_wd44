@@ -12,9 +12,9 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh Mục Bài Viết';
-
         $query = Category::query();
 
+        // Tìm kiếm theo tên hoặc tên cha
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
             $query->where('name', 'like', '%' . $search . '%')
@@ -23,6 +23,17 @@ class CategoryController extends Controller
                 });
         }
 
+        // Lọc theo ngày tạo
+        if ($request->has('created_at') && $request->created_at) {
+            $query->whereDate('created_at', $request->created_at);
+        }
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('status', $request->status);
+        }
+
+        // Phân trang và lấy danh sách danh mục
         $categories = $query->paginate(10);
 
         return view('admin.categories.index', compact('categories', 'title'));
