@@ -14,14 +14,14 @@ return new class extends Migration
     Schema::create('promotions', function (Blueprint $table) {
         $table->id();
         $table->string('code');
-        $table->decimal('discount_value', 10, 2);
+        $table->decimal('discount_value', 15, 2);
         $table->enum('status', ['active', 'inactive']);
         $table->date('start_date');
         $table->date('end_date');
         $table->enum('type', ['percentage', 'fixed_amount', 'free_shipping']);
         $table->boolean('applies_to_order');
         $table->boolean('applies_to_shipping');
-        $table->decimal('min_order_value', 8, 2)->nullable();  // Cho phép NULL ở đây
+        $table->decimal('min_order_value', 10, 2)->nullable();  // Cho phép NULL ở đây
         $table->timestamps();
     });
 }
