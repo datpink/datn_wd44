@@ -170,4 +170,25 @@ class OrderController extends Controller
         // Trả về PDF
         return $pdf->download('invoice_' . $order->id . '.pdf');
     }
+
+    public function cancel(Request $request, $id)
+    {
+        $order = Order::findOrFail($id);
+
+        // Các trạng thái không cho phép hủy
+        $nonCancelableStatuses = ['shipped', 'canceled', 'refunded', 'Delivering'];
+
+        // Kiểm tra trạng thái đơn hàng có thể hủy
+        if (in_array($order->status, $nonCancelableStatuses)) {
+            return redirect()->back()->with('error', 'Không thể hủy đơn hàng này.');
+        }
+
+        // Cập nhật trạng thái và lý do hủy
+        $order->status = 'canceled';
+        $order->cancellation_reason = $request->input('cancellation_reason');
+        $order->save();
+
+        // Quay lại trang lịch sử đơn hàng với thông báo thành công
+        return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công.');
+    }
 }

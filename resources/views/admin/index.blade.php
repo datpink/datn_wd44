@@ -77,7 +77,7 @@
                                                     <i class="bi bi-circle-fill text-primary me-2"></i>
                                                     <div class="d-flex flex-column">
                                                         <h6>Tổng Doanh Số</h6>
-                                                        <h5 class="text-primary">{{ number_format($totalSales, 2) }}
+                                                        <h5 class="text-primary">{{ number_format($totalSales, 0, ',', '.') }}
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
@@ -86,7 +86,7 @@
                                                     <div class="d-flex flex-column">
                                                         <h6>Doanh Thu Tổng</h6>
                                                         <h5 class="text-success">
-                                                            {{ number_format(array_sum($totals), 2) }} VNĐ</h5>
+                                                            {{ number_format(array_sum($totals), 0, ',', '.') }} VNĐ</h5>
                                                     </div>
                                                 </div>
                                                 <div class="reports-summary-block mb-3">
@@ -94,7 +94,7 @@
                                                     <div class="d-flex flex-column">
                                                         <h6>Doanh Thu Sau Giảm Giá</h6>
                                                         <h5 class="text-danger">
-                                                            {{ number_format(array_sum($totals) - $discounts, 2) }}
+                                                            {{ number_format(array_sum($totals) - $discounts, 0, ',', '.') }}
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>

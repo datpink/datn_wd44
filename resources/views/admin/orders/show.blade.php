@@ -61,6 +61,9 @@
                                         <p><strong>Phương thức thanh toán:</strong>
                                             {{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}
                                         </p>
+                                        @if ($order->cancellation_reason)
+                                            <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

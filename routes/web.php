@@ -134,6 +134,8 @@ Route::prefix('shop')->group(function () {
     Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
