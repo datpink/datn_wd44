@@ -20,7 +20,8 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-886">
                                         <a class="azeroth-menu-item-title" title="menu"
                                             href="{{ route('client.productByCatalogues', $catalogue->slug) }}">
-                                            <img src="{{ asset('storage/' . $catalogue->image) }}" width="20px" height="20px" class="icon flaticon-console"> {{ $catalogue->name }}</a>
+                                            <img src="{{ asset('storage/' . $catalogue->image) }}" width="20px"
+                                                height="20px" class="icon flaticon-console"> {{ $catalogue->name }}</a>
                                     </li>
                                 @endif
                             @endforeach
@@ -63,7 +64,8 @@
                                                                 @if ($child->status === 'active')
                                                                     <!-- Kiểm tra trạng thái cho child -->
                                                                     <li>
-                                                                        <a href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
+                                                                        <a
+                                                                            href="{{ route('client.productByCatalogues', [$catalogues->slug, $child->slug]) }}">{{ $child->name }}</a>
                                                                     </li>
                                                                 @endif
                                                             @endforeach
@@ -221,6 +223,13 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li id="menu-item-230"
+                            class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
+                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.listProductFavorites') }}">Sản phẩm yêu thích</a>
+                            <span class="toggle-submenu"></span>
+                        </li>
+
                         <li id="menu-item-238"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100"

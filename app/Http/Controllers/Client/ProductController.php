@@ -48,6 +48,7 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
+
         // dd($products);
         return view('client.products.index', compact('products', 'minDiscountPrice', 'maxDiscountPrice', 'variant_values', 'variant_storage_values'));
     }
@@ -598,5 +599,22 @@ class ProductController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Phản hồi của bạn đã được thêm!');
+    }
+
+
+    public function productFavorite()
+    {
+
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thêm vào danh sách yêu thích.');
+        }
+        $user = Auth::user();
+        $products = Product::whereHas('favoritedBy.favorites', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
+        // dd($products);
+
+        return view('client.products.product-favorite', compact('products'));
     }
 }

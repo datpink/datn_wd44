@@ -14,7 +14,6 @@
         case 'client.posts.index':
             $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => ''];
             break;
-
         case 'contact.index':
             $breadcrumbs[] = ['name' => 'Liên Hệ', 'url' => ''];
             break;
@@ -38,6 +37,10 @@
         case 'client.products.product-detail':
             $breadcrumbs[] = ['name' => 'Sản Phẩm', 'url' => route('client.products.index')];
             $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
+            break;
+
+            case 'client.product-favorite':
+            $breadcrumbs[] = ['name' => 'Sản Phẩm Yêu Thích', 'url' => route('client.listProductFavorites')];
             break;
     }
 @endphp
