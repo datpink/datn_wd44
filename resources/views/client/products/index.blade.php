@@ -344,6 +344,7 @@
                                 const maxDiscountPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
                                     'data-max'));
 
+
                                 $('.price_slider').slider({
                                     range: true,
                                     min: 0,
@@ -352,15 +353,31 @@
                                     slide: function(event, ui) {
                                         priceFrom.textContent = `$${ui.values[0]}`;
                                         priceTo.textContent = `$${ui.values[1]}`;
+                                    },
+                                    change: function(event, ui) {
+                                        activeFilters.price_min = ui.values[0];
+                                        activeFilters.price_max = ui.values[1];
+                                        fetchFilteredProducts();
                                     }
                                 });
 
-                                // Gắn sự kiện "change" sau khi slider đã khởi tạo
-                                $('.price_slider').on('slidestop', function(event, ui) {
-                                    activeFilters.price_min = ui.values[0];
-                                    activeFilters.price_max = ui.values[1];
-                                    fetchFilteredProducts();
-                                });
+                                // $('.price_slider').slider({
+                                //     range: true,
+                                //     min: 0,
+                                //     max: maxDiscountPrice,
+                                //     values: [minPrice, maxPrice],
+                                //     slide: function(event, ui) {
+                                //         priceFrom.textContent = `$${ui.values[0]}`;
+                                //         priceTo.textContent = `$${ui.values[1]}`;
+                                //     }
+                                // });
+
+                                // // Gắn sự kiện "change" sau khi slider đã khởi tạo
+                                // $('.price_slider').on('slidestop', function(event, ui) {
+                                //     activeFilters.price_min = ui.values[0];
+                                //     activeFilters.price_max = ui.values[1];
+                                //     fetchFilteredProducts();
+                                // });
 
 
                                 priceFrom.textContent = `$${minPrice}`;
@@ -403,6 +420,7 @@
                                             activeFilters.storage = storageId;
                                             this.classList.add('selected'); // Thêm dấu tích
                                         }
+                                        console.log("Storage clicked:", storageId); // Kiểm tra xem sự kiện có được gọi
 
                                         fetchFilteredProducts();
                                     });
@@ -410,6 +428,7 @@
 
 
                                 function fetchFilteredProducts() {
+                                    // console.log("Fetching filtered products with filters:", activeFilters);
                                     axios.post('/api/shop/products', {
                                             // parent_id: parent_id ? parent_id.value : null,
                                             // child_id: child_id ? child_id.value : null,
