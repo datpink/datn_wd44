@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentReplyController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -38,6 +39,7 @@ use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\Client\NotificationController as ClientNotificationController;
 use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -76,7 +78,11 @@ Route::prefix('shop')->group(function () {
     Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
+   // Route hiển thị danh sách thông báo
+   Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
 
+   // Route đánh dấu thông báo đã đọc
+   Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
@@ -184,7 +190,13 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    // Danh sách thông báo
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
 
+    // Thêm thông báo
+    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+    
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
     Route::get('catalogues-trash', [CatalogueController::class, 'trash'])->name('catalogues.trash');

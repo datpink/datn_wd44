@@ -50,6 +50,7 @@
 
                 {{-- you-cart --}}
                 @include('client.you-cart.you-cart')
+                @include('client.layouts.notification')
                 {{-- login --}}
                 @include('auth.login-client')
 
