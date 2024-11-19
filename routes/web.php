@@ -92,6 +92,10 @@ Route::prefix('shop')->group(function () {
     Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
     Route::post('product/{product}/comment', [ProductController::class, 'storeComment'])->name('client.storeComment');
     Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
+
+    Route::get('list-product-favorite', [ProductController::class, 'productFavorite'])->name('client.listProductFavorites');
+
+
     // Route sửa và xóa bình luận
     Route::put('product/{product}/comment/{comment}/edit', [ProductController::class, 'updateComment'])->name('client.updateComment');
     Route::delete('product/{product}/comment/{comment}/delete', [ProductController::class, 'deleteComment'])->name('client.deleteComment');
@@ -317,5 +321,4 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/favorite/{productId}', [FavoriteController::class, 'addFavorite'])->name('favorite.add');
         Route::delete('/favorite/{productId}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
     });
-
 });
