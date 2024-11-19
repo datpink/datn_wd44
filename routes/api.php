@@ -26,3 +26,5 @@ Route::get('/shop/products/filter-by-color',                  [ProductController
 Route::get('/shop/products/filter-by-color-catalogies',                  [ProductController::class, 'productByCatalogues']);
 Route::post('/shop/products/filter-catalogies-api',                  [ProductController::class, 'productByCataloguesApi']);
 Route::get('/shop/products/filter-by-storage',                  [ProductController::class, 'filterByStorage']);
+// Route::post('/shop/add-product-favorite', [ProductController::class, 'addProductFavorite']);
+

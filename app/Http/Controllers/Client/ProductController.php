@@ -617,4 +617,64 @@ class ProductController extends Controller
 
         return view('client.products.product-favorite', compact('products'));
     }
+
+
+    public function addProductFavorite(Request $request)
+    {
+
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (!Auth::check()) {
+            return response()->json([
+                'error' => 'Bạn cần đăng nhập để thêm vào danh sách yêu thích.'
+            ], 401); // Trả về mã lỗi 401 khi chưa đăng nhập
+        }
+
+        $user = Auth::user();
+        // dd($user);
+        $productId = $request->input('product_id');
+        // Kiểm tra sản phẩm đã tồn tại trong danh sách yêu thích hay chưa
+        $isFavorited = $user->favorites()->where('product_id', $productId)->exists();
+
+        if ($isFavorited) {
+            return response()->json([
+                'error' => 'Sản phẩm đã có trong danh sách yêu thích.'
+            ], 400); // Trả về mã lỗi 400 khi sản phẩm đã có trong danh sách yêu thích
+        }
+
+        $user->favorites()->attach($productId);
+
+        return response()->json([
+            'success' => 'Sản phẩm đã được thêm vào danh sách yêu thích.'
+        ], 200); // Trả về mã lỗi 200 khi thành công
+    }
+
+
+    public function removeProductFavorite(Request $request)
+    {
+        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+        if (!Auth::check()) {
+            return response()->json([
+                'error' => 'Bạn cần đăng nhập để xóa khỏi danh sách yêu thích.'
+            ], 401); // Trả về mã lỗi 401 khi chưa đăng nhập
+        }
+
+        $user = Auth::user();
+        $productId = $request->input('product_id');
+
+        // Kiểm tra xem sản phẩm có tồn tại trong danh sách yêu thích hay không
+        $isFavorited = $user->favorites()->where('product_id', $productId)->exists();
+
+        if (!$isFavorited) {
+            return response()->json([
+                'error' => 'Sản phẩm không có trong danh sách yêu thích.'
+            ], 400); // Trả về mã lỗi 400 nếu sản phẩm không có trong danh sách yêu thích
+        }
+
+        // Nếu sản phẩm có trong danh sách yêu thích, xóa nó
+        $user->favorites()->detach($productId);
+
+        return response()->json([
+            'success' => 'Sản phẩm đã được xóa khỏi danh sách yêu thích.'
+        ], 200); // Trả về mã lỗi 200 khi thành công
+    }
 }

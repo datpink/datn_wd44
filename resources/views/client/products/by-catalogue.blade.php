@@ -124,7 +124,7 @@
                                                                         </div>
                                                                         <div class="yith-wcwl-add-to-wishlist">
                                                                             <div class="yith-wcwl-add-button show">
-                                                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                                                <a href="javascript:voi(0)" data-product-id={{$product->id}} class="add_to_wishlist">Thêm vào yêu thích</a>
                                                                             </div>
                                                                         </div>
                                                                         <div class="kobolg product compare-button">
@@ -231,7 +231,8 @@
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Thêm vào yêu thích</a>
+                                                        <a href="javascript:voi(0)" data-product-id={{ $product->id }}
+                                                            class="add_to_wishlist">Thêm vào yêu thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
@@ -423,6 +424,7 @@
             const priceFrom = document.getElementById('priceFrom');
             const priceTo = document.getElementById('priceTo');
 
+
             let activeFilters = {
                 color: null,
                 storage: null,
@@ -546,7 +548,7 @@
                                         <span class="review">(${product.ratings_count})</span>
                                     </div>
                                     <h3 class="product-name product_title">
-                                        <a href="/products/${product.id}">${product.name}</a>
+                                        <a href="{{ route('client.products.product-detail', $product->slug) }}">${product.name}</a>
                                     </h3>
                                     <span class="price">
                                         <span class="kobolg-Price-amount amount text-danger">
@@ -565,7 +567,7 @@
                                         </div>
                                         <div class="yith-wcwl-add-to-wishlist">
                                             <div class="yith-wcwl-add-button show">
-                                                <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                <a href="javascript:voi(0)" data-product-id=${product.id} class="add_to_wishlist">Thêm vào yêu thích</a>
                                             </div>
                                         </div>
                                         <div class="kobolg product compare-button">
@@ -586,6 +588,90 @@
                         console.log(err);
                     });
             }
+
+
+            document.body.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add_to_wishlist')) {
+                    const productId = e.target.dataset.productId;
+                    console.log(productId);
+
+                    axios.post('http://127.0.0.1:8000/shop/add-product-favorite', {
+                            product_id: productId,
+                        }, {
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content'),
+                            }
+                        })
+                        .then((res) => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: res.data.success, // Lấy thông báo từ response
+                                position: 'top',
+                                toast: true,
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                        })
+                        .catch((err) => {
+                            if (err.response) {
+                                // Kiểm tra mã lỗi HTTP từ server
+                                if (err.response.status === 401) {
+                                    // Nếu người dùng chưa đăng nhập
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Cần đăng nhập!',
+                                        text: err.response.data
+                                            .error, // Lấy thông báo lỗi từ response
+                                        position: 'top',
+                                        toast: true,
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else if (err.response.status === 400) {
+                                    // Nếu sản phẩm đã có trong danh sách yêu thích
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Có lỗi xảy ra!',
+                                        text: err.response.data
+                                            .error, // Lấy thông báo lỗi từ response
+                                        position: 'top',
+                                        toast: true,
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                } else {
+                                    // Các lỗi khác
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Có lỗi xảy ra!',
+                                        text: 'Không thể thêm sản phẩm vào yêu thích.',
+                                        position: 'top',
+                                        toast: true,
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+                                }
+                            } else {
+                                // Nếu không có response (ví dụ lỗi mạng)
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Có lỗi xảy ra!',
+                                    text: 'Không thể kết nối với server.',
+                                    position: 'top',
+                                    toast: true,
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+                            }
+                        })
+
+                }
+            });
+
+
         });
     </script>
 
@@ -674,7 +760,7 @@
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                                        <a href="javascript:voi(0)" data-product-id={{$product->id}} class="add_to_wishlist">Thêm vào yêu thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
