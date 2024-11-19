@@ -77,6 +77,19 @@
                         </ul>
                     </div>
                 </li>
+                <li class="sidebar-dropdown">
+                    <a href="#">
+                        <i class="bi bi-person"></i>
+                        <span class="menu-text"> Thông Báo</span>
+                    </a>
+                    <div class="sidebar-submenu">
+                        <ul>
+                            <li>
+                                <a href="{{ route('admin.notifications.index') }}">Danh sách Người Dùng</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
 
                 <li class="sidebar-dropdown">
                     <a href="#">

@@ -15,15 +15,23 @@
                     @if(session('success'))
                     <div class="alert alert-success alert-dismissible fade show mt-4" role="alert">
                         {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        
                     </div>
                     @endif
+
+                    @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+                        {{ session('error') }}
+                        
+                    </div>
+                    @endif
+
 
                     <!-- Form nhập mã giảm giá -->
                     <form action="{{ route('promotion.add') }}" method="POST" class="mb-4">
                         @csrf
                         <div class="input-group">
-                            <input type="text" name="code" id="code" class="form-control" placeholder="Nhập mã giảm giá" required>
+                            <input type="text" name="code" id="code" class="form-control" placeholder="Nhập mã giảms giá" required>
                             <button type="submit" class="btn btn-success">Thêm mã</button>
                         </div>
                     </form>
@@ -34,7 +42,7 @@
                         @forelse($userPromotions as $userPromotion)
                         <div class="list-group-item d-flex justify-content-between align-items-center">
                             <span>{{ $userPromotion->promotion->code }}</span>
-                            <span class="badge bg-info text-dark">Giảm: {{ number_format($userPromotion->promotion->discount_value) }} %</span>
+                            <span class="badge bg-info text-dark">Giảm: {{ number_format($userPromotion->promotion->discount_value) }} đ</span> 
                         </div>
                         @empty
                         <div class="alert alert-warning" role="alert">

@@ -23,7 +23,7 @@ class CheckoutController extends Controller
 
         // Kiểm tra nếu không có sản phẩm nào được chọn
         if (empty($selectedProducts)) {
-            return redirect()->route('cart.index')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+            return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
         }
 
         $user = Auth::user();
@@ -166,4 +166,42 @@ class CheckoutController extends Controller
             'wards' => $wards,
         ]);
     }
+    public function getShippingFee(Request $request)
+{
+    // Lấy các thông tin từ request
+    $provinceId = $request->province_id;
+    $districtId = $request->district_id;
+    $wardId = $request->ward_id; // Nếu cần thiết
+
+    // Kiểm tra nếu các thông tin này tồn tại
+    if (!$provinceId || !$districtId) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Thông tin tỉnh hoặc huyện không hợp lệ.',
+        ]);
+    }
+
+    // Lấy giá ship từ bảng `districts`
+    $district = District::where('province_id', $provinceId)
+                        ->where('id', $districtId)
+                        ->first();
+
+    // Kiểm tra nếu không tìm thấy
+    if (!$district) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Không tìm thấy huyện này.',
+        ]);
+    }
+
+    // Lấy giá ship từ thông tin huyện
+    $shippingFee = $district->shipping_fee;
+
+    // Trả về giá ship
+    return response()->json([
+        'status' => 'success',
+        'shipping_fee' => $shippingFee,
+    ]);
+}
+
 }
