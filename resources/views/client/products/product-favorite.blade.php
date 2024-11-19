@@ -115,7 +115,7 @@
                 const productId = e.target.dataset.productId;
                 console.log(productId);
 
-                axios.post('http://127.0.0.1:8000/shop/remove-product-favorite', {
+                axios.post('http://localhost:8000/shop/remove-product-favorite', {
                         product_id: productId,
                     }, {
                         headers: {
