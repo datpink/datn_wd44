@@ -80,21 +80,25 @@
                     <select class="form-control" id="discount-code">
                         <option value="">Chọn mã giảm giá</option>
                         @foreach ($discountCodes as $promotion)
-                        <option
-                            value="{{ $promotion->discount_value }}"
+                        <option value="{{ $promotion->id }}"
                             data-type="{{ $promotion->type }}"
-                            data-value="{{ $promotion->discount_value }}">
-                            @if ($promotion->type == 'percentage')
-                            {{ $promotion->code }} - Giảm giá {{ $promotion->discount_value }}%
-                            @else
-                            {{ $promotion->code }} - Giảm giá {{ number_format($promotion->discount_value, 0, ',', '.') }}₫
+                            data-value="{{ $promotion->discount_value }}"
+                            data-min-order-value="{{ $promotion->min_order_value }}">
+                            {{ $promotion->code }} -
+                            @if ($promotion->type === 'percentage')
+                            Giảm {{ $promotion->discount_value }}%
+                            @elseif ($promotion->type === 'fixed_amount')
+                            Giảm ₫{{ number_format($promotion->discount_value, 0, ',', '.') }}
+                            @elseif ($promotion->type === 'free_shipping')
+                            Miễn phí vận chuyển
                             @endif
+                            (Đơn hàng tối thiểu: ₫{{ number_format($promotion->min_order_value, 0, ',', '.') }})
                         </option>
                         @endforeach
                     </select>
                     <button type="button" class="btn btn-primary mt-2" id="apply-discount-btn">Áp dụng</button>
                 </div>
-                
+
 
 
                 <div class="d-flex">
@@ -160,26 +164,37 @@
 
         const discountCode = document.getElementById('discount-code').value;
         let discountValue = 0;
+        let minOrderValue = 0;
 
-        // Kiểm tra loại mã giảm giá và tính toán giá trị giảm
         if (discountCode) {
             const discountData = document.querySelector(`#discount-code option[value="${discountCode}"]`);
-            const discountType = discountData ? discountData.dataset.type : '';
-            const discountAmount = discountData ? parseFloat(discountData.dataset.value) : 0;
+            if (discountData) {
+                const discountType = discountData.dataset.type;
+                const discountAmount = parseFloat(discountData.dataset.value) || 0;
+                minOrderValue = parseFloat(discountData.dataset.minOrderValue) || 0;
 
-            if (discountType === 'percentage') {
-                // Giảm giá theo phần trăm
-                discountValue = (subtotal * discountAmount) / 100;
-            } else if (discountType === 'fixed_amount') {
-                // Giảm giá theo số tiền cố định
-                discountValue = discountAmount;
-            } else if (discountType === 'free_shipping') {
-                // Nếu miễn phí vận chuyển, không thay đổi tổng
-                discountValue = 0;
+                if (subtotal >= minOrderValue) {
+                    if (discountType === 'percentage') {
+                        discountValue = (subtotal * discountAmount) / 100;
+                    } else if (discountType === 'fixed_amount') {
+                        discountValue = discountAmount;
+                    } else if (discountType === 'free_shipping') {
+                        discountValue = 0;
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Không đủ điều kiện áp dụng!',
+                        text: `Tổng tiền phải lớn hơn hoặc bằng ₫${formatCurrency(minOrderValue)} để áp dụng mã giảm giá.`,
+                        toast: true,
+                        timer: 4000,
+                        position: 'top',
+                        showConfirmButton: true
+                    });
+                }
             }
         }
 
-        // Cập nhật giá trị giảm giá và tổng
         document.getElementById('discount-value').textContent = `₫${formatCurrency(discountValue)}`;
         const total = Math.max(subtotal - discountValue, 0); // Đảm bảo không âm
         document.getElementById('total-price').textContent = `₫${formatCurrency(total)}`;
@@ -187,14 +202,6 @@
 
     document.getElementById('apply-discount-btn').addEventListener('click', function() {
         updateCartTotal();
-        Swal.fire({
-            icon: 'success',
-            title: 'Đã áp dụng mã giảm giá!',
-            toast: true,
-            timer: 2000,
-            position: 'top',
-            showConfirmButton: false
-        });
     });
 
     function submitCheckout() {
@@ -210,5 +217,6 @@
         document.getElementById('checkoutForm').submit();
     }
 </script>
+
 
 @endsection

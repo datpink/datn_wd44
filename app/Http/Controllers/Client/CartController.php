@@ -14,12 +14,21 @@ class CartController extends Controller
 {
 
     public function view()
-    {
+{
+    $discountCodes = [];
+
+    if (auth()->check()) {
         $user = auth()->user();
-        $discountCodes = $user->promotions()->wherePivot('is_used', false)->get(); // Lấy mã giảm giá chưa dùng
-        // dd($discountCodes);
-        return view('client.you-cart.viewcart',compact('discountCodes'));
+        // Lấy các mã giảm giá chưa dùng và có trạng thái active
+        $discountCodes = $user->promotions()
+            ->wherePivot('is_used', false)
+            ->where('status', 'active')
+            ->get();
     }
+
+    return view('client.you-cart.viewcart', compact('discountCodes'));
+}
+
 
     public function temporary()
     {
