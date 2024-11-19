@@ -39,6 +39,7 @@ use App\Http\Controllers\Auth\LoginFacebookController;
 use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
+use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\Client\NotificationController as ClientNotificationController;
 use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
@@ -149,7 +150,7 @@ Route::prefix('shop')->group(function () {
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
-    
+
     Route::get('/discount-codes', [DiscountController::class, 'showDiscountCodes'])->name('discountCodes');
     Route::post('/apply-discount', [DiscountController::class, 'applyDiscount'])->name('applyDiscount');
 
@@ -173,6 +174,9 @@ Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('
 // Route để xử lý AJAX lấy danh sách huyện
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
+Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
+Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
 
 
 
@@ -204,7 +208,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Thêm thông báo
     Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
     Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
-    
+
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
     Route::get('catalogues-trash', [CatalogueController::class, 'trash'])->name('catalogues.trash');

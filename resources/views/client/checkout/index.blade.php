@@ -74,8 +74,9 @@
                                     </form>
                                 </div>
                             </div>
-                            <form name="checkout" method="post" class="checkout kobolg-checkout" action="#"
+                            <form method="post" class="checkout kobolg-checkout" action="{{ route('vnpay') }}"
                                 enctype="multipart/form-data">
+                                @csrf
                                 <div class="col2-set" id="customer_details">
                                     <div class="col-1">
                                         @if ($user)
@@ -227,18 +228,22 @@
                                         </tbody>
 
                                         <tfoot>
-                                            <tr class="cart-subtotal">
+                                            <tr class="cart-shipping">
                                                 <th>Phí vận chuyển</th>
                                                 <td>
-                                                    <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol">₫</span>
-
-                                                    </span>
+                                                    <strong>
+                                                        <span class="kobolg-Price-amount amount" style="color: red;">
+                                                            <span class="kobolg-Price-currencySymbol">₫</span>
+                                                            <span id="shipping-fee">0</span>
+                                                            <!-- Giá sẽ được cập nhật qua JS -->
+                                                        </span>
+                                                    </strong>
                                                 </td>
                                             </tr>
 
+
+
                                             <!-- Dòng giảm giá -->
-                                            <!-- Hiển thị giảm giá nếu có -->
                                             <tr class="cart-discount" style="display: none;">
                                                 <th>Giảm giá</th>
                                                 <td>
@@ -294,8 +299,7 @@
                                 </div>
 
                                 <p class="form-row place-order">
-                                    <input type="hidden" id="kobolg-checkout-nonce" name="kobolg-checkout-nonce"
-                                        value="e896ef098e">
+                                    <input type="hidden" name="redirect" value="1">
                                     <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
                                         id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
@@ -457,6 +461,49 @@
                     $('#ward').append('<option value="">Chọn xã/phường</option>');
                 }
             });
+        });
+
+        $('#province, #district, #ward').change(function() {
+            // Lấy giá trị của tỉnh, huyện và xã/phường
+            let provinceId = $('#province').val();
+            let districtId = $('#district').val();
+            let wardId = $('#ward').val(); // Nếu có
+
+            // Kiểm tra xem tất cả các trường đã được chọn chưa
+            if (provinceId && districtId) {
+                // Gửi request AJAX
+                $.ajax({
+                    url: '{{ route('getShippingFee') }}', // Đảm bảo route đúng
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        province_id: provinceId,
+                        district_id: districtId,
+                        ward_id: wardId // Nếu có
+                    },
+                    success: function(response) {
+                        if (response.status == 'success') {
+                            // Cập nhật phí vận chuyển
+                            $('#shipping-fee').text(response.shipping_fee.toLocaleString(
+                                'vi-VN')); // Định dạng số theo kiểu Việt Nam
+                            // Hiển thị phần phí vận chuyển
+                            $('#shipping-row').show();
+                        } else {
+                            alert(response.message);
+                            // Ẩn phí vận chuyển nếu có lỗi
+                            $('#shipping-row').hide();
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                        // Ẩn phí vận chuyển nếu có lỗi
+                        $('#shipping-row').hide();
+                    }
+                });
+            } else {
+                // Nếu chưa chọn đủ tỉnh và huyện, ẩn phí vận chuyển
+                $('#shipping-row').hide();
+            }
         });
     </script>
 @endsection
