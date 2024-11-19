@@ -88,6 +88,9 @@ Route::prefix('shop')->group(function () {
     Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
 
     Route::get('list-product-favorite', [ProductController::class, 'productFavorite'])->name('client.listProductFavorites');
+    Route::post('add-product-favorite', [ProductController::class, 'addProductFavorite']);
+    Route::post('remove-product-favorite', [ProductController::class, 'removeProductFavorite']);
+
 
 
     // Route sửa và xóa bình luận

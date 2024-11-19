@@ -23,6 +23,7 @@
         }
     </style>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <div class="main-container shop-page right-sidebar">
         <div class="container">
@@ -62,7 +63,7 @@
                             </select>
                         </form>
 
-                       
+
 
                     </div>
 
@@ -146,7 +147,9 @@
                                                 </div>
                                                 <div class="yith-wcwl-add-to-wishlist">
                                                     <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Thêm vào yêu thích</a>
+                                                        <a href="javascript:void(0)" data-product-id={{ $product->id }}
+                                                            class="add_to_wishlist">Thêm vào yêu
+                                                            thích</a>
                                                     </div>
                                                 </div>
                                                 <div class="kobolg product compare-button">
@@ -255,8 +258,26 @@
                             </ul>
                         </div>
 
+                        {{-- <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const addToWishlist = document.querySelectorAll('.add_to_wishlist');
 
-                    
+                                console.log(addToWishlist);
+
+                                addToWishlist.forEach(function(item) {
+                                    item.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        console.log(item);
+                                        console.log(123);
+
+                                    })
+                                })
+
+                            });
+                        </script> --}}
+
+
+
                         <style>
                             .kobolg-widget-layered-nav-list__item .term-storage:hover {
                                 position: relative;
@@ -299,6 +320,8 @@
                                 const priceFrom = document.getElementById('priceFrom');
                                 const priceTo = document.getElementById('priceTo');
 
+
+
                                 let activeFilters = {
                                     color: null,
                                     storage: null,
@@ -308,6 +331,7 @@
                                 };
 
                                 orderBySelect.addEventListener('change', function(e) {
+
                                     activeFilters.orderby = this.value; // Lấy giá trị tùy chọn sắp xếp
                                     fetchFilteredProducts();
                                 })
@@ -328,13 +352,16 @@
                                     slide: function(event, ui) {
                                         priceFrom.textContent = `$${ui.values[0]}`;
                                         priceTo.textContent = `$${ui.values[1]}`;
-                                    },
-                                    change: function(event, ui) {
-                                        activeFilters.price_min = ui.values[0];
-                                        activeFilters.price_max = ui.values[1];
-                                        fetchFilteredProducts();
                                     }
                                 });
+
+                                // Gắn sự kiện "change" sau khi slider đã khởi tạo
+                                $('.price_slider').on('slidestop', function(event, ui) {
+                                    activeFilters.price_min = ui.values[0];
+                                    activeFilters.price_max = ui.values[1];
+                                    fetchFilteredProducts();
+                                });
+
 
                                 priceFrom.textContent = `$${minPrice}`;
                                 priceTo.textContent = `$${maxPrice}`;
@@ -394,7 +421,7 @@
                                         })
                                         .then((res) => {
                                             const productList = document.getElementById('product-list');
-                                            console.log(productList);
+                                            // console.log(productList);
 
 
                                             productList.innerHTML = ''; // Xóa danh sách cũ
@@ -423,7 +450,7 @@
                                                                             <span class="review">(${product.ratings_count})</span>
                                                                         </div>
                                                                         <h3 class="product-name product_title">
-                                                                            <a href="/products/${product.id}">${product.name}</a>
+                                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}">${product.name}</a>
                                                                         </h3>
                                                                         <span class="price">
                                                                             <span class="kobolg-Price-amount amount text-danger">
@@ -444,7 +471,7 @@
                                                                             </div>
                                                                             <div class="yith-wcwl-add-to-wishlist">
                                                                                 <div class="yith-wcwl-add-button show">
-                                                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}" class="add_to_wishlist">Add to Wishlist</a>
+                                                                                    <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist">Thêm vào yêu thích</a>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="kobolg product compare-button">
@@ -465,8 +492,93 @@
                                             console.log(err);
                                         });
                                 }
-                            });
+
+
+                                document.body.addEventListener('click', function(e) {
+                                    if (e.target.classList.contains('add_to_wishlist')) {
+                                        const productId = e.target.dataset.productId;
+                                        console.log(productId);
+
+                                        axios.post('http://127.0.0.1:8000/shop/add-product-favorite', {
+                                                product_id: productId,
+                                            }, {
+                                                headers: {
+                                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                                        .getAttribute('content'),
+                                                }
+                                            })
+                                            .then((res) => {
+                                                Swal.fire({
+                                                    icon: 'success',
+                                                    title: 'Thành công!',
+                                                    text: res.data.success, // Lấy thông báo từ response
+                                                    position: 'top',
+                                                    toast: true,
+                                                    showConfirmButton: false,
+                                                    timer: 3000
+                                                });
+
+                                            })
+                                            .catch((err) => {
+                                                if (err.response) {
+                                                    // Kiểm tra mã lỗi HTTP từ server
+                                                    if (err.response.status === 401) {
+                                                        // Nếu người dùng chưa đăng nhập
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Cần đăng nhập!',
+                                                            text: err.response.data
+                                                                .error, // Lấy thông báo lỗi từ response
+                                                            position: 'top',
+                                                            toast: true,
+                                                            showConfirmButton: false,
+                                                            timer: 3000
+                                                        });
+                                                    } else if (err.response.status === 400) {
+                                                        // Nếu sản phẩm đã có trong danh sách yêu thích
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Có lỗi xảy ra!',
+                                                            text: err.response.data
+                                                                .error, // Lấy thông báo lỗi từ response
+                                                            position: 'top',
+                                                            toast: true,
+                                                            showConfirmButton: false,
+                                                            timer: 3000
+                                                        });
+                                                    } else {
+                                                        // Các lỗi khác
+                                                        Swal.fire({
+                                                            icon: 'error',
+                                                            title: 'Có lỗi xảy ra!',
+                                                            text: 'Không thể thêm sản phẩm vào yêu thích.',
+                                                            position: 'top',
+                                                            toast: true,
+                                                            showConfirmButton: false,
+                                                            timer: 3000
+                                                        });
+                                                    }
+                                                } else {
+                                                    // Nếu không có response (ví dụ lỗi mạng)
+                                                    Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Có lỗi xảy ra!',
+                                                        text: 'Không thể kết nối với server.',
+                                                        position: 'top',
+                                                        toast: true,
+                                                        showConfirmButton: false,
+                                                        timer: 3000
+                                                    });
+                                                }
+                                            })
+
+                                    }
+                                });
+
+                            })
                         </script>
+
+
 
 
 
@@ -505,4 +617,5 @@
             </div>
         </div>
     </div>
+
 @endsection

@@ -5,13 +5,13 @@
 @section('content')
 
     {{-- @include('components.breadcrumb-client') --}}
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <div class="container">
         <div class="auto-clear equal-container better-height kobolg-products">
             <ul class="row products columns-3">
                 @foreach ($products as $product)
-
-                {{-- @dd($product->variants) --}}
+                    {{-- @dd($product->variants) --}}
 
                     <li class="product-item wow fadeInUp product-item rows-space-30 col-bg-3 col-xl-3 col-lg-4 col-md-6 col-sm-6 col-ts-6 style-01 post-24 product type-product status-publish has-post-thumbnail product_cat-chair product_cat-table product_cat-new-arrivals product_tag-light product_tag-hat product_tag-sock first instock featured shipping-taxable purchasable product-type-variable has-default-attributes"
                         data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
@@ -65,11 +65,12 @@
                                     </table>
                                 </form>
                                 <div class="group-button">
-                                    {{-- <div class="yith-wcwl-add-to-wishlist">
+                                    <div class="yith-wcwl-add-to-wishlist">
                                         <div class="yith-wcwl-add-button show">
-                                            <a href="#" class="add_to_wishlist">Add to Wishlist</a>
+                                            <a href="javascript:voi(0)" data-product-id={{ $product->id }}
+                                                class="add_to_wishlist remove_to_wishlist">Remove to Wishlist</a>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                     <div class="kobolg product compare-button">
                                         <a href="#" class="compare button">Compare</a>
                                     </div>
@@ -82,19 +83,21 @@
                             </div>
                             <div class="product-info equal-elem" style="height: 118px;">
                                 <h3 class="product-name product_title">
-                                    <a href="#">{{$product->name}}</a>
+                                    <a href="#">{{ $product->name }}</a>
                                 </h3>
                                 <div class="rating-wapper nostar">
                                     <div class="star-rating">
-                                        <span style="width:{{$product->ratings_avg * 20}}%">Rated <strong class="rating">{{$product->ratings_avg}}</strong>
+                                        <span style="width:{{ $product->ratings_avg * 20 }}%">Rated <strong
+                                                class="rating">{{ $product->ratings_avg }}</strong>
                                             out
                                             of
-                                            5</span></div>
+                                            5</span>
+                                    </div>
                                     <span class="review">(0)</span>
                                 </div>
                                 <span class="price"><span class="kobolg-Price-amount amount"><span
-                                            class="kobolg-Price-currencySymbol">$</span>{{$product->discount_price}}</span> 
-                                            {{-- – <span
+                                            class="kobolg-Price-currencySymbol">$</span>{{ $product->discount_price }}</span>
+                                    {{-- – <span
                                         class="kobolg-Price-amount amount"><span
                                             class="kobolg-Price-currencySymbol">$</span>{}</span></span> --}}
                             </div>
@@ -105,4 +108,62 @@
             </ul>
         </div>
     </div>
+
+    <script>
+        document.body.addEventListener('click', function(e) {
+            if (e.target.classList.contains('add_to_wishlist')) {
+                const productId = e.target.dataset.productId;
+                console.log(productId);
+
+                axios.post('http://127.0.0.1:8000/shop/remove-product-favorite', {
+                        product_id: productId,
+                    }, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'),
+                        }
+                    })
+                    .then((res) => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: res.data.success, // Lấy thông báo thành công từ response
+                            position: 'top',
+                            toast: true,
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        // Nếu xóa thành công, có thể thực hiện thêm các thao tác như cập nhật UI (xóa sản phẩm khỏi danh sách)
+                        // Ví dụ: loại bỏ sản phẩm khỏi danh sách yêu thích trong UI
+                        e.target.closest('.product')
+                            .remove(); // Xóa sản phẩm khỏi danh sách (giả sử là sản phẩm có lớp 'product')
+                    })
+                    .catch((err) => {
+                        if (err.response) {
+                            // Kiểm tra lỗi từ response của API
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: err.response.data.error, // Lấy thông báo lỗi từ response
+                                position: 'top',
+                                toast: true,
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Có lỗi xảy ra!',
+                                text: 'Không thể xóa sản phẩm khỏi yêu thích.',
+                                position: 'top',
+                                toast: true,
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+                        }
+                    });
+            }
+        });
+    </script>
 @endsection
