@@ -15,7 +15,7 @@ class PromotionController extends Controller
         return view('admin.promotions.index', compact('promotions', 'title'));
     }
 
-        public function create()
+    public function create()
     {
         $title = 'Thêm mới mã giảm giá';
         return view('admin.promotions.create', compact('title'));
@@ -26,15 +26,39 @@ class PromotionController extends Controller
      */
     public function store(Request $request)
     {
-            $validatedData = $request->validate([
-            'code' => 'required|string|max:50|unique:promotions',
-            'discount_value' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'code' => 'required|unique:promotions,code|max:255',
+            'discount_value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
+                    if ($request->input('type') === 'percentage' && $value > 100) {
+                        $fail('Giá trị giảm giá không thể vượt quá 100%.');
+                    }
+                },
+            ],
             'status' => 'required|in:active,inactive,pending',
-            'start_date' => 'required|date|after_or_equal:today',
+            'start_date' => 'required|date|before:end_date',
             'end_date' => 'required|date|after:start_date',
+            'type' => 'required|in:percentage,fixed_amount,free_shipping',
+            'applies_to_order' => 'required|boolean',
+            'applies_to_shipping' => 'required|boolean',
+            'min_order_value' => 'nullable|numeric|min:0',  // Thêm kiểm tra cho order_value
         ]);
-
-        $promotion = Promotion::create($validatedData);
+        // Create the new promotion
+        $promotion = new Promotion();
+        $promotion->code = $request->input('code');
+        $promotion->discount_value = $request->input('discount_value');
+        $promotion->status = $request->input('status');
+        $promotion->start_date = $request->input('start_date');
+        $promotion->end_date = $request->input('end_date');
+        $promotion->type = $request->input('type');
+        $promotion->applies_to_order = $request->input('applies_to_order');
+        $promotion->applies_to_shipping = $request->input('applies_to_shipping');
+        $promotion->min_order_value = $request->input('order_value');  // Lưu giá trị đơn hàng
+        $promotion->save();
 
         return redirect()->route('promotions.index')->with('success', 'Khuyến mãi đã được thêm thành công!');
     }
@@ -50,7 +74,7 @@ class PromotionController extends Controller
     {
         $title = 'Cập Nhật Mã Giảm Giá';
         $promotion = Promotion::findOrFail($id);
-    
+
         return view('admin.promotions.edit', compact('promotion', 'title'));
     }
 
@@ -58,26 +82,38 @@ class PromotionController extends Controller
      * Update the specified resource in storage.    
      */
     public function update(Request $request, string $id)
-{
-    $promotion = Promotion::findOrFail($id);
+    {
+        $promotion = Promotion::findOrFail($id);
 
-    // Xác thực dữ liệu
-    $validatedData = $request->validate([
-        'code' => 'required|string|max:50|unique:promotions,code,' . $promotion->id,
-        'discount_value' => 'required|numeric|min:0',
-        'status' => 'required|in:active,inactive,pending',
-        'start_date' => 'required|date|after_or_equal:today',
-        'end_date' => 'required|date|after:start_date',
-    ]);
+        $request->validate([
+            'code' => 'required|unique:promotions,code,' . $promotion->id . '|max:255',
+            'discount_value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input('type') === 'percentage' && $value > 100) {
+                        $fail('Giá trị giảm giá phần trăm không thể lớn hơn 100.');
+                    }
+                }
+            ],
+            'status' => 'required|in:active,inactive',
+            'start_date' => 'required|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'type' => 'required|in:percentage,fixed_amount,free_shipping',
+            'applies_to_order' => 'required|boolean',
+            'applies_to_shipping' => 'required|boolean',
+            'min_order_value' => 'nullable|numeric|min:0', // Nếu bạn cần kiểm tra thêm về giá trị này
+        ]);
 
-    $promotion->update($validatedData);
+        $promotion->update($request->all());
 
-    return redirect()->route('promotions.index')->with('success', 'Khuyến mãi đã được cập nhật thành công!');
-}
+        return redirect()->route('promotions.index')->with('success', 'Khuyến mãi đã được cập nhật thành công!');
+    }
     public function destroy(string $id)
     {
-    $promotion = Promotion::findOrFail($id);
-    $promotion->delete();
-    return redirect()->route('promotions.index')->with('success', 'Khuyến mãi đã được xóa thành công!');
+        $promotion = Promotion::findOrFail($id);
+        $promotion->delete();
+        return redirect()->route('promotions.index')->with('success', 'Khuyến mãi đã được xóa thành công!');
     }
 }

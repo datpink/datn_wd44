@@ -61,7 +61,9 @@ class User extends Authenticatable
 
     public function promotions()
 {
-    return $this->belongsToMany(Promotion::class, 'user_promotions', 'user_id', 'promotion_id');
+    return $this->belongsToMany(Promotion::class, 'user_promotions')
+                ->withPivot('is_used')
+                ->withTimestamps();
 }
 
 

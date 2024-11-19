@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CatalogueController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CommentReplyController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -39,6 +40,7 @@ use App\Http\Controllers\Auth\LoginGoogleController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\PaymentController;
+use App\Http\Controllers\Client\NotificationController as ClientNotificationController;
 use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -77,7 +79,11 @@ Route::prefix('shop')->group(function () {
     Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
+   // Route hiển thị danh sách thông báo
+   Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
 
+   // Route đánh dấu thông báo đã đọc
+   Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
@@ -87,6 +93,10 @@ Route::prefix('shop')->group(function () {
     Route::get('/product/search', [ProductController::class, 'search'])->name('product.search');
     Route::post('product/{product}/comment', [ProductController::class, 'storeComment'])->name('client.storeComment');
     Route::post('comment/{comment}/reply', [ProductController::class, 'storeReply'])->name('client.storeReply');
+
+    Route::get('list-product-favorite', [ProductController::class, 'productFavorite'])->name('client.listProductFavorites');
+
+
     // Route sửa và xóa bình luận
     Route::put('product/{product}/comment/{comment}/edit', [ProductController::class, 'updateComment'])->name('client.updateComment');
     Route::delete('product/{product}/comment/{comment}/delete', [ProductController::class, 'deleteComment'])->name('client.deleteComment');
@@ -135,9 +145,15 @@ Route::prefix('shop')->group(function () {
     Route::get('/order-history/{userId}', [OrderController::class, 'showOrderHistory'])->name('order.history');
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
+    Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
+
+    Route::get('/discount-codes', [DiscountController::class, 'showDiscountCodes'])->name('discountCodes');
+    Route::post('/apply-discount', [DiscountController::class, 'applyDiscount'])->name('applyDiscount');
+
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
@@ -186,6 +202,12 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    // Danh sách thông báo
+    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+
+    // Thêm thông báo
+    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -307,5 +329,4 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
         Route::post('/favorite/{productId}', [FavoriteController::class, 'addFavorite'])->name('favorite.add');
         Route::delete('/favorite/{productId}', [FavoriteController::class, 'removeFavorite'])->name('favorite.remove');
     });
-
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Advertisement;
 use App\Models\Banner;
 use App\Models\Catalogue;
+use App\Models\OrderItem;
 use App\Models\Post;
 use App\Models\Product; // Import mô hình Product
 
@@ -19,7 +20,7 @@ class ClientController extends Controller
 
         // Lấy tất cả quảng cáo
         $advertisements = Advertisement::where('status', 'active')->get();
-
+        
         // Lấy sản phẩm nổi bật
         $featuredProducts = Product::where('is_featured', true)->where('is_active', true)->get();
 
@@ -31,10 +32,19 @@ class ClientController extends Controller
         ];
 
         $featuredPosts = Post::join('users', 'posts.user_id', '=', 'users.id')
-                            ->select('posts.*', 'users.name as author_name')
-                            ->where('is_featured', true)->get();
+            ->select('posts.*', 'users.name as author_name')
+            ->where('is_featured', true)->get();
 
-        return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts'));
+        $topSellingProducts = OrderItem::select('product_variant_id', \DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_variant_id')
+            ->orderBy('total_quantity', 'desc')
+            ->take(10) // Lấy 5 sản phẩm bán chạy nhất
+            ->get()
+            ->map(function ($item) {
+                return Product::find($item->product_variant_id); // Thay đổi nếu cần
+            });
+
+        return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts', 'topSellingProducts'));
     }
 
 }

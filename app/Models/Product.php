@@ -29,7 +29,7 @@ class Product extends Model
         'is_active',
         'condition',
         'tomtat',
-        'is_featured'
+        'is_featured',
     ];
 
     public function catalogue()

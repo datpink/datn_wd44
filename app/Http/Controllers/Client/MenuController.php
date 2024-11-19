@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Category;
+use App\Models\Notification;
+use GuzzleHttp\Psr7\Request;
 
 class MenuController extends Controller
 {
@@ -35,5 +37,7 @@ class MenuController extends Controller
         }
 
         return $branch;
+        
     }
+
 }

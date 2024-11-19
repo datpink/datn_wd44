@@ -22,6 +22,7 @@ class Order extends Model
         'shipping_address',
         'payment_method_id',
         'phone_number',
+        'cancellation_reason',
         'is_new'
     ];
 
