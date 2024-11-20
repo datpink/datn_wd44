@@ -518,7 +518,7 @@
                                         const productId = e.target.dataset.productId;
                                         console.log(productId);
 
-                                        axios.post('http://127.0.0.1:8000/shop/add-product-favorite', {
+                                        axios.post('http://localhost:8000/shop/add-product-favorite', {
                                                 product_id: productId,
                                             }, {
                                                 headers: {
@@ -602,7 +602,7 @@
 
 
 
-                        <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
+                        {{-- <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
                             <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
                             <ul class="product-categories">
                                 <li class="cat-item cat-item-22"><a href="#">Camera</a>
@@ -627,7 +627,7 @@
                                 <li class="cat-item cat-item-18"><a href="#">Featured</a> <span
                                         class="count">(6)</span></li>
                             </ul>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
