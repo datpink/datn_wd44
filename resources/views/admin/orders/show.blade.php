@@ -64,6 +64,18 @@
                                         @if ($order->cancellation_reason)
                                             <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
                                         @endif
+
+                                        @if ($order->status === 'refunded' && $order->refund_images)
+                                            <p><strong>Lý Do Trả Hàng:</strong> {{ $order->refund_reason }}</p>
+                                            <p><strong>Hình Ảnh Minh Họa:</strong></p>
+                                            <div>
+                                                @foreach (json_decode($order->refund_images) as $image)
+                                                    <img src="{{ Storage::url($image) }}" alt="Refund Image"
+                                                        style="max-width: 100px; margin: 5px;">
+                                                @endforeach
+                                            </div>
+                                        @endif
+
                                     </div>
                                 </div>
                             </div>
