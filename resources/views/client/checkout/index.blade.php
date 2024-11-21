@@ -300,6 +300,8 @@
 
                                 <p class="form-row place-order">
                                     <input type="hidden" name="redirect" value="1">
+                                    <input type="hidden" name="totalAmount" id="input-total"
+                                        value="{{ $totalAmount }}">
                                     <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
                                         id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
@@ -313,197 +315,204 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Lấy các nút và form
-
-            const showCouponButton = document.querySelector('.showcoupon');
-            const couponForm = document.querySelector('.checkout_coupon');
-
-            // Thêm sự kiện nhấp vào nút hiển thị form mã giảm giá
+            // Hiển thị/Ẩn form mã giảm giá
+            const showCouponButton = document.querySelector(".showcoupon");
+            const couponForm = document.querySelector(".checkout_coupon");
             if (showCouponButton && couponForm) {
-                showCouponButton.addEventListener('click', function(e) {
+                showCouponButton.addEventListener("click", function(e) {
                     e.preventDefault();
-                    couponForm.style.display = couponForm.style.display === 'none' ? 'block' : 'none';
+                    couponForm.style.display =
+                        couponForm.style.display === "none" ? "block" : "none";
                 });
             }
-        });
-        document.querySelector('.checkout_coupon.kobolg-form-coupon').addEventListener('submit', function(e) {
-            e.preventDefault();
 
-            // Lấy mã giảm giá từ input
-            const couponCode = document.querySelector('#coupon_code').value;
+            // Xử lý form mã giảm giá
+            const couponFormSubmit = document.querySelector(".checkout_coupon.kobolg-form-coupon");
+            if (couponFormSubmit) {
+                couponFormSubmit.addEventListener("submit", function(e) {
+                    e.preventDefault();
 
-            // Lấy tổng giỏ hàng từ một biến JavaScript (nếu có) hoặc từ input hidden
-            const totalAmount = parseFloat(document.querySelector('[name="totalAmount"]').value);
+                    const couponCode = document.querySelector("#coupon_code").value;
+                    const totalAmount = parseFloat(
+                        document.querySelector('[name="totalAmount"]').value
+                    );
+                    const shippingFee = parseFloat(document.querySelector("#shipping-fee").textContent
+                        .replace(/[^\d]/g, "") || 0);
 
-            // Kiểm tra xem totalAmount có hợp lệ không
-            if (isNaN(totalAmount) || totalAmount <= 0) {
-                alert('Tổng tiền không hợp lệ.');
-                return;
-            }
-
-            // Gửi AJAX request
-            fetch('{{ route('applyCoupon') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        coupon_code: couponCode,
-                        totalAmount: totalAmount // Gửi tổng tiền giỏ hàng lên server
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Hiển thị thông báo thành công
-                        alert('Áp dụng mã giảm giá thành công!');
-
-                        // Kiểm tra sự tồn tại của phần tử giảm giá và hiển thị
-                        const discountElement = document.querySelector('.cart-discount .amount');
-                        if (discountElement) {
-                            document.querySelector('.cart-discount').style.display = 'table-row';
-                            discountElement.textContent = '-' + new Intl.NumberFormat('vi-VN', {
-                                style: 'currency',
-                                currency: 'VND'
-                            }).format(data.discount);
-                        }
-
-                        // Kiểm tra sự tồn tại của phần tử tổng cộng và hiển thị tổng sau giảm
-                        const totalElement = document.querySelector('.order-total .amount');
-                        if (totalElement) {
-                            totalElement.textContent = new Intl.NumberFormat('vi-VN', {
-                                style: 'currency',
-                                currency: 'VND'
-                            }).format(data.final_amount);
-                        }
-                    } else {
-                        alert('Mã giảm giá không hợp lệ');
+                    if (isNaN(totalAmount) || totalAmount <= 0) {
+                        alert("Tổng tiền không hợp lệ.");
+                        return;
                     }
-                })
-                .catch(error => console.error('Error:', error));
-        });
 
-        $('#province').change(function() {
-            var provinceId = $(this).val();
+                    fetch("{{ route('applyCoupon') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            },
+                            body: JSON.stringify({
+                                coupon_code: couponCode,
+                                totalAmount: totalAmount,
+                            }),
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                alert("Áp dụng mã giảm giá thành công!");
 
-            if (provinceId) {
-                // Gửi yêu cầu AJAX để lấy danh sách huyện
-                $.ajax({
-                    url: '{{ route('getDistricts', ':provinceId') }}'.replace(':provinceId', provinceId),
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            var districts = response.districts;
-                            var $district = $('#district');
-                            $district.empty(); // Xóa các option hiện tại
+                                const discountElement = document.querySelector(
+                                ".cart-discount .amount");
+                                if (discountElement) {
+                                    document.querySelector(".cart-discount").style.display =
+                                    "table-row";
+                                    discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                            }).format(data.discount)}`;
+                                }
 
-                            // Thêm option mặc định
-                            $district.append('<option value="">Chọn huyện</option>');
+                                // Cập nhật lại tổng giá sau khi áp dụng mã giảm giá và phí vận chuyển
+                                const totalElement = document.querySelector(".order-total .amount");
+                                const finalAmount = data.final_amount + shippingFee;
 
-                            // Thêm các huyện mới vào select
-                            $.each(districts, function(index, district) {
-                                $district.append('<option value="' + district.id + '">' +
-                                    district.name + '</option>');
-                            });
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('Đã xảy ra lỗi khi tải danh sách huyện.');
-                    }
+                                if (totalElement) {
+                                    totalElement.textContent = new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    }).format(finalAmount);
+                                }
+
+                                syncTotalToInput(finalAmount); // Đồng bộ lại tổng giá vào input
+                            } else {
+                                alert("Mã giảm giá không hợp lệ.");
+                            }
+                        })
+                        .catch((error) => console.error("Error:", error));
                 });
-            } else {
-                // Nếu không chọn tỉnh, xóa danh sách huyện
-                $('#district').empty().append('<option value="">Chọn huyện</option>');
             }
-        });
 
-        $(document).ready(function() {
-            // Khi chọn huyện
-            $('#district').change(function() {
-                var districtId = $(this).val();
+            // Cập nhật danh sách huyện khi chọn tỉnh
+            $("#province").change(function() {
+                const provinceId = $(this).val();
 
-                if (districtId) {
-                    // Gửi yêu cầu AJAX để lấy danh sách xã/phường
+                if (provinceId) {
                     $.ajax({
-                        url: '{{ route('getWards', ':districtId') }}'.replace(':districtId',
-                            districtId),
-                        type: 'GET',
-                        dataType: 'json',
+                        url: `{{ route('getDistricts', ':provinceId') }}`.replace(":provinceId",
+                            provinceId),
+                        type: "GET",
+                        dataType: "json",
                         success: function(response) {
-                            if (response.status === 'success') {
-                                var wards = response.wards;
-                                var $ward = $('#ward');
-                                $ward.empty(); // Xóa các option hiện tại
+                            if (response.status === "success") {
+                                const $district = $("#district");
+                                $district.empty().append(
+                                '<option value="">Chọn huyện</option>');
 
-                                // Thêm option mặc định
-                                $ward.append('<option value="">Chọn xã/phường</option>');
-
-                                // Thêm các xã/phường mới vào select
-                                $.each(wards, function(index, ward) {
-                                    $ward.append('<option value="' + ward.id + '">' +
-                                        ward.name + '</option>');
+                                response.districts.forEach((district) => {
+                                    $district.append(
+                                        `<option value="${district.id}">${district.name}</option>`
+                                    );
                                 });
                             } else {
                                 alert(response.message);
                             }
                         },
                         error: function() {
-                            alert('Đã xảy ra lỗi khi tải danh sách xã/phường.');
-                        }
+                            alert("Đã xảy ra lỗi khi tải danh sách huyện.");
+                        },
                     });
                 } else {
-                    // Nếu không chọn huyện, xóa danh sách xã/phường
-                    $('#ward').empty();
-                    $('#ward').append('<option value="">Chọn xã/phường</option>');
+                    $("#district").empty().append('<option value="">Chọn huyện</option>');
+                }
+            });
+
+            // Cập nhật danh sách xã/phường khi chọn huyện
+            $("#district").change(function() {
+                const districtId = $(this).val();
+
+                if (districtId) {
+                    $.ajax({
+                        url: `{{ route('getWards', ':districtId') }}`.replace(":districtId",
+                            districtId),
+                        type: "GET",
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.status === "success") {
+                                const $ward = $("#ward");
+                                $ward.empty().append(
+                                '<option value="">Chọn xã/phường</option>');
+
+                                response.wards.forEach((ward) => {
+                                    $ward.append(
+                                        `<option value="${ward.id}">${ward.name}</option>`
+                                        );
+                                });
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function() {
+                            alert("Đã xảy ra lỗi khi tải danh sách xã/phường.");
+                        },
+                    });
+                } else {
+                    $("#ward").empty().append('<option value="">Chọn xã/phường</option>');
+                }
+            });
+
+            // Tính phí vận chuyển
+            $("#province, #district, #ward").change(function() {
+                const provinceId = $("#province").val();
+                const districtId = $("#district").val();
+                const wardId = $("#ward").val();
+
+                if (provinceId && districtId) {
+                    $.ajax({
+                        url: "{{ route('getShippingFee') }}",
+                        method: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            province_id: provinceId,
+                            district_id: districtId,
+                            ward_id: wardId,
+                        },
+                        success: function(response) {
+                            if (response.status === "success") {
+                                const shippingFee = response.shipping_fee || 0;
+                                $("#shipping-fee").text(shippingFee.toLocaleString("vi-VN"));
+                                $("#shipping-row").show();
+
+                                // Tính lại tổng tiền
+                                const totalAmount = parseFloat({{ $totalAmount }}) +
+                                    shippingFee;
+                                $(".order-total .amount").text(
+                                    new Intl.NumberFormat("vi-VN", {
+                                        style: "currency",
+                                        currency: "VND",
+                                    }).format(totalAmount)
+                                );
+
+                                syncTotalToInput(totalAmount); // Đồng bộ lại tổng giá vào input
+                            } else {
+                                alert(response.message);
+                                $("#shipping-row").hide();
+                            }
+                        },
+                        error: function() {
+                            alert("Có lỗi xảy ra. Vui lòng thử lại.");
+                            $("#shipping-row").hide();
+                        },
+                    });
+                } else {
+                    $("#shipping-row").hide();
                 }
             });
         });
 
-        $('#province, #district, #ward').change(function() {
-            // Lấy giá trị của tỉnh, huyện và xã/phường
-            let provinceId = $('#province').val();
-            let districtId = $('#district').val();
-            let wardId = $('#ward').val(); // Nếu có
-
-            // Kiểm tra xem tất cả các trường đã được chọn chưa
-            if (provinceId && districtId) {
-                // Gửi request AJAX
-                $.ajax({
-                    url: '{{ route('getShippingFee') }}', // Đảm bảo route đúng
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        province_id: provinceId,
-                        district_id: districtId,
-                        ward_id: wardId // Nếu có
-                    },
-                    success: function(response) {
-                        if (response.status == 'success') {
-                            // Cập nhật phí vận chuyển
-                            $('#shipping-fee').text(response.shipping_fee.toLocaleString(
-                                'vi-VN')); // Định dạng số theo kiểu Việt Nam
-                            // Hiển thị phần phí vận chuyển
-                            $('#shipping-row').show();
-                        } else {
-                            alert(response.message);
-                            // Ẩn phí vận chuyển nếu có lỗi
-                            $('#shipping-row').hide();
-                        }
-                    },
-                    error: function() {
-                        alert('Có lỗi xảy ra. Vui lòng thử lại.');
-                        // Ẩn phí vận chuyển nếu có lỗi
-                        $('#shipping-row').hide();
-                    }
-                });
-            } else {
-                // Nếu chưa chọn đủ tỉnh và huyện, ẩn phí vận chuyển
-                $('#shipping-row').hide();
-            }
-        });
+        // Hàm đồng bộ giá trị tổng cộng vào input ẩn
+        function syncTotalToInput(totalAmount) {
+            document.querySelector("#input-total").value = totalAmount;
+        }
+        
     </script>
+
 @endsection

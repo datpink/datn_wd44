@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
-    public function vnpay()
+    public function vnpay(Request $request)
     {
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "http://127.0.0.1:8000/vnpay_return";
@@ -19,7 +19,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = time(); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
         $vnp_OrderInfo = "Thanh toán hóa đơn";
         $vnp_OrderType = "ZAIA Enterprise";
-        $vnp_Amount = 10000 * 100;
+        $vnp_Amount = $request->totalAmount *100;
         $vnp_Locale = "VN";
         $vnp_BankCode = "NCB";
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
