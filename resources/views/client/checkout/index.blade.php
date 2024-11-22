@@ -299,9 +299,16 @@
                                 </div>
 
                                 <p class="form-row place-order">
+                                    {{-- input --}}
                                     <input type="hidden" name="redirect" value="1">
                                     <input type="hidden" name="totalAmount" id="input-total"
                                         value="{{ $totalAmount }}">
+
+                                    <input type="hidden" name="promotion_id"
+                                        value="{{ old('promotion_id', $promotion_id ?? '') }}">
+                                    <input type="hidden" name="discount_total" value="0">
+
+                                    <!-- Trường này sẽ được cập nhật -->
                                     <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
                                         id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
@@ -336,8 +343,9 @@
                     const totalAmount = parseFloat(
                         document.querySelector('[name="totalAmount"]').value
                     );
-                    const shippingFee = parseFloat(document.querySelector("#shipping-fee").textContent
-                        .replace(/[^\d]/g, "") || 0);
+                    const shippingFee = parseFloat(
+                        document.querySelector("#shipping-fee").textContent.replace(/[^\d]/g, "") || 0
+                    );
 
                     if (isNaN(totalAmount) || totalAmount <= 0) {
                         alert("Tổng tiền không hợp lệ.");
@@ -360,21 +368,40 @@
                             if (data.status === "success") {
                                 alert("Áp dụng mã giảm giá thành công!");
 
+                                // Lấy ID mã giảm giá từ API response
+                                const promotionId = data
+                                .promotion_id; // Lấy giá trị promotion_id từ response
+
+                                // Thêm input hidden nếu chưa có
+                                let promotionIdInput = document.querySelector('[name="promotion_id"]');
+                                if (!promotionIdInput) {
+                                    promotionIdInput = document.createElement("input");
+                                    promotionIdInput.type = "hidden";
+                                    promotionIdInput.name =
+                                    "promotion_id"; // Đảm bảo tên là promotion_id
+                                    promotionIdInput.value =
+                                    promotionId; // Gán giá trị của promotion_id
+                                    document.querySelector("form").appendChild(
+                                    promotionIdInput); // Thêm input vào form
+                                } else {
+                                    // Cập nhật giá trị nếu input đã tồn tại
+                                    promotionIdInput.value = promotionId;
+                                }
+
+                                // Cập nhật giao diện khác như giảm giá, tổng tiền
                                 const discountElement = document.querySelector(
                                 ".cart-discount .amount");
                                 if (discountElement) {
                                     document.querySelector(".cart-discount").style.display =
                                     "table-row";
                                     discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                            }).format(data.discount)}`;
+                            style: "currency",
+                            currency: "VND",
+                        }).format(data.discount)}`;
                                 }
 
-                                // Cập nhật lại tổng giá sau khi áp dụng mã giảm giá và phí vận chuyển
                                 const totalElement = document.querySelector(".order-total .amount");
                                 const finalAmount = data.final_amount + shippingFee;
-
                                 if (totalElement) {
                                     totalElement.textContent = new Intl.NumberFormat("vi-VN", {
                                         style: "currency",
@@ -386,10 +413,10 @@
                             } else {
                                 alert("Mã giảm giá không hợp lệ.");
                             }
-                        })
-                        .catch((error) => console.error("Error:", error));
+                        });
                 });
             }
+
 
             // Cập nhật danh sách huyện khi chọn tỉnh
             $("#province").change(function() {
@@ -405,7 +432,7 @@
                             if (response.status === "success") {
                                 const $district = $("#district");
                                 $district.empty().append(
-                                '<option value="">Chọn huyện</option>');
+                                    '<option value="">Chọn huyện</option>');
 
                                 response.districts.forEach((district) => {
                                     $district.append(
@@ -439,12 +466,12 @@
                             if (response.status === "success") {
                                 const $ward = $("#ward");
                                 $ward.empty().append(
-                                '<option value="">Chọn xã/phường</option>');
+                                    '<option value="">Chọn xã/phường</option>');
 
                                 response.wards.forEach((ward) => {
                                     $ward.append(
                                         `<option value="${ward.id}">${ward.name}</option>`
-                                        );
+                                    );
                                 });
                             } else {
                                 alert(response.message);
@@ -512,7 +539,6 @@
         function syncTotalToInput(totalAmount) {
             document.querySelector("#input-total").value = totalAmount;
         }
-        
     </script>
 
 @endsection
