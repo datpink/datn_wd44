@@ -86,8 +86,10 @@ class CheckoutController extends Controller
     public function applyCoupon(Request $request)
     {
         $couponCode = $request->input('coupon_code');
-        // Kiểm tra mã giảm giá trong cơ sở dữ liệu
-        $coupon = Promotion::where('code', $couponCode)
+
+        // Kiểm tra mã giảm giá
+        $coupon = Promotion::select('id', 'discount_value', 'code') // Lấy thêm ID
+            ->where('code', $couponCode)
             ->where('status', 'active')
             ->where('start_date', '<=', Carbon::today())
             ->where(function ($query) {
@@ -99,34 +101,26 @@ class CheckoutController extends Controller
         if (!$coupon) {
             return response()->json(['status' => 'error', 'message' => 'Mã giảm giá không hợp lệ'], 400);
         }
-        // Log::info('Request Input:', $request->all()); // Ghi lại tất cả các input trong request
+
+        Log::info('Promotion ID:', ['promotion_id' => $coupon->id]);
+        // Tính giảm giá
         $totalAmount = $request->input('totalAmount');
-
-        $totalAmount = $request->totalAmount;
-        // Log::info('Total Amount:', ['total_amount' => $totalAmount]);
-        // Giả sử bạn đã lưu tổng giỏ hàng ở đây
-
-        // Tính giảm giá (giảm theo phần trăm)
         $discountAmount = ($totalAmount * $coupon->discount_value) / 100;
-
-        // Tính tổng tiền sau khi áp dụng giảm giá
         $finalAmount = $totalAmount - $discountAmount;
 
-        // Lưu giá trị giảm giá và tổng tiền sau giảm vào session
-        session(['discount_value' => $discountAmount, 'coupon_code' => $coupon->code, 'final_amount' => $finalAmount]);
-        // Log::info('Coupon Code:', ['coupon_code' => $discountAmount]);
+        // Trả về JSON
         return response()->json([
             'status' => 'success',
             'message' => 'Mã giảm giá hợp lệ',
-            'discount' => $discountAmount, // Trả về giá trị giảm giá
-            'final_amount' => $finalAmount  // Trả về tổng tiền sau giảm giá
+            'promotion_id' => $coupon->id, // Trả về ID mã giảm giá
+            'discount' => $discountAmount,
+            'final_amount' => $finalAmount,
         ]);
     }
 
+
     public function getDistricts($provinceId)
     {
-        Log::info('Entered getDistricts function');
-
         if (!$provinceId) {
             return response()->json([
                 'status' => 'error',
@@ -137,8 +131,6 @@ class CheckoutController extends Controller
         $districts = District::where('province_id', $provinceId)
             ->select('id', 'name')
             ->get();
-
-        Log::info('Province ID: ' . $districts);
         return response()->json([
             'status' => 'success',
             'districts' => $districts,
@@ -167,41 +159,40 @@ class CheckoutController extends Controller
         ]);
     }
     public function getShippingFee(Request $request)
-{
-    // Lấy các thông tin từ request
-    $provinceId = $request->province_id;
-    $districtId = $request->district_id;
-    $wardId = $request->ward_id; // Nếu cần thiết
+    {
+        // Lấy các thông tin từ request
+        $provinceId = $request->province_id;
+        $districtId = $request->district_id;
+        $wardId = $request->ward_id; // Nếu cần thiết
 
-    // Kiểm tra nếu các thông tin này tồn tại
-    if (!$provinceId || !$districtId) {
+        // Kiểm tra nếu các thông tin này tồn tại
+        if (!$provinceId || !$districtId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Thông tin tỉnh hoặc huyện không hợp lệ.',
+            ]);
+        }
+
+        // Lấy giá ship từ bảng `districts`
+        $district = District::where('province_id', $provinceId)
+            ->where('id', $districtId)
+            ->first();
+
+        // Kiểm tra nếu không tìm thấy
+        if (!$district) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Không tìm thấy huyện này.',
+            ]);
+        }
+
+        // Lấy giá ship từ thông tin huyện
+        $shippingFee = $district->shipping_fee;
+
+        // Trả về giá ship
         return response()->json([
-            'status' => 'error',
-            'message' => 'Thông tin tỉnh hoặc huyện không hợp lệ.',
+            'status' => 'success',
+            'shipping_fee' => $shippingFee,
         ]);
     }
-
-    // Lấy giá ship từ bảng `districts`
-    $district = District::where('province_id', $provinceId)
-                        ->where('id', $districtId)
-                        ->first();
-
-    // Kiểm tra nếu không tìm thấy
-    if (!$district) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Không tìm thấy huyện này.',
-        ]);
-    }
-
-    // Lấy giá ship từ thông tin huyện
-    $shippingFee = $district->shipping_fee;
-
-    // Trả về giá ship
-    return response()->json([
-        'status' => 'success',
-        'shipping_fee' => $shippingFee,
-    ]);
-}
-
 }
