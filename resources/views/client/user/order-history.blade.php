@@ -120,6 +120,55 @@
                                 </div>
                             </div>
 
+                            @if ($order->status === 'shipped' && !$order->refund_reason)
+                                <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
+                                <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
+                                <div class="refundOrderForm" style="display: none; margin-top: 20px;">
+                                    <form action="{{ route('orders.refund', $order->id) }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <div class="form-group">
+                                            <label for="refund_reason">Lý do trả hàng/hoàn tiền:</label>
+                                            <textarea name="refund_reason" id="refund_reason" rows="4" class="form-control" required></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="refund_image">Hình ảnh minh họa (chọn nhiều hình):</label>
+                                            <label for="refund_image" class="custom-file-upload">Chọn Hình Ảnh</label>
+                                            <input type="file" name="refund_image[]" id="refund_image"
+                                                class="custom-file-input" accept="image/*" multiple required>
+                                        </div>
+
+                                        <!-- Preview các hình ảnh đã chọn -->
+                                        <div class="image-preview-container" id="imagePreview"></div>
+
+
+                                        <button type="submit" class="btn btn-warning">Xác Nhận</button>
+                                    </form>
+
+                                </div>
+                            @endif
+
+
+
+                            @if (!in_array($order->status, ['Delivering', 'shipped', 'refunded', 'canceled']))
+                                <button class="btn btn-danger cancelOrderButton">Hủy Đơn Hàng</button>
+                                <div class="cancelOrderForm" style="display: none; margin-top: 20px;">
+                                    <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <div class="form-group">
+                                            <label for="cancellation_reason">Lý do hủy:</label>
+                                            <textarea name="cancellation_reason" id="cancellation_reason" rows="4" class="form-control" required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-danger">Xác Nhận Hủy</button>
+                                    </form>
+                                </div>
+                            @endif
 
                         </div>
                     </div>
@@ -226,53 +275,3 @@
 
 
 @endsection
-
-@if ($order->status === 'shipped' && !$order->refund_reason)
-                                <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
-                                <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
-                                <div class="refundOrderForm" style="display: none; margin-top: 20px;">
-                                    <form action="{{ route('orders.refund', $order->id) }}" method="POST"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <div class="form-group">
-                                            <label for="refund_reason">Lý do trả hàng/hoàn tiền:</label>
-                                            <textarea name="refund_reason" id="refund_reason" rows="4" class="form-control" required></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="refund_image">Hình ảnh minh họa (chọn nhiều hình):</label>
-                                            <label for="refund_image" class="custom-file-upload">Chọn Hình Ảnh</label>
-                                            <input type="file" name="refund_image[]" id="refund_image"
-                                                class="custom-file-input" accept="image/*" multiple required>
-                                        </div>
-
-                                        <!-- Preview các hình ảnh đã chọn -->
-                                        <div class="image-preview-container" id="imagePreview"></div>
-
-
-                                        <button type="submit" class="btn btn-warning">Xác Nhận</button>
-                                    </form>
-
-                                </div>
-                            @endif
-
-
-
-                            @if (!in_array($order->status, ['Delivering', 'shipped', 'refunded', 'canceled']))
-                                <button class="btn btn-danger cancelOrderButton">Hủy Đơn Hàng</button>
-                                <div class="cancelOrderForm" style="display: none; margin-top: 20px;">
-                                    <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <div class="form-group">
-                                            <label for="cancellation_reason">Lý do hủy:</label>
-                                            <textarea name="cancellation_reason" id="cancellation_reason" rows="4" class="form-control" required></textarea>
-                                        </div>
-
-                                        <button type="submit" class="btn btn-danger">Xác Nhận Hủy</button>
-                                    </form>
-                                </div>
-                            @endif

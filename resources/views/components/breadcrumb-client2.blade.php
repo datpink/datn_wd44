@@ -40,6 +40,11 @@
             $breadcrumbs[] = ['name' => 'Giỏ Hàng', 'url' => ''];
             break;
 
+        case 'showCheckout':
+            $breadcrumbs[] = ['name' => 'Giỏ Hàng', 'url' => route('cart.view')];
+            $breadcrumbs[] = ['name' => 'Thanh Toán', 'url' => ''];
+            break;
+
         case 'client.about.index': // Cập nhật cho trang About
             $breadcrumbs[] = ['name' => 'About', 'url' => ''];
             break;
