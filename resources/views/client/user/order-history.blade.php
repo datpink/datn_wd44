@@ -3,8 +3,10 @@
 @section('title', 'Lịch Sử Đơn Hàng')
 
 @section('content')
-    <div class="container">
-        <h1 class="text-center mb-5">Lịch Sử Đơn Hàng</h1>
+
+    @include('components.breadcrumb-client2')
+
+    <div class="container mt-5">
 
         @if ($orders->isEmpty())
             <p class="text-center">Bạn chưa có đơn hàng nào.</p>
@@ -29,93 +31,101 @@
                 ];
             @endphp
 
-            <div class="accordion" id="orderAccordion">
+            <div class="orders">
                 @foreach ($orders as $order)
                     @php
                         $statusClass = $statusClasses[$order->status] ?? 'bg-primary';
                         $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
                     @endphp
-
-                    <div class="card mb-4">
-                        <div class="card-header {{ $statusClass }}" id="heading{{ $order->id }}"
-                            style="border-color: {{ $statusClass }}; background-color: {{ $statusClass }};">
-                            <h5>
-                                <span style="color: #000; font-weight: bold">Mã Đơn Hàng: #{{ $order->id }}</span>
-                            </h5>
-                        </div>
-
+                    <div class="card mb-4 shadow-sm">
                         <div class="card-body">
-                            <p><strong>Ngày Đặt Hàng:</strong>
-                                {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</p>
-                            <p><strong>Trạng Thái:</strong>
-                                <span class="badge {{ $statusClass }} text-white">{{ $statusLabel }}</span>
-                            </p>
-                            <p><strong>Tổng Tiền:</strong> {{ number_format($order->items_sum_total, 0, ',', '.') }} VND</p>
-
-                            <a href="{{ route('order.detail', $order->id) }}" class="btn btn-secondary">
-                                @if ($order->status === 'canceled')
-                                    Xem Chi Tiết Đơn Hủy
-                                @elseif ($order->status === 'refunded')
-                                    Xem Chi Tiết Đơn Hàng Đã Hoàn Trả
-                                @else
-                                    Xem Chi Tiết
-                                @endif
-                            </a>
-
-                            @if ($order->status === 'shipped' && !$order->refund_reason)
-                                <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
-                                <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
-                                <div class="refundOrderForm" style="display: none; margin-top: 20px;">
-                                    <form action="{{ route('orders.refund', $order->id) }}" method="POST"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <div class="form-group">
-                                            <label for="refund_reason">Lý do trả hàng/hoàn tiền:</label>
-                                            <textarea name="refund_reason" id="refund_reason" rows="4" class="form-control" required></textarea>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="refund_image">Hình ảnh minh họa (chọn nhiều hình):</label>
-                                            <label for="refund_image" class="custom-file-upload">Chọn Hình Ảnh</label>
-                                            <input type="file" name="refund_image[]" id="refund_image"
-                                                class="custom-file-input" accept="image/*" multiple required>
-                                        </div>
-
-                                        <!-- Preview các hình ảnh đã chọn -->
-                                        <div class="image-preview-container" id="imagePreview"></div>
-
-
-                                        <button type="submit" class="btn btn-warning">Xác Nhận</button>
-                                    </form>
-
+                            <div class="row">
+                                <!-- Thông tin người mua -->
+                                <div class="col-md-3 mb-2">
+                                    <h4>Thông Tin Khách Hàng</h4>
+                                    <p><strong>Người Mua:</strong> {{ $order->user->name }}</p>
+                                    <p><strong>Email:</strong> {{ $order->user->email }}</p>
+                                    <p><strong>Địa Chỉ:</strong> {{ $order->user->address }}</p>
+                                    <p><strong>Số Điện Thoại:</strong> {{ $order->user->phone ?? 'Chưa có thông tin' }}</p>
+                                    <p><strong>Ngày Đặt Hàng:</strong>
+                                        {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}
+                                    </p>
                                 </div>
-                            @endif
 
-
-
-                            @if (!in_array($order->status, ['Delivering', 'shipped', 'refunded', 'canceled']))
-                                <button class="btn btn-danger cancelOrderButton">Hủy Đơn Hàng</button>
-                                <div class="cancelOrderForm" style="display: none; margin-top: 20px;">
-                                    <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-
-                                        <div class="form-group">
-                                            <label for="cancellation_reason">Lý do hủy:</label>
-                                            <textarea name="cancellation_reason" id="cancellation_reason" rows="4" class="form-control" required></textarea>
+                                <!-- Chi tiết sản phẩm -->
+                                <div class="col-md-4 mb-2">
+                                    <h4>Thông Tin Sản Phẩm</h4>
+                                    @foreach ($order->items as $item)
+                                        <div>
+                                            <strong>{{ $item->productVariant->product->name }}</strong>
+                                            <small class="text-muted">(Mã SP: {{ $item->productVariant->id }})</small>
                                         </div>
+                                        <ul>
+                                            <li>Số Lượng: {{ $item->quantity }}</li>
+                                            <li>Giá: {{ number_format($item->price, 0, ',', '.') }} VND</li>
+                                            <li>Thương Hiệu: {{ $item->productVariant->product->brand->name }}</li>
+                                        </ul>
 
-                                        <button type="submit" class="btn btn-danger">Xác Nhận Hủy</button>
-                                    </form>
+                                        <!-- Thuộc tính của sản phẩm -->
+                                        @if (isset($order->groupedVariantAttributes[$item->product_variant_id]))
+                                            <div class="mt-1">
+                                                <strong>Thuộc Tính:</strong>
+                                                <ul class="mb-0">
+                                                    @foreach ($order->groupedVariantAttributes[$item->product_variant_id] as $attribute)
+                                                        <li>{{ $attribute->attribute_name }}:
+                                                            {{ $attribute->attribute_value }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @else
+                                            Không có Thuộc Tính nào.
+                                        @endif
+                                    @endforeach
                                 </div>
-                            @endif
+
+                                <!-- Hiển thị ảnh sản phẩm -->
+                                <div class="col-md-2 mb-2">
+                                    <h4>Ảnh Sản Phẩm</h4>
+                                    @if ($item->productVariant->product->image_url && \Storage::exists($item->productVariant->product->image_url))
+                                        <img src="{{ \Storage::url($item->productVariant->product->image_url) }}"
+                                            alt="{{ $item->productVariant->product->name }}"
+                                            style="max-width: 130px; height: auto;">
+                                    @else
+                                        Không có ảnh
+                                    @endif
+                                </div>
+
+                                <!-- Thông tin tổng tiền và trạng thái -->
+                                <div class="col-md-3 mb-2">
+                                    <h4>Tổng Cộng</h4>
+                                    <p><strong>Tổng Tiền Đơn Hàng:</strong>
+                                        <span class="text-success fw-bold">
+                                            {{ number_format($order->items_sum_total, 0, ',', '.') }} VND
+                                        </span>
+                                    </p>
+                                    <p><strong>Trạng Thái:</strong>
+                                        <span class="badge {{ $statusClass }}">{{ $statusLabel }}</span>
+                                    </p>
+                                    <p><strong>Trạng thái thanh toán:</strong>
+                                        @if ($order->payment_status === 'pending')
+                                            <span class="badge rounded-pill bg-warning">Chưa thanh toán</span>
+                                        @elseif ($order->payment_status === 'paid')
+                                            <span class="badge rounded-pill bg-success">Đã thanh toán</span>
+                                        @elseif ($order->payment_status === 'failed')
+                                            <span class="badge rounded-pill bg-danger">Thanh toán thất bại</span>
+                                        @else
+                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
 
 
                         </div>
                     </div>
                 @endforeach
+
+
             </div>
         @endif
     </div>
@@ -216,3 +226,53 @@
 
 
 @endsection
+
+@if ($order->status === 'shipped' && !$order->refund_reason)
+                                <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
+                                <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
+                                <div class="refundOrderForm" style="display: none; margin-top: 20px;">
+                                    <form action="{{ route('orders.refund', $order->id) }}" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <div class="form-group">
+                                            <label for="refund_reason">Lý do trả hàng/hoàn tiền:</label>
+                                            <textarea name="refund_reason" id="refund_reason" rows="4" class="form-control" required></textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="refund_image">Hình ảnh minh họa (chọn nhiều hình):</label>
+                                            <label for="refund_image" class="custom-file-upload">Chọn Hình Ảnh</label>
+                                            <input type="file" name="refund_image[]" id="refund_image"
+                                                class="custom-file-input" accept="image/*" multiple required>
+                                        </div>
+
+                                        <!-- Preview các hình ảnh đã chọn -->
+                                        <div class="image-preview-container" id="imagePreview"></div>
+
+
+                                        <button type="submit" class="btn btn-warning">Xác Nhận</button>
+                                    </form>
+
+                                </div>
+                            @endif
+
+
+
+                            @if (!in_array($order->status, ['Delivering', 'shipped', 'refunded', 'canceled']))
+                                <button class="btn btn-danger cancelOrderButton">Hủy Đơn Hàng</button>
+                                <div class="cancelOrderForm" style="display: none; margin-top: 20px;">
+                                    <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+
+                                        <div class="form-group">
+                                            <label for="cancellation_reason">Lý do hủy:</label>
+                                            <textarea name="cancellation_reason" id="cancellation_reason" rows="4" class="form-control" required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-danger">Xác Nhận Hủy</button>
+                                    </form>
+                                </div>
+                            @endif

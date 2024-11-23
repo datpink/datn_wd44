@@ -2,7 +2,9 @@
 @section('title', $post->title . ' - Zaia Enterprise')
 
 @section('content')
-    <div class="main-container left-sidebar has-sidebar">
+
+    @include('components.breadcrumb-client2')
+    <div class="main-container left-sidebar has-sidebar mt-5">
 
         <!-- POST LAYOUT -->
         <div class="container">

@@ -73,40 +73,21 @@
     }
 @endphp
 
-@php
-    use App\Models\Advertisement;
-    $advertisements = Advertisement::all();
-    $validAdvertisements = $advertisements->filter(function ($advertisement) {
-        return $advertisement->image &&
-            $advertisement->title &&
-            $advertisement->description &&
-            $advertisement->button_link &&
-            $advertisement->button_text &&
-            $advertisement->position == 5;
-    });
-@endphp
-
 <div class="banner-wrapper has_background">
-    @if ($validAdvertisements->count() > 0)
-        @foreach ($validAdvertisements as $advertisement)
-            <img src="{{ asset('storage/' . $advertisement->image) }}"
-                class="img-responsive attachment-1920x447 size-1920x447" alt="img">
-            <div class="banner-wrapper-inner">
-                <h1 class="page-title container">{{ end($breadcrumbs)['name'] }}</h1>
-                <div role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs container">
-                    <ul class="trail-items breadcrumb">
-                        @foreach ($breadcrumbs as $breadcrumb)
-                            <li class="trail-item {{ $loop->last ? 'trail-end active' : '' }}">
-                                @if ($breadcrumb['url'])
-                                    <a href="{{ $breadcrumb['url'] }}"><span>{{ $breadcrumb['name'] }}</span></a>
-                                @else
-                                    <span>{{ $breadcrumb['name'] }}</span>
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        @endforeach
-    @endif
+
+    <h1 class="page-title container">{{ end($breadcrumbs)['name'] }}</h1>
+    <div role="navigation" aria-label="Breadcrumbs" class="breadcrumb-trail breadcrumbs container">
+        <ul class="trail-items breadcrumb">
+            @foreach ($breadcrumbs as $breadcrumb)
+                <li class="trail-item {{ $loop->last ? 'trail-end active' : '' }}">
+                    @if ($breadcrumb['url'])
+                        <a href="{{ $breadcrumb['url'] }}"><span>{{ $breadcrumb['name'] }}</span></a>
+                    @else
+                        <span>{{ $breadcrumb['name'] }}</span>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+    </div>
+
 </div>
