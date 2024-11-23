@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Liên Hệ')
+@section('title', 'Checkout')
 
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -33,6 +33,9 @@
             transform: translateX(3px);
         }
     </style>
+
+    @include('components.breadcrumb-client2')
+
     <main class="site-main main-container no-sidebar">
         <div class="container">
             <div class="row">

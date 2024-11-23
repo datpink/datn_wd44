@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @include('components.breadcrumb-client')
+    @include('components.breadcrumb-client2')
     @include('admin.layouts.load')
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

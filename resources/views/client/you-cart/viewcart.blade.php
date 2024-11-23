@@ -3,7 +3,8 @@
 @section('title', 'Zaia Enterprise | Giỏ hàng của bạn')
 
 @section('content')
-    <div class="container px-3 my-5 clearfix">
+@include('components.breadcrumb-client2')
+    <div class="container px-3 my-5 clearfix mt-5">
         <div class="card">
             <div class="card-header">
                 <h2>Giỏ hàng của bạn</h2>
