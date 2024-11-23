@@ -3,6 +3,7 @@
 @section('title', 'Thay đổi mật khẩu')
 
 @section('content')
+@include('components.breadcrumb-client2')
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">

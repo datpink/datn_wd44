@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('components.breadcrumb-client')
+    @include('components.breadcrumb-client2')
 
     <div class="main-container left-sidebar has-sidebar">
         <div class="container">

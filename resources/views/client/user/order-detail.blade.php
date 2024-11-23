@@ -96,7 +96,7 @@
                         'shipped' => 'bg-info',
                         'canceled' => 'bg-danger',
                         'refunded' => 'bg-warning',
-                        'delivering' => 'bg-secondary',
+                        'Delivering' => 'bg-secondary',
                         'delivered' => 'bg-success',
                     ];
 
@@ -105,7 +105,7 @@
                         'shipped' => 'Đã Gửi',
                         'canceled' => 'Đã Hủy',
                         'refunded' => 'Đã Hoàn Tiền',
-                        'delivering' => 'Đang Giao',
+                        'Delivering' => 'Đang Giao',
                         'delivered' => 'Đã Giao',
                     ];
 

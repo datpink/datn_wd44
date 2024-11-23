@@ -1,6 +1,6 @@
 @extends('client.master')
 
-@section('title', 'Liên Hệ')
+@section('title', 'Checkout')
 
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -33,6 +33,9 @@
             transform: translateX(3px);
         }
     </style>
+
+    @include('components.breadcrumb-client2')
+
     <main class="site-main main-container no-sidebar">
         <div class="container">
             <div class="row">
@@ -370,7 +373,7 @@
 
                                 // Lấy ID mã giảm giá từ API response
                                 const promotionId = data
-                                .promotion_id; // Lấy giá trị promotion_id từ response
+                                    .promotion_id; // Lấy giá trị promotion_id từ response
 
                                 // Thêm input hidden nếu chưa có
                                 let promotionIdInput = document.querySelector('[name="promotion_id"]');
@@ -378,11 +381,11 @@
                                     promotionIdInput = document.createElement("input");
                                     promotionIdInput.type = "hidden";
                                     promotionIdInput.name =
-                                    "promotion_id"; // Đảm bảo tên là promotion_id
+                                        "promotion_id"; // Đảm bảo tên là promotion_id
                                     promotionIdInput.value =
-                                    promotionId; // Gán giá trị của promotion_id
+                                        promotionId; // Gán giá trị của promotion_id
                                     document.querySelector("form").appendChild(
-                                    promotionIdInput); // Thêm input vào form
+                                        promotionIdInput); // Thêm input vào form
                                 } else {
                                     // Cập nhật giá trị nếu input đã tồn tại
                                     promotionIdInput.value = promotionId;
@@ -390,10 +393,10 @@
 
                                 // Cập nhật giao diện khác như giảm giá, tổng tiền
                                 const discountElement = document.querySelector(
-                                ".cart-discount .amount");
+                                    ".cart-discount .amount");
                                 if (discountElement) {
                                     document.querySelector(".cart-discount").style.display =
-                                    "table-row";
+                                        "table-row";
                                     discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
                             style: "currency",
                             currency: "VND",

@@ -126,18 +126,39 @@ class OrderController extends Controller
     }
 
     //Hiển thị danh sách lịch sử đơn hàng
-    public function showOrderHistory($userId)
+    public function showOrderHistory()
     {
+        // Lấy ID người dùng hiện tại
         $userId = Auth::id();
 
-        // Truy vấn lấy danh sách đơn hàng của người dùng với tổng tiền mỗi đơn hàng theo order_id
-        $orders = Order::withSum('items', 'total')
+        // Lấy danh sách đơn hàng của người dùng, bao gồm thông tin người mua, sản phẩm và tổng tiền mỗi đơn hàng
+        $orders = Order::with(['user', 'items.productVariant.product'])
+            ->withSum('items', 'total') // Tổng tiền từng đơn hàng
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // Xử lý chi tiết sản phẩm và thuộc tính cho từng đơn hàng
+        foreach ($orders as $order) {
+            $items = $order->items; // Lấy danh sách sản phẩm trong đơn hàng
+
+            // Lấy thuộc tính biến thể từ bảng `product_variant_attributes`
+            $productVariantAttributes = DB::table('product_variant_attributes as pva')
+                ->join('attribute_values as av', 'pva.attribute_value_id', '=', 'av.id')
+                ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
+                ->whereIn('pva.product_variant_id', $items->pluck('product_variant_id')->toArray())
+                ->select('pva.product_variant_id', 'a.name as attribute_name', 'av.name as attribute_value')
+                ->get();
+
+            // Gom nhóm các thuộc tính biến thể theo `product_variant_id`
+            $order->groupedVariantAttributes = $productVariantAttributes->groupBy('product_variant_id');
+        }
+
         return view('client.user.order-history', compact('orders'));
     }
+
+
+
     public function detailOrderHistory(Order $order)
     {
         // Lấy thông tin người mua
