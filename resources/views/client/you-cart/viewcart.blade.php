@@ -13,7 +13,9 @@
                     <table class="table table-bordered m-0" id="cart-table">
                         <thead>
                             <tr>
-                                <th class="text-center align-middle py-3 px-0" style="width: 40px;"></th>
+                                <th class="text-center align-middle py-3 px-0" style="width: 40px;">
+                                    <input type="checkbox" id="select-all">
+                                </th>
                                 <th class="text-center py-3 px-4" style="min-width: 150px;">Hình ảnh</th>
                                 <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm &amp; Chi tiết</th>
                                 <th class="text-right py-3 px-4" style="width: 100px;">Giá</th>
@@ -21,11 +23,12 @@
                                 <th class="text-right py-3 px-4" style="width: 100px;">Tổng</th>
                                 <th class="text-center align-middle py-3 px-0" style="width: 80px;"></th>
                             </tr>
+
                         </thead>
                         <tbody>
                             @php $subtotal = 0; @endphp
-                            @if (session('cart') && count(session('cart')) > 0)
-                                @foreach (session('cart') as $key => $item)
+                            @if (session("cart_{$id}") && count(session("cart_{$id}")) > 0)
+                                @foreach (session("cart_{$id}") as $key => $item)
                                     <tr>
                                         <td class="text-center align-middle px-0">
                                             <input type="checkbox" name="product_checkbox" value="{{ $key }}">
@@ -43,7 +46,7 @@
                                                             Màu: {{ $item['options']['color'] }} - Bộ nhớ:
                                                             {{ $item['options']['storage'] }}
                                                         @endif
-</small>
+                                                    </small>
                                                 </div>
                                             </div>
                                         </td>
@@ -90,7 +93,7 @@
                                     {{ number_format($subtotal, 0, ',', '.') }}</strong></div>
                         </div>
                     </div>
-</div>
+                </div>
                 <div class="float-right">
                     <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3"
                         onclick="window.location.href='{{ route('products.index') }}'">Trở về mua sắm</button>
@@ -152,13 +155,25 @@
 
         function submitCheckout() {
             const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')]
-                .map(checkbox => checkbox.value);
+                .map(checkbox => {
+                    const row = checkbox.closest('tr'); // Lấy hàng tương ứng với checkbox
+                    const variantId = row.dataset.variantId; // Lấy `variant_id` từ dataset
+                    return {
+                        cart_id: checkbox.value, // Giữ nguyên `cart_id` từ giá trị checkbox
+                        variant_id: variantId // Bổ sung thêm `variant_id`
+                    };
+                });
+
+            // Gắn dữ liệu vào input hidden
             document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
+
+            // Submit form
             document.getElementById('checkoutForm').submit();
         }
 
+
         document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
-checkbox.addEventListener('change', updateCartTotal);
+            checkbox.addEventListener('change', updateCartTotal);
         });
 
         document.addEventListener('DOMContentLoaded', updateCartTotal);
@@ -220,6 +235,17 @@ checkbox.addEventListener('change', updateCartTotal);
                     }
                 });
             });
+        });
+        document.getElementById('select-all').addEventListener('change', function() {
+            const isChecked = this.checked;
+            const checkboxes = document.querySelectorAll('#cart-table tbody input[name="product_checkbox"]');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+
+            // Cập nhật tổng tiền khi tất cả được chọn/bỏ chọn
+            updateCartTotal();
         });
     </script>
 @endsection

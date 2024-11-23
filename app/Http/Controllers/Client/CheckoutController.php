@@ -18,6 +18,7 @@ class CheckoutController extends Controller
 {
     public function showCheckout(Request $request)
     {
+
         // Lấy danh sách ID sản phẩm từ input 'selected_products'
         $selectedProducts = json_decode($request->input('selected_products'), true);
 
@@ -31,15 +32,27 @@ class CheckoutController extends Controller
         // Lấy thông tin chi tiết của các sản phẩm đã chọn
         $products = [];
         $totalAmount = 0;
-        foreach ($selectedProducts as $productId) {
-            if (session("cart.$productId")) {
-                $product = session("cart.$productId");
+
+        foreach ($selectedProducts as $selectedProduct) {
+            // Lấy cart_id và variant_id từ mỗi phần tử
+            $cartId = $selectedProduct['cart_id'];
+            $variantId = $selectedProduct['variant_id'];
+
+            // Kiểm tra sản phẩm trong session theo cart_id
+            if (session("cart.$cartId")) {
+                $product = session("cart.$cartId");
+
+                // Gắn thêm variant_id vào sản phẩm
+                $product['variant_id'] = $variantId;
+
+                // Thêm sản phẩm vào danh sách
                 $products[] = $product;
 
                 // Tính tổng số tiền
                 $totalAmount += $product['price'] * $product['quantity'];
             }
         }
+
 
         // Lấy danh sách phương thức thanh toán từ cơ sở dữ liệu
         $paymentMethods = PaymentMethod::all();
@@ -74,6 +87,7 @@ class CheckoutController extends Controller
         // Ví dụ: các tỉnh miền Bắc có shippingFee = 30000, miền Trung = 40000, miền Nam = 50000
 
         // Truyền dữ liệu vào view
+        dd($products);
         return view('client.checkout.index', compact('products', 'paymentMethods', 'totalAmount', 'user', 'provinces', 'discount'));
     }
 
@@ -88,7 +102,7 @@ class CheckoutController extends Controller
         $couponCode = $request->input('coupon_code');
 
         // Kiểm tra mã giảm giá
-        $coupon = Promotion::select('id', 'discount_value', 'code') // Lấy thêm ID
+        $coupon = Promotion::select('id', 'discount_value', 'code', 'type', 'min_order_value')
             ->where('code', $couponCode)
             ->where('status', 'active')
             ->where('start_date', '<=', Carbon::today())
@@ -102,21 +116,39 @@ class CheckoutController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Mã giảm giá không hợp lệ'], 400);
         }
 
-        Log::info('Promotion ID:', ['promotion_id' => $coupon->id]);
-        // Tính giảm giá
         $totalAmount = $request->input('totalAmount');
-        $discountAmount = ($totalAmount * $coupon->discount_value) / 100;
+
+        // Kiểm tra giá trị đơn hàng tối thiểu (nếu có)
+        if ($coupon->min_order_value && $totalAmount < $coupon->min_order_value) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Đơn hàng không đủ điều kiện áp dụng mã giảm giá'
+            ], 400);
+        }
+
+        // Tính giảm giá
+        $discountAmount = 0;
+        if ($coupon->type === 'percentage') {
+            $discountAmount = ($totalAmount * $coupon->discount_value) / 100;
+        } elseif ($coupon->type === 'fixed_amount') {
+            $discountAmount = $coupon->discount_value;
+        }
+
+        // Đảm bảo số tiền giảm không lớn hơn tổng số tiền đơn hàng
+        $discountAmount = min($discountAmount, $totalAmount);
+
         $finalAmount = $totalAmount - $discountAmount;
 
         // Trả về JSON
         return response()->json([
             'status' => 'success',
             'message' => 'Mã giảm giá hợp lệ',
-            'promotion_id' => $coupon->id, // Trả về ID mã giảm giá
+            'promotion_id' => $coupon->id,
             'discount' => $discountAmount,
             'final_amount' => $finalAmount,
         ]);
     }
+
 
 
     public function getDistricts($provinceId)
