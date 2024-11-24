@@ -39,7 +39,7 @@
                         <label for="url" class="form-label">URL:</label>
                         <input type="url" name="url" id="url" class="form-control" value="{{ old('url') }}" placeholder="https://example.com">
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Thêm Thông Báo</button>
+                    <button type="submit" class="btn btn-primary rounded-pill mt-3">Thêm Thông Báo</button>
                 </form>
             </div>
         </div>
