@@ -3,7 +3,7 @@
 @section('title', 'Zaia Enterprise | Giỏ hàng của bạn')
 
 @section('content')
-@include('components.breadcrumb-client2')
+    @include('components.breadcrumb-client2')
     <div class="container px-3 my-5 clearfix mt-5">
         <div class="card">
             <div class="card-header">
@@ -14,7 +14,9 @@
                     <table class="table table-bordered m-0" id="cart-table">
                         <thead>
                             <tr>
-                                <th class="text-center align-middle py-3 px-0" style="width: 40px;"></th>
+                                <th class="text-center align-middle py-3 px-0" style="width: 40px;">
+                                    <input type="checkbox" id="select-all">
+                                </th>
                                 <th class="text-center py-3 px-4" style="min-width: 150px;">Hình ảnh</th>
                                 <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm &amp; Chi tiết</th>
                                 <th class="text-right py-3 px-4" style="width: 100px;">Giá</th>
@@ -25,9 +27,12 @@
                         </thead>
                         <tbody>
                             @php $subtotal = 0; @endphp
-                            @if (session('cart') && count(session('cart')) > 0)
-                                @foreach (session('cart') as $key => $item)
-                                    <tr>
+                            @if (session("cart_{$id}") && count(session("cart_{$id}")) > 0)
+                                @foreach (session("cart_{$id}") as $key => $item)
+                                    <tr data-cart-id="{{ $key }}"
+                                        data-storage-variant-id="{{ $item['options']['storage_variant_id'] }}"
+                                        data-color-variant-id="{{ $item['options']['color_variant_id'] }}">
+
                                         <td class="text-center align-middle px-0">
                                             <input type="checkbox" name="product_checkbox" value="{{ $key }}">
                                         </td>
@@ -44,7 +49,7 @@
                                                             Màu: {{ $item['options']['color'] }} - Bộ nhớ:
                                                             {{ $item['options']['storage'] }}
                                                         @endif
-</small>
+                                                    </small>
                                                 </div>
                                             </div>
                                         </td>
@@ -54,7 +59,8 @@
                                         </td>
                                         <td class="align-middle p-4">
                                             <input type="number" class="form-control text-center quantity"
-                                                value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
+                                                value="{{ $item['quantity'] }}" min="1"
+                                                onchange="updateTotal(this)">
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4 total">
                                             {{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫
@@ -77,13 +83,9 @@
 
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
                     <div class="mt-4">
-                        <label class="text-muted font-weight-normal">Mã Giảm Giá</label>
-                        <input type="text" placeholder="ABC" class="form-control">
                     </div>
                     <div class="d-flex">
-                        <div class="text-right mt-4 mr-5">
-                            <label class="text-muted font-weight-normal m-0">Discount</label>
-                            <div class="text-large"><strong>₫0.00</strong></div>
+                        <div class="text-right mt-4 mr-4">
                         </div>
                         <div class="text-right mt-4">
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
@@ -91,7 +93,7 @@
                                     {{ number_format($subtotal, 0, ',', '.') }}</strong></div>
                         </div>
                     </div>
-</div>
+                </div>
                 <div class="float-right">
                     <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3"
                         onclick="window.location.href='{{ route('products.index') }}'">Trở về mua sắm</button>
@@ -136,91 +138,61 @@
             updateCartTotal();
         }
 
-        function updateCartTotal() {
-            let subtotal = 0;
-            document.querySelectorAll('#cart-table tbody tr').forEach(row => {
-                const checkbox = row.querySelector('input[type="checkbox"]');
-                if (checkbox && checkbox.checked) {
-                    const totalValue = parseFloat(row.querySelector('.total').textContent.replace('₫', '').replace(
-                        /\./g, ''));
-                    if (!isNaN(totalValue)) {
-                        subtotal += totalValue;
-                    }
-                }
-            });
-            document.getElementById('total-price').textContent = `₫${formatCurrency(subtotal)}`;
+        function updateTotal(input) {
+            const row = input.closest('tr');
+            const price = parseFloat(row.querySelector('[data-price]').dataset.price);
+            let quantity = parseInt(input.value);
+
+            if (isNaN(quantity) || quantity < 1) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    toast: true,
+                    timer: 3500,
+                    position: 'top',
+                    text: "Số lượng không hợp lệ!"
+                });
+                input.value = 1; // Đặt lại số lượng về 1 nếu không hợp lệ
+                quantity = 1; // Cập nhật lại giá trị
+            }
+
+            const total = price * quantity;
+            row.querySelector('.total').textContent = `₫${formatCurrency(total)}`;
+            updateCartTotal();
         }
 
+
         function submitCheckout() {
-            const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')]
-                .map(checkbox => checkbox.value);
+            const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')].map(
+                checkbox => {
+                    const row = checkbox.closest('tr');
+                    return {
+                        cart_id: checkbox.value,
+                        storage_variant_id: row.dataset.storageVariantId ||
+                        null, // Sử dụng dataset để lấy giá trị data-attributes
+                        color_variant_id: row.dataset.colorVariantId ||
+                            null // Sử dụng dataset để lấy giá trị data-attributes
+                    };
+                });
+
             document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
             document.getElementById('checkoutForm').submit();
         }
 
+
+
         document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
-checkbox.addEventListener('change', updateCartTotal);
+            checkbox.addEventListener('change', updateCartTotal);
         });
 
         document.addEventListener('DOMContentLoaded', updateCartTotal);
 
-        document.querySelectorAll('.remove-from-cart').forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                const productId = this.getAttribute('data-id');
-
-                Swal.fire({
-                    title: 'Xác nhận',
-                    text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    toast: true,
-                    timer: 3500,
-                    position: 'top',
-                    confirmButtonText: 'Có',
-                    cancelButtonText: 'Không'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch(`{{ url('cart/remove/') }}/${productId}`, {
-                                method: 'POST',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    id: productId
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Đã xóa!',
-                                        text: data.message,
-                                        toast: true,
-                                        timer: 3500,
-                                        position: 'top',
-                                        showConfirmButton: false
-                                    });
-                                    this.closest('tr').remove();
-                                    updateCartTotal();
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Lỗi!',
-                                        text: data.message,
-                                        toast: true,
-                                        timer: 3500,
-                                        position: 'top',
-                                        showConfirmButton: false
-                                    });
-                                }
-                            })
-                            .catch(error => console.error('Error:', error));
-                    }
-                });
+        document.getElementById('select-all').addEventListener('change', function() {
+            const checked = this.checked;
+            document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = checked;
             });
+            updateCartTotal();
         });
     </script>
 @endsection

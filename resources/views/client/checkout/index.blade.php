@@ -107,11 +107,13 @@
                                                                     <option value="">Chọn tỉnh</option>
                                                                     @foreach ($provinces as $province)
                                                                         <option value="{{ $province->id }}">
-                                                                            {{ $province->name }}</option>
+                                                                            {{ $province->name }}
+                                                                        </option>
                                                                     @endforeach
                                                                 </select>
                                                             </span>
                                                         </p>
+
                                                         <p class="form-row form-row-wide validate-required"
                                                             data-priority="30">
                                                             <label>Chọn Huyện&nbsp;<abbr class="required"
@@ -124,6 +126,7 @@
                                                                 </select>
                                                             </span>
                                                         </p>
+
                                                         <p class="form-row form-row-wide validate-required"
                                                             data-priority="40">
                                                             <label>Chọn Xã/Phường&nbsp;<abbr class="required"
@@ -143,19 +146,9 @@
                                                         <label>Số điện thoại&nbsp;<abbr class="required"
                                                                 title="required">*</abbr></label>
                                                         <span class="kobolg-input-wrapper">
-                                                            <input type="tel" class="input-text" name="billing_phone"
+                                                            <input type="tel" class="input-text" name="phone_number"
                                                                 value="{{ $user->phone ?? '' }}" placeholder=""
                                                                 autocomplete="tel" required>
-                                                        </span>
-                                                    </p>
-                                                    <p class="form-row form-row-wide validate-required validate-email"
-                                                        data-priority="110">
-                                                        <label>Email&nbsp;<abbr class="required"
-                                                                title="required">*</abbr></label>
-                                                        <span class="kobolg-input-wrapper">
-                                                            <input type="email" class="input-text" name="billing_email"
-                                                                value="{{ $user->email }}" placeholder=""
-                                                                autocomplete="email username" required>
                                                         </span>
                                                     </p>
                                                 </div>
@@ -181,7 +174,7 @@
                                                     <label for="order_comments" class="">Ghi chú đơn hàng&nbsp;<span
                                                             class="optional">(tùy chọn)</span></label>
                                                     <span class="kobolg-input-wrapper">
-                                                        <textarea name="order_comments" class="input-text " id="order_comments"
+                                                        <textarea name="description" class="input-text " id="order_comments"
                                                             placeholder="Ghi chú về đơn hàng của bạn, ví dụ: ghi chú đặc biệt cho giao hàng." rows="2" cols="5"></textarea>
                                                     </span>
                                                 </p>
@@ -218,16 +211,40 @@
                                                                         {{ $product['options']['storage'] }}
                                                                     @endif
                                                                 </small>
+                                                                <p>Variant: {{ $product['storage_variant_id'] ?? 'NULL' }},
+                                                                    {{ $product['color_variant_id'] ?? 'NULL' }}</p>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td class="price-col">
                                                         <span>
-                                                            {{ $product['price'] * $product['quantity'] == floor($product['price'] * $product['quantity']) ? number_format($product['price'] * $product['quantity'], 0, ',', '.') : number_format($product['price'] * $product['quantity'], 2, ',', '.') }}₫
+                                                            {{ number_format($product['price'] * $product['quantity'], 0, ',', '.') }}₫
                                                         </span>
                                                     </td>
+
+                                                    <!-- Thêm thông tin về biến thể vào các hidden inputs -->
+                                                    <input type="hidden" name="products[{{ $loop->index }}][id]"
+                                                        value="{{ $product['id'] }}">
+
+                                                    <!-- Lưu thông tin biến thể (id của biến thể) vào các trường hidden -->
+                                                    <input type="hidden"
+                                                        name="products[{{ $loop->index }}][storage_variant_id]"
+                                                        value="{{ $product['storage_variant_id'] ?? '' }}">
+                                                    <!-- Nếu không có, để trống -->
+                                                    <input type="hidden"
+                                                        name="products[{{ $loop->index }}][color_variant_id]"
+                                                        value="{{ $product['color_variant_id'] ?? '' }}">
+                                                    <!-- Nếu không có, để trống -->
+
+                                                    <input type="hidden" name="products[{{ $loop->index }}][price]"
+                                                        value="{{ $product['price'] }}">
+                                                    <input type="hidden" name="products[{{ $loop->index }}][quantity]"
+                                                        value="{{ $product['quantity'] }}">
+                                                    <input type="hidden" name="products[{{ $loop->index }}][total]"
+                                                        value="{{ $product['price'] * $product['quantity'] }}">
                                                 </tr>
                                             @endforeach
+
                                         </tbody>
 
                                         <tfoot>
@@ -288,7 +305,7 @@
                                                                     name="payment_method" value="{{ $method->id }}"
                                                                     @if ($loop->first) checked="checked" @endif>
                                                                 <label
-                                                                    for="payment_method_{{ $method->id }}">{{ $method->name }}</label>
+                                                                    for="payment_method_{{ $method->id }}">{{ $method->description }}</label>
                                                             </li>
                                                         @endif
                                                     @endforeach
@@ -309,9 +326,12 @@
 
                                     <input type="hidden" name="promotion_id"
                                         value="{{ old('promotion_id', $promotion_id ?? '') }}">
-                                    <input type="hidden" name="discount_total" value="0">
+                                    <input type="hidden" id="discount_display" name="discount_display">
 
-                                    <!-- Trường này sẽ được cập nhật -->
+                                    <!-- Trường input ẩn để chứa dữ liệu gộp -->
+                                    <input type="hidden" id="full_address" name="full_address" value="">
+
+
                                     <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
                                         id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
@@ -339,23 +359,24 @@
             // Xử lý form mã giảm giá
             const couponFormSubmit = document.querySelector(".checkout_coupon.kobolg-form-coupon");
             if (couponFormSubmit) {
-                couponFormSubmit.addEventListener("submit", function(e) {
+                couponFormSubmit.addEventListener("submit", async function(e) {
                     e.preventDefault();
 
                     const couponCode = document.querySelector("#coupon_code").value;
-                    const totalAmount = parseFloat(
-                        document.querySelector('[name="totalAmount"]').value
-                    );
+                    const totalAmountInput = document.querySelector('[name="totalAmount"]');
                     const shippingFee = parseFloat(
-                        document.querySelector("#shipping-fee").textContent.replace(/[^\d]/g, "") || 0
+                        document.querySelector("#shipping-fee").textContent.replace(/[^\d]/g, "") ||
+                        0
                     );
 
+                    const totalAmount = parseFloat(totalAmountInput?.value || 0);
                     if (isNaN(totalAmount) || totalAmount <= 0) {
                         alert("Tổng tiền không hợp lệ.");
                         return;
                     }
 
-                    fetch("{{ route('applyCoupon') }}", {
+                    try {
+                        const response = await fetch("{{ route('applyCoupon') }}", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -365,59 +386,95 @@
                                 coupon_code: couponCode,
                                 totalAmount: totalAmount,
                             }),
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (data.status === "success") {
-                                alert("Áp dụng mã giảm giá thành công!");
-
-                                // Lấy ID mã giảm giá từ API response
-                                const promotionId = data
-                                    .promotion_id; // Lấy giá trị promotion_id từ response
-
-                                // Thêm input hidden nếu chưa có
-                                let promotionIdInput = document.querySelector('[name="promotion_id"]');
-                                if (!promotionIdInput) {
-                                    promotionIdInput = document.createElement("input");
-                                    promotionIdInput.type = "hidden";
-                                    promotionIdInput.name =
-                                        "promotion_id"; // Đảm bảo tên là promotion_id
-                                    promotionIdInput.value =
-                                        promotionId; // Gán giá trị của promotion_id
-                                    document.querySelector("form").appendChild(
-                                        promotionIdInput); // Thêm input vào form
-                                } else {
-                                    // Cập nhật giá trị nếu input đã tồn tại
-                                    promotionIdInput.value = promotionId;
-                                }
-
-                                // Cập nhật giao diện khác như giảm giá, tổng tiền
-                                const discountElement = document.querySelector(
-                                    ".cart-discount .amount");
-                                if (discountElement) {
-                                    document.querySelector(".cart-discount").style.display =
-                                        "table-row";
-                                    discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                        }).format(data.discount)}`;
-                                }
-
-                                const totalElement = document.querySelector(".order-total .amount");
-                                const finalAmount = data.final_amount + shippingFee;
-                                if (totalElement) {
-                                    totalElement.textContent = new Intl.NumberFormat("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    }).format(finalAmount);
-                                }
-
-                                syncTotalToInput(finalAmount); // Đồng bộ lại tổng giá vào input
-                            } else {
-                                alert("Mã giảm giá không hợp lệ.");
-                            }
                         });
+                        const data = await response.json();
+
+                        if (data.status === "success") {
+                            alert("Áp dụng mã giảm giá thành công!");
+
+                            updatePromotionInput(data.promotion_id);
+                            updateDiscountInput(data.discount);
+                            updateTotalAmount(totalAmount, data.discount, shippingFee);
+                            updateDiscountDisplay(data.discount);
+                        } else {
+                            alert("Mã giảm giá không hợp lệ.");
+                        }
+                    } catch (error) {
+                        console.error("Lỗi:", error);
+                    }
                 });
+            }
+
+            // Hàm cập nhật `promotion_id`
+            function updatePromotionInput(promotionId) {
+                let promotionInput = document.querySelector('[name="promotion_id"]');
+                if (!promotionInput) {
+                    promotionInput = document.createElement("input");
+                    promotionInput.type = "hidden";
+                    promotionInput.name = "promotion_id";
+                    document.querySelector("form").appendChild(promotionInput);
+                }
+                promotionInput.value = promotionId;
+            }
+
+            function updateDiscountInput(discount) {
+                // Kiểm tra giá trị của discount
+                console.log('Discount: ', discount); // Debug
+
+                // Tìm input ẩn 'discount_total'
+                let discountInput = document.querySelector('[name="discount_total"]');
+
+                // Nếu input không tồn tại, tạo mới
+                if (!discountInput) {
+                    discountInput = document.createElement("input");
+                    discountInput.type = "hidden";
+                    discountInput.name = "discount_total";
+                    document.querySelector("form").appendChild(discountInput);
+                }
+
+                // Cập nhật giá trị giảm giá vào input ẩn
+                discountInput.value = discount;
+
+                // Debug giá trị đã được gán vào input ẩn
+                console.log('Input Hidden Value: ', discountInput.value); // Kiểm tra giá trị
+
+                // Cập nhật ô input ẩn `discount_display` (nếu tồn tại)
+                const discountDisplayInput = document.querySelector("#discount_display");
+                if (discountDisplayInput) {
+                    discountDisplayInput.value = discount; // Gán giá trị số thẳng vào
+                }
+            }
+
+
+
+
+
+
+            // Hàm cập nhật tổng tiền sau khi áp dụng mã giảm giá
+            function updateTotalAmount(totalAmount, discount, shippingFee) {
+                const finalAmount = totalAmount - discount + shippingFee;
+                const totalAmountInput = document.querySelector('[name="totalAmount"]');
+                if (totalAmountInput) totalAmountInput.value = finalAmount;
+
+                const totalElement = document.querySelector(".order-total .amount");
+                if (totalElement) {
+                    totalElement.textContent = new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                    }).format(finalAmount);
+                }
+            }
+
+            // Hàm cập nhật giao diện hiển thị giảm giá
+            function updateDiscountDisplay(discount) {
+                const discountElement = document.querySelector(".cart-discount .amount");
+                if (discountElement) {
+                    document.querySelector(".cart-discount").style.display = "table-row";
+                    discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+            }).format(discount)}`;
+                }
             }
 
 
@@ -542,6 +599,40 @@
         function syncTotalToInput(totalAmount) {
             document.querySelector("#input-total").value = totalAmount;
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const provinceSelect = document.querySelector('#province');
+            const districtSelect = document.querySelector('#district');
+            const wardSelect = document.querySelector('#ward');
+            const fullAddressInput = document.querySelector('#full_address');
+
+            // Lắng nghe sự thay đổi của các dropdown
+            provinceSelect.addEventListener('change', updateFullAddress);
+            districtSelect.addEventListener('change', updateFullAddress);
+            wardSelect.addEventListener('change', updateFullAddress);
+
+            function updateFullAddress() {
+                const provinceId = provinceSelect.value;
+                const districtId = districtSelect.value;
+                const wardId = wardSelect.value;
+
+                let fullAddress = '';
+
+                // Kiểm tra xem các giá trị có hợp lệ không và tạo chuỗi gộp
+                if (provinceId) {
+                    fullAddress += provinceSelect.options[provinceSelect.selectedIndex].text;
+                }
+                if (districtId) {
+                    fullAddress += ' - ' + districtSelect.options[districtSelect.selectedIndex].text;
+                }
+                if (wardId) {
+                    fullAddress += ' - ' + wardSelect.options[wardSelect.selectedIndex].text;
+                }
+
+                // Cập nhật giá trị cho input ẩn
+                fullAddressInput.value = fullAddress;
+            }
+        });
     </script>
 
 @endsection
