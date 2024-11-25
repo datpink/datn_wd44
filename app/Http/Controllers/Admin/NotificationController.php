@@ -3,23 +3,27 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NotificationCreated;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Mail;
 
 class NotificationController extends Controller
 {
     public function index()
     {
+        $title = 'Danh Sách Thông báo';
         $notifications = Notification::latest()->paginate(10); // Lấy danh sách thông báo
-        return view('admin.notifications.index', compact('notifications'));
+        return view('admin.notifications.index', compact('notifications', 'title'));
     }
 
     public function create()
     {
+        $title = 'Thêm Mới Thông Báo';
         // Lấy tất cả người dùng
         $users = User::all();
-        return view('admin.notifications.create', compact('users'));
+        return view('admin.notifications.create', compact('users', 'title'));
     }
 
     public function store(Request $request)
@@ -29,11 +33,18 @@ class NotificationController extends Controller
             'description' => 'required|string',
             'url' => 'nullable|url',  // Kiểm tra định dạng URL hợp lệ
         ]);
-    
+
         // Lấy user_id từ request và tạo thông báo
         $validated['user_id'] = $request->input('user_id');  // Lấy user_id từ form
-        Notification::create($validated);
-    
+        $notification = Notification::create($validated);
+
+        // Gửi email thông báo
+        $user = User::find($validated['user_id']);
+        if ($user) {
+            Mail::to($user->email)->send(new NotificationCreated($notification));
+        }
+
         return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được tạo thành công.');
     }
-    }
+
+}
