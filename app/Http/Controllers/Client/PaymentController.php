@@ -37,9 +37,11 @@ class PaymentController extends Controller
             // Kiểm tra danh sách sản phẩm
             if (isset($request->products) && count($request->products) > 0) {
                 foreach ($request->products as $product) {
+                    // Lưu thông tin vào các trường variant_id
                     $order->orderItems()->create([
                         'order_id' => $order->id,                       // ID đơn hàng
-                        'product_variant_id' => $product['variant_id'], // ID biến thể sản phẩm (nếu có)
+                        'storage_variant_id' => $product['storage_variant_id'] ?? null, // Lưu ID biến thể bộ nhớ (nếu có)
+                        'color_variant_id' => $product['color_variant_id'] ?? null,     // Lưu ID biến thể màu sắc (nếu có)
                         'quantity' => $product['quantity'],             // Số lượng sản phẩm
                         'price' => $product['price'],                   // Giá sản phẩm
                         'total' => $product['price'] * $product['quantity'], // Tổng tiền sản phẩm (giá * số lượng)
@@ -48,6 +50,7 @@ class PaymentController extends Controller
             } else {
                 throw new \Exception("Danh sách sản phẩm không hợp lệ.");
             }
+
 
             // Xử lý theo phương thức thanh toán
             if ($paymentMethod === 'cod') {
@@ -92,16 +95,7 @@ class PaymentController extends Controller
 
                 DB::commit();
                 return redirect()->to($paymentUrl);
-            } elseif ($paymentMethod === 'card') {
-                // Thanh toán qua thẻ
-                // TODO: Xử lý logic tích hợp thanh toán qua thẻ nếu cần
-                $order->payment_status = 'paid'; // Cập nhật trạng thái
-                $order->save();
-
-                DB::commit();
-                return redirect()->route('order.success', ['order_id' => $order->id])
-                    ->with('success', 'Thanh toán qua thẻ thành công.');
-            } else {
+            }else {
                 throw new \Exception("Phương thức thanh toán không hợp lệ.");
             }
         } catch (\Exception $e) {

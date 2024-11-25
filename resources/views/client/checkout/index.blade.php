@@ -211,6 +211,8 @@
                                                                         {{ $product['options']['storage'] }}
                                                                     @endif
                                                                 </small>
+                                                                <p>Variant: {{ $product['storage_variant_id'] ?? 'NULL' }},
+                                                                    {{ $product['color_variant_id'] ?? 'NULL' }}</p>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -219,11 +221,21 @@
                                                             {{ number_format($product['price'] * $product['quantity'], 0, ',', '.') }}₫
                                                         </span>
                                                     </td>
+
+                                                    <!-- Thêm thông tin về biến thể vào các hidden inputs -->
                                                     <input type="hidden" name="products[{{ $loop->index }}][id]"
                                                         value="{{ $product['id'] }}">
+
+                                                    <!-- Lưu thông tin biến thể (id của biến thể) vào các trường hidden -->
                                                     <input type="hidden"
-                                                        name="products[{{ $loop->index }}][variant_id]"
-                                                        value="{{ $product['variant_id'] }}">
+                                                        name="products[{{ $loop->index }}][storage_variant_id]"
+                                                        value="{{ $product['storage_variant_id'] ?? '' }}">
+                                                    <!-- Nếu không có, để trống -->
+                                                    <input type="hidden"
+                                                        name="products[{{ $loop->index }}][color_variant_id]"
+                                                        value="{{ $product['color_variant_id'] ?? '' }}">
+                                                    <!-- Nếu không có, để trống -->
+
                                                     <input type="hidden" name="products[{{ $loop->index }}][price]"
                                                         value="{{ $product['price'] }}">
                                                     <input type="hidden" name="products[{{ $loop->index }}][quantity]"
@@ -232,6 +244,7 @@
                                                         value="{{ $product['price'] * $product['quantity'] }}">
                                                 </tr>
                                             @endforeach
+
                                         </tbody>
 
                                         <tfoot>

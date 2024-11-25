@@ -22,7 +22,7 @@ class CartController extends Controller
         if (auth()->check()) {
             $id = auth()->id();
             $user = auth()->user();
-            dd(session("cart_{$id}"));
+            // dd(session("cart_{$id}"));
             // Lấy các mã giảm giá chưa dùng và có trạng thái active
             $discountCodes = $user->promotions()
                 ->wherePivot('is_used', false)
@@ -54,14 +54,21 @@ class CartController extends Controller
         // Log kiểm tra dữ liệu
         info('Variant IDs:', ['variantIds' => $variantIds]);
 
-        // Kiểm tra biến có đủ phần tử
-        if (!is_array($variantIds) || count($variantIds) < 2) {
-            return response()->json(['message' => 'Cần chọn cả dung lượng và màu sắc.'], 400);
-        }
+        // Kiểm tra sản phẩm có biến thể hay không
+        $productHasVariants = !empty($variantIds) && is_array($variantIds);
 
-        // Gán giá trị từ mảng
-        $storageVariantId = $variantIds[0] ?? null; // Dung lượng
-        $colorVariantId = $variantIds[1] ?? null; // Màu sắc
+        $storageVariantId = null;
+        $colorVariantId = null;
+
+        if ($productHasVariants) {
+            if (count($variantIds) < 2) {
+                return response()->json(['message' => 'Cần chọn cả dung lượng và màu sắc.'], 400);
+            }
+
+            // Gán giá trị từ mảng biến thể
+            $storageVariantId = $variantIds[0];
+            $colorVariantId = $variantIds[1];
+        }
 
         // Tạo hoặc cập nhật giỏ hàng
         $cart = session()->get("cart_{$userId}", []);
@@ -70,8 +77,10 @@ class CartController extends Controller
         foreach ($cart as $key => $item) {
             if (
                 $item['id'] == $productId &&
-                $item['options']['storage_variant_id'] == $storageVariantId &&
-                $item['options']['color_variant_id'] == $colorVariantId
+                (!$productHasVariants || (
+                    $item['options']['storage_variant_id'] == $storageVariantId &&
+                    $item['options']['color_variant_id'] == $colorVariantId
+                ))
             ) {
                 $existingItemKey = $key;
                 break;
@@ -101,6 +110,7 @@ class CartController extends Controller
 
         return response()->json(['message' => 'Đã thêm vào giỏ hàng.']);
     }
+
 
 
 
