@@ -39,7 +39,7 @@
             $breadcrumbs[] = ['name' => 'Chi Tiết Sản Phẩm', 'url' => ''];
             break;
 
-            case 'client.product-favorite':
+        case 'client.product-favorite':
             $breadcrumbs[] = ['name' => 'Sản Phẩm Yêu Thích', 'url' => route('client.listProductFavorites')];
             break;
     }

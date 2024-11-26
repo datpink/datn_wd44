@@ -448,6 +448,11 @@
                                             if (res.data.data.data.length > 0) {
                                                 let productsHTML = '';
                                                 res.data.data.data.forEach(product => {
+                                                    console.log(product);
+                                                    
+                                                    const isFavorited = Array.isArray(product.favorited_by) && product
+                                                        .favorited_by.length > 0 ? 'red' : 'inherit';
+
                                                     productsHTML += `
                                                 <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                                                                 data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
@@ -469,7 +474,7 @@
                                                                             <span class="review">(${product.ratings_count})</span>
                                                                         </div>
                                                                         <h3 class="product-name product_title">
-                                                                            <a href="{{ route('client.products.product-detail', $product->slug) }}">${product.name}</a>
+                                                                            <a href="/shop/products/chi-tiet/${product.slug}">${product.name}</a>
                                                                         </h3>
                                                                         <span class="price">
                                                                             <span class="kobolg-Price-amount amount text-danger">
@@ -490,7 +495,7 @@
                                                                             </div>
                                                                             <div class="yith-wcwl-add-to-wishlist">
                                                                                 <div class="yith-wcwl-add-button show">
-                                                                                    <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist">Thêm vào yêu thích</a>
+                                                                                    <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist" style="color:${isFavorited}">Thêm vào yêu thích</a>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="kobolg product compare-button">
@@ -518,7 +523,7 @@
                                         const productId = e.target.dataset.productId;
                                         console.log(productId);
 
-                                        axios.post('http://127.0.0.1:8000/shop/add-product-favorite', {
+                                        axios.post('/shop/add-product-favorite', {
                                                 product_id: productId,
                                             }, {
                                                 headers: {
@@ -536,6 +541,13 @@
                                                     showConfirmButton: false,
                                                     timer: 3000
                                                 });
+
+                                                if (e.target.style.color === 'red') {
+                                                    e.target.style.color =
+                                                        'inherit'; // Nếu đã yêu thích, chuyển lại màu mặc định
+                                                } else {
+                                                    e.target.style.color = 'red'; // Nếu chưa yêu thích, đổi sang màu đỏ
+                                                }
 
                                             })
                                             .catch((err) => {
@@ -557,7 +569,7 @@
                                                         // Nếu sản phẩm đã có trong danh sách yêu thích
                                                         Swal.fire({
                                                             icon: 'error',
-                                                            title: 'Có lỗi xảy ra!',
+                                                            title: 'Sản phẩm đã tồn tại!',
                                                             text: err.response.data
                                                                 .error, // Lấy thông báo lỗi từ response
                                                             position: 'top',
@@ -598,39 +610,8 @@
                         </script>
 
 
-
-
-
-
-                        <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
-                            <ul class="product-categories">
-                                <li class="cat-item cat-item-22"><a href="#">Camera</a>
-                                    <span class="count">(11)</span>
-                                </li>
-                                <li class="cat-item cat-item-16"><a href="#">Accessories</a>
-                                    <span class="count">(9)</span>
-                                </li>
-                                <li class="cat-item cat-item-24"><a href="#">Game & Consoles</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-27"><a href="#">Life style</a> <span
-                                        class="count">(6)</span></li>
-                                <li class="cat-item cat-item-19"><a href="#">New arrivals</a>
-                                    <span class="count">(7)</span>
-                                </li>
-                                <li class="cat-item cat-item-17"><a href="#">Summer Sale</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-26"><a href="#">Specials</a> <span
-                                        class="count">(4)</span></li>
-                                <li class="cat-item cat-item-18"><a href="#">Featured</a> <span
-                                        class="count">(6)</span></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
-
 
 
             </div>

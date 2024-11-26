@@ -57,101 +57,7 @@
                             </select>
                         </form>
 
-                        {{-- <script>
-                            $(document).ready(function() {
-                                $(".orderby").change(function() {
-                                    const orderby = $(this).val(); // Lấy giá trị đã chọn
-                                    console.log(orderby);
-                    
-                                    // Gửi yêu cầu AJAX với Axios
-                                    axios.get('/api/shop/products', {
-                                            params: { // Sử dụng params để gửi các tham số
-                                                orderby: orderby
-                                            }
-                                        })
-                                        .then((res) => {
-                                            console.log(res); // Kiểm tra dữ liệu nhận được
-                                            $('#item-product').html(''); // Xóa danh sách cũ
-                    
-                                            // Lấy dữ liệu sản phẩm từ phản hồi
-                                            const products = res.data.data.data; // Dữ liệu sản phẩm
-                                            // console.log(products.data);
-                    
-                                            // Kiểm tra nếu products là mảng
-                                            if (Array.isArray(products)) {
-                                                // Tạo HTML cho từng sản phẩm
-                                                let productHtml = ''; // Khởi tạo biến chứa HTML sản phẩm
-                                                products.forEach(product => {
-                                                    productHtml += `
-                                                        <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
-                                                            data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
-                                                            <div class="product-inner images">
-                                                                <div class="product-thumb">
-                                                                        <a class="thumb-link" href="#">
-                                                                            ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
-                                                                        </a>
-                                                                    <div class="flash">
-                                                                        ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
-                                                                    </div>
-                                                                    <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
-                                                                </div>
-                                                                <div class="product-info">
-                                                                    <div class="rating-wapper nostar">
-                                                                        <div class="star-rating">
-                                                                            <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
-                                                                        </div>
-                                                                        <span class="review">(${product.ratings_count})</span>
-                                                                    </div>
-                                                                    <h3 class="product-name product_title">
-                                                                        <a href="/products/${product.id}">${product.name}</a>
-                                                                    </h3>
-                                                                    <span class="price">
-                                                                            <span class="kobolg-Price-amount amount text-danger">
-                                                                                <del>
-                                                                                    ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
-                                                                                </del>
-                                                                            </span>
-                                                                            ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
-                                                                    </span>
-                                                                    <div class="kobolg-product-details__short-description">
-                                                                        <p>${product.tomtat}</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="group-button">
-                                                                    <div class="group-button-inner">
-                                                                        <div class="add-to-cart">
-                                                                            <a href="" class="button product_type_variable add_to_cart_button">Select options</a>
-                                                                        </div>
-                                                                        <div class="yith-wcwl-add-to-wishlist">
-                                                                            <div class="yith-wcwl-add-button show">
-                                                                                <a href="javascript:voi(0)" data-product-id={{$product->id}} class="add_to_wishlist">Thêm vào yêu thích</a>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="kobolg product compare-button">
-                                                                            <a href="#" class="compare button">Compare</a>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </li>
-                                                    `;
-                                                });
-                    
-                                                // Cập nhật nội dung HTML của #item-product
-                                                document.getElementById('item-product').innerHTML =
-                                                    productHtml; // Sử dụng innerHTML
-                                                console.log(document.getElementById('item-product'));
-                                            } else {
-                                                // Nếu products không phải là mảng, log ra đối tượng chứa dữ liệu
-                                                console.error('Dữ liệu không phải là mảng:', products);
-                                            }
-                                        })
-                                        .catch((error) => {
-                                            console.error('Có lỗi xảy ra:', error);
-                                        });
-                                });
-                            });
-                        </script> --}}
+
                     </div>
 
                     <div class="auto-clear equal-container better-height kobolg-products">
@@ -350,32 +256,6 @@
                         </div>
 
 
-                        <div id="kobolg_product_categories-3" class="widget kobolg widget_product_categories">
-                            <h2 class="widgettitle">Danh mục sản phẩm<span class="arrow"></span></h2>
-                            <ul class="product-categories">
-                                <li class="cat-item cat-item-22"><a href="#">Camera</a>
-                                    <span class="count">(11)</span>
-                                </li>
-                                <li class="cat-item cat-item-16"><a href="#">Accessories</a>
-                                    <span class="count">(9)</span>
-                                </li>
-                                <li class="cat-item cat-item-24"><a href="#">Game & Consoles</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-27"><a href="#">Life style</a> <span
-                                        class="count">(6)</span></li>
-                                <li class="cat-item cat-item-19"><a href="#">New arrivals</a>
-                                    <span class="count">(7)</span>
-                                </li>
-                                <li class="cat-item cat-item-17"><a href="#">Summer Sale</a>
-                                    <span class="count">(6)</span>
-                                </li>
-                                <li class="cat-item cat-item-26"><a href="#">Specials</a> <span
-                                        class="count">(4)</span></li>
-                                <li class="cat-item cat-item-18"><a href="#">Featured</a> <span
-                                        class="count">(6)</span></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -527,6 +407,10 @@
                         if (res.data.data.length > 0) {
                             let productsHTML = '';
                             res.data.data.forEach(product => {
+                                console.log(product.favorited_by);
+
+                                const isFavorited = product.favorited_by.length > 0 ? 'red' : 'inherit';
+
                                 productsHTML += `
                         <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
@@ -567,7 +451,7 @@
                                         </div>
                                         <div class="yith-wcwl-add-to-wishlist">
                                             <div class="yith-wcwl-add-button show">
-                                                <a href="javascript:voi(0)" data-product-id=${product.id} class="add_to_wishlist">Thêm vào yêu thích</a>
+                                                <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist" style="color:${isFavorited}">Thêm vào yêu thícdh</a>
                                             </div>
                                         </div>
                                         <div class="kobolg product compare-button">
@@ -595,7 +479,7 @@
                     const productId = e.target.dataset.productId;
                     console.log(productId);
 
-                    axios.post('http://127.0.0.1:8000/shop/add-product-favorite', {
+                    axios.post('/shop/add-product-favorite', {
                             product_id: productId,
                         }, {
                             headers: {
@@ -604,6 +488,8 @@
                             }
                         })
                         .then((res) => {
+                            // console.log('123',res);
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Thành công!',
@@ -613,6 +499,14 @@
                                 showConfirmButton: false,
                                 timer: 3000
                             });
+
+                            // Thay đổi màu nút "Thêm vào yêu thích"
+                            if (e.target.style.color === 'red') {
+                                e.target.style.color =
+                                    'inherit'; // Nếu đã yêu thích, chuyển lại màu mặc định
+                            } else {
+                                e.target.style.color = 'red'; // Nếu chưa yêu thích, đổi sang màu đỏ
+                            }
 
                         })
                         .catch((err) => {
@@ -674,122 +568,5 @@
 
         });
     </script>
-
-
-
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function(e) {
-            const colorGroup = document.querySelectorAll('.term-color');
-            const parent_id = document.getElementById('catalogues-id');
-            const child_id = document.getElementById('child-catalogues-id');
-
-            console.log(parent_id.value);
-
-            colorGroup.forEach(function(color) {
-
-                color.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const attributeId = this.getAttribute('data-attribute_id');
-                    const attributeStorageId = this.getAttribute('data-attribute_storage_id');
-                    console.log(attributeStorageId)
-                    if (attributeStorageId) {
-
-                        console.log(attributeStorageId);
-                    }
-
-                    axios.post('/api/shop/products/filter-catalogies-api', {
-                            parent_id: parent_id.value,
-                            child_id: child_id.value,
-                            attribute_id: attributeId,
-                            attribute_storage_value_id: attributeStorageId
-                        })
-
-                        .then((res) => {
-                            console.log(res);
-                            // Xóa danh sách cũ
-                            const productList = document.getElementById('product-list');
-                            productList.innerHTML = ''; // Xóa danh sách cũ
-                            console.log(productList);
-
-
-                            // Kiểm tra nếu có sản phẩm trong phản hồi
-                            if (res.data.data.length > 0) {
-                                // Tạo một biến để chứa HTML của tất cả các sản phẩm
-                                let productsHTML = '';
-
-                                res.data.data.forEach(product => {
-                                    // Tạo nội dung HTML cho sản phẩm mới
-                                    productsHTML += `
-                                    <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
-                                    data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
-                                    <div class="product-inner images">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#">
-                                                ${product.image_url ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
-                                            </a>
-                                            <div class="flash">
-                                                ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
-                                            </div>
-                                            <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating">
-                                                    <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
-                                                </div>
-                                                <span class="review">(${product.ratings_count})</span>
-                                            </div>
-                                            <h3 class="product-name product_title">
-                                                <a href="/products/${product.id}">${product.name}</a>
-                                            </h3>
-                                            <span class="price">
-                                                <span class="kobolg-Price-amount amount text-danger">
-                                                    <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
-                                                </span>
-                                                ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
-                                            </span>
-                                            <div class="kobolg-product-details__short-description">
-                                                <p>${product.tomtat}</p>
-                                            </div>
-                                        </div>
-                                        <div class="group-button">
-                                            <div class="group-button-inner">
-                                                <div class="add-to-cart">
-                                                    <a href="#" class="button product_type_variable add_to_cart_button">Select options</a>
-                                                </div>
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="javascript:voi(0)" data-product-id={{$product->id}} class="add_to_wishlist">Thêm vào yêu thích</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                `;
-                                });
-
-                                // Cập nhật danh sách sản phẩm mới vào DOM
-                                productList.innerHTML = productsHTML;
-
-                            } else {
-                                productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
-                            }
-
-                        }).catch((err) => {
-                            console.log(err);
-
-                        })
-                })
-
-            })
-
-        })
-    </script> --}}
-
 
 @endsection
