@@ -58,6 +58,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+<!-- Data Tables -->
+<script src="{{ asset('theme/admin/assets/vendor/datatables/dataTables.min.js') }}"></script>
+<script src="{{ asset('theme/admin/assets/vendor/datatables/dataTables.bootstrap.min.js') }}"></script>
+
+<!-- Custom Data tables -->
+<script src="{{ asset('theme/admin/assets/vendor/datatables/custom/custom-datatables.js') }}"></script>
+
 {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
 
 {{-- <script>
