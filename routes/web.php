@@ -149,6 +149,8 @@ Route::prefix('shop')->group(function () {
     Route::get('/order/{order}', [OrderController::class, 'detailOrderHistory'])->name('order.detail');
 
     Route::patch('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::patch('/orders/{id}/refund', [OrderController::class, 'refund'])->name('orders.refund');
+
 
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
@@ -180,6 +182,8 @@ Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->
 Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
 Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
+Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
+
 
 
 

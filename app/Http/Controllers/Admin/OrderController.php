@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use PDF;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
@@ -125,18 +126,39 @@ class OrderController extends Controller
     }
 
     //Hiển thị danh sách lịch sử đơn hàng
-    public function showOrderHistory($userId)
+    public function showOrderHistory()
     {
+        // Lấy ID người dùng hiện tại
         $userId = Auth::id();
 
-        // Truy vấn lấy danh sách đơn hàng của người dùng với tổng tiền mỗi đơn hàng theo order_id
-        $orders = Order::withSum('items', 'total')
+        // Lấy danh sách đơn hàng của người dùng, bao gồm thông tin người mua, sản phẩm và tổng tiền mỗi đơn hàng
+        $orders = Order::with(['user', 'items.productVariant.product'])
+            ->withSum('items', 'total') // Tổng tiền từng đơn hàng
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // Xử lý chi tiết sản phẩm và thuộc tính cho từng đơn hàng
+        foreach ($orders as $order) {
+            $items = $order->items; // Lấy danh sách sản phẩm trong đơn hàng
+
+            // Lấy thuộc tính biến thể từ bảng `product_variant_attributes`
+            $productVariantAttributes = DB::table('product_variant_attributes as pva')
+                ->join('attribute_values as av', 'pva.attribute_value_id', '=', 'av.id')
+                ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
+                ->whereIn('pva.product_variant_id', $items->pluck('product_variant_id')->toArray())
+                ->select('pva.product_variant_id', 'a.name as attribute_name', 'av.name as attribute_value')
+                ->get();
+
+            // Gom nhóm các thuộc tính biến thể theo `product_variant_id`
+            $order->groupedVariantAttributes = $productVariantAttributes->groupBy('product_variant_id');
+        }
+
         return view('client.user.order-history', compact('orders'));
     }
+
+
+
     public function detailOrderHistory(Order $order)
     {
         // Lấy thông tin người mua
@@ -191,4 +213,48 @@ class OrderController extends Controller
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công.');
     }
+
+    public function refund(Request $request, $id)
+    {
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
+
+        // Kiểm tra trạng thái đơn hàng, chỉ cho phép trả hàng nếu trạng thái là 'shipped'
+        if ($order->status !== 'shipped') {
+            return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể trả hàng.');
+        }
+
+        // Trước khi cập nhật trạng thái
+        Log::info('Trạng thái trước khi cập nhật: ' . $order->status);
+
+        // Lưu lý do trả hàng
+        $order->refund_reason = $request->input('refund_reason');
+        $order->status = 'refunded';  // Cập nhật trạng thái đơn hàng thành 'refunded'
+        $order->payment_status = 'failed';  // Cập nhật trạng thái thanh toán thành 'failed'
+
+        // Xử lý hình ảnh trả hàng (nếu có)
+        if ($request->hasFile('refund_image')) {
+            $images = $request->file('refund_image');
+            $imagePaths = [];
+
+            foreach ($images as $image) {
+                // Lưu hình ảnh vào thư mục 'refunds' trong storage
+                $imagePaths[] = $image->store('refunds', 'public');
+            }
+
+            // Lưu đường dẫn các hình ảnh vào database dưới dạng JSON
+            $order->refund_images = json_encode($imagePaths);
+        }
+
+        // Lưu các thay đổi vào cơ sở dữ liệu
+        $order->save();
+
+        // Sau khi lưu
+        Log::info('Trạng thái sau khi cập nhật: ' . $order->status);
+        Log::info('Trạng thái thanh toán sau khi cập nhật: ' . $order->payment_status);
+
+        // Quay lại trang lịch sử đơn hàng với thông báo thành công
+        return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hoàn trả và trạng thái thanh toán đã được cập nhật.');
+    }
+
 }

@@ -1,4 +1,4 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{{-- <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -44,20 +44,22 @@
         let selectedVariantId = null; // Biến để lưu variantId
 
         // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
-        const variants = {!! json_encode(
-            $product->variants->map(function ($variant) {
+        const variants = {
+            !!json_encode(
+                $product - > variants - > map(function($variant) {
                     return [
-                        'variant_id' => $variant->id, // Lưu variant_id vào đây
-                        'price' => $variant->price,
-                        'attributes' => $variant->attributeValues->map(function ($attributeValue) {
+                        'variant_id' => $variant - > id, // Lưu variant_id vào đây
+                        'price' => $variant - > price,
+                        'attributes' => $variant - > attributeValues - > map(function($attributeValue) {
                             return [
-                                'name' => $attributeValue->attribute->name,
-                                'value' => $attributeValue->name,
+                                'name' => $attributeValue - > attribute - > name,
+                                'value' => $attributeValue - > name,
                             ];
                         }),
                     ];
-                })->toArray(),
-        ) !!};
+                }) - > toArray(),
+            ) !!
+        };
 
         const originalPrice = parseFloat("{{ $product->price }}");
         const priceElement = document.getElementById('product-price');
@@ -142,9 +144,6 @@
                 }).format(originalPrice);
             }
         }
-
-
-        // Gọi hàm để cập nhật giá khi trang tải
         updatePrice();
 
 
@@ -155,38 +154,41 @@
                 const storage = event.target.getAttribute('data-dung-luong');
                 const color = event.target.getAttribute('data-mau-sac');
 
-                // Kiểm tra nếu là nút dung lượng
+                // Kiểm tra nếu là nút dung lượng (Storage)
                 if (storage) {
                     if (selectedStorage === storage) {
-                        resetButton(selectedStorageButton);
+                        resetButton(selectedStorageButton); // Nếu đã chọn, bỏ chọn
                         selectedStorage = null;
                         selectedStorageButton = null;
                     } else {
-                        if (selectedStorageButton) resetButton(selectedStorageButton);
+                        if (selectedStorageButton) resetButton(
+                            selectedStorageButton); // Xóa chọn nếu đã chọn trước đó
                         selectedStorage = storage;
                         selectedStorageButton = event.target;
-                        selectButton(selectedStorageButton);
+                        selectButton(selectedStorageButton); // Đánh dấu nút được chọn
                     }
                 }
 
-                // Kiểm tra nếu là nút màu sắc
+                // Kiểm tra nếu là nút màu sắc (Color)
                 if (color) {
                     if (selectedColor === color) {
-                        resetButton(selectedColorButton);
+                        resetButton(selectedColorButton); // Nếu đã chọn, bỏ chọn
                         selectedColor = null;
                         selectedColorButton = null;
                     } else {
-                        if (selectedColorButton) resetButton(selectedColorButton);
+                        if (selectedColorButton) resetButton(
+                            selectedColorButton); // Xóa chọn nếu đã chọn trước đó
                         selectedColor = color;
                         selectedColorButton = event.target;
-                        selectButton(selectedColorButton);
+                        selectButton(selectedColorButton); // Đánh dấu nút được chọn
                     }
                 }
 
-                // Cập nhật giá dựa trên các lựa chọn hiện tại
-                updatePrice();
+                // Cập nhật giá và Variant ID sau khi chọn
+                updatePrice(); // Cập nhật giá sản phẩm dựa trên lựa chọn
             }
         });
+
         // Hàm để lấy variantId dựa trên các lựa chọn (Storage và Color)
         function getVariantIds() {
             let variantIds = [];
@@ -223,6 +225,10 @@
             return variantIds; // Trả về mảng chứa các variantIds
         }
 
+
+
+
+
         // Hàm để đặt lại trạng thái của nút về mặc định
         function resetButton(button) {
             if (button) {
@@ -238,7 +244,6 @@
                 button.style.border = '2px solid red'; // Viền đỏ
             }
         }
-
         // Khi nhấn "Thêm vào giỏ hàng"
         document.getElementById('add-to-cart').addEventListener('click', function(e) {
             e.preventDefault();
@@ -246,95 +251,46 @@
             const productId = '{{ $product->id }}';
             const quantity = document.getElementById('quantity').value;
             const productImage = '{{ \Storage::url($product->image_url) }}';
+
             const variantIds = getVariantIds(); // Lấy tất cả variantIds từ hàm getVariantIds
-
-            console.log('Variant IDs:', variantIds); // Kiểm tra mảng variantIds
-
             if (variantIds.length > 0) {
-                if (selectedStorage && selectedColor) {
-                    variantId = variantIds; // Truyền cả dung lượng và màu sắc dưới dạng mảng
-                } else {
-                    Swal.fire({
-                        position: 'top',
-                        icon: 'warning',
-                        title: 'Chưa chọn đầy đủ',
-                        toast: true,
-                        text: 'Vui lòng chọn cả dung lượng và màu sắc!',
-                        showConfirmButton: false,
-                        timerProgressBar: true,
-                        timer: 3500
-                    });
-                    return; // Ngừng hàm lại nếu chưa chọn đủ thông tin
-                }
+                // Nếu có variantIds (tức là người dùng đã chọn đủ các biến thể)
+                $.ajax({
+                    url: '{{ route('cart.add') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        product_id: productId,
+                        variant_ids: variantIds, // Gửi mảng variantIds
+                        selected_storage: selectedStorage,
+                        selected_color: selectedColor,
+                        price: currentPrice,
+                        quantity: quantity,
+                        product_image: productImage,
+                    },
+                    success: function(response) {
+                        showSuccessMessage(response.message);
+                        // Cập nhật giỏ hàng tạm thời
+                        updateTemporaryCart();
+                    },
+                    error: function(xhr) {
+                        showErrorMessage();
+                    }
+                });
             } else {
-                // Nếu sản phẩm không có biến thể, sử dụng giá trị mặc định
-                variantId = null; // Không có biến thể
+                // Nếu không chọn đủ Storage và Color
+                Swal.fire({
+                    position: 'top',
+                    icon: 'warning',
+                    title: 'Chưa chọn đầy đủ',
+                    toast: true,
+                    text: 'Vui lòng chọn cả dung lượng và màu sắc!',
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    timer: 3500
+                });
             }
-            alert(variantIds)
-            $.ajax({
-                url: '{{ route('cart.add') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    product_id: productId,
-                    variant_ids: variantIds, // Truyền cả mảng variantIds
-                    price: currentPrice, // Đảm bảo currentPrice được định nghĩa ở đâu đó
-                    quantity: quantity,
-                    selected_storage: selectedStorage, // Truyền storage nếu có
-                    selected_color: selectedColor, // Truyền color nếu có
-                    product_image: productImage,
-                },
-                success: function(response) {
-                    showSuccessMessage(response.message);
-                    updateTemporaryCart();
-                },
-                error: function(xhr) {
-                    showErrorMessage();
-                    console.log(xhr.responseText); // In ra lỗi từ server
-                }
-            });
         });
-
-
-        function updateTemporaryCart() {
-            $.ajax({
-                url: '{{ route('cart.temporary') }}', // Đường dẫn route lấy giỏ hàng tạm
-                method: 'GET',
-                success: function(data) {
-                    $('.header-control-inner .meta-dreaming').html(
-                        data); // Cập nhật HTML giỏ hàng tạm
-                },
-                error: function(xhr, status, error) {
-                    console.error("Lỗi khi cập nhật giỏ hàng tạm:", status, error);
-                }
-            });
-        }
-
-        function showSuccessMessage(message) {
-            Swal.fire({
-                position: 'top',
-                icon: 'success',
-                title: 'Thành công!',
-                toast: true,
-                text: message,
-                showConfirmButton: false,
-                timerProgressBar: true,
-                timer: 3500
-            });
-        }
-
-        function showErrorMessage() {
-            Swal.fire({
-                position: 'top',
-                icon: 'error',
-                title: 'Oops...',
-                toast: true,
-                text: 'Có lỗi xảy ra, vui lòng thử lại!',
-                showConfirmButton: false,
-                timerProgressBar: true,
-                timer: 3500
-            });
-        }
 
 
         function updateTemporaryCart() {

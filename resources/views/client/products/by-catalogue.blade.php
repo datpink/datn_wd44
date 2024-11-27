@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('components.breadcrumb-client')
+    @include('components.breadcrumb-client2')
 
 
 

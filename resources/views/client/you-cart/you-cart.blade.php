@@ -79,19 +79,20 @@
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="{{ route('cart.view') }}">
             <span class="flaticon-online-shopping-cart"></span>
-            <span class="count">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+            <span
+                class="count">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
         </a>
     </div>
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
                 Giỏ hàng của bạn <span
-                    class="minicart-number-items">{{ session('cart') ? count(session('cart')) : 0 }}</span>
+                    class="minicart-number-items">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
-                @if (session('cart'))
+                @if (session('cart_' . auth()->id()))
                     @php $subtotal = 0; @endphp
-                    @foreach (session('cart') as $key => $item)
+                    @foreach (session('cart_' . auth()->id()) as $key => $item)
                         <li class="kobolg-mini-cart-item mini_cart_item">
                             <form class="remove-form" style="display: inline;">
                                 @csrf
@@ -134,6 +135,7 @@
         </div>
     </div>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>

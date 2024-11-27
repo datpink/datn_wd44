@@ -39,7 +39,7 @@
         </div>
         <div class="form-group">
             <label for="attributes">Chọn Thuộc Tính</label>
-            <select name="attributes[]" class="form-control" multiple>
+            <select name="attributes[]" class="form-control">
                 @foreach ($attributeValues as $value)
                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                 @endforeach

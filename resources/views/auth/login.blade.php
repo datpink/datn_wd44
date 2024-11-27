@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
-    @include('components.breadcrumb-client')
+    @include('components.breadcrumb-client2')
 
     <main class="site-main main-container no-sidebar">
         <div class="container">

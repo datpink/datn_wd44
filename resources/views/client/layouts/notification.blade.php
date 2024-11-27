@@ -1,7 +1,7 @@
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="">
-            <span class="fa-regular fa-bell"></span> <!-- Biểu tượng thông báo -->
+            <span class="fa fa-bell"></span> <!-- Biểu tượng thông báo -->
             <span class="count">{{ count($notifications ?? []) }}</span> <!-- Hiển thị số lượng thông báo -->
         </a>
     </div>
@@ -35,4 +35,4 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+

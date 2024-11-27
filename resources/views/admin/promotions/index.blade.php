@@ -81,23 +81,23 @@
                                         </td>
                                         <td>
                                             @if ($promotion->status == 'active')
-                                            <span class="badge bg-success">Kích hoạt</span>
+                                            <span class="badge bg-success rounded-pill">Kích hoạt</span>
                                             @elseif ($promotion->status == 'inactive')
-                                            <span class="badge bg-danger">Không kích hoạt</span>
+                                            <span class="badge bg-danger rounded-pill">Không kích hoạt</span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($promotion->applies_to_order)
-                                            <span class="badge bg-info">Có</span>
+                                            <span class="badge bg-info rounded-pill">Có</span>
                                             @else
-                                            <span class="badge bg-secondary">Không</span>
+                                            <span class="badge bg-secondary rounded-pill">Không</span>
                                             @endif
                                         </td>
                                         <td>
                                             @if ($promotion->applies_to_shipping)
-                                            <span class="badge bg-info">Có</span>
+                                            <span class="badge bg-info rounded-pill">Có</span>
                                             @else
-                                            <span class="badge bg-secondary">Không</span>
+                                            <span class="badge bg-secondary rounded-pill">Không</span>
                                             @endif
                                         </td>
                                         <td>{{ $promotion->start_date }}</td>

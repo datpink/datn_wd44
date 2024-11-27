@@ -23,6 +23,8 @@ class Order extends Model
         'payment_method_id',
         'phone_number',
         'cancellation_reason',
+        'refund_reason',
+        'refund_images',
         'is_new'
     ];
 
@@ -64,7 +66,7 @@ class Order extends Model
     {
         return $value;
     }
-    
+
 
     public function setPaymentStatusAttribute($value)
     {

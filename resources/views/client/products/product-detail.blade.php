@@ -6,7 +6,7 @@
 
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
 
-    @include('components.breadcrumb-client')
+    @include('components.breadcrumb-client2')
 
     @include('client.muteki.css')
 
@@ -72,10 +72,11 @@
                                         <span class="kobolg-Price-amount amount">
                                             <span class="kobolg-Price-currencySymbol"></span>
                                             <span id="product-price" class="kobolg-Price-amount amount">
-                                                {{ number_format($product->price, 0, ',', '.') }}đ
+                                                <!-- Giá sẽ được cập nhật từ JavaScript -->
                                             </span>
                                         </span>
                                     </p>
+
                                     <br>
                                     <div class="product-variants">
                                         <div class="product-attributes">
@@ -90,7 +91,6 @@
                                                     }
                                                 }
                                             @endphp
-                                            <!-- Dung lượng -->
                                             @if (count($dungLuongVariants) > 0)
                                                 <div class="attribute-group">
                                                     <h4>Dung lượng:</h4>

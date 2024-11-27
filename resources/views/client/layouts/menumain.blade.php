@@ -233,7 +233,7 @@
                         <li id="menu-item-238"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
                             <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100"
-                                href="#">Freeship Với Đơn Từ 1.000.000đ
+                                href="#">
                             </a>
                         </li>
                     </ul>

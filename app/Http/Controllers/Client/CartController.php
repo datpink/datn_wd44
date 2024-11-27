@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Database\Eloquent\Model\User;
+use Illuminate\Support\Facades\Log;
 
 use function Laravel\Prompts\alert;
 
@@ -15,11 +17,22 @@ class CartController extends Controller
 
     public function view()
     {
-        $user = auth()->user();
-        $discountCodes = $user->promotions()->wherePivot('is_used', false)->get(); // Lấy mã giảm giá chưa dùng
-        // dd($discountCodes);
-        return view('client.you-cart.viewcart',compact('discountCodes'));
+        $discountCodes = [];
+
+        if (auth()->check()) {
+            $id = auth()->id();
+            $user = auth()->user();
+            // dd(session("cart_{$id}"));
+            // Lấy các mã giảm giá chưa dùng và có trạng thái active
+            $discountCodes = $user->promotions()
+                ->wherePivot('is_used', false)
+                ->where('status', 'active')
+                ->get();
+        }
+
+        return view('client.you-cart.viewcart', compact('discountCodes', 'id'));
     }
+
 
     public function temporary()
     {
@@ -28,74 +41,88 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
+        $userId = auth()->id();
+        if (!$userId) {
+            return response()->json(['message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.'], 401);
+        }
+
         $productId = $request->input('product_id');
-        $variantId = $request->input('variant_id', null); // Giá trị mặc định là null nếu không có
-        $quantity = $request->input('quantity');
-        $selectedStorage = $request->input('selected_storage');
-        $selectedColor = $request->input('selected_color');
-        $productImage = $request->input('product_image');
-        $price = $request->input('price'); // Nhận giá sau khi chọn biến thể
+        $variantIds = $request->input('variant_ids', []); // Lấy mảng variant_ids từ request
+        $quantity = $request->input('quantity', 1);
+        $price = $request->input('price');
 
-        // Tìm sản phẩm
-        $product = Product::find($productId);
-        if (!$product) {
-            return response()->json(['message' => 'Sản phẩm không tồn tại.'], 404);
+        // Log kiểm tra dữ liệu
+        info('Variant IDs:', ['variantIds' => $variantIds]);
+
+        // Kiểm tra sản phẩm có biến thể hay không
+        $productHasVariants = !empty($variantIds) && is_array($variantIds);
+
+        $storageVariantId = null;
+        $colorVariantId = null;
+
+        if ($productHasVariants) {
+            if (count($variantIds) < 2) {
+                return response()->json(['message' => 'Cần chọn cả dung lượng và màu sắc.'], 400);
+            }
+
+            // Gán giá trị từ mảng biến thể
+            $storageVariantId = $variantIds[0];
+            $colorVariantId = $variantIds[1];
         }
 
-        // Kiểm tra số lượng
-        if ($quantity <= 0) {
-            return response()->json(['message' => 'Số lượng phải lớn hơn 0.'], 400);
-        }
+        // Tạo hoặc cập nhật giỏ hàng
+        $cart = session()->get("cart_{$userId}", []);
 
-        // Lưu vào session
-        $cart = session()->get('cart', []);
-
-        // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
-        $existingItemKey = null; // Khóa sản phẩm nếu đã tồn tại
+        $existingItemKey = null;
         foreach ($cart as $key => $item) {
             if (
                 $item['id'] == $productId &&
-                $item['options']['variant_id'] == $variantId &&
-                $item['options']['storage'] == $selectedStorage &&
-                $item['options']['color'] == $selectedColor
+                (!$productHasVariants || (
+                    $item['options']['storage_variant_id'] == $storageVariantId &&
+                    $item['options']['color_variant_id'] == $colorVariantId
+                ))
             ) {
                 $existingItemKey = $key;
                 break;
             }
         }
 
-        // Nếu sản phẩm đã tồn tại, cập nhật số lượng
         if ($existingItemKey !== null) {
-            $cart[$existingItemKey]['quantity'] += $quantity; // Cộng thêm số lượng
+            $cart[$existingItemKey]['quantity'] += $quantity;
         } else {
-            // Nếu chưa tồn tại, tạo item giỏ hàng mới
             $item = [
                 'id' => $productId,
-                'name' => $product->name,
-                'price' => $price, // Sử dụng giá của biến thể đã chọn
+                'name' => Product::find($productId)->name,
+                'price' => $price,
                 'quantity' => $quantity,
                 'options' => [
-                    'variant_id' => $variantId,
-                    'storage' => $selectedStorage,
-                    'color' => $selectedColor,
-                    'image' => $productImage,
+                    'storage_variant_id' => $storageVariantId,
+                    'color_variant_id' => $colorVariantId,
+                    'storage' => $request->input('selected_storage'),
+                    'color' => $request->input('selected_color'),
+                    'image' => $request->input('product_image'),
                 ],
             ];
-
-            $cart[] = $item; // Thêm sản phẩm vào giỏ hàng
+            $cart[] = $item;
         }
 
-        session()->put('cart', $cart); // Cập nhật giỏ hàng vào session
+        session()->put("cart_{$userId}", $cart);
 
         return response()->json(['message' => 'Đã thêm vào giỏ hàng.']);
     }
 
+
+
+
+
+
+
     public function removeFromCart($id)
     {
-        $cart = session()->get('cart');
+        $cart = session()->get('cart_' . auth()->id());
         if (isset($cart[$id])) {
             unset($cart[$id]);
-            session()->put('cart', $cart);
+            session()->put('cart_' . auth()->id(), $cart);
         }
 
         return response()->json([
@@ -104,7 +131,4 @@ class CartController extends Controller
             'cartCount' => count($cart) // Số lượng sản phẩm sau khi xóa
         ]);
     }
-
-
-
 }
