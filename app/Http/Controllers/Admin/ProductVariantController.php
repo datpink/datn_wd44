@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductVariantController extends Controller
 {
@@ -25,10 +27,19 @@ class ProductVariantController extends Controller
     public function create(Product $product)
     {
         $title = 'Thêm Mới Biến Thể';
-        // Giả sử bạn có model AttributeValue
-        $attributeValues = AttributeValue::all(); // Lấy tất cả giá trị thuộc tính
 
-        return view('admin.variants.create', compact('product', 'attributeValues', 'title'));
+        // Lấy ID của thuộc tính 'Color' và 'Storage'
+        $colorAttributeId = Attribute::where('name', 'Color')->value('id');
+        $storageAttributeId = Attribute::where('name', 'Storage')->value('id');
+
+        // Lấy các giá trị thuộc tính từ bảng attribute_values
+        $colors = AttributeValue::where('attribute_id', $colorAttributeId)->get();
+        $storages = AttributeValue::where('attribute_id', $storageAttributeId)->get();
+
+        // Lấy tất cả giá trị thuộc tính (nếu cần)
+        $attributeValues = AttributeValue::all();
+
+        return view('admin.variants.create', compact('product', 'colors', 'storages', 'attributeValues', 'title'));
     }
     // Lưu biến thể mới
 
@@ -48,22 +59,22 @@ class ProductVariantController extends Controller
         $imageUrl = $request->file('image_url') ? $request->file('image_url')->store('product_images', 'public') : null;
         // Kiểm tra và lọc các thuộc tính hợp lệ
         $validAttributes = array_filter($request->input('attributes', []), 'is_numeric');
-    
+
         if (empty($validAttributes)) {
             return redirect()->route('products.variants.index', $product->id)
                 ->with('error', 'Không thể thêm biến thể do thiếu thuộc tính hợp lệ.');
         }
-    
+
         // Tạo biến thể mới và lưu vào cơ sở dữ liệu
         $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
             'status' => 'inactive', // Mặc định là không kích hoạt
             'image_url' => $imageUrl,
 
         ]);
-    
+
         // Lưu biến thể vào cơ sở dữ liệu
         $product->variants()->save($variant);
-    
+
         // Chèn các thuộc tính trực tiếp vào bảng trung gian
         try {
             foreach ($validAttributes as $validAttributeId) {
@@ -73,13 +84,13 @@ class ProductVariantController extends Controller
                 ]);
             }
         } catch (\Exception $e) {
-            \Log::error('Failed to insert into product_variant_attributes: ' . $e->getMessage());
+            Log::error('Failed to insert into product_variant_attributes: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Có lỗi xảy ra khi thêm thuộc tính.');
         }
-    
+
         return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
     }
-        
+
     // Chỉnh sửa biến thể
     public function edit(ProductVariant $variant)
     {

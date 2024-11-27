@@ -18,20 +18,23 @@
                         @csrf
 
                         <div class="form-group">
-                            <label for="product_id">Tên sản phẩm:</label>
-                            <select name="product_id" id="product_id"
-                                class="form-control @error('product_id') is-invalid @enderror">
-                                <option value="" disabled selected>Chọn sản phẩm</option>
-                                @foreach ($products as $product)
-                                    <option value="{{ $product->id }}"
-                                        {{ old('product_id') == $product->id ? 'selected' : '' }}>
-                                        {{ $product->name }}
-                                    </option>
+                            <label for="color">Màu sắc:</label>
+                            <select name="color" id="color" class="form-control">
+                                <option value="" disabled selected>Chọn màu sắc</option>
+                                @foreach ($colors as $color)
+                                    <option value="{{ $color->id }}">{{ $color->name }}</option>
                                 @endforeach
                             </select>
-                            @error('product_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storage">Dung lượng:</label>
+                            <select name="storage" id="storage" class="form-control">
+                                <option value="" disabled selected>Chọn dung lượng</option>
+                                @foreach ($storages as $storage)
+                                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group">
