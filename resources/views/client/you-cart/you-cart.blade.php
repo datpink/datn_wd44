@@ -26,106 +26,54 @@
     </script>
 @endif
 
-<style>
-    .custom-alert {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        padding: 20px;
-        text-align: center;
-    }
-
-    .custom-alert .alert-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .custom-alert .alert-message {
-        font-size: 16px;
-        margin-bottom: 20px;
-    }
-
-    .custom-alert .btn {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: #fff;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 8px 16px;
-        border-radius: 4px;
-    }
-
-    .custom-alert .btn:hover {
-        background-color: #0056b3;
-        border-color: #004d99;
-    }
-
-    .kobolg-mini-cart-item a {
-        display: inline-block;
-        max-width: 300px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-    }
-
-    .kobolg-mini-cart__total {
-        font-weight: bold;
-    }
-</style>
-
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="{{ route('cart.view') }}">
             <span class="flaticon-online-shopping-cart"></span>
-            <span
-                class="count">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
+            <span class="count">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
         </a>
     </div>
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
-                Giỏ hàng của bạn <span
-                    class="minicart-number-items">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
+                Giỏ hàng của bạn <span class="minicart-number-items">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
-                @if (session('cart_' . auth()->id()))
-                    @php $subtotal = 0; @endphp
-                    @foreach (session('cart_' . auth()->id()) as $key => $item)
-                        <li class="kobolg-mini-cart-item mini_cart_item">
-                            <form class="remove-form" style="display: inline;">
-                                @csrf
-                                <button type="button" class="remove remove_from_cart_button" title="Remove this item"
-                                    style="border: none; background: none; cursor: pointer;">×</button>
-                                <input type="hidden" name="id" value="{{ $key }}">
-                            </form>
-                            <a href="#">
-                                <img src="{{ $item['options']['image'] }}" alt="{{ $item['name'] }}" width="100px"
-                                    height="100px">
-                                {{ $item['name'] }}
-                                @if ($item['options']['color'] || $item['options']['storage'])
-                                    - {{ $item['options']['color'] }} - {{ $item['options']['storage'] }}
-                                @endif
-                            </a>
-                            <span class="quantity">
-                                {{ $item['quantity'] }} ×
-                                <span class="kobolg-Price-amount amount">
-                                    {{ number_format($item['price'], 0) }}<span
-                                        class="kobolg-Price-currencySymbol">₫</span>
-                                </span>
-                            </span>
-                        </li>
-                        @php $subtotal += $item['quantity'] * $item['price']; @endphp
-                    @endforeach
-                @else
-                    <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
-                @endif
+                @php
+                    $cart = session('cart_' . auth()->id(), []);
+                    $subtotal = 0;
+                @endphp
+
+                @foreach($cart as $item)
+                    <li class="kobolg-mini-cart-item">
+                        <a href="#" class="product-title">{{ $item['name'] }}</a>
+                        <span class="quantity">{{ $item['quantity'] }} x
+                            <span class="amount">{{ $item['price'] }}₫</span>
+                        </span>
+
+                        <!-- Hiển thị hình ảnh sản phẩm -->
+                        <img src="{{ $item['options']['image'] }}" alt="{{ $item['name'] }}" class="mini-cart-product-image">
+
+                        <!-- Hiển thị thuộc tính (variant) nếu có -->
+                        @if($item['options']['variant']->count() > 0)
+                            <div class="product-attributes">
+                                @foreach($item['options']['variant'] as $attribute)
+                                    <p><strong>{{ $attribute->name }}:</strong> {{ $attribute->value }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <a href="#" class="remove remove_from_cart" data-id="{{ $item['id'] }}">×</a>
+                    </li>
+                    @php
+                        $subtotal += $item['price'] * $item['quantity']; // Tính tổng giá trị giỏ hàng
+                    @endphp
+                @endforeach
             </ul>
             <p class="kobolg-mini-cart__total total">
                 <strong>Tổng:</strong>
                 <span class="kobolg-Price-amount amount">
-                    {{ number_format($subtotal ?? 0, 0) }}<span class="kobolg-Price-currencySymbol">₫</span>
+                    {{ number_format($subtotal, 0) }}₫
                 </span>
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
@@ -135,6 +83,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

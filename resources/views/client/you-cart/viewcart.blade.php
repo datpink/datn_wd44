@@ -18,7 +18,7 @@
                                     <input type="checkbox" id="select-all">
                                 </th>
                                 <th class="text-center py-3 px-4" style="min-width: 150px;">Hình ảnh</th>
-                                <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm &amp; Chi tiết</th>
+                                <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm</th>
                                 <th class="text-right py-3 px-4" style="width: 100px;">Giá</th>
                                 <th class="text-center py-3 px-4" style="width: 120px;">Số lượng</th>
                                 <th class="text-right py-3 px-4" style="width: 100px;">Tổng</th>
@@ -29,10 +29,7 @@
                             @php $subtotal = 0; @endphp
                             @if (session("cart_{$id}") && count(session("cart_{$id}")) > 0)
                                 @foreach (session("cart_{$id}") as $key => $item)
-                                    <tr data-cart-id="{{ $key }}"
-                                        data-storage-variant-id="{{ $item['options']['storage_variant_id'] }}"
-                                        data-color-variant-id="{{ $item['options']['color_variant_id'] }}">
-
+                                    <tr data-cart-id="{{ $key }}">
                                         <td class="text-center align-middle px-0">
                                             <input type="checkbox" name="product_checkbox" value="{{ $key }}">
                                         </td>
@@ -44,12 +41,6 @@
                                             <div class="media align-items-center">
                                                 <div class="media-body">
                                                     <a href="#" class="d-block text-dark">{{ $item['name'] }}</a>
-                                                    <small>
-                                                        @if ($item['options']['color'] || $item['options']['storage'])
-                                                            Màu: {{ $item['options']['color'] }} - Bộ nhớ:
-                                                            {{ $item['options']['storage'] }}
-                                                        @endif
-                                                    </small>
                                                 </div>
                                             </div>
                                         </td>
@@ -82,11 +73,9 @@
                 </div>
 
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
-                    <div class="mt-4">
-                    </div>
+                    <div class="mt-4"></div>
                     <div class="d-flex">
-                        <div class="text-right mt-4 mr-4">
-                        </div>
+                        <div class="text-right mt-4 mr-4"></div>
                         <div class="text-right mt-4">
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
                             <div class="text-large"><strong id="total-price">₫
@@ -119,28 +108,6 @@
         function updateTotal(input) {
             const row = input.closest('tr');
             const price = parseFloat(row.querySelector('[data-price]').dataset.price);
-            const quantity = parseInt(input.value);
-
-            if (isNaN(quantity) || quantity < 1) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi!',
-                    toast: true,
-                    timer: 3500,
-                    position: 'top',
-                    text: "Số lượng không hợp lệ!"
-                });
-                return;
-            }
-
-            const total = price * quantity;
-            row.querySelector('.total').textContent = `₫${formatCurrency(total)}`;
-            updateCartTotal();
-        }
-
-        function updateTotal(input) {
-            const row = input.closest('tr');
-            const price = parseFloat(row.querySelector('[data-price]').dataset.price);
             let quantity = parseInt(input.value);
 
             if (isNaN(quantity) || quantity < 1) {
@@ -161,6 +128,15 @@
             updateCartTotal();
         }
 
+        function updateCartTotal() {
+            let total = 0;
+            document.querySelectorAll('#cart-table tbody tr').forEach(row => {
+                const quantity = parseInt(row.querySelector('.quantity').value);
+                const price = parseFloat(row.querySelector('.total').textContent.replace('₫', '').replace('.', '').trim());
+                total += quantity * price;
+            });
+            document.getElementById('total-price').textContent = `₫${formatCurrency(total)}`;
+        }
 
         function submitCheckout() {
             const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')].map(
@@ -178,8 +154,6 @@
             document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
             document.getElementById('checkoutForm').submit();
         }
-
-
 
         document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', updateCartTotal);
