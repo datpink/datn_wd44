@@ -55,7 +55,7 @@ class ProductController extends Controller
 
     public function orderByPriceApi(Request $request)
     {
-        $query = Product::where('is_active', 1);
+        $query = Product::with('favoritedBy')->where('is_active', 1);
 
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
@@ -307,7 +307,7 @@ class ProductController extends Controller
                 ->pluck('id');
         }
 
-        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
+        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues', 'favoritedBy')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1);
 
@@ -365,7 +365,7 @@ class ProductController extends Controller
         foreach ($productByCatalogues as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
-
+        // dd($productByCatalogues);
         return response()->json(['data' => $productByCatalogues]);
     }
 
