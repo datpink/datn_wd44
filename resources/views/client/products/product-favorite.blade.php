@@ -7,8 +7,8 @@
     @include('components.breadcrumb-client2')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <div class="container">
-        <h1 class="m-5">Danh sách sản phẩm yêu thích</h1>
+    <div class="container mt-3">
+        {{-- <h1 class="m-5">Danh sách sản phẩm yêu thích</h1> --}}
         <div class="auto-clear equal-container better-height kobolg-products">
             <ul class="row products columns-3">
                 @foreach ($products as $product)
