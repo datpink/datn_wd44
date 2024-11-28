@@ -147,7 +147,7 @@
                                                                 title="required">*</abbr></label>
                                                         <span class="kobolg-input-wrapper">
                                                             <input type="tel" class="input-text" name="phone_number"
-                                                                value="{{ $user->phone ?? '' }}" placeholder=""
+                                                                value="{{ $user->phone }}" placeholder=""
                                                                 autocomplete="tel" required>
                                                         </span>
                                                     </p>
@@ -192,91 +192,124 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($products as $product)
-                                                <tr>
-                                                    <td class="text-center">
-                                                        <img src="{{ $product['options']['image'] }}"
-                                                            class="d-block ui-w-40 ui-bordered"
-                                                            alt="{{ $product['name'] }}"
-                                                            style="max-width: 90px; margin: 0 auto;">
-                                                    </td>
-                                                    <td class="p-4">
-                                                        <div class="media align-items-center">
-                                                            <div class="media-body">
-                                                                <a href="#"
-                                                                    class="d-block text-dark">{{ $product['name'] }}</a>
-                                                                <small>
-                                                                    @if ($product['options']['color'] || $product['options']['storage'])
-                                                                        Màu: {{ $product['options']['color'] }} - Bộ nhớ:
-                                                                        {{ $product['options']['storage'] }}
+                                            @if ($products)
+                                                @foreach ($products as $product)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <img src="{{ $product['options']['image'] }}"
+                                                                alt="{{ $product['name'] }}"
+                                                                class="mini-cart-product-image"
+                                                                style="width: 80px; height: auto; margin-right: 10px;">
+                                                        </td>
+                                                        <td class="p-5" style="width: 350px">
+                                                            <div class="media align-items-center">
+                                                                <div class="media-body">
+                                                                    <a href="#"
+                                                                        class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                    @if (isset($product['options']['color']) || isset($product['options']['storage']))
+                                                                        <small>
+                                                                            Màu:
+                                                                            {{ $product['options']['color'] ?? 'N/A' }} -
+                                                                            Bộ nhớ:
+                                                                            {{ $product['options']['storage'] ?? 'N/A' }}
+                                                                        </small>
                                                                     @endif
-                                                                </small>
-                                                                <p>Variant: {{ $product['storage_variant_id'] ?? 'NULL' }},
-                                                                    {{ $product['color_variant_id'] ?? 'NULL' }}</p>
+                                                                    @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
+                                                                        <div class="product-attributes">
+                                                                            @foreach ($product['options']['variant'] as $index => $attribute)
+                                                                                <span
+                                                                                    class="attribute-item">{{ $attribute['name'] }}</span>
+                                                                                @if ($index < count($product['options']['variant']) - 1)
+                                                                                    <span>-</span>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                    <span
+                                                                        style="font-size: 0.8vw">{{ $product['quantity'] }}
+                                                                        ×
+                                                                        {{ number_format($product['price'], 0) }}₫</span>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                    <td class="price-col">
-                                                        <span>
-                                                            {{ number_format($product['price'] * $product['quantity'], 0, ',', '.') }}₫
-                                                        </span>
-                                                    </td>
-
-                                                    <!-- Thêm thông tin về biến thể vào các hidden inputs -->
-                                                    <input type="hidden" name="products[{{ $loop->index }}][id]"
-                                                        value="{{ $product['id'] }}">
-
-                                                    <!-- Lưu thông tin biến thể (id của biến thể) vào các trường hidden -->
-                                                    <input type="hidden"
-                                                        name="products[{{ $loop->index }}][storage_variant_id]"
-                                                        value="{{ $product['storage_variant_id'] ?? '' }}">
-                                                    <!-- Nếu không có, để trống -->
-                                                    <input type="hidden"
-                                                        name="products[{{ $loop->index }}][color_variant_id]"
-                                                        value="{{ $product['color_variant_id'] ?? '' }}">
-                                                    <!-- Nếu không có, để trống -->
-
-                                                    <input type="hidden" name="products[{{ $loop->index }}][price]"
-                                                        value="{{ $product['price'] }}">
-                                                    <input type="hidden" name="products[{{ $loop->index }}][quantity]"
-                                                        value="{{ $product['quantity'] }}">
-                                                    <input type="hidden" name="products[{{ $loop->index }}][total]"
-                                                        value="{{ $product['price'] * $product['quantity'] }}">
-                                                </tr>
-                                            @endforeach
+                                                        </td>
+                                                        <td class="total-col" style="text-align: right;">
+                                                            <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @else
+                                                @foreach (session('cart_' . auth()->id()) as $key => $item)
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <img src="{{ $item['options']['image'] }}"
+                                                                alt="{{ $item['name'] }}" class="mini-cart-product-image"
+                                                                style="width: 80px; height: auto; margin-right: 10px;">
+                                                        </td>
+                                                        <td class="p-5" style="width: 350px">
+                                                            <div class="media align-items-center">
+                                                                <div class="media-body">
+                                                                    <a href="#"
+                                                                        class="d-block text-dark">{{ $item['name'] }}</a>
+                                                                    @if (isset($item['options']['color']) || isset($item['options']['storage']))
+                                                                        <small>
+                                                                            Màu: {{ $item['options']['color'] ?? 'N/A' }} -
+                                                                            Bộ
+                                                                            nhớ: {{ $item['options']['storage'] ?? 'N/A' }}
+                                                                        </small>
+                                                                    @endif
+                                                                    @if (!empty($item['options']['variant']) && count($item['options']['variant']) > 0)
+                                                                        <div class="product-attributes">
+                                                                            @foreach ($item['options']['variant'] as $index => $attribute)
+                                                                                <span
+                                                                                    class="attribute-item">{{ $attribute->name }}</span>
+                                                                                @if ($index < count($item['options']['variant']) - 1)
+                                                                                    <span>-</span>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </div>
+                                                                    @endif
+                                                                    <span style="font-size: 0.8vw">{{ $item['quantity'] }}
+                                                                        ×
+                                                                        {{ number_format($item['price'], 0) }}₫</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="total-col" style="text-align: right;">
+                                                            <span>{{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫</span>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
 
                                         </tbody>
 
                                         <tfoot>
                                             <tr class="cart-shipping">
-                                                <th>Phí vận chuyển</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Phí vận chuyển</td>
+                                                <td class="shipping-fee" style="text-align: right;">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount" style="color: red;">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
                                                             <span id="shipping-fee">0</span>
-                                                            <!-- Giá sẽ được cập nhật qua JS -->
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
 
-
-
-                                            <!-- Dòng giảm giá -->
                                             <tr class="cart-discount" style="display: none;">
-                                                <th>Giảm giá</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Giảm giá</td>
+                                                <td style="text-align: right;">
                                                     <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                        <span class="kobolg-Price-currencySymbol"
+                                                            style="color: red"></span>
                                                         0
                                                     </span>
                                                 </td>
                                             </tr>
 
                                             <tr class="order-total">
-                                                <th>Tổng cộng</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Tổng cộng</td>
+                                                <td style="text-align: right;">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
@@ -286,7 +319,9 @@
                                                 </td>
                                             </tr>
                                         </tfoot>
+
                                     </table>
+
 
 
                                     <input type="hidden" name="lang" value="en">
