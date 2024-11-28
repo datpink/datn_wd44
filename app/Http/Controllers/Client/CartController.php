@@ -24,7 +24,7 @@ class CartController extends Controller
             $id = auth()->id();
             $user = auth()->user();
 
-            dd(session("cart_{$id}"));
+            // dd(session("cart_{$id}"));
             // Lấy các mã giảm giá chưa dùng và có trạng thái active
             $discountCodes = $user->promotions()
                 ->wherePivot('is_used', false)
@@ -90,8 +90,11 @@ class CartController extends Controller
         }
 
         session()->put("cart_{$userId}", $cart);
-
-        return response()->json(['message' => 'Đã thêm vào giỏ hàng.']);
+        $cartCount = count(session("cart_{$userId}"));
+        return response()->json([
+            'message' => 'Đã thêm vào giỏ hàng.',
+            'cartCount' => $cartCount
+        ]);
     }
 
 

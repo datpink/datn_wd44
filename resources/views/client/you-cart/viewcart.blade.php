@@ -31,7 +31,7 @@
                                 @foreach (session("cart_{$id}") as $key => $item)
                                     <tr data-cart-id="{{ $key }}">
                                         <td class="text-center align-middle px-0">
-                                            <input type="checkbox" name="product_checkbox" value="{{ $key }}">
+                                            <input type="checkbox" class="product-checkbox" value="{{ $key }}">
                                         </td>
                                         <td class="text-center">
                                             <img src="{{ $item['options']['image'] }}" class="d-block ui-w-40 ui-bordered"
@@ -41,6 +41,13 @@
                                             <div class="media align-items-center">
                                                 <div class="media-body">
                                                     <a href="#" class="d-block text-dark">{{ $item['name'] }}</a>
+                                                    <ul class="list-unstyled mb-0">
+                                                        @foreach ($item['options']['variant'] as $variant)
+                                                            <li>
+                                                                <small>{{ $variant->name }}</small>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </td>
@@ -50,8 +57,7 @@
                                         </td>
                                         <td class="align-middle p-4">
                                             <input type="number" class="form-control text-center quantity"
-                                                value="{{ $item['quantity'] }}" min="1"
-                                                onchange="updateTotal(this)">
+                                                value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4 total">
                                             {{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫
@@ -71,23 +77,19 @@
                         </tbody>
                     </table>
                 </div>
-
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
                     <div class="mt-4"></div>
                     <div class="d-flex">
                         <div class="text-right mt-4 mr-4"></div>
                         <div class="text-right mt-4">
+                            <div class="text-right mt-4 mr-4"></div>
                             <label class="text-muted font-weight-normal m-0">Tổng giá</label>
-                            <div class="text-large"><strong id="total-price">₫
-                                    {{ number_format($subtotal, 0, ',', '.') }}</strong></div>
+                            <div class="text-large"><strong
+                                    id="total-price">₫{{ number_format($subtotal, 0, ',', '.') }}</strong></div>
                         </div>
                     </div>
                 </div>
                 <div class="float-right">
-                    <button type="button" class="btn btn-lg btn-default md-btn-flat mt-2 mr-3"
-                        onclick="window.location.href='{{ route('products.index') }}'">Trở về mua sắm</button>
-
-                    <!-- Form gửi dữ liệu sản phẩm đã chọn -->
                     <form id="checkoutForm" action="{{ route('showCheckout') }}" method="POST" style="display: inline;">
                         @csrf
                         <input type="hidden" id="selected_products" name="selected_products">
@@ -98,75 +100,78 @@
             </div>
         </div>
     </div>
+@endsection
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        function formatCurrency(value) {
-            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        }
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAllCheckbox = document.getElementById('select-all');
+        const productCheckboxes = document.querySelectorAll('.product-checkbox');
+        const totalPriceElement = document.getElementById('total-price');
+        const quantityInputs = document.querySelectorAll('.quantity');  // Lấy tất cả các input số lượng
 
+        // Hàm cập nhật tổng giá sản phẩm
         function updateTotal(input) {
-            const row = input.closest('tr');
-            const price = parseFloat(row.querySelector('[data-price]').dataset.price);
-            let quantity = parseInt(input.value);
+            const row = input.closest('tr');  // Lấy dòng sản phẩm
+            const price = parseFloat(row.querySelector('.text-right').dataset.price);  // Lấy giá sản phẩm
+            const quantity = parseInt(input.value);  // Lấy số lượng mới
+            const totalCell = row.querySelector('.total');  // Lấy cột tổng giá
+            const newTotal = price * quantity;  // Tính lại tổng giá
 
-            if (isNaN(quantity) || quantity < 1) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi!',
-                    toast: true,
-                    timer: 3500,
-                    position: 'top',
-                    text: "Số lượng không hợp lệ!"
-                });
-                input.value = 1; // Đặt lại số lượng về 1 nếu không hợp lệ
-                quantity = 1; // Cập nhật lại giá trị
-            }
-
-            const total = price * quantity;
-            row.querySelector('.total').textContent = `₫${formatCurrency(total)}`;
-            updateCartTotal();
+            totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫';  // Cập nhật lại cột tổng
+            updateCartTotal();  // Cập nhật lại tổng toàn bộ giỏ hàng
         }
 
+        // Hàm cập nhật tổng giá của toàn bộ giỏ hàng
         function updateCartTotal() {
             let total = 0;
-            document.querySelectorAll('#cart-table tbody tr').forEach(row => {
-                const quantity = parseInt(row.querySelector('.quantity').value);
-                const price = parseFloat(row.querySelector('.total').textContent.replace('₫', '').replace('.', '').trim());
-                total += quantity * price;
-            });
-            document.getElementById('total-price').textContent = `₫${formatCurrency(total)}`;
-        }
-
-        function submitCheckout() {
-            const selectedProducts = [...document.querySelectorAll('input[name="product_checkbox"]:checked')].map(
-                checkbox => {
+            productCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
                     const row = checkbox.closest('tr');
-                    return {
-                        cart_id: checkbox.value,
-                        storage_variant_id: row.dataset.storageVariantId ||
-                        null, // Sử dụng dataset để lấy giá trị data-attributes
-                        color_variant_id: row.dataset.colorVariantId ||
-                            null // Sử dụng dataset để lấy giá trị data-attributes
-                    };
-                });
-
-            document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
-            document.getElementById('checkoutForm').submit();
+                    const totalCell = row.querySelector('.total').textContent.replace('₫', '').replace(/\./g, '');
+                    total += parseFloat(totalCell);
+                }
+            });
+            totalPriceElement.textContent = `₫${total.toLocaleString('vi-VN')}`;
         }
 
-        document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
+        // Gắn sự kiện change cho checkbox "select-all"
+        selectAllCheckbox.addEventListener('change', function() {
+            const isChecked = this.checked;
+            productCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            updateCartTotal();
+        });
+
+        // Gắn sự kiện change cho từng checkbox sản phẩm
+        productCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', updateCartTotal);
         });
 
-        document.addEventListener('DOMContentLoaded', updateCartTotal);
-
-        document.getElementById('select-all').addEventListener('change', function() {
-            const checked = this.checked;
-            document.querySelectorAll('#cart-table tbody input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = checked;
+        // Gắn sự kiện change cho các input số lượng
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (input.value < 1) {
+                    input.value = 1;  // Đảm bảo không có số lượng âm hoặc bằng 0
+                }
+                updateTotal(input);  // Cập nhật lại tổng của sản phẩm này
             });
-            updateCartTotal();
         });
-    </script>
-@endsection
+
+        // Gọi hàm cập nhật tổng giá ban đầu
+        updateCartTotal();
+    });
+
+    // Hàm xử lý thanh toán
+    function submitCheckout() {
+        const selectedProducts = [...document.querySelectorAll('.product-checkbox:checked')].map(checkbox => {
+            const row = checkbox.closest('tr');
+            return {
+                cart_id: checkbox.value
+            };
+        });
+
+        document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
+        document.getElementById('checkoutForm').submit();
+    }
+</script>

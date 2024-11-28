@@ -54,7 +54,7 @@
             $('#product-price').text(variantData.price);
 
             var productImage = $('#product-image').data(
-            'default-src'); // Lấy ảnh sản phẩm chính từ data-default-src
+                'default-src'); // Lấy ảnh sản phẩm chính từ data-default-src
 
             $('#product-image').attr('src', productImage);
 
@@ -66,26 +66,24 @@
         });
 
         // Xử lý khi người dùng nhấn nút "Thêm vào giỏ hàng"
+        // Khi người dùng nhấn nút "Thêm vào giỏ hàng"
         $('#add-to-cart').on('click', function(e) {
             e.preventDefault(); // Ngăn form submit mặc định
 
             // Kiểm tra xem đã chọn biến thể hay chưa
             if (!selectedVariantId) {
-                $('#error-message').text('Vui lòng chọn biến thể sản phẩm.');
-                return; // Dừng lại nếu không chọn biến thể
+                selectedVariantId = null;
             }
 
             // Lấy các giá trị cần thiết
             var productId = $('#product-id').val(); // ID sản phẩm
             var quantity = $('#quantity').val(); // Số lượng sản phẩm
-            var price = $('#product-price').text().replace(/[^0-9.-]+/g,
-                ''); // Loại bỏ tất cả ký tự không phải số, dấu chấm, dấu gạch ngang
+            var price = $('#product-price').text().replace(/[^0-9.-]+/g, ''); // Loại bỏ ký hiệu tiền tệ
 
             // Gửi dữ liệu qua AJAX
             $.ajax({
                 url: '{{ route('cart.add') }}',
                 method: 'POST',
-                // Gửi dữ liệu qua AJAX
                 data: {
                     _token: '{{ csrf_token() }}',
                     product_id: productId,
@@ -95,7 +93,6 @@
                     image_url: $('#product-image').data('default-src') ||
                         null, // Gửi ảnh biến thể hoặc ảnh sản phẩm chính
                 },
-
                 success: function(response) {
                     Swal.fire({
                         icon: 'success',
@@ -106,6 +103,10 @@
                         timer: 3000,
                         showConfirmButton: false,
                     });
+
+                    // Gọi hàm cập nhật giỏ hàng tạm sau khi thêm sản phẩm thành công
+                    updateCartCount(response.cartCount);
+                    updateCartContents();
                 },
                 error: function(xhr) {
                     Swal.fire({
@@ -122,6 +123,34 @@
             });
         });
 
+        // Hàm cập nhật giỏ hàng tạm
+        function updateCartCount(count) {
+            // Cập nhật số lượng giỏ hàng
+            document.querySelector('.count').textContent = count;
+            document.querySelector('.minicart-number-items').textContent = count;
+        }
+
+
+
+        // Hàm cập nhật nội dung giỏ hàng
+        function updateCartContents() {
+            $.ajax({
+                url: '{{ route('cart.temporary') }}',
+                method: 'GET',
+                success: function(html) {
+                    $('#cart-content').html(html); // Cập nhật nội dung giỏ hàng
+                },
+                error: function(xhr) {
+                    console.error('Không thể tải nội dung giỏ hàng:', xhr.responseText);
+                },
+            });
+        }
+        // Hàm cập nhật hiển thị số lượng giỏ hàng
+        function updateCartCount(count) {
+            // Chỉ thay đổi số lượng mà không thay đổi các thành phần khác
+            $('.minicart-number-items, .cart').text(count);
+        }
+
         // Cập nhật ảnh sản phẩm ban đầu khi trang tải
         $(document).ready(function() {
             var defaultImage = $('#product-image').data('default-src');
@@ -129,8 +158,7 @@
                 defaultImage); // Gán ảnh mặc định cho sản phẩm nếu chưa chọn biến thể
         });
 
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Các hàm thông báo thành công và thất bại
         function showSuccessMessage(message) {
             Swal.fire({
                 position: 'top',
@@ -157,20 +185,6 @@
             });
         }
 
-
-        function updateTemporaryCart() {
-            $.ajax({
-                url: '{{ route('cart.temporary') }}', // Đường dẫn route lấy giỏ hàng tạm
-                method: 'GET',
-                success: function(data) {
-                    $('.header-control-inner .meta-dreaming').html(
-                        data); // Cập nhật HTML giỏ hàng tạm
-                },
-                error: function(xhr, status, error) {
-                    console.error("Lỗi khi cập nhật giỏ hàng tạm:", status, error);
-                }
-            });
-        }
 
     });
 </script>
