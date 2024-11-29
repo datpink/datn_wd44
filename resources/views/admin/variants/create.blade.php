@@ -1,6 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Thêm biến thể')
+@section('title', 'Thêm Biến Thể')
 
 @section('content')
     <h4>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h4>
@@ -20,15 +20,15 @@
             <input type="text" name="sku" class="form-control" id="sku" readonly required>
         </div>
         <div class="form-group">
-            <label for="stock">Kho</label>
+            <label for="stock">Số lượng tồn kho</label>
             <input type="number" name="stock" class="form-control" required>
         </div>
         <div class="form-group">
-            <label for="weight">Cân Nặng</label>
+            <label for="weight">Cân nặng (kg)</label>
             <input type="number" name="weight" class="form-control" step="0.01">
         </div>
         <div class="form-group">
-            <label for="dimension">Kích Thước</label>
+            <label for="dimension">Kích thước (DxRxC)</label>
             <input type="text" name="dimension" class="form-control">
         </div>
         <div class="form-group">
@@ -38,11 +38,25 @@
                 style="max-width: 150px; height: auto; display: none;" class="mt-2">
         </div>
         <div class="form-group">
-            <label for="attributes">Chọn Thuộc Tính</label>
-            <select name="attributes[]" class="form-control">
-                @foreach ($attributeValues as $value)
-                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                @endforeach
+            <label for="colors">Màu Sắc</label>
+            <select name="attributes[color]" class="form-control" id="colors">
+                <option value="" selected>Chọn màu sắc</option>
+                @forelse ($colors as $color)
+                    <option value="{{ $color->id }}">{{ $color->name }}</option>
+                @empty
+                    <option value="" disabled>Không có màu sắc</option>
+                @endforelse
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="storages">Dung Lượng</label>
+            <select name="attributes[storage]" class="form-control" id="storages">
+                <option value="" selected>Chọn dung lượng</option>
+                @forelse ($storages as $storage)
+                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                @empty
+                    <option value="" disabled>Không có dung lượng</option>
+                @endforelse
             </select>
         </div>
 
