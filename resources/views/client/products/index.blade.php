@@ -449,7 +449,7 @@
                                                 let productsHTML = '';
                                                 res.data.data.data.forEach(product => {
                                                     console.log(product);
-                                                    
+
                                                     const isFavorited = Array.isArray(product.favorited_by) && product
                                                         .favorited_by.length > 0 ? 'red' : 'inherit';
 
@@ -459,7 +459,7 @@
                                                                 <div class="product-inner images">
                                                                     <div class="product-thumb">
                                                                         <a class="thumb-link" href="#">
-                                                                            ${product.image_url ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                            ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                         </a>
                                                                         <div class="flash">
                                                                             ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}

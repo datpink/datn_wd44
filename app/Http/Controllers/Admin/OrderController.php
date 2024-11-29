@@ -150,6 +150,8 @@ class OrderController extends Controller
                 ->select('pva.product_variant_id', 'a.name as attribute_name', 'av.name as attribute_value')
                 ->get();
 
+
+                dd($productVariantAttributes);
             // Gom nhóm các thuộc tính biến thể theo `product_variant_id`
             $order->groupedVariantAttributes = $productVariantAttributes->groupBy('product_variant_id');
         }
