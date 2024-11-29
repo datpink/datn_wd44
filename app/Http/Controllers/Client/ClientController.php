@@ -9,6 +9,7 @@ use App\Models\Catalogue;
 use App\Models\OrderItem;
 use App\Models\Post;
 use App\Models\Product; // Import mô hình Product
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -35,7 +36,7 @@ class ClientController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('is_featured', true)->get();
 
-        $topSellingProducts = OrderItem::select('product_variant_id', \DB::raw('SUM(quantity) as total_quantity'))
+        $topSellingProducts = OrderItem::select('product_variant_id',DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_variant_id')
             ->orderBy('total_quantity', 'desc')
             ->take(10) // Lấy 5 sản phẩm bán chạy nhất
@@ -43,7 +44,7 @@ class ClientController extends Controller
             ->map(function ($item) {
                 return Product::find($item->product_variant_id); // Thay đổi nếu cần
             });
-
+            // dd($topSellingProducts);
         return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts', 'topSellingProducts'));
     }
 

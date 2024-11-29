@@ -67,7 +67,6 @@ class CheckoutController extends Controller
             $totalAmount += $product['price'] * $product['quantity'];
         }
 
-        Log::info('Products data:', $products);
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);

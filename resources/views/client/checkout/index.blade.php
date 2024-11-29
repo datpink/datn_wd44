@@ -192,94 +192,48 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @if ($products)
-                                                @foreach ($products as $product)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <img src="{{ $product['options']['image'] }}"
-                                                                alt="{{ $product['name'] }}"
-                                                                class="mini-cart-product-image"
-                                                                style="width: 80px; height: auto; margin-right: 10px;">
-                                                        </td>
-                                                        <td class="p-5" style="width: 350px">
-                                                            <div class="media align-items-center">
-                                                                <div class="media-body">
-                                                                    <a href="#"
-                                                                        class="d-block text-dark">{{ $product['name'] }}</a>
-                                                                    @if (isset($product['options']['color']) || isset($product['options']['storage']))
-                                                                        <small>
-                                                                            Màu:
-                                                                            {{ $product['options']['color'] ?? 'N/A' }} -
-                                                                            Bộ nhớ:
-                                                                            {{ $product['options']['storage'] ?? 'N/A' }}
-                                                                        </small>
-                                                                    @endif
-                                                                    @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
-                                                                        <div class="product-attributes">
-                                                                            @foreach ($product['options']['variant'] as $index => $attribute)
-                                                                                <span
-                                                                                    class="attribute-item">{{ $attribute['name'] }}</span>
-                                                                                @if ($index < count($product['options']['variant']) - 1)
-                                                                                    <span>-</span>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
-                                                                    <span
-                                                                        style="font-size: 0.8vw">{{ $product['quantity'] }}
-                                                                        ×
-                                                                        {{ number_format($product['price'], 0) }}₫</span>
-                                                                </div>
+                                            @foreach ($products as $index => $product)
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <img src="{{ $product['options']['image'] }}"
+                                                            alt="{{ $product['name'] }}" class="mini-cart-product-image"
+                                                            style="max-width: 120px; max-height: 150px; width: auto; height: auto; margin-right: 5px; padding: 5px;">
+                                                    </td>
+                                                    <td class="" style="padding: 10px; width: 350px;">
+                                                        <!-- Mở rộng thêm chút nữa cột này -->
+                                                        <div class="media align-items-center">
+                                                            <div class="media-body">
+                                                                <a href="#"
+                                                                    class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
+                                                                    <div class="product-attributes">
+                                                                        @foreach ($product['options']['variant'] as $attrIndex => $attribute)
+                                                                            <span
+                                                                                class="attribute-item">{{ $attribute['name'] }}</span>
+                                                                            @if ($attrIndex < count($product['options']['variant']) - 1)
+                                                                                <span>-</span>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
+                                                                <span style="font-size: 0.8vw">{{ $product['quantity'] }}
+                                                                    × {{ number_format($product['price'], 0) }}₫</span>
                                                             </div>
-                                                        </td>
-                                                        <td class="total-col" style="text-align: right;">
-                                                            <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @else
-                                                @foreach (session('cart_' . auth()->id()) as $key => $item)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <img src="{{ $item['options']['image'] }}"
-                                                                alt="{{ $item['name'] }}" class="mini-cart-product-image"
-                                                                style="width: 80px; height: auto; margin-right: 10px;">
-                                                        </td>
-                                                        <td class="p-5" style="width: 350px">
-                                                            <div class="media align-items-center">
-                                                                <div class="media-body">
-                                                                    <a href="#"
-                                                                        class="d-block text-dark">{{ $item['name'] }}</a>
-                                                                    @if (isset($item['options']['color']) || isset($item['options']['storage']))
-                                                                        <small>
-                                                                            Màu: {{ $item['options']['color'] ?? 'N/A' }} -
-                                                                            Bộ
-                                                                            nhớ: {{ $item['options']['storage'] ?? 'N/A' }}
-                                                                        </small>
-                                                                    @endif
-                                                                    @if (!empty($item['options']['variant']) && count($item['options']['variant']) > 0)
-                                                                        <div class="product-attributes">
-                                                                            @foreach ($item['options']['variant'] as $index => $attribute)
-                                                                                <span
-                                                                                    class="attribute-item">{{ $attribute->name }}</span>
-                                                                                @if ($index < count($item['options']['variant']) - 1)
-                                                                                    <span>-</span>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </div>
-                                                                    @endif
-                                                                    <span style="font-size: 0.8vw">{{ $item['quantity'] }}
-                                                                        ×
-                                                                        {{ number_format($item['price'], 0) }}₫</span>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="total-col" style="text-align: right;">
-                                                            <span>{{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫</span>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
+                                                        </div>
+                                                    </td>
+                                                    <td class="total-col" style="text-align: right;">
+                                                        <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Hidden inputs to include product data in form submission -->
+                                                <input type="hidden" name="products[{{ $index }}][variant_id]"
+                                                    value="{{ $product['options']['variant_id'] }}">
+                                                <input type="hidden" name="products[{{ $index }}][quantity]"
+                                                    value="{{ $product['quantity'] }}">
+                                                <input type="hidden" name="products[{{ $index }}][price]"
+                                                    value="{{ $product['price'] }}">
+                                            @endforeach
 
                                         </tbody>
 
@@ -337,8 +291,11 @@
                                                                 class="wc_payment_method payment_method_{{ $method->id }}">
                                                                 <input id="payment_method_{{ $method->id }}"
                                                                     type="radio" class="input-radio"
-                                                                    name="payment_method" value="{{ $method->id }}"
+                                                                    name="payment_method"
+                                                                    value="{{ json_encode(['id' => $method->id, 'name' => $method->name]) }}"
                                                                     @if ($loop->first) checked="checked" @endif>
+
+
                                                                 <label
                                                                     for="payment_method_{{ $method->id }}">{{ $method->description }}</label>
                                                             </li>
@@ -367,8 +324,9 @@
                                     <input type="hidden" id="full_address" name="full_address" value="">
 
 
-                                    <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
-                                        id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
+                                    <button type="submit" class="button alt mt-3"
+                                        name="woocommerce_checkout_place_order" id="place_order" value="Đặt hàng"
+                                        data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
                                 </p>
                             </form>
