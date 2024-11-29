@@ -147,7 +147,7 @@
                                                                 title="required">*</abbr></label>
                                                         <span class="kobolg-input-wrapper">
                                                             <input type="tel" class="input-text" name="phone_number"
-                                                                value="{{ $user->phone ?? '' }}" placeholder=""
+                                                                value="{{ $user->phone }}" placeholder=""
                                                                 autocomplete="tel" required>
                                                         </span>
                                                     </p>
@@ -192,91 +192,78 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($products as $product)
+                                            @foreach ($products as $index => $product)
                                                 <tr>
                                                     <td class="text-center">
                                                         <img src="{{ $product['options']['image'] }}"
-                                                            class="d-block ui-w-40 ui-bordered"
-                                                            alt="{{ $product['name'] }}"
-                                                            style="max-width: 90px; margin: 0 auto;">
+                                                            alt="{{ $product['name'] }}" class="mini-cart-product-image"
+                                                            style="max-width: 120px; max-height: 150px; width: auto; height: auto; margin-right: 5px; padding: 5px;">
                                                     </td>
-                                                    <td class="p-4">
+                                                    <td class="" style="padding: 10px; width: 350px;">
+                                                        <!-- Mở rộng thêm chút nữa cột này -->
                                                         <div class="media align-items-center">
                                                             <div class="media-body">
                                                                 <a href="#"
                                                                     class="d-block text-dark">{{ $product['name'] }}</a>
-                                                                <small>
-                                                                    @if ($product['options']['color'] || $product['options']['storage'])
-                                                                        Màu: {{ $product['options']['color'] }} - Bộ nhớ:
-                                                                        {{ $product['options']['storage'] }}
-                                                                    @endif
-                                                                </small>
-                                                                <p>Variant: {{ $product['storage_variant_id'] ?? 'NULL' }},
-                                                                    {{ $product['color_variant_id'] ?? 'NULL' }}</p>
+                                                                @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
+                                                                    <div class="product-attributes">
+                                                                        @foreach ($product['options']['variant'] as $attrIndex => $attribute)
+                                                                            <span
+                                                                                class="attribute-item">{{ $attribute['name'] }}</span>
+                                                                            @if ($attrIndex < count($product['options']['variant']) - 1)
+                                                                                <span>-</span>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
+                                                                <span style="font-size: 0.8vw">{{ $product['quantity'] }}
+                                                                    × {{ number_format($product['price'], 0) }}₫</span>
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td class="price-col">
-                                                        <span>
-                                                            {{ number_format($product['price'] * $product['quantity'], 0, ',', '.') }}₫
-                                                        </span>
+                                                    <td class="total-col" style="text-align: right;">
+                                                        <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
                                                     </td>
-
-                                                    <!-- Thêm thông tin về biến thể vào các hidden inputs -->
-                                                    <input type="hidden" name="products[{{ $loop->index }}][id]"
-                                                        value="{{ $product['id'] }}">
-
-                                                    <!-- Lưu thông tin biến thể (id của biến thể) vào các trường hidden -->
-                                                    <input type="hidden"
-                                                        name="products[{{ $loop->index }}][storage_variant_id]"
-                                                        value="{{ $product['storage_variant_id'] ?? '' }}">
-                                                    <!-- Nếu không có, để trống -->
-                                                    <input type="hidden"
-                                                        name="products[{{ $loop->index }}][color_variant_id]"
-                                                        value="{{ $product['color_variant_id'] ?? '' }}">
-                                                    <!-- Nếu không có, để trống -->
-
-                                                    <input type="hidden" name="products[{{ $loop->index }}][price]"
-                                                        value="{{ $product['price'] }}">
-                                                    <input type="hidden" name="products[{{ $loop->index }}][quantity]"
-                                                        value="{{ $product['quantity'] }}">
-                                                    <input type="hidden" name="products[{{ $loop->index }}][total]"
-                                                        value="{{ $product['price'] * $product['quantity'] }}">
                                                 </tr>
+
+                                                <!-- Hidden inputs to include product data in form submission -->
+                                                <input type="hidden" name="products[{{ $index }}][variant_id]"
+                                                    value="{{ $product['options']['variant_id'] }}">
+                                                <input type="hidden" name="products[{{ $index }}][quantity]"
+                                                    value="{{ $product['quantity'] }}">
+                                                <input type="hidden" name="products[{{ $index }}][price]"
+                                                    value="{{ $product['price'] }}">
                                             @endforeach
 
                                         </tbody>
 
                                         <tfoot>
                                             <tr class="cart-shipping">
-                                                <th>Phí vận chuyển</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Phí vận chuyển</td>
+                                                <td class="shipping-fee" style="text-align: right;">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount" style="color: red;">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
                                                             <span id="shipping-fee">0</span>
-                                                            <!-- Giá sẽ được cập nhật qua JS -->
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
 
-
-
-                                            <!-- Dòng giảm giá -->
                                             <tr class="cart-discount" style="display: none;">
-                                                <th>Giảm giá</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Giảm giá</td>
+                                                <td style="text-align: right;">
                                                     <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                        <span class="kobolg-Price-currencySymbol"
+                                                            style="color: red"></span>
                                                         0
                                                     </span>
                                                 </td>
                                             </tr>
 
                                             <tr class="order-total">
-                                                <th>Tổng cộng</th>
-                                                <td>
+                                                <td colspan="2" class="text-left">Tổng cộng</td>
+                                                <td style="text-align: right;">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
@@ -286,7 +273,9 @@
                                                 </td>
                                             </tr>
                                         </tfoot>
+
                                     </table>
+
 
 
                                     <input type="hidden" name="lang" value="en">
@@ -302,8 +291,11 @@
                                                                 class="wc_payment_method payment_method_{{ $method->id }}">
                                                                 <input id="payment_method_{{ $method->id }}"
                                                                     type="radio" class="input-radio"
-                                                                    name="payment_method" value="{{ $method->id }}"
+                                                                    name="payment_method"
+                                                                    value="{{ json_encode(['id' => $method->id, 'name' => $method->name]) }}"
                                                                     @if ($loop->first) checked="checked" @endif>
+
+
                                                                 <label
                                                                     for="payment_method_{{ $method->id }}">{{ $method->description }}</label>
                                                             </li>
@@ -332,8 +324,9 @@
                                     <input type="hidden" id="full_address" name="full_address" value="">
 
 
-                                    <button type="submit" class="button alt" name="woocommerce_checkout_place_order"
-                                        id="place_order" value="Đặt hàng" data-value="Đặt hàng">Đặt hàng</button>
+                                    <button type="submit" class="button alt mt-3"
+                                        name="woocommerce_checkout_place_order" id="place_order" value="Đặt hàng"
+                                        data-value="Đặt hàng">Đặt hàng</button>
                                     <span class="kobolg-loader"></span>
                                 </p>
                             </form>

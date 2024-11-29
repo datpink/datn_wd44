@@ -26,65 +26,93 @@
     </script>
 @endif
 
-<div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
+<style>
+    <style>.product-attributes {
+        display: flex;
+        flex-wrap: wrap;
+        /* Nếu có quá nhiều nội dung, nó sẽ tự xuống dòng */
+        gap: 8px;
+        /* Khoảng cách giữa các mục */
+    }
+
+    .product-attributes .attribute-item {
+        font-size: 12px;
+        /* Kích thước chữ nhỏ hơn */
+        color: #666;
+        /* Màu chữ xám nhạt (tuỳ chọn) */
+        white-space: nowrap;
+        /* Ngăn nội dung bị xuống dòng */
+    }
+</style>
+
+</style>
+<div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown" id="cart-content">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="{{ route('cart.view') }}">
             <span class="flaticon-online-shopping-cart"></span>
-            <span class="count">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
+            <span
+                class="count cart">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
         </a>
     </div>
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
-                Giỏ hàng của bạn <span class="minicart-number-items">{{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}</span>
+                Giỏ hàng của bạn
+                <span class="minicart-number-items">
+                    {{ session('cart_' . auth()->id()) ? count(session('cart_' . auth()->id())) : 0 }}
+                </span>
             </h3>
             <ul class="kobolg-mini-cart cart_list product_list_widget">
-                @php
-                    $cart = session('cart_' . auth()->id(), []);
-                    $subtotal = 0;
-                @endphp
+                @if (session('cart_' . auth()->id()))
+                    @php $subtotal = 0; @endphp
+                    @foreach (session('cart_' . auth()->id()) as $key => $item)
+                        <li class="kobolg-mini-cart-item mini_cart_item">
+                            <a href="#">
+                                <img src="{{ $item['options']['image'] }}" alt="{{ $item['name'] }}"
+                                    class="mini-cart-product-image"
+                                    style="width: 80px; height: auto; margin-right: 10px;">
+                                <span class="product-title">{{ $item['name'] }}</span>
+                            </a>
+                            @if (
+                                !empty($item['options']['variant']) &&
+                                    is_countable($item['options']['variant']) &&
+                                    $item['options']['variant']->count() > 0)
+                                <div class="product-attributes">
+                                    @foreach ($item['options']['variant'] as $index => $attribute)
+                                        <span class="attribute-item">{{ $attribute->name }}</span>
+                                        @if ($index < count($item['options']['variant']) - 1)
+                                            <span>-</span>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                            <span class="quantity">
+                                {{ $item['quantity'] }} × {{ number_format($item['price'], 0) }}₫
+                            </span>
 
-                @foreach($cart as $item)
-                    <li class="kobolg-mini-cart-item">
-                        <a href="#" class="product-title">{{ $item['name'] }}</a>
-                        <span class="quantity">{{ $item['quantity'] }} x
-                            <span class="amount">{{ $item['price'] }}₫</span>
-                        </span>
-
-                        <!-- Hiển thị hình ảnh sản phẩm -->
-                        <img src="{{ $item['options']['image'] }}" alt="{{ $item['name'] }}" class="mini-cart-product-image">
-
-                        <!-- Hiển thị thuộc tính (variant) nếu có -->
-                        @if($item['options']['variant']->count() > 0)
-                            <div class="product-attributes">
-                                @foreach($item['options']['variant'] as $attribute)
-                                    <p><strong>{{ $attribute->name }}:</strong> {{ $attribute->value }}</p>
-                                @endforeach
-                            </div>
-                        @endif
-
-                        <a href="#" class="remove remove_from_cart" data-id="{{ $item['id'] }}">×</a>
-                    </li>
-                    @php
-                        $subtotal += $item['price'] * $item['quantity']; // Tính tổng giá trị giỏ hàng
-                    @endphp
-                @endforeach
+                            <button type="button" class="remove remove_from_cart_button" data-id="{{ $key }}"
+                                style="background: none; border: none; color: red; font-size: 16px; cursor: pointer;">×</button>
+                        </li>
+                        @php $subtotal += $item['quantity'] * $item['price']; @endphp
+                    @endforeach
+                @else
+                    <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
+                @endif
             </ul>
             <p class="kobolg-mini-cart__total total">
                 <strong>Tổng:</strong>
                 <span class="kobolg-Price-amount amount">
-                    {{ number_format($subtotal, 0) }}₫
+                    <span class="kobolg-Price-currencySymbol">₫</span>
+                    {{ number_format($subtotal ?? 0, 0) }}
                 </span>
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
                 <a href="{{ route('cart.view') }}" class="button kobolg-forward">Xem Giỏ hàng</a>
-                <a href="checkout.html" class="button checkout kobolg-forward">Thanh toán</a>
+                <a href="{{ route('showCheckout') }}" class="button checkout kobolg-forward">Thanh toán</a>
             </p>
         </div>
     </div>
 </div>
-
-
 
 
 
@@ -99,80 +127,66 @@
     document.querySelectorAll('.remove_from_cart_button').forEach(button => {
         button.addEventListener('click', function(event) {
             event.preventDefault();
-            const form = this.closest('.remove-form');
+            const cartItemId = this.getAttribute('data-id');
 
             Swal.fire({
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
-                position: 'top',
-                toast: true,
                 showCancelButton: true,
-                timer: 3500,
                 confirmButtonText: 'Có',
-                cancelButtonText: 'Không',
-                customClass: {
-                    confirmButton: 'custom-confirm-button',
-                    cancelButton: 'custom-cancel-button'
-                }
+                cancelButtonText: 'Không'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    const productId = form.querySelector('input[name="id"]').value;
-
-                    fetch(`{{ url('cart/remove/') }}/${productId}`, {
+                    fetch(`{{ url('cart/remove/') }}/${cartItemId}`, {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
                                 'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                id: productId
-                            })
-                        })
-                        .then(response => response.json())
+                            }
+                        }).then(response => response.json())
                         .then(data => {
                             if (data.success) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Đã xóa!',
                                     text: data.message,
-                                    position: 'top',
-                                    toast: true,
+                                    timer: 1500,
                                     showConfirmButton: false
                                 });
-                                form.closest('.kobolg-mini-cart-item')
-                                    .remove(); // Xóa sản phẩm khỏi danh sách
-                                updateCartTotal(); // Cập nhật tổng giỏ hàng
+                                document.querySelector(`.remove[data-id="${cartItemId}"]`)
+                                    .closest('.kobolg-mini-cart-item')
+                                    .remove(); // Xóa sản phẩm khỏi giao diện
                                 updateCartCount(data
                                     .cartCount); // Cập nhật số lượng giỏ hàng
-                            } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Lỗi!',
-                                    text: data.message,
-                                    position: 'top',
-                                    toast: true,
-                                    showConfirmButton: false
-                                });
                             }
                         })
-                        .catch(error => console.error('Error:', error));
+                        .catch(console.error);
                 }
             });
         });
     });
 
-    function updateCartTotal() {
-        let subtotal = 0;
-        document.querySelectorAll('.kobolg-mini-cart-item').forEach(item => {
-            const quantity = parseInt(item.querySelector('.quantity').textContent.split(' × ')[0]);
-            const price = parseFloat(item.querySelector('.kobolg-Price-amount').textContent.replace('₫', '')
-                .replace('.', '').trim());
-            subtotal += quantity * price;
+    // Hàm tính lại tổng số lượng và giá trị giỏ hàng
+    function updateTemporaryCart() {
+        $.ajax({
+            url: '{{ route('cart.temporary') }}', // Lấy lại giỏ hàng mới từ backend
+            method: 'GET',
+            success: function(data) {
+                console.log('Dữ liệu giỏ hàng:', data);
+                $('.widget_shopping_cart_content').html(data.cartHtml);
+
+                const cartCount = data.cartCount;
+                $('.header-control-inner .meta-dreaming .cart').text(cartCount);
+                $('.minicart-number-items').text(cartCount); // Cập nhật số lượng trong giỏ hàng
+            },
+            error: function(xhr, status, error) {
+                console.error("Lỗi khi cập nhật giỏ hàng:", status, error);
+            },
         });
-        document.querySelector('.total').innerHTML =
-            `<strong>Tổng:</strong> <span class="kobolg-Price-amount amount"><span class="kobolg-Price-currencySymbol">₫</span>${numberWithCommas(subtotal.toFixed(2))}</span>`;
     }
+
+
 
     function numberWithCommas(x) {
         return x.replace(/\B(?=(\d{3})+(?!\d))/g, ".");

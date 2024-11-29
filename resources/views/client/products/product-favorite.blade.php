@@ -20,7 +20,7 @@
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
                                     <img class="img-responsive"
-                                        src="https://static0.xdaimages.com/wordpress/wp-content/uploads/2024/08/acer-predator-helios-14-2024-commerce.png"
+                                        src="{{ \Storage::url($product->image_url)}}"
                                         alt="Gaming Mouse" width="600" height="778">
                                 </a>
                                 <div class="flash">
