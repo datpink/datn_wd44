@@ -7,7 +7,7 @@ use App\Mail\NotificationCreated;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationController extends Controller
 {

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Notification;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 
 class ViewServiceProvider extends ServiceProvider
 {
@@ -31,5 +33,30 @@ class ViewServiceProvider extends ServiceProvider
 
             $view->with('latestPosts', $latestPosts);
         });
+        View::composer('*', function ($view) {
+            // Thêm logic thông báo mà không ảnh hưởng đến phần đã có
+            if (Auth::check()) {
+                $userId = Auth::id();
+
+                // Lấy thông báo chưa đọc
+                $notifications = Notification::where('user_id', $userId)
+                    ->whereNull('read_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                // Lấy tất cả thông báo
+                $allNotifications = Notification::where('user_id', $userId)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+                // Truyền dữ liệu vào view
+                $view->with(compact('notifications', 'allNotifications'));
+            } else {
+                // Trường hợp không đăng nhập
+                $view->with('notifications', []);
+                $view->with('allNotifications', []);
+            }
+        });
+
     }
 }

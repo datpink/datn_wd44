@@ -11,27 +11,41 @@
                 Thông Báo 
                 <span class="minicart-number-items">{{ count($notifications ?? []) }}</span>
             </h3>
-            <ul class="kobolg-mini-cart cart_list product_list_widget">
-                @if (!empty($notifications) && count($notifications) > 0)
-                    @foreach ($notifications as $notification)
-                        <li class="kobolg-mini-cart-item mini_cart_item">
-                            <form class="remove-form" style="display: inline;" method="POST" action="{{ route('notifications.markAsRead', $notification->id) }}">
-                                @csrf
-                                <button type="submit" class="remove remove_from_cart_button" title="Đánh dấu đã đọc"
-                                    style="border: none; background: none; cursor: pointer;">×</button>
-                            </form>
-                            <a href="{{ $notification->url }}">
-                                <p class="notification-title">{{ $notification->title }}</p>
-                                <p class="notification-desc">{{ $notification->description }}</p>
-                                <p class="notification-time">{{ $notification->created_at->diffForHumans() }}</p>
-                            </a>
-                        </li>
-                    @endforeach
-                @else
-                    <li class="kobolg-mini-cart-item mini_cart_item">Không có thông báo nào.</li>
-                @endif
-            </ul>
-        </div>
+        
+            <div class="card">
+                <div class="card-header">
+                    <strong>Tất Cả Thông Báo</strong>
+                </div>
+                <div class="card-body">
+                    @if ($allNotifications->isEmpty())
+                        <p class="text-muted">Bạn chưa có thông báo nào.</p>
+                    @else
+                        <ul class="list-group">
+                            @foreach ($allNotifications as $notification)
+                                <li class="list-group-item">
+                                    <div>
+                                        <strong>{{ $notification->title }}</strong>
+                                        <p class="mb-1">{{ $notification->description }}</p>
+                                        @if ($notification->url)
+                                        <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary">
+                                            Xem chi tiết
+                                        </a>                                        @endif
+                                        <small class="text-muted d-block mt-2">
+                                            {{ $notification->created_at->format('H:i d/m/Y') }}
+                                        </small>
+                                        @if (is_null($notification->read_at))
+                                            <span class="badge bg-warning text-dark">Chưa đọc</span>
+                                        @else
+                                            <span class="badge bg-success">Đã đọc</span>
+                                        @endif
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>
+            </div>
+                </div>
     </div>
 </div>
 
