@@ -45,8 +45,8 @@
                                     <h4>Thông Tin Khách Hàng</h4>
                                     <p><strong>Người Mua:</strong> {{ $order->user->name }}</p>
                                     <p><strong>Email:</strong> {{ $order->user->email }}</p>
-                                    <p><strong>Địa Chỉ:</strong> {{ $order->user->address }}</p>
-                                    <p><strong>Số Điện Thoại:</strong> {{ $order->user->phone ?? 'Chưa có thông tin' }}</p>
+                                    <p><strong>Địa Chỉ:</strong> {{ $order->shipping_address }}</p>
+                                    <p><strong>Số Điện Thoại:</strong> {{ $order->phone_number }}</p>
                                     <p><strong>Ngày Đặt Hàng:</strong>
                                         {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}
                                     </p>
