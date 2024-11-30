@@ -7,7 +7,8 @@
     @include('components.breadcrumb-client2')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <div class="container">
+    <div class="container mt-3">
+        {{-- <h1 class="m-5">Danh sách sản phẩm yêu thích</h1> --}}
         <div class="auto-clear equal-container better-height kobolg-products">
             <ul class="row products columns-3">
                 @foreach ($products as $product)
@@ -19,7 +20,8 @@
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
                                     <img class="img-responsive"
-                                        src="https://static0.xdaimages.com/wordpress/wp-content/uploads/2024/08/acer-predator-helios-14-2024-commerce.png"
+                                        src="https://imageupscaler.com/wp-content/uploads/2024/07/deblured-cutty-fox.jpg"
+                                        {{-- {{ \Storage::url($product->image_url)}} --}}
                                         alt="Gaming Mouse" width="600" height="778">
                                 </a>
                                 <div class="flash">
@@ -83,7 +85,7 @@
                             </div>
                             <div class="product-info equal-elem" style="height: 118px;">
                                 <h3 class="product-name product_title">
-                                    <a href="#">{{ $product->name }}</a>
+                                    <a href="{{ url('shop/products/chi-tiet', $product->slug) }}">{{ $product->name }}</a>
                                 </h3>
                                 <div class="rating-wapper nostar">
                                     <div class="star-rating">
@@ -115,7 +117,7 @@
                 const productId = e.target.dataset.productId;
                 console.log(productId);
 
-                axios.post('http://localhost:8000/shop/remove-product-favorite', {
+                axios.post('/shop/remove-product-favorite', {
                         product_id: productId,
                     }, {
                         headers: {

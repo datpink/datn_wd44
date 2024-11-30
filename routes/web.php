@@ -171,6 +171,7 @@ Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name
 
 
 // thanh toán
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
 
@@ -179,7 +180,7 @@ Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistri
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
 Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
 Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpayReturn');
 Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
 
 

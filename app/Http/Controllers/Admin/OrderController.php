@@ -84,7 +84,12 @@ class OrderController extends Controller
     {
         $title = 'Chi Tiết Đơn Hàng';
 
-        $order = Order::with(['user', 'orderItems.productVariant.product'])->findOrFail($id);
+        // Lấy đơn hàng với các thông tin cần thiết (user, orderItems, product và productVariant)
+        $order = Order::with([
+            'user',
+            'orderItems.productVariant.product', // Nếu có biến thể
+            'orderItems.product' // Nếu không có biến thể
+        ])->findOrFail($id);
 
         // Đánh dấu đơn hàng là đã được xem
         $order->is_new = false;
@@ -92,6 +97,7 @@ class OrderController extends Controller
 
         return view('admin.orders.show', compact('order', 'title'));
     }
+
 
     public function destroy($id)
     {
@@ -131,32 +137,34 @@ class OrderController extends Controller
         // Lấy ID người dùng hiện tại
         $userId = Auth::id();
 
-        // Lấy danh sách đơn hàng của người dùng, bao gồm thông tin người mua, sản phẩm và tổng tiền mỗi đơn hàng
-        $orders = Order::with(['user', 'items.productVariant.product'])
+        // Lấy danh sách đơn hàng của người dùng
+        $orders = Order::with([
+            'user',
+            'items.productVariant.product.brand', // Thông qua productVariant
+            'items.product.brand' // Trực tiếp từ product
+        ])
             ->withSum('items', 'total') // Tổng tiền từng đơn hàng
             ->where('user_id', $userId)
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Xử lý chi tiết sản phẩm và thuộc tính cho từng đơn hàng
+        // Xử lý thuộc tính biến thể nếu có
         foreach ($orders as $order) {
-            $items = $order->items; // Lấy danh sách sản phẩm trong đơn hàng
+            $items = $order->items;
 
-            // Lấy thuộc tính biến thể từ bảng `product_variant_attributes`
+            // Chỉ lấy thuộc tính cho các sản phẩm có biến thể
             $productVariantAttributes = DB::table('product_variant_attributes as pva')
                 ->join('attribute_values as av', 'pva.attribute_value_id', '=', 'av.id')
                 ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
-                ->whereIn('pva.product_variant_id', $items->pluck('product_variant_id')->toArray())
+                ->whereIn('pva.product_variant_id', $items->pluck('product_variant_id')->filter()->toArray())
                 ->select('pva.product_variant_id', 'a.name as attribute_name', 'av.name as attribute_value')
                 ->get();
 
-            // Gom nhóm các thuộc tính biến thể theo `product_variant_id`
             $order->groupedVariantAttributes = $productVariantAttributes->groupBy('product_variant_id');
         }
 
         return view('client.user.order-history', compact('orders'));
     }
-
 
 
     public function detailOrderHistory(Order $order)

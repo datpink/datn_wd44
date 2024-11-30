@@ -24,15 +24,9 @@ class ProductController extends Controller
         // Lấy query gốc từ bảng Product
         $query = Product::with("variants.attributeValues")->where('is_active', 1);
 
-        // $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
-        // ->whereHas('variants.attributeValues', function ($query) {
-        //     $query->where('attribute_values.id', 1); // Lọc các sản phẩm có attribute_value_id = 1
-        // })
-        // ->paginate(6);
-
         // dd($products);
         $variants = Attribute::with('attributeValues')->get();
-        $variant_values = AttributeValue::with('attribute')->where('attribute_id', '1')->get();
+        $variant_values = AttributeValue::with('attribute','productVariants')->where('attribute_id', '1')->get();
 
         $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
         // dd($variant_storage_values);
@@ -55,7 +49,7 @@ class ProductController extends Controller
 
     public function orderByPriceApi(Request $request)
     {
-        $query = Product::where('is_active', 1);
+        $query = Product::with('favoritedBy')->where('is_active', 1);
 
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
@@ -79,6 +73,8 @@ class ProductController extends Controller
                     break;
             }
         }
+        // 0982723969
+        // 0332141009
 
         $minPrice = $request->input('price_min');
         $maxPrice = $request->input('price_max');
@@ -120,44 +116,52 @@ class ProductController extends Controller
         // Trả về dữ liệu sản phẩm dưới dạng JSON
         return response()->json([
             'data' => $products,
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+                'prev_page_url' => $products->previousPageUrl(),
+                'next_page_url' => $products->nextPageUrl(),
+            ],
             'minDiscountPrice' => Product::min('discount_price'),
             'maxDiscountPrice' => Product::max('discount_price'),
         ]);
     }
 
-    public function filterByColor(Request $request)
-    {
-        $attributeValueId = $request->input('attribute_value_id');
-        $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
-            ->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
-                $query->where('attribute_values.id', $attributeValueId); // Lọc các sản phẩm có attribute_value_id = 1
-            })
+    // public function filterByColor(Request $request)
+    // {
+    //     $attributeValueId = $request->input('attribute_value_id');
+    //     $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+    //         ->whereHas('variants.attributeValues', function ($query) use ($attributeValueId) {
+    //             $query->where('attribute_values.id', $attributeValueId); // Lọc các sản phẩm có attribute_value_id = 1
+    //         })
 
-            ->get();
-
-
-        return response()->json(['data' => $products]);
-    }
+    //         ->get();
 
 
-    public function filterByStorage(Request $request)
-    {
-
-        $attributeStorageValueId = $request->input('attribute_storage_value_id');
-        // return response()->json(['data' => $attributeStorageValueId]);
-
-        $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
-            ->whereHas('variants.attributeValues', function ($query) use ($attributeStorageValueId) {
-                $query->where('attribute_values.id', $attributeStorageValueId); // Lọc các sản phẩm có attribute_value_id = 1
-            })
-
-            ->get();
+    //     return response()->json(['data' => $products]);
+    // }
 
 
-        return response()->json([
-            'data' => $products,
-        ]);
-    }
+    // public function filterByStorage(Request $request)
+    // {
+
+    //     $attributeStorageValueId = $request->input('attribute_storage_value_id');
+    //     // return response()->json(['data' => $attributeStorageValueId]);
+
+    //     $products = Product::with('variants.attributeValues') // Eager load các biến thể và giá trị thuộc tính
+    //         ->whereHas('variants.attributeValues', function ($query) use ($attributeStorageValueId) {
+    //             $query->where('attribute_values.id', $attributeStorageValueId); // Lọc các sản phẩm có attribute_value_id = 1
+    //         })
+
+    //         ->get();
+
+
+    //     return response()->json([
+    //         'data' => $products,
+    //     ]);
+    // }
 
 
 
@@ -197,25 +201,25 @@ class ProductController extends Controller
         return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
     }
 
-    public function getVariantPrice(Request $request)
-    {
-        // Lấy thông tin biến thể dựa trên ID
-        $variant = ProductVariant::find($request->variant_id);
+    // public function getVariantPrice(Request $request)
+    // {
+    //     // Lấy thông tin biến thể dựa trên ID
+    //     $variant = ProductVariant::find($request->variant_id);
 
-        if ($variant) {
-            // Trả về giá của biến thể
-            return response()->json([
-                'success' => true,
-                'price' => number_format($variant->price, 0, ',', '.')
-            ]);
-        } else {
-            // Trả về lỗi nếu không tìm thấy biến thể
-            return response()->json([
-                'success' => false,
-                'message' => 'Biến thể không tồn tại.'
-            ]);
-        }
-    }
+    //     if ($variant) {
+    //         // Trả về giá của biến thể
+    //         return response()->json([
+    //             'success' => true,
+    //             'price' => number_format($variant->price, 0, ',', '.')
+    //         ]);
+    //     } else {
+    //         // Trả về lỗi nếu không tìm thấy biến thể
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Biến thể không tồn tại.'
+    //         ]);
+    //     }
+    // }
 
     public function productByCatalogues(string $parentSlug, $childSlug = null)
     {
@@ -255,7 +259,7 @@ class ProductController extends Controller
         $productByCatalogues = Product::with('catalogue')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1)
-            ->paginate(6);
+            ->paginate(2);
 
         // dd($productByCatalogues);
         foreach ($productByCatalogues as $product) {
@@ -307,7 +311,7 @@ class ProductController extends Controller
                 ->pluck('id');
         }
 
-        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues')
+        $productByCatalogues = Product::with('catalogue', 'variants.attributeValues', 'favoritedBy')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1);
 
@@ -360,13 +364,23 @@ class ProductController extends Controller
         }
 
         // Lấy dữ liệu sản phẩm
-        $productByCatalogues = $productByCatalogues->get();
+        $productByCatalogues = $productByCatalogues->paginate(2);
 
         foreach ($productByCatalogues as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;
         }
-
-        return response()->json(['data' => $productByCatalogues]);
+        // dd($productByCatalogues);
+        return response()->json([
+            'data' => $productByCatalogues->items(),
+            'pagination' => [
+                'current_page' => $productByCatalogues->currentPage(),
+                'last_page' => $productByCatalogues->lastPage(),
+                'per_page' => $productByCatalogues->perPage(),
+                'total' => $productByCatalogues->total(),
+                'prev_page_url' => $productByCatalogues->previousPageUrl(),
+                'next_page_url' => $productByCatalogues->nextPageUrl(),
+            ],
+        ]);
     }
 
     public function filterByPrice(Request $request)
@@ -403,7 +417,7 @@ class ProductController extends Controller
 
         // return response()->json(['products' => $products]);
         // Thêm phân trang
-        $products = $products->paginate(6); // 10 sản phẩm mỗi trang
+        $products = $products->paginate(2); // 10 sản phẩm mỗi trang
 
         return response()->json([
             'products' => $products->items(),

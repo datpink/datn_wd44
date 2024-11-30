@@ -37,16 +37,6 @@ class CheckoutController extends Controller
         // Kiểm tra và xử lý các sản phẩm đã chọn
         foreach ($selectedProducts as $selectedProduct) {
             $cartId = $selectedProduct["cart_id"] ?? null; // Lấy cart_id từ sản phẩm
-            $storageVariantId = $selectedProduct['storage_variant_id'] ?? null;
-            $colorVariantId = $selectedProduct['color_variant_id'] ?? null;
-
-            Log::info('Thông tin sản phẩm:', [
-                'cart_id' => $cartId,
-                'storage_variant_id' => $storageVariantId,
-                'color_variant_id' => $colorVariantId,
-                'session_key' => "cart_{$userId}.$cartId"
-            ]);
-
             // Kiểm tra nếu cart_id không hợp lệ (null là không hợp lệ, nhưng 0 thì hợp lệ)
             if (is_null($cartId)) {
                 return redirect()->route('cart.view')->with('error', 'Thông tin sản phẩm không hợp lệ.');
@@ -63,14 +53,11 @@ class CheckoutController extends Controller
             // Lấy sản phẩm từ session
             $product = session($cartSessionKey); // Lấy sản phẩm từ session
 
-            // Kiểm tra và xử lý thông tin biến thể nếu có
-            if ($storageVariantId || $colorVariantId) {
-                if (is_null($storageVariantId) || is_null($colorVariantId)) {
-                    return redirect()->route('cart.view')->with('error', 'Thông tin biến thể sản phẩm không hợp lệ.');
-                }
-                // Gắn thêm thông tin variant vào sản phẩm
-                $product['storage_variant_id'] = $storageVariantId;
-                $product['color_variant_id'] = $colorVariantId;
+            // Kiểm tra nếu sản phẩm có biến thể
+            $variant = $selectedProduct['options']['variant_id'] ?? null; // Lấy biến thể của sản phẩm
+            if ($variant) {
+                // Nếu có biến thể, gắn thông tin biến thể vào sản phẩm
+                $product['variant_id'] = $variant;
             }
 
             // Thêm sản phẩm vào danh sách
@@ -80,34 +67,10 @@ class CheckoutController extends Controller
             $totalAmount += $product['price'] * $product['quantity'];
         }
 
-        // Xử lý mã giảm giá nếu có
-        $couponCode = $request->input('coupon_code');
-        $discount = 0;
-        if ($couponCode) {
-            $coupon = Promotion::where('code', $couponCode)
-                ->where('status', 'active')
-                ->where('start_date', '<=', now())
-                ->where(function ($query) {
-                    $query->whereNull('end_date')
-                        ->orWhere('end_date', '>=', now());
-                })
-                ->first();
-
-            if ($coupon) {
-                $discount = $coupon->type === 'percent'
-                    ? $totalAmount * ($coupon->discount_value / 100)
-                    : $coupon->discount_value;
-
-                $totalAmount = max($totalAmount - $discount, 0); // Không để tổng tiền âm
-            } else {
-                return redirect()->route('cart.view')->with('error', 'Mã giảm giá không hợp lệ hoặc đã hết hạn.');
-            }
-        }
-
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
-
+        // dd($products);
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',
@@ -115,9 +78,9 @@ class CheckoutController extends Controller
             'totalAmount',
             'user',
             'provinces',
-            'discount'
         ));
     }
+
 
 
 
