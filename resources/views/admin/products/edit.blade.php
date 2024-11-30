@@ -35,6 +35,13 @@
                                         value="{{ $product->slug }}" readonly>
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="stock" class="form-label">Số Lượng</label>
+                                    <input type="number" class="form-control" id="stock" name="stock"
+                                        value="{{ $product->stock }}" min="0" required>
+                                </div>
+
+
                                 <!-- Thương hiệu -->
                                 <div class="form-group">
                                     <label for="brand_id">Thương hiệu</label>
@@ -93,7 +100,7 @@
                                 </div>
 
                                 <input type="hidden" name="discount_price" id="discount_price" class="form-control"
-                                    value="{{ $product->discount_price}}">
+                                    value="{{ $product->discount_price }}">
 
 
                                 <!-- SKU -->

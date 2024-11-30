@@ -60,7 +60,7 @@
         <ul>
             <li><strong>Số tiền:</strong> {{ number_format($order['amount'] / 100) }} VND</li>
             <li><strong>Mã giao dịch:</strong> {{ $order['txn_ref'] }}</li>
-            <li><strong>Ngân hàng:</strong> NB</li>
+            <li><strong>Ngân hàng:</strong> NCB</li>
         </ul>
         <a href="{{route('client.index')}}">Quay về trang chủ</a>
     </div>

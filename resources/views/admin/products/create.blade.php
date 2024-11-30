@@ -69,7 +69,7 @@
 
 
                                 <div class="mb-3">
-                                    <label for="stock" class="form-label">Tồn Kho</label>
+                                    <label for="stock" class="form-label">Số Lượng</label>
                                     <input type="number" class="form-control" id="stock" name="stock"
                                         value="{{ old('stock') }}">
                                 </div>
