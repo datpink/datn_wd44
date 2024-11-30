@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->string('txn_ref'); // Mã đơn hàng
             $table->string('order_info');
             $table->decimal('amount', 15, 2); // Số tiền
             $table->string('status'); // Trạng thái giao dịch (success, failed)
-            $table->string('vnp_response_code'); // Mã phản hồi của VNPAY
             $table->timestamps();
         });
     }
