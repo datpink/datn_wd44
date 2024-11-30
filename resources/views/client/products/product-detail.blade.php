@@ -328,6 +328,7 @@
 
                                 <div class="product_meta">
                                     <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
+                                    <span class="sku_wrapper">Số Lượng Sản Phẩm: <span class="sku">{{ $product->stock }}</span></span>
                                     <span class="posted_in">Danh mục:
                                         <a href="#"
                                             rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>

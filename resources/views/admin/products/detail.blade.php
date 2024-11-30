@@ -91,6 +91,11 @@
                                 <p class="form-control">{{ $product->sku }}</p>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="stock" class="form-label">Số Lượng</label>
+                                <p class="form-control">{{  $product->stock }}</p>
+                            </div>
+
                             <!-- Cân nặng (Weight) -->
                             <div class="form-group">
                                 <label for="weight">Cân nặng (kg)</label>

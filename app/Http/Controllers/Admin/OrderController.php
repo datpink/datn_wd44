@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\ProductVariant;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use PDF;
@@ -218,9 +219,30 @@ class OrderController extends Controller
         $order->cancellation_reason = $request->input('cancellation_reason');
         $order->save();
 
+        // Hoàn lại stock cho từng sản phẩm trong đơn hàng
+        foreach ($order->orderItems as $orderItem) {
+            if ($orderItem->product_variant_id) {
+                // Nếu sản phẩm có biến thể, hoàn lại stock vào product_variant
+                $productVariant = ProductVariant::find($orderItem->product_variant_id);
+                if ($productVariant) {
+                    $productVariant->stock += $orderItem->quantity; // Hoàn lại số lượng vào product_variant
+                    $productVariant->save();
+                }
+            } else {
+                // Nếu sản phẩm không có biến thể, hoàn lại stock vào product
+                $product = $orderItem->product;
+                if ($product) {
+                    $product->stock += $orderItem->quantity; // Hoàn lại số lượng vào product
+                    $product->save();
+                }
+            }
+        }
+
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
-        return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công.');
+        return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công và số lượng sản phẩm đã được hoàn lại vào kho.');
     }
+
+
 
     public function refund(Request $request, $id)
     {
