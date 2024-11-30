@@ -227,6 +227,8 @@
                                                 </tr>
 
                                                 <!-- Hidden inputs to include product data in form submission -->
+                                                <input type="hidden" name="products[{{ $index }}][id]"
+                                                    value="{{ $product['id'] }}">
                                                 <input type="hidden" name="products[{{ $index }}][variant_id]"
                                                     value="{{ $product['options']['variant_id'] }}">
                                                 <input type="hidden" name="products[{{ $index }}][quantity]"

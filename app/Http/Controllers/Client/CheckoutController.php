@@ -70,7 +70,7 @@ class CheckoutController extends Controller
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
-
+        // dd($products);
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',

@@ -436,14 +436,14 @@
                             // Nút trang trước
                             if (pagination.prev_page_url) {
                                 paginationContainer.innerHTML += `
-                                    <button onclick="fetchFilteredProducts(${pagination.current_page - 1})" 
+                                    <button onclick="fetchFilteredProducts(${pagination.current_page - 1})"
                                             class="pagination-button">«</button>`;
                             }
 
                             // Các số trang
                             for (let page = 1; page <= pagination.last_page; page++) {
                                 paginationContainer.innerHTML += `
-                                    <button onclick="fetchFilteredProducts(${page})" 
+                                    <button onclick="fetchFilteredProducts(${page})"
                                             class="pagination-button ${page === pagination.current_page ? 'active' : ''}">
                                         ${page}
                                     </button>`;
@@ -452,7 +452,7 @@
                             // Nút trang sau
                             if (pagination.next_page_url) {
                                 paginationContainer.innerHTML += `
-                                    <button onclick="fetchFilteredProducts(${pagination.current_page + 1})" 
+                                    <button onclick="fetchFilteredProducts(${pagination.current_page + 1})"
                                             class="pagination-button">»</button>`;
                             }
                         }

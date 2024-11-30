@@ -50,7 +50,7 @@ class PaymentController extends Controller
                     // Lưu sản phẩm vào orderItems
                     $order->orderItems()->create([
                         'order_id' => $order->id,
-                        // 'product_id' => $product['id'],
+                        'product_id' => $product['id'],
                         'product_variant_id' => $product['variant_id'],
                         'quantity' => $product['quantity'],
                         'price' => $product['price'],
