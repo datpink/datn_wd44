@@ -24,7 +24,7 @@ class OrderItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id'); // Sử dụng product_id nếu trường này tồn tại
     }
 
     public function productVariant()

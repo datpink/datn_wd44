@@ -57,17 +57,38 @@
                                     <h4>Thông Tin Sản Phẩm</h4>
                                     @foreach ($order->items as $item)
                                         <div>
-                                            <strong>{{ $item->productVariant->product->name }}</strong>
-                                            <small class="text-muted">(Mã SP: {{ $item->productVariant->id }})</small>
+                                            <strong>
+                                                @if ($item->product_variant_id)
+                                                    {{ $item->productVariant->product->name }}
+                                                @else
+                                                    {{ $item->product->name }}
+                                                @endif
+                                            </strong>
+                                            <small class="text-muted">
+                                                @if ($item->product_variant_id)
+                                                    (Mã SP: {{ $item->productVariant->id }})
+                                                @else
+                                                    (Mã SP: {{ $item->product->id }})
+                                                @endif
+                                            </small>
                                         </div>
+
                                         <ul>
                                             <li>Số Lượng: {{ $item->quantity }}</li>
                                             <li>Giá: {{ number_format($item->price, 0, ',', '.') }} VND</li>
-                                            <li>Thương Hiệu: {{ $item->productVariant->product->brand->name }}</li>
+                                            <li>Thương Hiệu:
+                                                @if ($item->product_variant_id && $item->productVariant->product->brand)
+                                                    {{ $item->productVariant->product->brand->name }}
+                                                @elseif ($item->product && $item->product->brand)
+                                                    {{ $item->product->brand->name }}
+                                                @else
+                                                    Không xác định
+                                                @endif
+                                            </li>
                                         </ul>
 
                                         <!-- Thuộc tính của sản phẩm -->
-                                        @if (isset($order->groupedVariantAttributes[$item->product_variant_id]))
+                                        @if ($item->product_variant_id && isset($order->groupedVariantAttributes[$item->product_variant_id]))
                                             <div class="mt-1">
                                                 <strong>Thuộc Tính:</strong>
                                                 <ul class="mb-0">
@@ -81,18 +102,27 @@
                                             Không có Thuộc Tính nào.
                                         @endif
                                     @endforeach
+
+
                                 </div>
 
                                 <!-- Hiển thị ảnh sản phẩm -->
                                 <div class="col-md-2 mb-2">
                                     <h4>Ảnh Sản Phẩm</h4>
-                                    @if ($item->productVariant->product->image_url && \Storage::exists($item->productVariant->product->image_url))
+                                    @if (
+                                        $item->product_variant_id &&
+                                            $item->productVariant->product->image_url &&
+                                            \Storage::exists($item->productVariant->product->image_url))
                                         <img src="{{ \Storage::url($item->productVariant->product->image_url) }}"
                                             alt="{{ $item->productVariant->product->name }}"
                                             style="max-width: 130px; height: auto;">
+                                    @elseif ($item->product && $item->product->image_url && \Storage::exists($item->product->image_url))
+                                        <img src="{{ \Storage::url($item->product->image_url) }}"
+                                            alt="{{ $item->product->name }}" style="max-width: 130px; height: auto;">
                                     @else
                                         Không có ảnh
                                     @endif
+
                                 </div>
 
                                 <!-- Thông tin tổng tiền và trạng thái -->
