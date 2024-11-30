@@ -162,6 +162,10 @@
                             @endforeach
                         </ul>
                     </div>
+                    <nav class="navigation pagination mt-3">
+                        <div id="paginationContainer" class="nav-links"></div>
+                    </nav>
+
                     @if ($products->count() > 0 && $products->lastPage() > 1)
                         <nav class="navigation pagination mt-3">
                             <div class="nav-links">
@@ -427,7 +431,7 @@
                                 });
 
 
-                                function fetchFilteredProducts() {
+                                function fetchFilteredProducts(page = 1) {
                                     // console.log("Fetching filtered products with filters:", activeFilters);
                                     axios.post('/api/shop/products', {
                                             // parent_id: parent_id ? parent_id.value : null,
@@ -436,10 +440,12 @@
                                             attribute_storage_value_id: activeFilters.storage,
                                             price_min: activeFilters.price_min, // Gửi giá min
                                             price_max: activeFilters.price_max, // Gửi giá max
-                                            orderby: activeFilters.orderby
+                                            orderby: activeFilters.orderby,
+                                            page: page // Truyền tham số page vào API
                                         })
                                         .then((res) => {
                                             const productList = document.getElementById('product-list');
+                                            const paginationContainer = document.getElementById('paginationContainer'); // Container chứa các nút phân trang
                                             // console.log(productList);
 
 
@@ -511,6 +517,7 @@
                                             } else {
                                                 productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
                                             }
+                                            
                                         })
                                         .catch((err) => {
                                             console.log(err);
