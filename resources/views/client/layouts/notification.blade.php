@@ -17,9 +17,6 @@
                     <strong>Tất Cả Thông Báo</strong>
                 </div>
                 <div class="card-body">
-                    @if ($allNotifications->isEmpty())
-                        <p class="text-muted">Bạn chưa có thông báo nào.</p>
-                    @else
                         <ul class="list-group">
                             @foreach ($allNotifications as $notification)
                                 <li class="list-group-item">
@@ -42,10 +39,9 @@
                                 </li>
                             @endforeach
                         </ul>
-                    @endif
                 </div>
             </div>
-                </div>
+        </div>
     </div>
 </div>
 

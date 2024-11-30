@@ -14,7 +14,7 @@ class NotificationController extends Controller
     public function index()
     {
         $title = 'Danh Sách Thông báo';
-        $notifications = Notification::latest()->paginate(10); // Lấy danh sách thông báo
+        $notifications = Notification::query()->paginate(10); // Lấy danh sách thông báo
         return view('admin.notifications.index', compact('notifications', 'title'));
     }
 
@@ -39,10 +39,10 @@ class NotificationController extends Controller
         $notification = Notification::create($validated);
 
         // Gửi email thông báo
-        $user = User::find($validated['user_id']);
-        if ($user) {
-            Mail::to($user->email)->send(new NotificationCreated($notification));
-        }
+        // $user = User::find($validated['user_id']);
+        // if ($user) {
+        //     Mail::to($user->email)->send(new NotificationCreated($notification));
+        // }
 
         return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được tạo thành công.');
     }

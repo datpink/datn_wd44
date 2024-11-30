@@ -208,11 +208,11 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
     // Danh sách thông báo
-    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
 
     // Thêm thông báo
-    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
-    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+    Route::get('/notification/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notification', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
