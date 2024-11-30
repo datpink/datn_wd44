@@ -82,7 +82,7 @@ class PaymentController extends Controller
                 $vnp_TxnRef = time(); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
                 $vnp_OrderInfo = "Thanh toán hóa đơn";
                 $vnp_OrderType = "ZAIA Enterprise";
-                $vnp_Amount  = (int)($request->totalAmount * 100); // Chuyển thành số nguyên (VND)
+                $vnp_Amount = (int) ($request->totalAmount * 100); // Chuyển thành số nguyên (VND)
                 $vnp_Locale = "VN";
                 $vnp_BankCode = "NCB";
                 $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -135,7 +135,6 @@ class PaymentController extends Controller
                     'status' => 'paid',
                     'vnp_response_code' => '00',
                 ]);
-
                 DB::commit();
 
                 return redirect()->away($vnp_Url);
