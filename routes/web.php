@@ -81,10 +81,8 @@ Route::prefix('shop')->group(function () {
 
    // Route hiển thị danh sách thông báo
    Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
-
-   // Route đánh dấu thông báo đã đọc
-   Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    // Các route không yêu cầu đăng nhập
+   Route::get('/notifications/{id}/read', [ClientNotificationController::class, 'markAsReadAndRedirect'])->name('notifications.read');
+   // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
@@ -211,11 +209,11 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
     // Danh sách thông báo
-    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
 
     // Thêm thông báo
-    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
-    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+    Route::get('/notification/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notification', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);

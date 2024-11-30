@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
@@ -13,39 +14,53 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        // Lấy danh sách thông báo của user hiện tại (giả sử bạn đã cấu hình auth)
-        $notifications = Notification::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
 
-        // Truyền danh sách thông báo sang view
-        return view('notifications.index', compact('notifications'));
+        if (Auth::check()) {
+            $id = Auth::id(); // Lấy ID người dùng hiện tại
+            $user = Auth::user(); // Lấy thông tin người dùng hiện tại
+
+            // Lấy các thông báo chưa đọc của người dùng
+            $unreadNotifications = Notification::where('user_id', $id)
+                ->whereNull('read_at') // Chỉ lấy thông báo chưa đọc
+                ->orderBy('created_at', 'desc') // Sắp xếp thông báo theo thứ tự mới nhất
+                ->get();
+
+            // Lấy tất cả thông báo của người dùng
+            $allNotifications = Notification::where('user_id', $id)
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } else {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem thông báo.');
+        }
+
+        // Trả dữ liệu ra view
+        return view('client.layouts.notification', compact('unreadNotifications', 'allNotifications', 'user'));
     }
+
 
     /**
      * Render lại thông báo (ví dụ: thông báo chưa đọc).
      */
-    public function temporary()
+    public function markAsReadAndRedirect($id)
     {
-        $unreadNotifications = Notification::where('user_id', auth()->id())
-            ->where('is_read', false)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return view('client.notifications.temporary', ['notifications' => $unreadNotifications]);
-    }
-    public function markAsRead($id)
-    {
+        // Lấy thông báo của người dùng hiện tại
         $notification = Notification::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
-    
-        if ($notification) {
-            $notification->is_read = true; // Đánh dấu là đã đọc
+
+        if (!$notification) {
+            return redirect()->route('notifications.index')->with('error', 'Thông báo không tồn tại.');
+        }
+
+        // Cập nhật read_at nếu chưa đọc
+        if (is_null($notification->read_at)) {
+            $notification->read_at = now();
             $notification->save();
         }
-    
-        return redirect()->back();
+
+        // Chuyển hướng đến URL của thông báo nếu có
+        return $notification->url 
+            ? redirect($notification->url) 
+            : redirect()->route('notifications.index');
     }
-    
 }
