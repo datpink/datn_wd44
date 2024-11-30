@@ -151,7 +151,7 @@ class PaymentController extends Controller
     public function vnpayReturn(Request $request)
     {
 
-        dd($request->all());
+        // dd($request->all());
         $vnp_HashSecret = "65TDBHY5NLK43Y566EFLVM6ATI1X79YF";
         $inputData = $request->all();
         $vnp_SecureHash = $inputData['vnp_SecureHash'];

@@ -68,7 +68,7 @@
                                     <div class="product-inner images">
                                         <div class="product-thumb">
                                             <a class="thumb-link" href="#">
-                                                <img class="img-responsive" src="{{ $product->image_url) }}">
+                                                <img class="img-responsive" src="{{ $product->image_url }}">
                                             </a>
                                             <div class="flash">
                                                 @if ($product->condition === 'new')
