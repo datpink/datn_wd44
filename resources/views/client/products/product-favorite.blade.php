@@ -20,7 +20,8 @@
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
                                     <img class="img-responsive"
-                                        src="{{ \Storage::url($product->image_url)}}"
+                                        src="https://imageupscaler.com/wp-content/uploads/2024/07/deblured-cutty-fox.jpg"
+                                        {{-- {{ \Storage::url($product->image_url)}} --}}
                                         alt="Gaming Mouse" width="600" height="778">
                                 </a>
                                 <div class="flash">
