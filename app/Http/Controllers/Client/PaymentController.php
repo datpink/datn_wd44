@@ -43,13 +43,14 @@ class PaymentController extends Controller
             ];
 
             $order = Order::create($data);
-            $vnp_TxnRef = $order->id;
+            $vnp_TxnRef = time();
             // Kiểm tra danh sách sản phẩm
             if (isset($request->products) && is_array($request->products) && count($request->products) > 0) {
                 foreach ($request->products as $product) {
                     // Lưu sản phẩm vào orderItems
                     $order->orderItems()->create([
                         'order_id' => $order->id,
+                        'product_id' => $product['id'],
                         'product_variant_id' => $product['variant_id'],
                         'quantity' => $product['quantity'],
                         'price' => $product['price'],
@@ -150,7 +151,7 @@ class PaymentController extends Controller
     public function vnpayReturn(Request $request)
     {
 
-        // dd($request->all());
+        dd($request->all());
         $vnp_HashSecret = "65TDBHY5NLK43Y566EFLVM6ATI1X79YF";
         $inputData = $request->all();
         $vnp_SecureHash = $inputData['vnp_SecureHash'];
