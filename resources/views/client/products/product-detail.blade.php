@@ -178,8 +178,8 @@
                                         <ol class="flex-control-nav flex-control-thumbs">
                                             <li>
                                                 <img src="{{ \Storage::url($product->image_url) }}"
-                                                    alt="{{ $product->name }} Thumbnail"
-                                                    style="width: 100px; height: auto;" class="gallery-thumbnail">
+                                                    alt="{{ $product->name }} Thumbnail" style="width: 100px; height: auto;"
+                                                    class="gallery-thumbnail">
                                             </li>
                                             @if ($product->galleries->isNotEmpty())
                                                 @foreach ($product->galleries as $gallery)
@@ -209,7 +209,7 @@
                             <div class="summary entry-summary">
                                 <h1 class="product_title entry-title">{{ $product->name }}</h1>
                                 <p class="price">
-                                    <span class="kobolg-Price-currencySymbol">₫</span>
+                                    {{-- <span class="kobolg-Price-currencySymbol">₫</span> --}}
                                     <span id="product-price">
                                         @if ($product->variants->isNotEmpty())
                                             {{ number_format($minPrice, 0, ',', '.') }}₫ -
@@ -346,7 +346,6 @@
                                 </div>
                             </div>
 
-                            </>
                         </div>
 
                         <div class="kobolg-tabs kobolg-tabs-wrapper">
@@ -379,317 +378,40 @@
                 <div class="section-001">
 
                     <!-- danh mục 2 -->
-                    <div class="container">
-                        <div class="kobolg-heading style-01">
-                            <div class="heading-inner">
-                                <h3 class="title">Sản phẩm mới</h3>
-                                <div class="subtitle">
-                                    Các sản phẩm mới ra mắt và đang được mọi người săn đón.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="kobolg-products style-01">
-                            <div class="response-product product-list-owl owl-slick equal-container better-height"
-                                data-slick="{&quot;arrows&quot;:true,&quot;slidesMargin&quot;:30,&quot;dots&quot;:true,&quot;infinite&quot;:false,&quot;speed&quot;:300,&quot;slidesToShow&quot;:4,&quot;rows&quot;:1}"
-                                data-responsive="[{&quot;breakpoint&quot;:480,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:768,&quot;settings&quot;:{&quot;slidesToShow&quot;:2,&quot;slidesMargin&quot;:&quot;10&quot;}},{&quot;breakpoint&quot;:992,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1200,&quot;settings&quot;:{&quot;slidesToShow&quot;:3,&quot;slidesMargin&quot;:&quot;20&quot;}},{&quot;breakpoint&quot;:1500,&quot;settings&quot;:{&quot;slidesToShow&quot;:4,&quot;slidesMargin&quot;:&quot;30&quot;}}]">
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-93 product type-product status-publish has-post-thumbnail product_cat-light product_cat-table product_cat-new-arrivals product_tag-table product_tag-sock first instock shipping-taxable purchasable product-type-simple  ">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="0">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro13-1-270x350.jpg') }}"
-                                                    alt="Meta Watches                                                "
-                                                    width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Add to
-                                                        cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="0">Meta Watches </a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>109.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-49 product type-product status-publish has-post-thumbnail product_cat-light product_cat-bed product_cat-sofas product_tag-multi product_tag-lamp  instock shipping-taxable purchasable product-type-simple">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="0">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro302-270x350.jpg') }}"
-                                                    alt="Circle Watches" width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Add to
-                                                        cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="0">Circle Watches</a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>79.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-37 product type-product status-publish has-post-thumbnail product_cat-chair product_cat-bed product_tag-light product_tag-hat product_tag-sock last instock shipping-taxable purchasable product-type-simple">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="0">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro31-1-270x350.jpg') }}"
-                                                    alt="Blue Smartphone" width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Add to
-                                                        cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="0">Blue Smartphone</a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>120.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-35 product type-product status-publish has-post-thumbnail product_cat-chair product_cat-new-arrivals product_cat-lamp product_tag-light product_tag-hat product_tag-sock first instock shipping-taxable purchasable product-type-simple">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="0">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro41-1-270x350.jpg') }}"
-                                                    alt="White Watches" width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Add to
-                                                        cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="0">White Watches</a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>134.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-36 product type-product status-publish has-post-thumbnail product_cat-table product_cat-bed product_tag-light product_tag-table product_tag-sock  instock sale shipping-taxable purchasable product-type-simple">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="-1">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro51012-1-270x350.jpg') }}"
-                                                    alt="Multi Cellphone" width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onsale"><span class="number">-21%</span></span>
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Add to
-                                                        cart</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="-1">Multi Cellphone</a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><del><span class="kobolg-Price-amount amount"><span
-                                                            class="kobolg-Price-currencySymbol">$</span>125.00</span></del>
-                                                <ins><span class="kobolg-Price-amount amount"><span
-                                                            class="kobolg-Price-currencySymbol">$</span>99.00</span></ins></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="product-item recent-product style-01 rows-space-0 post-34 product type-product status-publish has-post-thumbnail product_cat-light product_cat-new-arrivals product_tag-light product_tag-hat product_tag-sock last instock sale featured shipping-taxable product-type-grouped">
-                                    <div class="product-inner tooltip-left">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#" tabindex="-1">
-                                                <img class="img-responsive"
-                                                    src="{{ asset('theme/client/assets/images/apro61-1-270x350.jpg') }}"
-                                                    alt="Black Watches" width="270" height="350">
-                                            </a>
-                                            <div class="flash">
-                                                <span class="onnew"><span class="text">New</span></span>
-                                            </div>
-                                            <div class="group-button">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist">Add to Wishlist</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                                <a href="#" class="button yith-wcqv-button">Quick View</a>
-                                                <div class="add-to-cart">
-                                                    <a href="#"
-                                                        class="button product_type_simple add_to_cart_button">Viewproducts</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="product-info equal-elem">
-                                            <h3 class="product-name product_title">
-                                                <a href="#" tabindex="-1">Black Watches</a>
-                                            </h3>
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span style="width:0%">Rated <strong
-                                                            class="rating">0</strong> out of 5</span></div>
-                                                <span class="review">(0)</span>
-                                            </div>
-                                            <span class="price"><span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>79.00</span> –
-                                                <span class="kobolg-Price-amount amount"><span
-                                                        class="kobolg-Price-currencySymbol">$</span>139.00</span></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
             @include('client.muteki.js')
+
+            <script>
+                $(document).ready(function() {
+                    $('.kobolg-product-gallery__image').on('mousemove', function(e) {
+                        var $img = $(this).find('img'); // Lấy ảnh trong phần tử này
+                        var offset = $(this).offset(); // Vị trí của phần tử chứa ảnh
+                        var width = $(this).width(); // Chiều rộng của phần tử chứa ảnh
+                        var height = $(this).height(); // Chiều cao của phần tử chứa ảnh
+                        var mouseX = e.pageX - offset.left; // Vị trí chuột theo trục X
+                        var mouseY = e.pageY - offset.top; // Vị trí chuột theo trục Y
+
+                        // Tính toán tỷ lệ di chuyển của ảnh theo vị trí chuột
+                        var moveX = (mouseX / width) * 100;
+                        var moveY = (mouseY / height) * 100;
+
+                        // Di chuyển ảnh ngược lại theo hướng chuột di chuyển
+                        $img.css({
+                            transform: 'scale(1.5) translate(-' + moveX + '%, -' + moveY + '%)',
+                            transition: 'none' // Tắt hiệu ứng chuyển động khi di chuyển
+                        });
+                    });
+
+                    // Khi rời chuột ra ngoài ảnh, trả lại ảnh về vị trí ban đầu
+                    $('.kobolg-product-gallery__image').on('mouseleave', function() {
+                        $(this).find('img').css({
+                            transform: 'scale(1)',
+                            transition: 'transform 0.3s ease' // Hiệu ứng chuyển động mượt mà khi rời chuột
+                        });
+                    });
+                });
+            </script>
         @endsection
-        <script>
-            $(document).ready(function() {
-                $('.kobolg-product-gallery__image').on('mousemove', function(e) {
-                    var $img = $(this).find('img'); // Lấy ảnh trong phần tử này
-                    var offset = $(this).offset(); // Vị trí của phần tử chứa ảnh
-                    var width = $(this).width(); // Chiều rộng của phần tử chứa ảnh
-                    var height = $(this).height(); // Chiều cao của phần tử chứa ảnh
-                    var mouseX = e.pageX - offset.left; // Vị trí chuột theo trục X
-                    var mouseY = e.pageY - offset.top; // Vị trí chuột theo trục Y
-
-                    // Tính toán tỷ lệ di chuyển của ảnh theo vị trí chuột
-                    var moveX = (mouseX / width) * 100;
-                    var moveY = (mouseY / height) * 100;
-
-                    // Di chuyển ảnh ngược lại theo hướng chuột di chuyển
-                    $img.css({
-                        transform: 'scale(1.5) translate(-' + moveX + '%, -' + moveY + '%)',
-                        transition: 'none' // Tắt hiệu ứng chuyển động khi di chuyển
-                    });
-                });
-
-                // Khi rời chuột ra ngoài ảnh, trả lại ảnh về vị trí ban đầu
-                $('.kobolg-product-gallery__image').on('mouseleave', function() {
-                    $(this).find('img').css({
-                        transform: 'scale(1)',
-                        transition: 'transform 0.3s ease' // Hiệu ứng chuyển động mượt mà khi rời chuột
-                    });
-                });
-            });
-        </script>

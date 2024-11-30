@@ -246,4 +246,4 @@
             $('#main-image').attr('src', defaultImage); // Trả lại ảnh gốc
         });
     });
-</script>>
+</script>
