@@ -97,11 +97,24 @@
                                         @forelse($order->orderItems as $index => $item)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $item->productVariant->product->name }}</td>
                                                 <td>
-                                                    @if ($item->productVariant->product->image_url && \Storage::exists($item->productVariant->product->image_url))
+                                                    @if ($item->product_variant_id)
+                                                        {{ $item->productVariant->product->name }}
+                                                    @else
+                                                        {{ $item->product->name }}
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if (
+                                                        $item->product_variant_id &&
+                                                            $item->productVariant->product->image_url &&
+                                                            \Storage::exists($item->productVariant->product->image_url))
                                                         <img src="{{ \Storage::url($item->productVariant->product->image_url) }}"
                                                             alt="{{ $item->productVariant->product->name }}"
+                                                            style="max-width: 100px; height: auto;">
+                                                    @elseif ($item->product && $item->product->image_url && \Storage::exists($item->product->image_url))
+                                                        <img src="{{ \Storage::url($item->product->image_url) }}"
+                                                            alt="{{ $item->product->name }}"
                                                             style="max-width: 100px; height: auto;">
                                                     @else
                                                         Không có ảnh
@@ -117,6 +130,7 @@
                                                 </td>
                                             </tr>
                                         @endforelse
+
                                     </tbody>
                                 </table>
                             </div>
