@@ -1,4 +1,4 @@
-<div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
+{{-- <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="">
             <span class="fa fa-bell"></span> <!-- Biểu tượng thông báo -->
@@ -8,10 +8,10 @@
     <div class="widget kobolg widget_shopping_cart">
         <div class="widget_shopping_cart_content">
             <h3 class="minicart-title">
-                Thông Báo 
+                Thông Báo
                 <span class="minicart-number-items">{{ count($notifications ?? []) }}</span>
             </h3>
-        
+
             <div class="card">
                 <div class="card-header">
                     <strong>Tất Cả Thông Báo</strong>
@@ -45,4 +45,4 @@
     </div>
 </div>
 
-
+ --}}

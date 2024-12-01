@@ -4,7 +4,7 @@
 
 @section('content')
 @include('components.breadcrumb-client2')
-<div class="container mt-5">
+<div class="container mt-5" style="margin-bottom: 20px">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-lg p-4 border-0 rounded">
