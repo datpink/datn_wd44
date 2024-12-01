@@ -98,7 +98,7 @@ class PaymentController extends Controller
                 $vnp_TxnRef = time(); // Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này
                 $vnp_OrderInfo = "Thanh toán hóa đơn";
                 $vnp_OrderType = "ZAIA Enterprise";
-                $vnp_Amount  = (int)($request->totalAmount * 100); // Chuyển thành số nguyên (VND)
+                $vnp_Amount = (int) ($request->totalAmount * 100); // Chuyển thành số nguyên (VND)
                 $vnp_Locale = "VN";
                 $vnp_BankCode = "NCB";
                 $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
@@ -181,7 +181,7 @@ class PaymentController extends Controller
         // dd($request->all());
         Log::info('VNPAY Callback Data:', $request->all());
 
-        Log::info('user',  [auth()->user()]);
+        Log::info('user', [auth()->user()]);
         $vnp_HashSecret = "65TDBHY5NLK43Y566EFLVM6ATI1X79YF";
         $inputData = $request->all();
         $vnp_SecureHash = $inputData['vnp_SecureHash'];
@@ -205,6 +205,20 @@ class PaymentController extends Controller
                 $order2->payment_status = "paid";
                 $order->save();
                 $order2->save();
+                // // Giảm số lượng tồn kho
+                // foreach ($order2->orderItems as $item) {
+                //     if ($item->product_variant_id) {
+                //         // Cập nhật tồn kho cho biến thể
+                //         $productVariant = ProductVariant::findOrFail($item->product_variant_id);
+                //         $productVariant->stock -= $item->quantity;
+                //         $productVariant->save();
+                //     } else {
+                //         // Cập nhật tồn kho cho sản phẩm đơn
+                //         $product = Product::findOrFail($item->product_id);
+                //         $product->stock -= $item->quantity;
+                //         $product->save();
+                //     }
+                // }
                 // Giảm số lượng tồn kho
                 foreach ($order2->orderItems as $item) {
                     if ($item->product_variant_id) {
@@ -212,6 +226,11 @@ class PaymentController extends Controller
                         $productVariant = ProductVariant::findOrFail($item->product_variant_id);
                         $productVariant->stock -= $item->quantity;
                         $productVariant->save();
+
+                        // Cập nhật tồn kho cho sản phẩm gốc
+                        $product = $productVariant->product; // Giả sử có mối quan hệ giữa biến thể và sản phẩm
+                        $product->stock -= $item->quantity; // Giảm tồn kho của sản phẩm gốc
+                        $product->save();
                     } else {
                         // Cập nhật tồn kho cho sản phẩm đơn
                         $product = Product::findOrFail($item->product_id);

@@ -19,7 +19,7 @@
                             <form action="{{ route('products.update', $product) }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT')
+                                @method('PATCH')
 
                                 <!-- Tên sản phẩm -->
                                 <div class="form-group">

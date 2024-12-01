@@ -12,8 +12,8 @@
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">Danh Sách Biến Thể</div>
                             <div>
-                                <a href="{{ route('products.variants.create', $product->id) }}" 
-                                   class="btn btn-primary btn-rounded d-flex align-items-center">
+                                <a href="{{ route('products.variants.create', $product->id) }}"
+                                    class="btn btn-primary btn-rounded d-flex align-items-center">
                                     <i class="bi bi-plus-circle me-2"></i> Thêm Mới
                                 </a>
                                 <a href="{{ route('products.index') }}"
@@ -41,27 +41,41 @@
                                             <td colspan="6" class="text-center">Chưa có biến thể nào.</td>
                                         </tr>
                                     @else
-                                        @foreach($variants as $variant)
+                                        @foreach ($variants as $variant)
                                             <tr>
                                                 <td>{{ $variant->variant_name }}</td>
                                                 <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
                                                 <td>{{ $variant->sku }}</td>
                                                 <td>{{ $variant->stock }}</td>
                                                 <td>
-                                                    <span class="badge rounded-pill {{ $variant->status == 'active' ? 'bg-success' : 'bg-secondary' }}">
-                                                        <i class="bi {{ $variant->status == 'active' ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
+                                                    <span
+                                                        class="badge rounded-pill {{ $variant->status == 'active' ? 'bg-success' : 'bg-secondary' }}">
+                                                        <i
+                                                            class="bi {{ $variant->status == 'active' ? 'bi-check-circle' : 'bi-x-circle' }}"></i>
                                                         {{ ucfirst($variant->status) }}
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <form action="{{ route('variants.updateStatus', $variant->id) }}" method="POST" style="display:inline-block;">
+                                                    <!-- Chỉnh sửa biến thể -->
+                                                    <a href="{{ route('variants.edit', ['product' => $variant->product_id, 'variant' => $variant->id]) }}"
+                                                        class="editRow" title="Sửa" style="margin-right: 10px;">
+                                                        <i class="bi bi-pencil-square text-warning"
+                                                            style="font-size: 1.8em;"></i>
+                                                    </a>
+
+                                                    <!-- Cập nhật trạng thái -->
+                                                    <form action="{{ route('variants.updateStatus', $variant->id) }}"
+                                                        method="POST" style="display:inline-block;">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button type="submit" class="btn rounded-pill btn-sm" style="background: none; border: none; padding: 0;">
-                                                            <i class="bi {{ $variant->status == 'active' ? 'bi-x-circle text-warning' : 'bi-check-circle text-success' }}" style="font-size: 1.8em;"></i>
+                                                        <button type="submit" class="btn rounded-pill btn-sm"
+                                                            style="background: none; border: none; padding: 0;">
+                                                            <i class="bi {{ $variant->status == 'active' ? 'bi-x-circle text-warning' : 'bi-check-circle text-success' }}"
+                                                                style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     @endif
