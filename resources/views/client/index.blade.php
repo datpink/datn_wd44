@@ -281,113 +281,85 @@
                             {"breakpoint":1500,"settings":{"slidesToShow":4,"slidesMargin":"30"}}
                         ]'>
 
-                    @foreach ($topSellingProducts as $product)
-                    <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
-                        <div class="product-inner tooltip-top">
-                            <div class="product-thumb">
-                                <div class="img" style="width: 200px; height: auto; margin-top: 10px">
-                                    <a class="thumb-link"
-                                        href="{{ route('client.products.product-detail', $product->slug) }}"
-                                        tabindex="0">
-                                        @if ($product->image_url && \Storage::exists($product->image_url))
-                                        <img src="{{ \Storage::url($product->image_url) }}"
-                                            alt="{{ $product->name }}">
-                                        @endif
-                                    </a>
-                                </div>
-                                <div class="flash">
-                                    @if ($product->condition === 'new')
-                                    <span class="onsale"><span class="number">-18%</span></span>
-                                    <span class="onnew"><span class="text">New</span></span>
-                                    @endif
-                                </div>
-                                <a href="{{ route('client.products.product-detail', $product->slug) }}"
-                                    class="button yith-wcqv-button">Quick View</a>
-                            </div>
-                            <div class="product-info">
-                                <div class="rating-wapper nostar">
-                                    <div class="star-rating">
-                                        <span style="width:0%">Rated <strong class="rating">0</strong> out of
-                                            5</span>
+                        {{-- @foreach ($topSellingProducts as $product)
+                            <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
+                                <div class="product-inner tooltip-top">
+                                    <div class="product-thumb">
+                                        <div class="img" style="width: 200px; height: auto; margin-top: 10px">
+                                            <a class="thumb-link"
+                                                href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                tabindex="0">
+                                                @if ($product->image_url && \Storage::exists($product->image_url))
+                                                    <img src="{{ \Storage::url($product->image_url) }}"
+                                                        alt="{{ $product->name }}">
+                                                @endif
+                                            </a>
+                                        </div>
+                                        <div class="flash">
+                                            @if ($product->condition === 'new')
+                                                <span class="onsale"><span class="number">-18%</span></span>
+                                                <span class="onnew"><span class="text">New</span></span>
+                                            @endif
+                                        </div>
+                                        <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                            class="button yith-wcqv-button">Quick View</a>
                                     </div>
-                                    <span class="review">(0)</span>
-                                </div>
-                                <h3 class="product-name product_title">
-                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
-                                        tabindex="0">{{ $product->name }}</a>
-                                </h3>
-                                @php
-                                $minVariantPrice = null;
-                                $maxVariantPrice = null;
-
-                                // Kiểm tra giá các biến thể
-                                foreach ($product->variants as $variant) {
-                                // Tính giá của biến thể (chưa tính giảm giá)
-                                $variantPrice = $variant->price;
-
-                                // Tính giá của biến thể (cộng với giá giảm nếu có)
-                                $variantDiscountPrice = $variant->discount_price ?? $variant->price;
-
-                                // Cập nhật giá min và max từ các biến thể
-                                if ($minVariantPrice === null || $variantDiscountPrice < $minVariantPrice) {
-                                    $minVariantPrice=$variantDiscountPrice;
-                                    }
-                                    if ($maxVariantPrice===null || $variantPrice> $maxVariantPrice) {
-                                    $maxVariantPrice = $variantPrice;
-                                    }
-                                    }
-                                    @endphp
-
-                                    <!-- Kiểm tra discount_price -->
-                                    <span class="price">
-                                        @if ($product->discount_price && $product->discount_price > 0)
-                                        <!-- Giá gốc cộng với giá biến thể cao nhất, bị gạch ngang -->
-                                        <del>
-                                            <span class="kobolg-Price-amount amount">
-                                                {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                    <div class="product-info">
+                                        <div class="rating-wapper nostar">
+                                            <div class="star-rating">
+                                                <span style="width:0%">Rated <strong class="rating">0</strong> out of
+                                                    5</span>
+                                            </div>
+                                            <span class="review">(0)</span>
+                                        </div>
+                                        <h3 class="product-name product_title">
+                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                tabindex="0">{{ $product->name }}</a>
+                                        </h3>
+                                        <span class="price">
+                                            <span class="kobolg-Price-amount amount text-danger">
+                                                <del>
+                                                    {{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}<span
+                                                        class="kobolg-Price-currencySymbol">₫</span>
+                                                </del>
                                             </span>
-                                        </del>
-                                        
-                                        <!-- Giá giảm cộng với giá biến thể thấp nhất, nhấn mạnh -->
-                                        <span class="kobolg-Price-amount amount text-danger font-weight-bold">
-                                            {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
+                                            @if ($product->discount_price)
+                                                <span class="kobolg-Price-amount amount old-price">
+                                                    {{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}<span
+                                                        class="kobolg-Price-currencySymbol">₫</span>
+                                                </span>
+                                            @endif
                                         </span>
-                                        @else
-                                        <!-- Chỉ hiển thị giá gốc cộng với giá biến thể cao nhất -->
-                                        <span class="kobolg-Price-amount amount">
-                                            {{ number_format($product->price + $minVariantPrice, 0, ',', '.') }}₫
-                                        </span>
-                                        @endif
-                                    </span>
-
-                            </div>
-                            <div class="group-button clearfix">
-                                <div class="yith-wcwl-add-to-wishlist">
-                                    <div class="yith-wcwl-add-button show">
-                                        <a href="#" class="add_to_wishlist"
-                                            data-product-id="{{ $product->id }}">
-                                            {{-- {{ auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích' }} --}}
-                                            {{ auth()->check() &&
+                                    </div>
+                                    <div class="group-button clearfix">
+                                        <div class="yith-wcwl-add-to-wishlist">
+                                            <div class="yith-wcwl-add-button show">
+                                                <a href="#" class="add_to_wishlist"
+                                                    data-product-id="{{ $product->id }}">
+                                                    // auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích':
+                                                    'Thêm vào yêu thích'
+                                                    {{ auth()->check() &&
                                                     auth()->user()->favorites->contains($product->id)
                                                         ? 'Bỏ yêu thích'
                                                         : 'Thêm vào yêu thích' }}
                                         </a>
                                     </div>
 
-                                </div>
-                                <div class="add-to-cart">
-                                    <a href="#" class="button product_type_grouped">View products</a>
-                                </div>
-                                <div class="kobolg product compare-button">
-                                    <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <a href="#" class="button product_type_grouped">View products</a>
+                                        </div>
+                                        <div class="kobolg product compare-button">
+                                            <a href="#" class="compare button">Compare</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endforeach --}}
+
                     </div>
-                    @endforeach
                 </div>
             </div>
-        </div>
 
     </div>
     <div class="section-038">

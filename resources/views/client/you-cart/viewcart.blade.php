@@ -41,13 +41,15 @@
                                             <div class="media align-items-center">
                                                 <div class="media-body">
                                                     <a href="#" class="d-block text-dark">{{ $item['name'] }}</a>
-                                                    <ul class="list-unstyled mb-0">
-                                                        @foreach ($item['options']['variant'] as $variant)
-                                                            <li>
-                                                                <small>{{ $variant->name }}</small>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
+                                                    @if (!empty($item['options']['variant']) && is_array($item['options']['variant']))
+                                                        <ul class="list-unstyled mb-0">
+                                                            @foreach ($item['options']['variant'] as $variant)
+                                                                <li>
+                                                                    <small>{{ $variant->name }}</small>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>
@@ -75,6 +77,7 @@
                                 </tr>
                             @endif
                         </tbody>
+
                     </table>
                 </div>
                 <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
@@ -107,18 +110,25 @@
         const selectAllCheckbox = document.getElementById('select-all');
         const productCheckboxes = document.querySelectorAll('.product-checkbox');
         const totalPriceElement = document.getElementById('total-price');
-        const quantityInputs = document.querySelectorAll('.quantity');  // Lấy tất cả các input số lượng
+        const quantityInputs = document.querySelectorAll('.quantity'); // Lấy tất cả các input số lượng
+
+        // Hàm làm tròn giá thành số nguyên
+        function roundPrice(price) {
+            return Math.round(price);
+        }
 
         // Hàm cập nhật tổng giá sản phẩm
         function updateTotal(input) {
-            const row = input.closest('tr');  // Lấy dòng sản phẩm
-            const price = parseFloat(row.querySelector('.text-right').dataset.price);  // Lấy giá sản phẩm
-            const quantity = parseInt(input.value);  // Lấy số lượng mới
-            const totalCell = row.querySelector('.total');  // Lấy cột tổng giá
-            const newTotal = price * quantity;  // Tính lại tổng giá
+            const row = input.closest('tr'); // Lấy dòng sản phẩm
+            const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
+            .price); // Lấy giá sản phẩm
+            const roundedPrice = roundPrice(price); // Làm tròn giá
+            const quantity = parseInt(input.value); // Lấy số lượng mới
+            const totalCell = row.querySelector('.total'); // Lấy cột tổng giá
+            const newTotal = roundedPrice * quantity; // Tính lại tổng giá
 
-            totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫';  // Cập nhật lại cột tổng
-            updateCartTotal();  // Cập nhật lại tổng toàn bộ giỏ hàng
+            totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫'; // Cập nhật lại cột tổng
+            updateCartTotal(); // Cập nhật lại tổng toàn bộ giỏ hàng
         }
 
         // Hàm cập nhật tổng giá của toàn bộ giỏ hàng
@@ -127,7 +137,8 @@
             productCheckboxes.forEach(checkbox => {
                 if (checkbox.checked) {
                     const row = checkbox.closest('tr');
-                    const totalCell = row.querySelector('.total').textContent.replace('₫', '').replace(/\./g, '');
+                    const totalCell = row.querySelector('.total').textContent.replace('₫', '').replace(
+                        /\./g, '');
                     total += parseFloat(totalCell);
                 }
             });
@@ -152,9 +163,9 @@
         quantityInputs.forEach(input => {
             input.addEventListener('change', function() {
                 if (input.value < 1) {
-                    input.value = 1;  // Đảm bảo không có số lượng âm hoặc bằng 0
+                    input.value = 1; // Đảm bảo không có số lượng âm hoặc bằng 0
                 }
-                updateTotal(input);  // Cập nhật lại tổng của sản phẩm này
+                updateTotal(input); // Cập nhật lại tổng của sản phẩm này
             });
         });
 
@@ -166,8 +177,10 @@
     function submitCheckout() {
         const selectedProducts = [...document.querySelectorAll('.product-checkbox:checked')].map(checkbox => {
             const row = checkbox.closest('tr');
+            const quantity = parseInt(row.querySelector('.quantity').value); // Lấy số lượng từ input
             return {
-                cart_id: checkbox.value
+                cart_id: checkbox.value,
+                quantity: quantity // Thêm số lượng vào dữ liệu gửi đi
             };
         });
 

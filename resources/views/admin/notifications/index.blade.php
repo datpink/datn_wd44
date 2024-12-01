@@ -29,9 +29,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($notifications as $index => $notification)
+                                @foreach ($notifications as $notification)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $notification->id }}</td>
                                         <td>{{ $notification->title }}</td>
                                         <td>{{ \Str::limit($notification->description, 50) }}</td>
                                         <td>
@@ -69,9 +69,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination justify-content-center mt-3">
+                    {{-- <div class="pagination justify-content-center mt-3">
                         {{ $notifications->links() }}
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

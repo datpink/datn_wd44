@@ -67,14 +67,9 @@
                                         value="{{ old('price') }}">
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="discount_price">Giá Khuyến Mãi</label>
-                                    <input type="text" name="discount_price" id="discount_price" class="form-control"
-                                        value="{{ old('discount_price', $product->discount_price ?? '') }}">
-                                </div>
 
                                 <div class="mb-3">
-                                    <label for="stock" class="form-label">Tồn Kho</label>
+                                    <label for="stock" class="form-label">Số Lượng</label>
                                     <input type="number" class="form-control" id="stock" name="stock"
                                         value="{{ old('stock') }}">
                                 </div>

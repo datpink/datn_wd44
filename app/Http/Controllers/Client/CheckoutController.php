@@ -36,42 +36,57 @@ class CheckoutController extends Controller
 
         // Kiểm tra và xử lý các sản phẩm đã chọn
         foreach ($selectedProducts as $selectedProduct) {
-            $cartId = $selectedProduct["cart_id"] ?? null; // Lấy cart_id từ sản phẩm
-            // Kiểm tra nếu cart_id không hợp lệ (null là không hợp lệ, nhưng 0 thì hợp lệ)
+            $cartId = $selectedProduct["cart_id"] ?? null;
             if (is_null($cartId)) {
                 return redirect()->route('cart.view')->with('error', 'Thông tin sản phẩm không hợp lệ.');
             }
 
-            // Tạo key session dựa trên cart_id và user_id
-            $cartSessionKey = "cart_{$userId}.$cartId"; // Key session
+            $cartSessionKey = "cart_{$userId}.$cartId";
 
-            // Kiểm tra xem có tồn tại sản phẩm trong session hay không
             if (!session()->has($cartSessionKey)) {
                 return redirect()->route('cart.view')->with('error', "Sản phẩm với ID giỏ hàng $cartId không tồn tại.");
             }
 
             // Lấy sản phẩm từ session
-            $product = session($cartSessionKey); // Lấy sản phẩm từ session
+            $product = session($cartSessionKey);
 
-            // Kiểm tra nếu sản phẩm có biến thể
-            $variant = $selectedProduct['options']['variant_id'] ?? null; // Lấy biến thể của sản phẩm
-            if ($variant) {
-                // Nếu có biến thể, gắn thông tin biến thể vào sản phẩm
-                $product['variant_id'] = $variant;
-            }
+            // Cập nhật số lượng từ request
+            $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
+            $product['quantity'] = $newQuantity;
+            $product['total_price'] = $product['price'] * $newQuantity;
 
-            // Thêm sản phẩm vào danh sách
+            // Cập nhật lại session
+            session([$cartSessionKey => $product]);
+
             $products[] = $product;
-
-            // Tính tổng tiền
-            $totalAmount += $product['price'] * $product['quantity'];
+            $totalAmount += $product['price'] * $newQuantity;
         }
 
-        Log::info('Products data:', $products);
+        $user = Auth::user(); // Lấy thông tin người dùng đã đăng nhập
+
+        // Tách địa chỉ
+        $province = $district = $ward = null;
+        if ($user->address) {
+            // Tách chuỗi địa chỉ thành các phần (Tỉnh - Huyện - Xã)
+            $addressParts = explode(' - ', $user->address);
+
+            // Đảm bảo có đủ 3 phần: tỉnh - huyện - xã
+            if (count($addressParts) >= 3) {
+                $provinceName = trim($addressParts[0]); // Loại bỏ khoảng trắng thừa
+                $districtName = trim($addressParts[1]);
+                $wardName = trim($addressParts[2]);
+
+                // Tìm tỉnh, huyện, xã/phường từ cơ sở dữ liệu
+                $province = Province::where('name', 'like', "%$provinceName%")->first();
+                $district = District::where('name', 'like', "%$districtName%")->first();
+                $ward = Ward::where('name', 'like', "%$wardName%")->first();
+            }
+        }
+
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
-
+        // dd($products);
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',
@@ -79,6 +94,9 @@ class CheckoutController extends Controller
             'totalAmount',
             'user',
             'provinces',
+            'province',
+            'district',
+            'ward'
         ));
     }
 

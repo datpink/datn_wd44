@@ -58,11 +58,11 @@
         <h1>Giao dịch thành công!</h1>
         <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.</p>
         <ul>
-            <li><strong>Số tiền:</strong> {{ number_format($data['vnp_Amount'] / 100) }} VND</li>
-            <li><strong>Mã giao dịch:</strong> {{ $data['vnp_TransactionNo'] }}</li>
-            <li><strong>Ngân hàng:</strong> {{ $data['vnp_BankCode'] }}</li>
+            <li><strong>Số tiền:</strong> {{ number_format($order['amount'] / 100) }} VND</li>
+            <li><strong>Mã giao dịch:</strong> {{ $order['txn_ref'] }}</li>
+            <li><strong>Ngân hàng:</strong> NCB</li>
         </ul>
-        <a href="/">Quay về trang chủ</a>
+        <a href="{{route('client.index')}}">Quay về trang chủ</a>
     </div>
 </body>
 </html>

@@ -21,6 +21,27 @@
         .ui-slider-horizontal .ui-slider-handle {
             top: 0px !important;
         }
+
+        .pagination-button {
+            background-color: #fff;
+            color: #000;
+            border: 1px solid #ccc;
+
+        }
+
+        .pagination-button.active {
+            background-color: #E52E06 !important;
+            color: #fff;
+        }
+
+        .pagination-button:hover {
+            background-color: #E52E06 !important;
+            color: #fff;
+        }
+
+        .widget_price_filter .button {
+            display: none;
+        }
     </style>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -70,99 +91,10 @@
 
                     <div class="auto-clear equal-container better-height kobolg-products">
                         <ul class="row products columns-3" id="product-list">
-                            @foreach ($products as $product)
-                                <li class="product-item wow fadeInUp product-item list col-md-12 post-{{ $product->id }} product type-product status-publish has-post-thumbnail"
-                                    id="item-product" data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
-                                    <div class="product-inner images">
-                                        <div class="product-thumb">
-                                            <a class="thumb-link" href="#">
-                                                <img src="{{ $product->image_url }}" alt="">
 
-
-                                            </a>
-                                            <div class="flash">
-                                                @if ($product->condition === 'new')
-                                                    <span class="onsale"><span class="number">-18%</span></span>
-                                                    <span class="onnew"><span class="text">New</span></span>
-                                                @endif
-                                            </div>
-                                            <form class="variations_form cart" method="post" enctype="multipart/form-data">
-                                                <table class="variations">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class="value">
-                                                                <select title="box_style" class="attribute-select"
-                                                                    name="attribute_pa_color">
-                                                                    <option value="">Choose an option</option>
-                                                                    {{-- @foreach ($product->colors as $color)
-                                                                        <option value="{{ $color }}">
-                                                                            {{ ucfirst($color) }}</option>
-                                                                    @endforeach --}}
-                                                                </select>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </form>
-                                            <a href="{{ route('client.products.product-detail', $product->slug) }}"
-                                                class="button yith-wcqv-button" data-product_id="{{ $product->id }}">Xem
-                                                nhanh</a>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating"><span
-                                                        style="width:{{ $product->rating * 20 }}%">Rated <strong
-                                                            class="rating">{{ $product->rating }}</strong> out of 5</span>
-                                                </div>
-                                                <span class="review">({{ $product->reviews_count }})</span>
-                                            </div>
-                                            <h3 class="product-name product_title">
-                                                <a
-                                                    href="{{ route('client.products.product-detail', $product->slug) }}">{{ $product->name }}</a>
-                                            </h3>
-                                            <span class="price">
-                                                <span class="kobolg-Price-amount amount text-danger">
-                                                    <del>
-                                                        {{ number_format($product->price, $product->price == floor($product->price) ? 0 : 2) }}<span
-                                                            class="kobolg-Price-currencySymbol">₫</span>
-                                                    </del>
-                                                </span>
-                                                @if ($product->discount_price)
-                                                    <span class="kobolg-Price-amount amount old-price">
-                                                        {{ number_format($product->discount_price, $product->discount_price == floor($product->discount_price) ? 0 : 2) }}<span
-                                                            class="kobolg-Price-currencySymbol">₫</span>
-                                                    </span>
-                                                @endif
-                                            </span>
-                                            <div class="kobolg-product-details__short-description">
-                                                <p>{{ $product->tomtat }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="group-button">
-                                            <div class="group-button-inner">
-                                                <div class="add-to-cart">
-                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
-                                                        class="button product_type_variable add_to_cart_button">Thêm vào giỏ
-                                                        hàng</a>
-                                                </div>
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="javascript:void(0)" data-product-id={{ $product->id }}
-                                                            class="add_to_wishlist">Thêm vào yêu
-                                                            thích</a>
-                                                    </div>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">So sánh</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
                         </ul>
                     </div>
-                    @if ($products->count() > 0 && $products->lastPage() > 1)
+                    {{-- @if ($products->count() > 0 && $products->lastPage() > 1)
                         <nav class="navigation pagination mt-3">
                             <div class="nav-links">
                                 @if ($products->onFirstPage())
@@ -186,7 +118,10 @@
                                 @endif
                             </div>
                         </nav>
-                    @endif
+                    @endif --}}
+                    <div id="paginationContainer" class="pagination  mt-3">
+                        <!-- Phân trang sẽ được thêm tại đây -->
+                    </div>
                 </div>
 
                 {{-- @include('client.layouts.fillter') --}}
@@ -231,12 +166,20 @@
                         <div id="kobolg_kobolg_layered_nav-4" class="widget kobolg_widget_layered_nav widget_layered_nav">
                             <h2 class="widgettitle">Lọc theo màu<span class="arrow"></span></h2>
                             <div class="color-group">
+                                @php
+                                    $countVariants = count($variant_values);
+                                    // dd($countVariants);
+                                    // dd($variant_values);
+                                @endphp
                                 @foreach ($variant_values as $item)
+                                    @php
+                                        // dd();
+                                    @endphp
                                     <a class="term-color" href="" id="variant_values" name="variant_values"
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">(*)</span> </a>
+                                        <span class="count">{{$item->productVariants->count()}}(*)</span> </a>
                                 @endforeach
 
                             </div>
@@ -260,7 +203,7 @@
 
                         {{-- <script>
                             document.addEventListener('DOMContentLoaded', function() {
-                                const addToWishlist = document.querySelectorAll('.add_to_wishlist');
+                                const addToWishlist = document.querySelectorAll('.add_to_wishlist_customer');
 
                                 console.log(addToWishlist);
 
@@ -358,6 +301,7 @@
                                         activeFilters.price_min = ui.values[0];
                                         activeFilters.price_max = ui.values[1];
                                         fetchFilteredProducts();
+
                                     }
                                 });
 
@@ -420,14 +364,14 @@
                                             activeFilters.storage = storageId;
                                             this.classList.add('selected'); // Thêm dấu tích
                                         }
-                                        console.log("Storage clicked:", storageId); // Kiểm tra xem sự kiện có được gọi
+                                        // console.log("Storage clicked:", storageId); // Kiểm tra xem sự kiện có được gọi
 
                                         fetchFilteredProducts();
                                     });
                                 });
 
 
-                                function fetchFilteredProducts() {
+                                window.fetchFilteredProducts = function(page = 1) {
                                     // console.log("Fetching filtered products with filters:", activeFilters);
                                     axios.post('/api/shop/products', {
                                             // parent_id: parent_id ? parent_id.value : null,
@@ -436,10 +380,13 @@
                                             attribute_storage_value_id: activeFilters.storage,
                                             price_min: activeFilters.price_min, // Gửi giá min
                                             price_max: activeFilters.price_max, // Gửi giá max
-                                            orderby: activeFilters.orderby
+                                            orderby: activeFilters.orderby,
+                                            page: page // Truyền tham số page vào API
                                         })
                                         .then((res) => {
                                             const productList = document.getElementById('product-list');
+                                            const paginationContainer = document.getElementById(
+                                                'paginationContainer'); // Container chứa các nút phân trang
                                             // console.log(productList);
 
 
@@ -447,11 +394,23 @@
 
                                             if (res.data.data.data.length > 0) {
                                                 let productsHTML = '';
+                                                const products =
+                                                    @json($products); // Truyền toàn bộ dữ liệu sản phẩm vào JavaScript
                                                 res.data.data.data.forEach(product => {
-                                                    console.log(product);
-                                                    
+                                                    // console.log(product);
+
                                                     const isFavorited = Array.isArray(product.favorited_by) && product
-                                                        .favorited_by.length > 0 ? 'red' : 'inherit';
+                                                        .favorited_by.length > 0;
+
+                                                    const favoriteIcon = isFavorited ?
+                                                        `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/></svg>` :
+                                                        `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343"><path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/></svg>`;
+
+
+                                                    let routeDetail =
+                                                        `{{ route('client.products.product-detail', ':slug') }}`
+                                                        .replace(
+                                                            ':slug', product.slug);
 
                                                     productsHTML += `
                                                 <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
@@ -459,7 +418,7 @@
                                                                 <div class="product-inner images">
                                                                     <div class="product-thumb">
                                                                         <a class="thumb-link" href="#">
-                                                                            ${product.image_url ? `<img class="img-responsive" src="http://127.0.0.1:8000/storage/${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
+                                                                            ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                         </a>
                                                                         <div class="flash">
                                                                             ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
@@ -491,11 +450,13 @@
                                                                     <div class="group-button">
                                                                         <div class="group-button-inner">
                                                                             <div class="add-to-cart">
-                                                                                <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button product_type_variable add_to_cart_button">Select options</a>
+                                                                                <a href="${routeDetail}" class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng</a>
                                                                             </div>
                                                                             <div class="yith-wcwl-add-to-wishlist">
                                                                                 <div class="yith-wcwl-add-button show">
-                                                                                    <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist" style="color:${isFavorited}">Thêm vào yêu thích</a>
+                                                                                    <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist_customer" style="color:${isFavorited ? 'red' : 'inherit'}">
+                                                                                                ${favoriteIcon} ${isFavorited ? 'Đã yêu thích' : 'Thêm vào yêu thích'}
+                                                                                            </a>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="kobolg product compare-button">
@@ -511,6 +472,39 @@
                                             } else {
                                                 productList.innerHTML = '<p>Không có sản phẩm nào phù hợp.</p>';
                                             }
+
+
+                                            // Xử lý phân trang
+                                            const pagination = res.data.pagination;
+                                            paginationContainer.innerHTML = ''; // Xóa phân trang cũ
+
+                                            if (pagination) {
+                                                // Nút trang trước
+                                                if (pagination.prev_page_url) {
+                                                    paginationContainer.innerHTML += `
+                                                        <button onclick="fetchFilteredProducts(${pagination.current_page - 1})" 
+                                                                class="pagination-button">«</button>`;
+                                                }
+
+                                                // Các số trang
+                                                for (let page = 1; page <= pagination.last_page; page++) {
+                                                    paginationContainer.innerHTML += `
+                                                        <button onclick="fetchFilteredProducts(${page})" 
+                                                                class="pagination-button ${page === pagination.current_page ? 'active' : ''}">
+                                                            ${page}
+                                                        </button>`;
+                                                }
+
+                                                // Nút trang sau
+                                                if (pagination.next_page_url) {
+                                                    paginationContainer.innerHTML += `
+                                                        <button onclick="fetchFilteredProducts(${pagination.current_page + 1})" 
+                                                                class="pagination-button">»</button>`;
+                                                }
+                                            }
+
+
+
                                         })
                                         .catch((err) => {
                                             console.log(err);
@@ -519,9 +513,10 @@
 
 
                                 document.body.addEventListener('click', function(e) {
-                                    if (e.target.classList.contains('add_to_wishlist')) {
+                                    if (e.target.classList.contains('add_to_wishlist_customer')) {
                                         const productId = e.target.dataset.productId;
-                                        console.log(productId);
+
+                                        // console.log(productId);
 
                                         axios.post('/shop/add-product-favorite', {
                                                 product_id: productId,
@@ -545,8 +540,15 @@
                                                 if (e.target.style.color === 'red') {
                                                     e.target.style.color =
                                                         'inherit'; // Nếu đã yêu thích, chuyển lại màu mặc định
+                                                    e.target.innerHTML = `  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#434343">
+                                                        <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+                                                    </svg> Thêm vào yêu thích`;
                                                 } else {
-                                                    e.target.style.color = 'red'; // Nếu chưa yêu thích, đổi sang màu đỏ
+                                                    e.target.style.color = 'red';
+
+                                                    e.target.innerHTML =
+                                                        `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#EA3323"><path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Z"/></svg>Đã yêu thích`;
+
                                                 }
 
                                             })

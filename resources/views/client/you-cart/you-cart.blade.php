@@ -108,7 +108,7 @@
             </p>
             <p class="kobolg-mini-cart__buttons buttons">
                 <a href="{{ route('cart.view') }}" class="button kobolg-forward">Xem Giỏ hàng</a>
-                <a href="checkout.html" class="button checkout kobolg-forward">Thanh toán</a>
+                <a href="{{ route('showCheckout') }}" class="button checkout kobolg-forward">Thanh toán</a>
             </p>
         </div>
     </div>

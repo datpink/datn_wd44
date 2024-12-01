@@ -84,9 +84,7 @@ Route::prefix('shop')->group(function () {
 
     // Route hiển thị danh sách thông báo
     Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
-
-    // Route đánh dấu thông báo đã đọc
-    Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::get('/notifications/{id}/read', [ClientNotificationController::class, 'markAsReadAndRedirect'])->name('notifications.read');
     // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
@@ -175,6 +173,7 @@ Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name
 
 
 // thanh toán
+Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
 
@@ -183,7 +182,7 @@ Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistri
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
 Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
 Route::post('/vnpay', [PaymentController::class, 'vnpay'])->name('vnpay');
-Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
+Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpayReturn')->middleware('web');
 Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
 
 
@@ -222,11 +221,11 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     //route trang profile
     Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
     // Danh sách thông báo
-    Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+    Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notifications.index');
 
     // Thêm thông báo
-    Route::get('/notifications/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
-    Route::post('/notifications', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+    Route::get('/notification/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notification', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
@@ -328,6 +327,12 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::get('admin/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('products.variants.create');
     Route::post('admin/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
     Route::patch('admin/variants/{variant}/status', [ProductVariantController::class, 'updateStatus'])->name('variants.updateStatus');
+    // Route cho trang chỉnh sửa biến thể
+    Route::get('admin/products/{product}/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('variants.edit');
+
+    // Route cho việc cập nhật biến thể
+    Route::put('admin/products/{product}/variants/{variant}', [ProductVariantController::class, 'update'])->name('variants.update');
+
 
     Route::resource('permissions', PermissionController::class);
 
