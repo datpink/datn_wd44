@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;;
+
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -22,7 +24,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\ClientController;
-use App\Http\Controllers\Client\DiscountController;
+use App\Http\Controllers\Client\DiscountController as ClientDiscountController;;
+
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
 use App\Http\Controllers\Client\PostController;
@@ -79,11 +82,11 @@ Route::prefix('shop')->group(function () {
     Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
-   // Route hiển thị danh sách thông báo
-   Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
+    // Route hiển thị danh sách thông báo
+    Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
 
-   // Route đánh dấu thông báo đã đọc
-   Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    // Route đánh dấu thông báo đã đọc
+    Route::post('/notifications/{id}/mark-as-read', [ClientNotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
@@ -153,12 +156,11 @@ Route::prefix('shop')->group(function () {
 
 
     //route cho trang nhập mã giảm giá
-    Route::post('/add-promotion', [DiscountController::class, 'addPromotion'])->name('promotion.add');
-    Route::get('/promotions', [DiscountController::class, 'showPromotions'])->name('promotion.index');
+    Route::post('/add-promotion', [ClientDiscountController::class, 'addPromotion'])->name('promotion.add');
+    Route::get('/promotions', [ClientDiscountController::class, 'showPromotions'])->name('promotion.index');
 
-    Route::get('/discount-codes', [DiscountController::class, 'showDiscountCodes'])->name('discountCodes');
-    Route::post('/apply-discount', [DiscountController::class, 'applyDiscount'])->name('applyDiscount');
-
+    Route::get('/discount-codes', [ClientDiscountController::class, 'showDiscountCodes'])->name('discountCodes');
+    Route::post('/apply-discount', [ClientDiscountController::class, 'applyDiscount'])->name('applyDiscount');
 });
 
 Route::get('/about', [AboutController::class, 'index'])->name('client.about.index');
@@ -180,7 +182,7 @@ Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
 Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
-Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
+Route::post('/vnpay', [PaymentController::class, 'vnpay'])->name('vnpay');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn']);
 Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
 
@@ -193,6 +195,16 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 //
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    // giảm giá catalogues 
+    Route::get('admin/catalogues', [AdminDiscountController::class, 'showDiscountToCatalogue'])->name('admin.catalogueList');
+    Route::post('/catalogues/{catalogueId}/apply-discount', [AdminDiscountController::class, 'applyDiscount'])->name('admin.catalogues.applyDiscount');
+    Route::post('/catalogues/{catalogueId}/remove-discount', [AdminDiscountController::class, 'removeDiscount'])
+    ->name('admin.catalogues.removeDiscount');
+    // Route hiển thị danh sách giảm giá
+    Route::resource('discounts', AdminDiscountController::class);
+
+
+
 
     // Promotions
     Route::resource('promotions', PromotionController::class);
