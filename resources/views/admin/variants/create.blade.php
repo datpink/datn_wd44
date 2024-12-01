@@ -64,7 +64,7 @@
             <button type="submit" class="btn btn-success rounded-pill">Thêm Biến Thể</button>
             <div>
                 <button type="button" class="btn btn-secondary rounded-pill me-2" id="generateSkuBtn">Tạo SKU</button>
-                <a href="{{ route('products.index') }}" class="btn btn-secondary rounded-pill">Quay lại</a>
+                <a href="{{ route('products.variants.index', $product->id) }}" class="btn btn-secondary rounded-pill">Quay lại</a>
             </div>
         </div>
     </form>
