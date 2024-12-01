@@ -278,7 +278,7 @@
                                     <p>{{ $product->tomtat }}</p>
                                 </div>
 
-                                <form class="variations_form cart" id="add-to-cart-form">
+                                <form class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
                                     <input type="hidden" id="product-image"
                                         data-default-src="{{ \Storage::url($product->image_url) }}">
                                     <input type="hidden" name="variant_id" id="selected-variant-id">

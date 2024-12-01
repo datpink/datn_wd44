@@ -61,18 +61,6 @@ class PaymentController extends Controller
                         'price' => $product['price'],
                         'total' => $product['price'] * $product['quantity'],
                     ]);
-                    // Cập nhật số lượng tồn kho của sản phẩm hoặc biến thể
-                    if ($product['variant_id']) {
-                        // Cập nhật tồn kho cho biến thể
-                        $productVariant = ProductVariant::findOrFail($product['variant_id']);
-                        $productVariant->stock -= $product['quantity'];
-                        $productVariant->save();
-                    } else {
-                        // Cập nhật tồn kho cho sản phẩm đơn
-                        $productModel = Product::findOrFail($product['id']);
-                        $productModel->stock -= $product['quantity'];
-                        $productModel->save();
-                    }
                 }
             } else {
                 throw new \Exception("Danh sách sản phẩm không hợp lệ hoặc không tồn tại.");
@@ -83,6 +71,17 @@ class PaymentController extends Controller
                 // Phương thức thanh toán khi nhận hàng (COD)
                 $order->payment_status = 'pending';
                 $order->save();
+                foreach ($request->products as $product) {
+                    if ($product['variant_id']) {
+                        $productVariant = ProductVariant::findOrFail($product['variant_id']);
+                        $productVariant->stock -= $product['quantity'];
+                        $productVariant->save();
+                    } else {
+                        $productModel = Product::findOrFail($product['id']);
+                        $productModel->stock -= $product['quantity'];
+                        $productModel->save();
+                    }
+                }
                 DB::commit();
                 return redirect()->route('client.index')
                     ->with('success', 'Đặt hàng thành công. Thanh toán khi nhận hàng.');

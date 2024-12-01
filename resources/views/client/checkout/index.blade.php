@@ -96,46 +96,58 @@
                                                         </span>
                                                     </p>
                                                     <div class="form-group">
-                                                        <!-- Dropdown chọn tỉnh và huyện -->
+                                                        <!-- Address -->
+                                                        <!-- Dropdown chọn tỉnh -->
                                                         <p class="form-row form-row-wide validate-required"
                                                             data-priority="20">
-                                                            <label>Chọn Tỉnh&nbsp;<abbr class="required"
+                                                            <label>Tỉnh&nbsp;<abbr class="required"
                                                                     title="required">*</abbr></label>
                                                             <span class="kobolg-input-wrapper">
                                                                 <select name="province" id="province" class="form-control"
                                                                     required>
                                                                     <option value="">Chọn tỉnh</option>
-                                                                    @foreach ($provinces as $province)
-                                                                        <option value="{{ $province->id }}">
-                                                                            {{ $province->name }}
+                                                                    @foreach ($provinces as $provinceOption)
+                                                                        <option value="{{ $provinceOption->id }}"
+                                                                            @if ($province && old('province', $province->id ?? null) == $provinceOption->id) selected @endif>
+                                                                            {{ $provinceOption->name }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
                                                             </span>
                                                         </p>
 
+                                                        <!-- Dropdown chọn huyện -->
                                                         <p class="form-row form-row-wide validate-required"
                                                             data-priority="30">
-                                                            <label>Chọn Huyện&nbsp;<abbr class="required"
+                                                            <label>Huyện&nbsp;<abbr class="required"
                                                                     title="required">*</abbr></label>
                                                             <span class="kobolg-input-wrapper">
                                                                 <select name="district" id="district" class="form-control"
                                                                     required>
                                                                     <option value="">Chọn huyện</option>
-                                                                    <!-- Các option huyện sẽ được thêm qua AJAX -->
+                                                                    @if ($district)
+                                                                        <option value="{{ $district->id }}" selected>
+                                                                            {{ $district->name }}
+                                                                        </option>
+                                                                    @endif
                                                                 </select>
                                                             </span>
                                                         </p>
 
+                                                        <!-- Dropdown chọn xã/phường -->
                                                         <p class="form-row form-row-wide validate-required"
                                                             data-priority="40">
-                                                            <label>Chọn Xã/Phường&nbsp;<abbr class="required"
+                                                            <label>Xã/Phường&nbsp;<abbr class="required"
                                                                     title="required">*</abbr></label>
                                                             <span class="kobolg-input-wrapper">
                                                                 <select name="ward" id="ward" class="form-control"
                                                                     required>
                                                                     <option value="">Chọn xã/phường</option>
-                                                                    <!-- Các option xã/phường sẽ được thêm qua AJAX -->
+                                                                    @if ($ward)
+                                                                        <option value="{{ $ward->id }}" selected>
+                                                                            {{ $ward->name }}
+                                                                        </option>
+                                                                    @endif
                                                                 </select>
                                                             </span>
                                                         </p>
