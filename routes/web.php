@@ -79,10 +79,10 @@ Route::prefix('shop')->group(function () {
     Route::get('reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update');
 
-   // Route hiển thị danh sách thông báo
-   Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
-   Route::get('/notifications/{id}/read', [ClientNotificationController::class, 'markAsReadAndRedirect'])->name('notifications.read');
-   // Các route không yêu cầu đăng nhập
+    // Route hiển thị danh sách thông báo
+    Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications/{id}/read', [ClientNotificationController::class, 'markAsReadAndRedirect'])->name('notifications.read');
+    // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');
     Route::get('product-by-catalogues/{parentSlug}/{childSlug?}', [ProductController::class, 'productByCatalogues'])->name('client.productByCatalogues');
@@ -179,7 +179,7 @@ Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
 Route::get('/get-wards/{districtId}', [CheckoutController::class, 'getWards'])->name('getWards');
 Route::post('/get-shipping-fee', [CheckoutController::class, 'getShippingFee'])->name('getShippingFee');
-Route::post('/vnpay',[PaymentController::class,'vnpay'])->name('vnpay');
+Route::post('/vnpay', [PaymentController::class, 'vnpay'])->name('vnpay');
 Route::get('/vnpay_return', [PaymentController::class, 'vnpayReturn'])->name('vnpayReturn')->middleware('web');
 Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
 
@@ -315,6 +315,12 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::get('admin/products/{product}/variants/create', [ProductVariantController::class, 'create'])->name('products.variants.create');
     Route::post('admin/products/{product}/variants', [ProductVariantController::class, 'store'])->name('variants.store');
     Route::patch('admin/variants/{variant}/status', [ProductVariantController::class, 'updateStatus'])->name('variants.updateStatus');
+    // Route cho trang chỉnh sửa biến thể
+    Route::get('admin/products/{product}/variants/{variant}/edit', [ProductVariantController::class, 'edit'])->name('variants.edit');
+
+    // Route cho việc cập nhật biến thể
+    Route::put('admin/products/{product}/variants/{variant}', [ProductVariantController::class, 'update'])->name('variants.update');
+
 
     Route::resource('permissions', PermissionController::class);
 

@@ -251,8 +251,8 @@
                             {"breakpoint":1200,"settings":{"slidesToShow":3,"slidesMargin":"20"}},
                             {"breakpoint":1500,"settings":{"slidesToShow":4,"slidesMargin":"30"}}
                         ]'>
-                        {{--
-                        @foreach ($topSellingProducts as $product)
+
+                        {{-- @foreach ($topSellingProducts as $product)
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
@@ -307,7 +307,8 @@
                                             <div class="yith-wcwl-add-button show">
                                                 <a href="#" class="add_to_wishlist"
                                                     data-product-id="{{ $product->id }}">
-                                                    // auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích'
+                                                    // auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích':
+                                                    'Thêm vào yêu thích'
                                                     {{ auth()->check() &&
                                                     auth()->user()->favorites->contains($product->id)
                                                         ? 'Bỏ yêu thích'
@@ -325,8 +326,8 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                        --}}
+                        @endforeach --}}
+
                     </div>
                 </div>
             </div>

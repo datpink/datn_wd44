@@ -1,4 +1,4 @@
-<!-- Loading wrapper start -->
+{{-- <!-- Loading wrapper start -->
 <div id="loading-wrapper">
     <div class="spinner">
         <div class="line1"></div>
@@ -9,4 +9,4 @@
         <div class="line6"></div>
     </div>
 </div>
-<!-- Loading wrapper end -->
+<!-- Loading wrapper end --> --}}
