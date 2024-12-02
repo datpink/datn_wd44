@@ -33,7 +33,24 @@ class Product extends Model
         'is_featured',
     ];
 
+    // lấy tồn kho sản phẩm ra, ví dụ: $productStock = $product->calculateTotalStock();
+    public function calculateTotalStock()
+    {
+        return $this->variants()->sum('stock');
+    }
 
+    // cập nhật lại tồn kho sản phẩm, ví dụ: $product->updateTotalStock() (nó tự cập nhật)
+    public function updateTotalStock()
+    {
+        $this->stock = $this->calculateTotalStock();
+        $this->save();
+    }
+    public function updateTotalStock2()
+    {
+        $totalStock = $this->stock = $this->calculateTotalStock();
+        $this->save();
+        return $totalStock;
+    }
     // Product.php (Model)
     public function getDiscountPrice()
     {
