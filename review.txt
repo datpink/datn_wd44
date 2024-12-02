@@ -46,7 +46,7 @@ php artisan db:seed --class=ContactSeeder
 php artisan db:seed --class=UserPromotionsSeeder
 php artisan db:seed --class=AdvertisementsTableSeeder
 php artisan db:seed --class=FavoritesTableSeeder
-
+php artisan db:seed --class=DiscountSeeder
 
 chạy full seeder
 php artisan db:seed

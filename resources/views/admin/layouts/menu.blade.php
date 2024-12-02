@@ -166,7 +166,10 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('promotions.index') }}">Danh Sách Mã Giảm Giá</a>
+                                <a href="{{ route('promotions.index') }}">Mã Giảm Giá</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('discounts.index') }}">Giảm Giá Danh Mục</a>
                             </li>
 
                         </ul>

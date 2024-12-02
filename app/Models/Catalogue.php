@@ -49,4 +49,9 @@ class Catalogue extends Model
                 });
         }
     }
+    // Mối quan hệ với bảng discounts thông qua bảng catalogue_discounts
+    public function discounts()
+{
+    return $this->belongsToMany(Discount::class, 'catelogue_discounts', 'catalogue_id', 'discount_id');
+}   
 }
