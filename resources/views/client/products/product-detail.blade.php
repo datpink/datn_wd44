@@ -125,7 +125,18 @@
     @include('components.breadcrumb-client2')
 
     @include('client.muteki.css')
+    <script>
+        var hasVariants = @json($product->variants->isNotEmpty()); // Kiểm tra sản phẩm có biến thể hay không
 
+        // Thông tin về số lượng sản phẩm còn lại
+        var stockQuantity = @json($product->stock); // Số lượng sản phẩm còn lại (không có biến thể)
+        var variantStock = {}; // Đối tượng để lưu trữ số lượng tồn kho của các biến thể (nếu có)
+
+        @foreach ($product->variants as $variant)
+            variantStock['{{ $variant->id }}'] = {{ $variant->stock }};
+        @endforeach
+
+    </script>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
             <div class="row">
@@ -220,6 +231,16 @@
                                     </span>
                                 </p>
                                 <br>
+                                <span class="sku_wrapper">
+                                    Sản phẩm còn lại:
+                                    <span class="sku">
+                                        @if ($product->variants()->exists())
+                                            {{ $product->updateTotalStock2() }}
+                                        @else
+                                            {{ $product->stock }}
+                                        @endif
+                                    </span>
+                                </span>
 
                                 <div class="product-variants">
                                     <div class="product-attributes">
@@ -237,6 +258,7 @@
                                                 ][] = $variant;
                                             }
                                         @endphp
+                                        <div id="error-message" style="color: red;"></div>
 
                                         @if (count($variantGroups) > 0)
                                             <div class="attribute-group">
@@ -298,7 +320,10 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" id="product-id" value="{{ $product->id }}">
-
+                                            <div id="out-of-stock-message"
+                                                style="display: none; color: red; font-weight: bold;">
+                                                Sản phẩm này hiện đã hết hàng và ngừng kinh doanh.
+                                            </div>
                                             <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
                                             <div class="action-buttons">
                                                 <button type="submit" id="add-to-cart"
@@ -328,7 +353,6 @@
 
                                 <div class="product_meta">
                                     <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
-                                    <span class="sku_wrapper">Số Lượng Sản Phẩm: <span class="sku">{{ $product->stock }}</span></span>
                                     <span class="posted_in">Danh mục:
                                         <a href="#"
                                             rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>
@@ -386,6 +410,8 @@
             @include('client.muteki.js')
 
             <script>
+
+                
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
                         var $img = $(this).find('img'); // Lấy ảnh trong phần tử này
