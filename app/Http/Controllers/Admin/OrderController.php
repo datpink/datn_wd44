@@ -80,6 +80,73 @@ class OrderController extends Controller
         return view("admin.orders.index", compact("orders", "title"));
     }
 
+    public function newOrders(Request $request)
+    {
+        $title = 'Đơn Hàng Mới';
+
+        $query = Order::query();
+
+        // Chỉ lấy các đơn hàng mới
+        $query->where('is_new', true);
+
+        // Tìm kiếm (nếu có)
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', '%' . $search . '%')
+                    ->orWhereHas('user', function ($userQuery) use ($search) {
+                        $userQuery->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('paymentMethod', function ($paymentMethodQuery) use ($search) {
+                        $paymentMethodQuery->where('name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhere('status', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Lọc theo ngày
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        // Lọc theo khoảng thời gian
+        if ($request->has('date_filter') && $request->date_filter) {
+            switch ($request->date_filter) {
+                case 'yesterday':
+                    $query->whereDate('created_at', Carbon::yesterday());
+                    break;
+                case 'this_week':
+                    $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
+                    break;
+                case 'last_week':
+                    $query->whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]);
+                    break;
+                case 'this_month':
+                    $query->whereMonth('created_at', Carbon::now()->month);
+                    break;
+                case 'last_month':
+                    $query->whereMonth('created_at', Carbon::now()->subMonth()->month);
+                    break;
+            }
+        }
+
+        // Lọc theo trạng thái
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Lọc theo trạng thái thanh toán
+        if ($request->has('payment_status') && $request->payment_status) {
+            $query->where('payment_status', $request->payment_status);
+        }
+
+        // Phân trang kết quả
+        $newOrders = $query->with('user')->paginate(10);
+
+        return view('admin.orders.new', compact('newOrders', 'title'));
+    }
+
+
 
     public function show($id)
     {
@@ -227,6 +294,13 @@ class OrderController extends Controller
                 if ($productVariant) {
                     $productVariant->stock += $orderItem->quantity; // Hoàn lại số lượng vào product_variant
                     $productVariant->save();
+
+                    // Đồng thời, cập nhật stock của sản phẩm chính
+                    $product = $productVariant->product;  // Lấy sản phẩm chính từ product_variant
+                    if ($product) {
+                        $product->stock += $orderItem->quantity; // Hoàn lại số lượng vào sản phẩm chính
+                        $product->save();
+                    }
                 }
             } else {
                 // Nếu sản phẩm không có biến thể, hoàn lại stock vào product
@@ -241,6 +315,7 @@ class OrderController extends Controller
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công và số lượng sản phẩm đã được hoàn lại vào kho.');
     }
+
 
 
 

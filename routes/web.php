@@ -274,7 +274,9 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
 
 
     // Route Order
+    Route::get('/orders/new', [OrderController::class, 'newOrders'])->name('orders.new');
     Route::resource('orders', OrderController::class);
+
 
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
