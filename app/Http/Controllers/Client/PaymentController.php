@@ -78,6 +78,8 @@ class PaymentController extends Controller
                         $productVariant = ProductVariant::findOrFail($product['variant_id']);
                         $productVariant->stock -= $product['quantity'];
                         $productVariant->save();
+                        $productVariant->product->updateTotalStock();
+
                     } else {
                         $productModel = Product::findOrFail($product['id']);
                         $productModel->stock -= $product['quantity'];
@@ -235,6 +237,7 @@ class PaymentController extends Controller
                         $product = $productVariant->product; // Giả sử có mối quan hệ giữa biến thể và sản phẩm
                         $product->stock -= $item->quantity; // Giảm tồn kho của sản phẩm gốc
                         $product->save();
+                        $product->updateTotalStock();
                     } else {
                         // Cập nhật tồn kho cho sản phẩm đơn
                         $product = Product::findOrFail($item->product_id);

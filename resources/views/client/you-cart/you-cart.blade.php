@@ -87,13 +87,18 @@
                                 </div>
                             @endif
                             <span class="quantity">
-                                {{ $item['quantity'] }} × {{ number_format($item['price'], 0) }}₫
+                                {{ $item['quantity'] }} × {{ number_format(floatval($item['price']), 0) }}₫
                             </span>
+
 
                             <button type="button" class="remove remove_from_cart_button" data-id="{{ $key }}"
                                 style="background: none; border: none; color: red; font-size: 16px; cursor: pointer;">×</button>
                         </li>
-                        @php $subtotal += $item['quantity'] * $item['price']; @endphp
+                        @php
+                        $price = is_numeric($item['price']) ? floatval($item['price']) : 0;
+                        $subtotal += $item['quantity'] * $price;
+                    @endphp
+
                     @endforeach
                 @else
                     <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
