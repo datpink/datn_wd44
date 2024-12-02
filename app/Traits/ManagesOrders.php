@@ -15,7 +15,7 @@ trait ManagesOrders
 
     public function update(Request $request, $id)
     {
-        $order = Order::findOrFail(id: $id);
+        $order = Order::findOrFail($id);
 
         $order->status = $request->input('status');
 
@@ -28,9 +28,10 @@ trait ManagesOrders
 
         $order->save();
 
-        return redirect()->route('orders.index')
-            ->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
+        // Sử dụng back() để quay lại trang trước đó
+        return redirect()->back()->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
     }
+
 
 }
 

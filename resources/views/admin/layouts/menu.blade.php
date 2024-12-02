@@ -79,7 +79,7 @@
                 </li>
                 <li class="sidebar-dropdown">
                     <a href="#">
-                        <i class="bi bi-person"></i>
+                        <i class="bi bi-messenger"></i>
                         <span class="menu-text"> Thông Báo</span>
                     </a>
                     <div class="sidebar-submenu">

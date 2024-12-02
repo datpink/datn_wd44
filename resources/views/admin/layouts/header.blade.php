@@ -50,7 +50,7 @@
                             </div>
                             <div class="dropdown-divider"></div>
                         @endforeach
-                        {{-- <a class="dropdown-item" href="orders.html">Xem tất cả đơn hàng</a> --}}
+                        <a class="dropdown-item" href="{{ route('orders.new') }}">Xem tất cả đơn hàng mới</a>
                     @else
                         <div class="dropdown-item">Không có đơn hàng mới</div>
                     @endif
