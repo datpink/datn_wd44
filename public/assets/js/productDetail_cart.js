@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     let selectedStorage = null;
     let selectedColor = null;
@@ -7,15 +6,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedColorButton = null;
     let selectedSizeButton = null;
 
-    // Giá gốc của sản phẩm (giá cơ bản)
+    // Giá gốc của sản phẩm (giá cơ bản) và giá đã giảm (discount_price)
     const originalPrice = parseFloat("{{ $product->price }}");
+    const discountPrice = parseFloat("{{ $product->discount_price }}"); // discount_price luôn tồn tại
     const priceElement = document.getElementById('product-price');
+
+    // Giá hiển thị sẽ là discount_price nếu lớn hơn 0, nếu không dùng giá gốc
+    const effectivePrice = discountPrice > 0 ? discountPrice : originalPrice;
 
     // Lấy danh sách biến thể từ PHP (dung lượng, màu sắc, kích thước và giá tương ứng)
     const variants = {!! json_encode(
         $product->variants->map(function ($variant) {
             return [
-                'price' => $variant->price,
+                'price' => $variant->discount_price > 0 ? $variant->discount_price : $variant->price, // Nếu có discount_price > 0 thì dùng giá đã giảm
                 'attributes' => $variant->attributeValues->map(function ($attributeValue) {
                     return [
                         'name' => $attributeValue->attribute->name,
@@ -28,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hiển thị giá
     function updatePrice() {
-        let totalPrice = originalPrice;
-        let minPrice = originalPrice; // Giá tối thiểu khởi tạo là giá gốc
-        let maxPrice = originalPrice; // Giá tối đa khởi tạo là giá gốc
+        let totalPrice = effectivePrice;
+        let minPrice = effectivePrice; // Giá tối thiểu khởi tạo là giá đã giảm hoặc giá gốc
+        let maxPrice = effectivePrice; // Giá tối đa khởi tạo là giá đã giảm hoặc giá gốc
         let isVariantSelected = false;
 
         // Nếu không có biến thể nào
@@ -38,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
-            }).format(originalPrice);
+            }).format(effectivePrice);
             return;
         }
 
@@ -56,11 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Tìm biến thể lưu trữ được chọn và cộng giá nếu có
         if (selectedStorage) {
             const foundStorageVariant = variants.find(variant =>
-                variant.attributes.some(attr => attr.name === 'Storage' && attr.value ===
-                    selectedStorage)
+                variant.attributes.some(attr => attr.name === 'Storage' && attr.value === selectedStorage)
             );
             if (foundStorageVariant) {
-                totalPrice += foundStorageVariant.price - originalPrice; // Cộng thêm giá biến thể lưu trữ
+                totalPrice += foundStorageVariant.price - effectivePrice; // Cộng thêm giá biến thể lưu trữ
                 isVariantSelected = true;
             }
         }
@@ -71,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 variant.attributes.some(attr => attr.name === 'Color' && attr.value === selectedColor)
             );
             if (foundColorVariant) {
-                totalPrice += foundColorVariant.price - originalPrice; // Cộng thêm giá biến thể màu sắc
+                totalPrice += foundColorVariant.price - effectivePrice; // Cộng thêm giá biến thể màu sắc
                 isVariantSelected = true;
             }
         }
@@ -82,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 variant.attributes.some(attr => attr.name === 'Size' && attr.value === selectedSize)
             );
             if (foundSizeVariant) {
-                totalPrice += foundSizeVariant.price - originalPrice; // Cộng thêm giá biến thể kích thước
+                totalPrice += foundSizeVariant.price - effectivePrice; // Cộng thêm giá biến thể kích thước
                 isVariantSelected = true;
             }
         }
@@ -93,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             priceElement.innerHTML = new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
-            }).format(originalPrice);
+            }).format(effectivePrice);
         } else if (!isVariantSelected) {
             // Nếu không có biến thể được chọn, hiển thị giá min và max
             priceElement.innerHTML = `${new Intl.NumberFormat('vi-VN', {
@@ -111,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }).format(totalPrice);
         }
     }
-
 
     // Sử dụng event delegation để lắng nghe sự kiện click
     document.addEventListener('click', function(event) {
@@ -190,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Giỏ hàng
 $(document).ready(function() {
     let selectedVariantId = null;
-    let isSingleProduct = {{ $product->variants->isEmpty() ? 'true' : 'false' }};
+    let isSingleProduct = {{ $product->variants->isEmpty() ? 'true' : 'false' }}; 
     let productId = "{{ $product->id }}";
 
     // Khi người dùng chọn dung lượng hoặc màu sắc (có biến thể)
