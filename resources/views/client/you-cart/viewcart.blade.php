@@ -121,7 +121,7 @@
         function updateTotal(input) {
             const row = input.closest('tr'); // Lấy dòng sản phẩm
             const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
-            .price); // Lấy giá sản phẩm
+                .price); // Lấy giá sản phẩm
             const roundedPrice = roundPrice(price); // Làm tròn giá
             const quantity = parseInt(input.value); // Lấy số lượng mới
             const totalCell = row.querySelector('.total'); // Lấy cột tổng giá
@@ -187,4 +187,61 @@
         document.getElementById('selected_products').value = JSON.stringify(selectedProducts);
         document.getElementById('checkoutForm').submit();
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.remove-from-cart').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const productId = this.getAttribute('data-id');
+                const row = this.closest('tr'); // Lấy dòng chứa sản phẩm
+
+                Swal.fire({
+                    title: 'Xác nhận',
+                    text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Có',
+                    cancelButtonText: 'Không'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(`/cart/remove/${productId}`, { // Đường dẫn tới controller
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}', // Thêm CSRF Token
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: productId
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Đã xóa!',
+                                        text: data.message,
+                                        toast: true,
+                                        timer: 2000,
+                                        position: 'top-right',
+                                        showConfirmButton: false
+                                    });
+                                    row.remove(); // Xóa dòng sản phẩm
+                                    updateCartTotal(); // Cập nhật lại tổng giá
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi!',
+                                        text: data.message,
+                                        toast: true,
+                                        timer: 2000,
+                                        position: 'top-right',
+                                        showConfirmButton: false
+                                    });
+                                }
+                            })
+                    }
+                });
+            });
+        });
+    });
 </script>
