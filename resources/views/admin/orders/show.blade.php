@@ -10,7 +10,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Chi Tiết Đơn Hàng #{{ $order->id }}</h4>
-                            <a href="{{ route('orders.index') }}" class="btn rounded-pill btn-secondary">
+                            <a href="{{ url()->previous() }}" class="btn rounded-pill btn-secondary">
                                 <i class="bi bi-arrow-left me-2"></i> Trở về
                             </a>
                         </div>
