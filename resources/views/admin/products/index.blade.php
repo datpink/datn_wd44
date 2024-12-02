@@ -70,7 +70,7 @@
                                         <th>Thương hiệu</th>
                                         <th>Danh mục</th>
                                         <th>Giá</th>
-                                        <th>Kích thước</th>
+                                        <th>Số Lượng</th>
                                         <th>Trạng thái</th>
                                         <th>Nổi bật</th>
                                         <th>Tình trạng</th>
@@ -93,7 +93,7 @@
                                             <td>{{ $product->brand ? $product->brand->name : 'Không có' }}</td>
                                             <td>{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</td>
                                             <td>{{ number_format($product->price, 0, ',', '.') }}đ</td>
-                                            <td>{{ $product->dimensions }}</td>
+                                            <td>{{  $product->stock }}</td>
                                             <td>
                                                 @if ($product->is_active)
                                                     <span class="badge rounded-pill bg-success">Kích hoạt</span>
