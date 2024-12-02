@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderConfirmation;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -82,9 +84,9 @@ class PaymentController extends Controller
                         $productModel->save();
                     }
                 }
+                Mail::to($order->user->email)->send(new OrderConfirmation($order));
                 DB::commit();
-                return redirect()->route('client.index')
-                    ->with('success', 'Đặt hàng thành công. Thanh toán khi nhận hàng.');
+                return view('client.vnpay.cod-success', ['order' => $order]);
             }
 
             if ($paymentMethodName === 'vnpay') {
@@ -204,6 +206,9 @@ class PaymentController extends Controller
                 $order2->payment_status = "paid";
                 $order->save();
                 $order2->save();
+                // Gửi email xác nhận đơn hàng
+                Mail::to($order2->user->email)->send(new OrderConfirmation($order2));
+
                 // // Giảm số lượng tồn kho
                 // foreach ($order2->orderItems as $item) {
                 //     if ($item->product_variant_id) {

@@ -430,7 +430,6 @@
 
                 // Tìm input ẩn 'discount_total'
                 let discountInput = document.querySelector('[name="discount_total"]');
-
                 // Nếu input không tồn tại, tạo mới
                 if (!discountInput) {
                     discountInput = document.createElement("input");
@@ -553,53 +552,69 @@
                 }
             });
 
-            // Tính phí vận chuyển
-            $("#province, #district, #ward").change(function() {
+            $(document).ready(function() {
+                // Gọi tính phí vận chuyển khi trang tải xong nếu đã có giá trị
                 const provinceId = $("#province").val();
                 const districtId = $("#district").val();
                 const wardId = $("#ward").val();
 
                 if (provinceId && districtId) {
-                    $.ajax({
-                        url: "{{ route('getShippingFee') }}",
-                        method: "POST",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            province_id: provinceId,
-                            district_id: districtId,
-                            ward_id: wardId,
-                        },
-                        success: function(response) {
-                            if (response.status === "success") {
-                                const shippingFee = response.shipping_fee || 0;
-                                $("#shipping-fee").text(shippingFee.toLocaleString("vi-VN"));
-                                $("#shipping-row").show();
-
-                                // Tính lại tổng tiền
-                                const totalAmount = parseFloat({{ $totalAmount }}) +
-                                    shippingFee;
-                                $(".order-total .amount").text(
-                                    new Intl.NumberFormat("vi-VN", {
-                                        style: "currency",
-                                        currency: "VND",
-                                    }).format(totalAmount)
-                                );
-
-                                syncTotalToInput(totalAmount); // Đồng bộ lại tổng giá vào input
-                            } else {
-                                alert(response.message);
-                                $("#shipping-row").hide();
-                            }
-                        },
-                        error: function() {
-                            alert("Có lỗi xảy ra. Vui lòng thử lại.");
-                            $("#shipping-row").hide();
-                        },
-                    });
-                } else {
-                    $("#shipping-row").hide();
+                    calculateShippingFee(provinceId, districtId, wardId);
                 }
+
+                // Lắng nghe sự kiện thay đổi dropdown
+                $("#province, #district, #ward").change(function() {
+                    const provinceId = $("#province").val();
+                    const districtId = $("#district").val();
+                    const wardId = $("#ward").val();
+
+                    if (provinceId && districtId) {
+                        calculateShippingFee(provinceId, districtId, wardId);
+                    } else {
+                        $("#shipping-row").hide();
+                    }
+                });
             });
+
+            // Hàm tính phí vận chuyển
+            function calculateShippingFee(provinceId, districtId, wardId) {
+                $.ajax({
+                    url: "{{ route('getShippingFee') }}",
+                    method: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        province_id: provinceId,
+                        district_id: districtId,
+                        ward_id: wardId,
+                    },
+                    success: function(response) {
+                        if (response.status === "success") {
+                            const shippingFee = response.shipping_fee || 0;
+                            $("#shipping-fee").text(shippingFee.toLocaleString("vi-VN"));
+                            $("#shipping-row").show();
+
+                            // Tính lại tổng tiền
+                            const totalAmount = parseFloat({{ $totalAmount }}) + shippingFee;
+                            $(".order-total .amount").text(
+                                new Intl.NumberFormat("vi-VN", {
+                                    style: "currency",
+                                    currency: "VND",
+                                }).format(totalAmount)
+                            );
+
+                            syncTotalToInput(totalAmount); // Đồng bộ lại tổng giá vào input
+                        } else {
+                            alert(response.message);
+                            $("#shipping-row").hide();
+                        }
+                    },
+                    error: function() {
+                        alert("Có lỗi xảy ra. Vui lòng thử lại.");
+                        $("#shipping-row").hide();
+                    },
+                });
+            }
+
         });
 
         // Hàm đồng bộ giá trị tổng cộng vào input ẩn
@@ -618,6 +633,9 @@
             districtSelect.addEventListener('change', updateFullAddress);
             wardSelect.addEventListener('change', updateFullAddress);
 
+            // Cập nhật giá trị full address khi trang được load lần đầu
+            updateFullAddress();
+
             function updateFullAddress() {
                 const provinceId = provinceSelect.value;
                 const districtId = districtSelect.value;
@@ -626,13 +644,13 @@
                 let fullAddress = '';
 
                 // Kiểm tra xem các giá trị có hợp lệ không và tạo chuỗi gộp
-                if (provinceId) {
+                if (provinceId && provinceSelect.selectedIndex !== 0) { // Đảm bảo tỉnh đã được chọn
                     fullAddress += provinceSelect.options[provinceSelect.selectedIndex].text;
                 }
-                if (districtId) {
+                if (districtId && districtSelect.selectedIndex !== 0) { // Đảm bảo huyện đã được chọn
                     fullAddress += ' - ' + districtSelect.options[districtSelect.selectedIndex].text;
                 }
-                if (wardId) {
+                if (wardId && wardSelect.selectedIndex !== 0) { // Đảm bảo xã/phường đã được chọn
                     fullAddress += ' - ' + wardSelect.options[wardSelect.selectedIndex].text;
                 }
 
