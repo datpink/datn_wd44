@@ -27,12 +27,13 @@
                                                     class="required">*</span></label>
                                             <input type="text" class="kobolg-Input kobolg-Input--text input-text"
                                                 name="username" id="username" autocomplete="username" value=""
-                                                required>
+                                                required placeholder="Nhập địa chỉ email của bạn">
                                         </p>
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
                                             <label for="password">Mật khẩu&nbsp;<span class="required">*</span></label>
                                             <input class="kobolg-Input kobolg-Input--text input-text" type="password"
-                                                name="password" id="password" autocomplete="current-password" required>
+                                                name="password" id="password" autocomplete="current-password" required
+                                                placeholder="Nhập mật khẩu">
                                         </p>
 
                                         <div class="form-row d-flex justify-content-between align-items-center">
@@ -86,19 +87,23 @@
                                             <label for="reg_email">Địa Chỉ Email&nbsp;<span
                                                     class="required">*</span></label>
                                             <input type="email" class="kobolg-Input kobolg-Input--text input-text"
-                                                name="email" id="reg_email" autocomplete="email" required>
+                                                name="email" id="reg_email" autocomplete="email" required
+                                                placeholder="Nhập địa chỉ email của bạn">
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
                                             <label for="reg_name">Họ và tên&nbsp;<span class="required">*</span></label>
                                             <input type="text" class="kobolg-Input kobolg-Input--text input-text"
-                                                name="name" id="reg_name" required>
+                                                name="name" id="reg_name" required
+                                                placeholder="Nhập họ và tên của bạn">
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
                                             <label for="reg_password">Mật khẩu&nbsp;<span class="required">*</span></label>
                                             <input type="password" class="kobolg-Input kobolg-Input--text input-text"
-                                                name="password" id="reg_password" required>
+                                                name="password" id="reg_password" required 
+                                                placeholder="Nhập mật khẩu"
+                                                >
                                         </p>
 
                                         <div class="kobolg-privacy-policy-text">
