@@ -22,6 +22,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $title = 'Danh sách Sản Phẩm';
         $query = Product::query();
 
         // Lấy tất cả các cột của bảng products
@@ -75,7 +76,7 @@ class ProductController extends Controller
         // Lấy danh sách sản phẩm với thông tin thương hiệu và danh mục
         $products = $query->with(['brand', 'catalogue'])->paginate(10);
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products', 'title'));
     }
 
 
