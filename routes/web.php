@@ -226,6 +226,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Thêm thông báo
     Route::get('/notification/create', [AdminNotificationController::class, 'create'])->name('admin.notifications.create');
     Route::post('/notification', [AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+    Route::delete('/admin/notification/{id}', [AdminNotificationController::class, 'destroy'])->name('admin.notifications.destroy');
 
     // Route Catalogue
     Route::resource('catalogues', CatalogueController::class);
