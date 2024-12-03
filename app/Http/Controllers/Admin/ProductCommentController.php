@@ -11,6 +11,7 @@ class ProductCommentController extends Controller
 {
     public function index(Request $request)
     {
+        $title = 'Danh sách bình luận sản phẩm';
         $search = $request->input('search');
         $productComments = ProductComment::with(['user', 'product', 'replies']) // Đổi thành 'replies'
             ->when($search, function ($query, $search) {
@@ -18,7 +19,7 @@ class ProductCommentController extends Controller
             })
             ->get();
 
-        return view('admin.product_comments.list', compact('productComments'));
+        return view('admin.product_comments.list', compact('productComments', 'title'));
     }
 
     public function destroy($id)
@@ -45,7 +46,7 @@ class ProductCommentController extends Controller
         } catch (\Throwable $th) {
 
             return $th->getMessage();
-            return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
+            // return redirect()->route('comments.index')->with('respondError', 'Có lỗi xảy ra khi gửi phản hồi.');
         }
     }
 

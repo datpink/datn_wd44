@@ -19,86 +19,165 @@
                             <form id="productForm" action="{{ route('products.store') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="productName" class="form-label">Tên Sản Phẩm</label>
-                                    <input type="text" class="form-control" id="productName" name="name"
-                                        value="{{ old('name') }}" oninput="ChangeToSlug()">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        id="productName" name="name" value="{{ old('name') }}"
+                                        oninput="ChangeToSlug()" required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="sku" class="form-label">SKU</label>
-                                    <input type="text" class="form-control" id="sku" name="sku"
-                                        value="{{ old('sku') }}" readonly>
+                                    <input type="text" class="form-control @error('sku') is-invalid @enderror"
+                                        id="sku" name="sku" value="{{ old('sku') }}" readonly required>
+                                    @error('sku')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <div class="mb-3 was-validated">
                                     <label for="slug" class="form-label">Slug</label>
                                     <input type="text" class="form-control" id="slug" name="slug"
-                                        value="{{ old('slug') }}" readonly>
+                                        value="{{ old('slug') }}" readonly required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="catalogue_id" class="form-label">Danh Mục</label>
-                                    <select class="form-control" id="catalogue_id" name="catalogue_id">
+                                    <select class="form-control @error('catalogue_id') is-invalid @enderror"
+                                        id="catalogue_id" name="catalogue_id" required>
+                                        <option value="">Chọn danh mục</option> <!-- Thêm tùy chọn mặc định -->
                                         @foreach ($catalogues as $catalogue)
-                                            <option value="{{ $catalogue->id }}">{{ $catalogue->name }}</option>
+                                            <option value="{{ $catalogue->id }}"
+                                                {{ old('catalogue_id') == $catalogue->id ? 'selected' : '' }}>
+                                                {{ $catalogue->name }}
+                                            </option>
                                         @endforeach
                                     </select>
+                                    @error('catalogue_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <div class="mb-3 was-validated">
                                     <label for="brand_id" class="form-label">Thương Hiệu</label>
-                                    <select class="form-control" id="brand_id" name="brand_id">
+                                    <select class="form-control" id="brand_id" name="brand_id" required>
                                         <option value="">Không có</option>
                                         @foreach ($brands as $brand)
                                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="weight">Cân nặng (kg)</label>
-                                    <input type="text" name="weight" class="form-control" id="weight"
-                                        value="{{ old('weight') }}">
+
+                                <div class="form-group was-validated">
+                                    <label for="weight" class="form-label">Cân nặng (kg)</label>
+                                    <input type="number" name="weight" step="0.01"
+                                        class="form-control @error('weight') is-invalid @enderror" id="weight"
+                                        value="{{ old('weight') }}" required>
+                                    @error('weight')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="form-group">
-                                    <label for="dimensions">Kích thước (DxRxC)</label>
-                                    <input type="text" name="dimensions" class="form-control" id="dimensions"
-                                        value="{{ old('dimensions') }}">
+
+                                <div class="form-group was-validated">
+                                    <label for="dimensions" class="form-label">Kích thước (DxRxC)</label>
+                                    <input type="text" name="dimensions"
+                                        class="form-control @error('dimensions') is-invalid @enderror" id="dimensions"
+                                        value="{{ old('dimensions') }}" required>
+                                    @error('dimensions')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <div class="mb-3 was-validated">
                                     <label for="price" class="form-label">Giá</label>
-                                    <input type="number" step="0.01" class="form-control" id="price" name="price"
-                                        value="{{ old('price') }}">
+                                    <input type="number" step="0.01"
+                                        class="form-control @error('price') is-invalid @enderror" id="price"
+                                        name="price" value="{{ old('price') }}" required>
+                                    @error('price')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="stock" class="form-label">Số Lượng</label>
-                                    <input type="number" class="form-control" id="stock" name="stock"
-                                        value="{{ old('stock') }}">
+                                    <input type="number" class="form-control @error('stock') is-invalid @enderror"
+                                        id="stock" name="stock" value="{{ old('stock') }}" required>
+                                    @error('stock')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        const weightInput = document.getElementById('weight');
+                                        const priceInput = document.getElementById('price');
+                                        const stockInput = document.getElementById('stock');
+
+                                        // Function to validate and reset negative or invalid values
+                                        function validateInput(input, minValue = 0, maxValue = 5000000) {
+                                            input.addEventListener('input', function() {
+                                                const value = parseFloat(input.value);
+
+                                                // Reset if value is less than minimum value (e.g., 0) or invalid
+                                                if (value < minValue || isNaN(value)) {
+                                                    input.value = ''; // Clear the value
+                                                    input.classList.add('is-invalid');
+                                                }
+                                                // If value exceeds the maximum value
+                                                else if (value > maxValue) {
+                                                    input.value = maxValue; // Set to max value
+                                                    input.classList.add('is-invalid');
+                                                }
+                                                // If value is valid
+                                                else {
+                                                    input.classList.remove('is-invalid');
+                                                }
+                                            });
+                                        }
+
+                                        // Apply validation for weight, price, and stock
+                                        validateInput(weightInput, 0);
+                                        validateInput(priceInput, 1); // Price should be at least 1
+                                        validateInput(stockInput, 0);
+                                    });
+                                </script>
+
+
+                                <div class="mb-3 was-validated">
                                     <label for="image_url" class="form-label">Ảnh Sản Phẩm</label>
-                                    <input type="file" class="form-control" id="image_url" name="image_url"
-                                        onchange="previewImageUrl(event)">
+                                    <input type="file" class="form-control @error('image_url') is-invalid @enderror"
+                                        id="image_url" name="image_url" onchange="previewImageUrl(event)" required>
                                     <img id="imageUrlPreview" src="" alt="Hình ảnh xem trước" class="mt-2"
                                         style="display: none; width: 100px;">
+                                    @error('image_url')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <div class="mb-3 was-validated">
                                     <label for="editor" class="form-label">Mô Tả</label>
-                                    <textarea class="form-control" id="editor" name="description">{{ old('description') }}</textarea>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="editor" name="description" required>{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
-                                <div class="mb-3">
+
+                                <div class="mb-3 was-validated">
                                     <label for="is_active" class="form-label">Trạng Thái</label>
-                                    <select class="form-control" id="is_active" name="is_active">
+                                    <select class="form-control" id="is_active" name="is_active" required>
                                         <option value="1" selected>Active</option>
                                         <option value="0">Inactive</option>
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="is_featured" class="form-label">Nổi bật</label>
                                     <input type="checkbox" id="is_featured" name="is_featured" value="1"
-                                        {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
+                                        {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }} required>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="condition" class="form-label">Tình trạng</label>
                                     <select class="form-select" id="condition" name="condition" required>
                                         <option value="">Chọn tình trạng</option>
@@ -108,9 +187,9 @@
                                     </select>
                                 </div>
                                 <!-- Thêm trường Tóm Tắt -->
-                                <div class="mb-3">
+                                <div class="mb-3 was-validated">
                                     <label for="tomtat" class="form-label">Tóm Tắt</label>
-                                    <textarea class="form-control" id="tomtat" name="tomtat">{{ old('tomtat') }}</textarea>
+                                    <textarea class="form-control" id="tomtat" name="tomtat" required>{{ old('tomtat') }}</textarea>
                                 </div>
 
                                 <div id="image-inputs">

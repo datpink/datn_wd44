@@ -177,29 +177,43 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-
+    
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
             });
         });
-
+    
         $colorVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
             });
         });
-
+    
         $sizeVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
             });
         });
-
-        // Truyền các biến thể vào view
-        return view('client.products.product-detail', compact('product', 'storageVariants', 'colorVariants', 'sizeVariants'));
+    
+        // Lấy danh sách sản phẩm liên quan theo `catalogue_id`
+        $relatedProducts = Product::where('catalogue_id', $product->catalogue_id)
+            ->where('id', '!=', $product->id) // Loại trừ sản phẩm hiện tại
+            ->with('galleries') // Nếu muốn lấy hình ảnh sản phẩm liên quan
+            ->limit(6) // Số lượng sản phẩm liên quan cần hiển thị
+            ->get();
+    
+        // Truyền dữ liệu vào view
+        return view('client.products.product-detail', compact(
+            'product',
+            'storageVariants',
+            'colorVariants',
+            'sizeVariants',
+            'relatedProducts'
+        ));
     }
+
 
     // public function getVariantPrice(Request $request)
     // {

@@ -47,19 +47,58 @@
                             </form>
 
                             <!-- Form tìm kiếm sản phẩm -->
-                            <form method="GET" action="{{ route('orders.index') }}" class="mb-3">
+                            <form method="GET" action="{{ route('products.index') }}" class="mb-3">
                                 <div class="row g-2">
+                                    <!-- Tìm kiếm theo tên sản phẩm -->
                                     <div class="col-auto">
-                                        <input type="text" id="id" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm"
-                                            value="{{ request()->search }}">
+                                        <input type="text" name="search" class="form-control form-control-sm"
+                                            placeholder="Tìm kiếm sản phẩm" value="{{ request()->search }}">
                                     </div>
+                                    <!-- Lọc theo trạng thái kích hoạt -->
+                                    <div class="col-auto">
+                                        <select name="is_active" class="form-select form-select-sm">
+                                            <option value="">Trạng thái kích hoạt</option>
+                                            <option value="1" {{ request()->is_active === '1' ? 'selected' : '' }}>Kích
+                                                hoạt</option>
+                                            <option value="0" {{ request()->is_active === '0' ? 'selected' : '' }}>
+                                                Không kích hoạt</option>
+                                        </select>
+                                    </div>
+                                    <!-- Lọc theo sản phẩm nổi bật -->
+                                    <div class="col-auto">
+                                        <select name="is_featured" class="form-select form-select-sm">
+                                            <option value="">Sản phẩm nổi bật</option>
+                                            <option value="1" {{ request()->is_featured === '1' ? 'selected' : '' }}>
+                                                Nổi bật</option>
+                                            <option value="0" {{ request()->is_featured === '0' ? 'selected' : '' }}>
+                                                Không nổi bật</option>
+                                        </select>
+                                    </div>
+                                    <!-- Lọc theo tình trạng sản phẩm -->
+                                    <div class="col-auto">
+                                        <select name="condition" class="form-select form-select-sm">
+                                            <option value="">Tình trạng</option>
+                                            <option value="new" {{ request()->condition === 'new' ? 'selected' : '' }}>
+                                                Mới</option>
+                                            <option value="used" {{ request()->condition === 'used' ? 'selected' : '' }}>
+                                                Đã qua sử dụng</option>
+                                            <option value="refurbished"
+                                                {{ request()->condition === 'refurbished' ? 'selected' : '' }}>Tái chế
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <!-- Lọc theo ngày tạo -->
+                                    <div class="col-auto">
+                                        <input type="date" name="created_at" class="form-control form-control-sm"
+                                            value="{{ request()->created_at }}">
+                                    </div>
+                                    <!-- Nút tìm kiếm và reset -->
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                        <a href="{{ route('products.index') }}" class="btn btn-sm btn-secondary">Reset</a>
                                     </div>
                                 </div>
                             </form>
-
                             <!-- Bảng danh sách sản phẩm -->
                             <table class="table table-striped">
                                 <thead>
@@ -70,7 +109,7 @@
                                         <th>Thương hiệu</th>
                                         <th>Danh mục</th>
                                         <th>Giá</th>
-                                        <th>Kích thước</th>
+                                        <th>Số Lượng</th>
                                         <th>Trạng thái</th>
                                         <th>Nổi bật</th>
                                         <th>Tình trạng</th>
@@ -78,7 +117,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $product)
+                                    @forelse ($products as $product)
                                         <tr>
                                             <td>{{ $product->id }}</td>
                                             <td>
@@ -93,7 +132,7 @@
                                             <td>{{ $product->brand ? $product->brand->name : 'Không có' }}</td>
                                             <td>{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</td>
                                             <td>{{ number_format($product->price, 0, ',', '.') }}đ</td>
-                                            <td>{{ $product->dimensions }}</td>
+                                            <td>{{ $product->stock }}</td>
                                             <td>
                                                 @if ($product->is_active)
                                                     <span class="badge rounded-pill bg-success">Kích hoạt</span>
@@ -182,7 +221,11 @@
                                             </style>
 
                                         </tr>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="11">Không có Sản Phẩm nào được tìm thấy.</td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                             <div class="mt-3">
