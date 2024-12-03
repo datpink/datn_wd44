@@ -130,13 +130,28 @@
 
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Sales</div>
+                            <div class="card-title">Người Mua Gần Đây</div>
                         </div>
                         <div class="card-body">
-                            <div id="salesGraph" class="auto-align-graph"></div>
-                            <div class="num-stats">
-                                <h2>2100</h2>
-                                <h6 class="text-truncate">12% higher than last month.</h6>
+                            <div class="scroll370">
+                                <div class="activity-container">
+                                    @foreach ($recentBuyers as $buyer)
+                                        <div class="activity-block">
+                                            <div class="activity-user">
+                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
+                                                <!-- Hình ảnh người dùng -->
+                                            </div>
+                                            <div class="activity-details">
+                                                <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
+                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
+                                                <!-- Thời gian thực hiện đơn hàng -->
+                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
+                                                <!-- Số lượng đơn hàng -->
+                                                <span class="badge shade-green rounded-pill">Mới</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,10 +174,24 @@
                 <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Bar Grouped</div>
+                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
                         </div>
                         <div class="card-body">
-                            <div id="basic-bar-graph-grouped"></div>
+                            <div id="taskGraph"></div>
+                            <ul class="task-list-container">
+                                @foreach ($ordersByStatusForList as $status => $count)
+                                    <li class="task-list-item">
+                                        <div
+                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
+                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                                        </div>
+                                        <div class="task-info">
+                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
+                                            <p class="amount-spend">{{ $count }}</p>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -170,7 +199,7 @@
 
             <!-- Row start -->
             <div class="row">
-                <div class="col-12">
+                <div class="col-sm-8 col-12">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Orders</div>
@@ -183,7 +212,6 @@
                                             <th>ID</th>
                                             <th>Customer</th>
                                             <th>Product</th>
-                                            <th>User ID</th>
                                             <th>Ordered Placed</th>
                                             <th>Amount</th>
                                             <th>Payment Status</th>
@@ -214,7 +242,6 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td>{{ $order->user_id }}</td>
                                                     <td>{{ $order->created_at->format('d/m/Y') }}</td>
                                                     <td>${{ number_format($order->total_amount, 2) }}</td>
                                                     <td>
@@ -256,119 +283,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Row end -->
 
-            <!-- Row start -->
-            <div class="row">
-                <div class="col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Transactions</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="scroll370">
-                                <div class="transactions-container">
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-blue">
-                                            <i class="bi bi-credit-card"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Visa Card</h4>
-                                            <p class="text-truncate">Laptop Ordered</p>
-                                        </div>
-                                        <div class="transaction-amount text-blue">$1590</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-green">
-                                            <i class="bi bi-paypal"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Paypal</h4>
-                                            <p class="text-truncate">Payment Received</p>
-                                        </div>
-                                        <div class="transaction-amount text-green">$310</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-blue">
-                                            <i class="bi bi-pin-map"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Travel</h4>
-                                            <p class="text-truncate">Yosemite Trip</p>
-                                        </div>
-                                        <div class="transaction-amount text-blue">$4900</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-blue">
-                                            <i class="bi bi-bag-check"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Shopping</h4>
-                                            <p class="text-truncate">Bill Paid</p>
-                                        </div>
-                                        <div class="transaction-amount text-blue">$285</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-green">
-                                            <i class="bi bi-boxes"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Bank</h4>
-                                            <p class="text-truncate">Investment</p>
-                                        </div>
-                                        <div class="transaction-amount text-green">$150</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-green">
-                                            <i class="bi bi-paypal"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Paypal</h4>
-                                            <p class="text-truncate">Amount Received</p>
-                                        </div>
-                                        <div class="transaction-amount text-green">$790</div>
-                                    </div>
-                                    <div class="transaction-block">
-                                        <div class="transaction-icon shade-blue">
-                                            <i class="bi bi-credit-card-2-front"></i>
-                                        </div>
-                                        <div class="transaction-details">
-                                            <h4>Credit Card</h4>
-                                            <p class="text-truncate">Online Shopping</p>
-                                        </div>
-                                        <div class="transaction-amount text-red">$280</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
-                        </div>
-                        <div class="card-body">
-                            <div id="taskGraph"></div>
-                            <ul class="task-list-container">
-                                @foreach ($ordersByStatusForList as $status => $count)
-                                    <li class="task-list-item">
-                                        <div
-                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
-                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
-                                        </div>
-                                        <div class="task-info">
-                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
-                                            <p class="amount-spend">{{ $count }}</p>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-12">
+                <div class="col-sm-4 col-12">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Notifications</div>
@@ -433,36 +349,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Người Mua Gần Đây</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="scroll370">
-                                <div class="activity-container">
-                                    @foreach ($recentBuyers as $buyer)
-                                        <div class="activity-block">
-                                            <div class="activity-user">
-                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
-                                                <!-- Hình ảnh người dùng -->
-                                            </div>
-                                            <div class="activity-details">
-                                                <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
-                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
-                                                <!-- Thời gian thực hiện đơn hàng -->
-                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
-                                                <!-- Số lượng đơn hàng -->
-                                                <span class="badge shade-green rounded-pill">Mới</span>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
+            <!-- Row end -->
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
