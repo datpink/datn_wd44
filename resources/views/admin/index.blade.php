@@ -98,6 +98,15 @@
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
+                                                <div class="reports-summary-block mb-3">
+                                                    <i class="bi bi-circle-fill text-blue me-2"></i>
+                                                    <div class="d-flex flex-column">
+                                                        <h6>Lợi Nhuận</h6>
+                                                        <h5 class="text-danger">
+                                                            {{ number_format($netProfit, 0, ',', '.') }}
+                                                            VNĐ</h5>
+                                                    </div>
+                                                </div>
                                                 <button class="btn btn-info w-100">Xem Báo Cáo</button>
                                             </div>
                                         </div>
@@ -105,11 +114,12 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="graph-day-selection mt-2" role="group">
-                                                        <button type="button" class="btn active">Today</button>
-                                                        <button type="button" class="btn">Yesterday</button>
-                                                        <button type="button" class="btn">7 days</button>
-                                                        <button type="button" class="btn">15 days</button>
-                                                        <button type="button" class="btn">30 days</button>
+                                                        <a href="?period=today" class="btn active {{ $period == 'today' ? 'btn-primary' : 'btn-secondary' }}">Today</a>
+                                                        <a href="?period=yesterday" class="btn {{ $period == 'yesterday' ? 'btn-primary' : 'btn-secondary' }}">Yesterday</a>
+                                                        <a href="?period=7days" class="btn {{ $period == '7days' ? 'btn-primary' : 'btn-secondary' }}">7 days</a>
+                                                        <a href="?period=15days" class="btn {{ $period == '15days' ? 'btn-primary' : 'btn-secondary' }}">15 days</a>
+                                                        <a href="?period=30days" class="btn {{ $period == '30days' ? 'btn-primary' : 'btn-secondary' }}">30 days</a>
+                                                        <a href="?period=1years" class="btn {{ $period == '1years' ? 'btn-primary' : 'btn-secondary' }}">1years</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mt-3">
@@ -363,10 +373,10 @@
                             },
                         },
                         dataLabels: {
-                            enabled: false
+                            enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
                         },
                         stroke: {
-                            curve: 'smooth',
+                            curve: 'smooth', // Đường cong mượt
                             width: 3
                         },
                         series: [{
@@ -378,12 +388,12 @@
                             strokeDashArray: 5,
                             xaxis: {
                                 lines: {
-                                    show: true
+                                    show: true // Hiển thị đường lưới trên trục X
                                 }
                             },
                             yaxis: {
                                 lines: {
-                                    show: false,
+                                    show: false, // Tắt đường lưới trên trục Y
                                 }
                             },
                             padding: {
@@ -395,30 +405,50 @@
                         },
                         xaxis: {
                             categories: @json($dates), // Dữ liệu ngày tháng
+                            labels: {
+                                style: {
+                                    fontSize: '12px',
+                                    colors: ['#6c757d']
+                                }
+                            }
                         },
                         yaxis: {
                             labels: {
-                                show: false,
-                            }
+                                show: true, // Hiển thị nhãn trên trục Y
+                                style: {
+                                    fontSize: '12px',
+                                    colors: ['#6c757d']
+                                }
+                            },
                         },
-                        colors: ['#4267cd', '#32b2fa'],
+                        colors: ['#4267cd'], // Màu sắc cho biểu đồ
                         markers: {
-                            size: 0,
-                            opacity: 0.1,
-                            colors: ['#4267cd', '#32b2fa'],
+                            size: 4,
+                            colors: ['#4267cd'],
                             strokeColor: "#ffffff",
                             strokeWidth: 2,
                             hover: {
-                                size: 7,
+                                size: 7, // Kích thước khi di chuột qua
                             }
                         },
+                        tooltip: {
+                            enabled: true,
+                            x: {
+                                format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+                            },
+                            y: {
+                                formatter: function (value) {
+                                    return value.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                                }
+                            }
+                        }
                     }
-
+            
                     var chart = new ApexCharts(
                         document.querySelector("#revenueGraph"),
                         options
                     );
-
+            
                     chart.render();
                 });
             </script>

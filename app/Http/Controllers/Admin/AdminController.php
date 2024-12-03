@@ -27,7 +27,7 @@ class AdminController extends Controller
     }
 
     // Trang chính của admin`
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Trang Quản Trị';
 
@@ -53,10 +53,42 @@ class AdminController extends Controller
             $buyer->last_order_time = Carbon::parse($buyer->last_order_time);
         }
 
-        // Lấy doanh thu theo ngày, chỉ tính các đơn hàng đã giao và đã thanh toán
-        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total, SUM(discount_amount) as discount')
-            ->where('status', 'shipped') // Chỉ lấy đơn hàng đã giao
-            ->where('payment_status', 'paid') // Chỉ lấy đơn hàng đã thanh toán
+        // Lấy tham số period từ query string
+        $period = $request->input('period', 'today'); // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+        $startDate = Carbon::today(); // Mặc định là hôm nay
+        $endDate = Carbon::today();   // Kết thúc cũng là hôm nay
+
+        // Xử lý khoảng thời gian dựa trên tham số period
+        switch ($period) {
+            case 'yesterday':
+                $startDate = Carbon::yesterday();
+                $endDate = Carbon::yesterday();
+                break;
+            case '7days':
+                $startDate = Carbon::today()->subDays(6);
+                break;
+            case '15days':
+                $startDate = Carbon::today()->subDays(14);
+                break;
+            case '30days':
+                $startDate = Carbon::today()->subDays(29);
+                break;
+            case '1years':
+                $startDate = Carbon::today()->subDays(364);
+                break;
+            default:
+                // Mặc định là hôm nay
+                $startDate = Carbon::today();
+                break;
+        }
+
+        // Truy vấn doanh thu theo khoảng thời gian
+        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'shipped') // Chỉ tính đơn hàng đã giao
+            ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -125,9 +157,29 @@ class AdminController extends Controller
 
         $topSellingProductQuantities = $topSellingProducts->pluck('total_quantity');
 
+        //lợi nhuận
+        $profits = DB::table('product_variants')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->select(
+                'product_variants.id as variant_id',
+                'products.price as base_price',
+                'product_variants.price as variant_price',
+                DB::raw('(product_variants.price - products.price) as profit')
+            )
+            ->get();
+
+        // Tính tổng lợi nhuận từ các biến thể
+        $totalProfit = $profits->sum('profit'); // Tổng lãi từ danh sách biến thể
+
+        // Tính lãi sau khi trừ giảm giá
+        $netProfit = $totalProfit - $discounts; // Trừ tổng giảm giá
+
         return view('admin.index', compact(
             'title',
             'recentBuyers',
+            'totalProfit',
+            'profits',
+            'netProfit',
             'catalogueCount',
             'orderCount',
             'userCount',
@@ -141,6 +193,7 @@ class AdminController extends Controller
             'ordersByStatusForChart',
             'topSellingProducts',
             'topSellingProductNames',
+            'period',
             'topSellingProductQuantities'
         ));
     }
