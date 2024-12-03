@@ -18,7 +18,7 @@
                             </div>
                             <div class="u-columns col2-set" id="customer_login">
                                 <div class="u-column1 col-1">
-                                    <h2>Login</h2>
+                                    <h2>Đăng nhập</h2>
                                     <form class="kobolg-form kobolg-form-login login" method="POST"
                                         action="{{ route('login') }}">
                                         @csrf
@@ -78,7 +78,7 @@
 
                                 </div>
                                 <div class="u-column2 col-2">
-                                    <h2>Register</h2>
+                                    <h2>Đăng ký</h2>
                                     <form method="POST" action="{{ route('register') }}"
                                         class="kobolg-form kobolg-form-register register">
                                         @csrf
@@ -90,13 +90,13 @@
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
-                                            <label for="reg_name">Name&nbsp;<span class="required">*</span></label>
+                                            <label for="reg_name">Họ và tên&nbsp;<span class="required">*</span></label>
                                             <input type="text" class="kobolg-Input kobolg-Input--text input-text"
                                                 name="name" id="reg_name" required>
                                         </p>
 
                                         <p class="kobolg-form-row kobolg-form-row--wide form-row form-row-wide">
-                                            <label for="reg_password">Password&nbsp;<span class="required">*</span></label>
+                                            <label for="reg_password">Mật khẩu&nbsp;<span class="required">*</span></label>
                                             <input type="password" class="kobolg-Input kobolg-Input--text input-text"
                                                 name="password" id="reg_password" required>
                                         </p>
