@@ -65,7 +65,7 @@
 
                                                     <!-- Cập nhật trạng thái -->
                                                     <form action="{{ route('variants.updateStatus', $variant->id) }}"
-                                                        method="POST" style="display:inline-block;">
+                                                        method="POST">
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="btn rounded-pill btn-sm"

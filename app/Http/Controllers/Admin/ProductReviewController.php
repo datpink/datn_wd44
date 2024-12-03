@@ -11,6 +11,7 @@ class ProductReviewController extends Controller
     // Hiển thị danh sách đánh giá
     public function index(Request $request)
     {
+        $title = 'Danh Sách Đánh Giá';
         $search = $request->input('search');
         $productReviews = ProductReview::with(['user', 'product', 'responses'])
             ->when($search, function ($query, $search) {
@@ -18,7 +19,7 @@ class ProductReviewController extends Controller
             })
             ->get();
 
-        return view('admin.product_reviews.list', compact('productReviews'));
+        return view('admin.product_reviews.list', compact('productReviews', 'title'));
     }
 
     // Xóa đánh giá
