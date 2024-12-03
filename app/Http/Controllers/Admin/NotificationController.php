@@ -46,5 +46,20 @@ class NotificationController extends Controller
 
         return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được tạo thành công.');
     }
+    public function destroy($id)
+{
+    // Tìm thông báo theo ID
+    $notification = Notification::find($id);
+
+    if (!$notification) {
+        return redirect()->route('admin.notifications.index')->with('error', 'Thông báo không tồn tại.');
+    }
+
+    // Thực hiện xóa thông báo
+    $notification->delete();
+
+    return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được xóa thành công.');
+}
+
 
 }

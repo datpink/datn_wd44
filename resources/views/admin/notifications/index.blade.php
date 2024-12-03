@@ -52,7 +52,7 @@
                                             </a>
 
                                             <!-- Form để xóa bài viết -->
-                                            <form action="#" method="POST"
+                                            <form action="{{ route('admin.notifications.destroy', $notification->id) }}" method="POST"
                                                 class="d-inline-block delete-form"
                                                 onsubmit="return confirm('Bạn có chắc muốn xóa Thông Báo này không?');">
                                                 @csrf

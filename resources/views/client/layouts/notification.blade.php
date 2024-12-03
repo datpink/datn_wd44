@@ -1,4 +1,4 @@
-{{-- <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
+ <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="">
             <span class="fa fa-bell"></span> <!-- Biểu tượng thông báo -->
@@ -22,7 +22,7 @@
                                 <li class="list-group-item">
                                     <div>
                                         <strong>{{ $notification->title }}</strong>
-                                        <p class="mb-1">{{ $notification->description }}</p>
+                                        <p class="mb-1">{{ \Str::limit($notification->description, 50) }}</p>
                                         @if ($notification->url)
                                         <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary">
                                             Xem chi tiết
@@ -45,4 +45,3 @@
     </div>
 </div>
 
- --}}
