@@ -30,6 +30,8 @@ class PostController extends Controller
             ->orderBy('posts.created_at', 'desc')
             ->limit(5)
             ->get();
+
+            // return 
     }
 
     // Hiển thị chi tiết bài viết

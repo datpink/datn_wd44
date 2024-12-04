@@ -129,13 +129,11 @@
                 <div class="sidebar col-xl-3 col-lg-4 col-md-4 col-sm-12">
                     <div id="widget-area" class="widget-area shop-sidebar">
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
-                            <form role="search" method="get" class="kobolg-product-search"
-                                action="{{ route('product.search') }}">
+                            <form role="search" method="get" class="kobolg-product-search" id="kobolg-product-search">
 
-                                <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Search products…" value="{{ request()->get('s') }}" name="s"
-                                    type="search">
-                                <button type="submit" value="Search">Search</button>
+                                <input id="kobolg-product-search-field-0" class="search-field" placeholder="Tìm kiếm…"
+                                    value="" name="" type="search">
+                                <button type="submit" value="Search" id="search-button">Tìm kiếm</button>
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
@@ -179,8 +177,10 @@
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">{{$item->productVariants->count()}}(*)</span> </a>
+                                        {{-- <span class="count">{{ $item->productVariants->count() }}(*)</span> --}}
+                                    </a>
                                 @endforeach
+
 
                             </div>
                         </div>
@@ -254,6 +254,7 @@
                         <script>
                             document.addEventListener('DOMContentLoaded', function(e) {
                                 const orderBySelect = document.querySelector('.orderby');
+                                const searchProduct = document.querySelector('.search-field');
                                 const colorGroup = document.querySelectorAll('.term-color');
                                 const storageGroup = document.querySelectorAll('.term-storage');
                                 // const priceRange = document.getElementById('price-range');
@@ -263,6 +264,8 @@
                                 const priceFrom = document.getElementById('priceFrom');
                                 const priceTo = document.getElementById('priceTo');
 
+                                // console.log(searchProduct);
+
 
 
                                 let activeFilters = {
@@ -270,7 +273,9 @@
                                     storage: null,
                                     price_min: null,
                                     price_max: null,
-                                    orderby: 'price-latest'
+                                    orderby: 'price-latest',
+                                    searchProduct: null
+
                                 };
 
                                 orderBySelect.addEventListener('change', function(e) {
@@ -278,6 +283,13 @@
                                     activeFilters.orderby = this.value; // Lấy giá trị tùy chọn sắp xếp
                                     fetchFilteredProducts();
                                 })
+
+                                document.getElementById('search-button').addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    activeFilters.searchProduct = searchProduct.value.trim();
+                                    fetchFilteredProducts();
+                                });
+
 
                                 // Cập nhật bộ lọc giá với slider
                                 const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
@@ -381,6 +393,7 @@
                                             price_min: activeFilters.price_min, // Gửi giá min
                                             price_max: activeFilters.price_max, // Gửi giá max
                                             orderby: activeFilters.orderby,
+                                            search: activeFilters.searchProduct, // Gửi từ khóa tìm kiếm
                                             page: page // Truyền tham số page vào API
                                         })
                                         .then((res) => {

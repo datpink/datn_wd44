@@ -346,13 +346,13 @@
                                     </div>
                                 </form>
 
-                                <div class="yith-wcwl-add-to-wishlist">
+                                {{-- <div class="yith-wcwl-add-to-wishlist">
                                     <div class="yith-wcwl-add-button show">
                                         <a href="#" rel="nofollow" data-product-id="27"
                                             data-product-type="variable" class="add_to_wishlist">
                                             Thêm vào danh sách yêu thích</a>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="clear"></div>
                                 <a href="#" class="compare button" data-product_id="27" rel="nofollow">So

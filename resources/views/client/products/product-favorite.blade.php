@@ -20,9 +20,8 @@
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
                                     <img class="img-responsive"
-                                        src="https://imageupscaler.com/wp-content/uploads/2024/07/deblured-cutty-fox.jpg"
-                                        {{-- {{ \Storage::url($product->image_url)}} --}}
-                                        alt="Gaming Mouse" width="600" height="778">
+                                        src="https://danviet.mediacdn.vn/upload/2-2019/images/2019-06-25/3-1561430885-width660height440.jpg"
+                                        {{-- {{ \Storage::url($product->image_url)}} --}} alt="Gaming Mouse" width="600" height="778">
                                 </a>
                                 <div class="flash">
                                     <span class="onnew"><span class="text">New</span></span>
@@ -73,9 +72,9 @@
                                                 class="add_to_wishlist remove_to_wishlist">Remove to Wishlist</a>
                                         </div>
                                     </div>
-                                    <div class="kobolg product compare-button">
+                                    {{-- <div class="kobolg product compare-button">
                                         <a href="#" class="compare button">Compare</a>
-                                    </div>
+                                    </div> --}}
                                     <a href="#" class="button yith-wcqv-button">Quick View</a>
                                     <div class="add-to-cart">
                                         <a href="#" class="button product_type_variable add_to_cart_button">Select
@@ -108,6 +107,31 @@
                 @endforeach
 
             </ul>
+            @if ($products->count() > 0 && $products->lastPage() > 1)
+                <nav class="navigation pagination mt-3">
+                    <div class="nav-links">
+                        @if ($products->onFirstPage())
+                            <span class="disabled page-numbers">«</span>
+                        @else
+                            <a class="page-numbers" href="{{ $products->previousPageUrl() }}">«</a>
+                        @endif
+
+                        @foreach (range(1, $products->lastPage()) as $page)
+                            @if ($page == $products->currentPage())
+                                <span class="current page-numbers">{{ $page }}</span>
+                            @else
+                                <a class="page-numbers" href="{{ $products->url($page) }}">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        @if ($products->hasMorePages())
+                            <a class="page-numbers" href="{{ $products->nextPageUrl() }}">»</a>
+                        @else
+                            <span class="disabled page-numbers">»</span>
+                        @endif
+                    </div>
+                </nav>
+            @endif
         </div>
     </div>
 
