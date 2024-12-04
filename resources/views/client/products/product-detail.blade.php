@@ -230,7 +230,7 @@
                                     {{-- <span class="kobolg-Price-currencySymbol">₫</span> --}}
                                     <span id="product-price">
                                         @if ($product->variants->isNotEmpty())
-                                            {{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                            {{ number_format($minPrice, 0, ',', '.') }}₫ - 
                                             {{ number_format($maxPrice, 0, ',', '.') }}₫
                                         @else
                                             {{ number_format($product->price, 0, ',', '.') }}₫

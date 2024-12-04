@@ -123,7 +123,7 @@
             const stockInput = document.getElementById('stock');
 
             // Function to validate and reset negative or invalid values
-            function validateInput(input, minValue = 0, maxValue = 5000000) {
+            function validateInput(input, minValue = 0, maxValue = 100000000) {
                 input.addEventListener('input', function() {
                     const value = parseFloat(input.value);
 

@@ -57,8 +57,8 @@ class AdminController extends Controller
         $period = $request->input('period', 'today'); // Mặc định là 'today'
 
         // Khởi tạo các mốc thời gian
-        $startDate = Carbon::today(); // Mặc định là hôm nay
-        $endDate = Carbon::today();   // Kết thúc cũng là hôm nay
+        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
 
         // Xử lý khoảng thời gian dựa trên tham số period
         switch ($period) {
@@ -84,14 +84,16 @@ class AdminController extends Controller
                 break;
         }
 
-        // Truy vấn doanh thu theo khoảng thời gian
         $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->where('status', 'shipped') // Chỉ tính đơn hàng đã giao
-            ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
+            ->whereDate('created_at', '>=', $startDate->toDateString())
+            ->whereDate('created_at', '<=', $endDate->toDateString())
+            ->where('status', 'shipped')
+            ->where('payment_status', 'paid')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
+
+        // dd($dailyRevenue);
 
         // Chuyển đổi dữ liệu thành mảng
         $dates = $dailyRevenue->pluck('date')->map(function ($date) {
