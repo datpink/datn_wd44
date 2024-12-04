@@ -179,7 +179,7 @@
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">{{$item->productVariants->count()}}(*)</span> </a>
+                                        <span class="count">{{ $item->productVariants->count() }}(*)</span> </a>
                                 @endforeach
 
                             </div>
@@ -437,11 +437,26 @@
                                                                         </h3>
                                                                         <span class="price">
                                                                             <span class="kobolg-Price-amount amount text-danger">
-                                                                                <del>
-                                                                                    ${new Intl.NumberFormat('de-DE').format(product.price)}<span class="kobolg-Price-currencySymbol">₫</span>
-                                                                                </del>
+                                                                                ${
+                                                                                    product.discount_price && product.discount_price !== product.price
+                                                                                        ? `
+                                                                                                                        <del>
+                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
+                                                                                                                            ${Number(product.price).toFixed(2)}
+                                                                                                                        </del>
+                                                                                                                        <span class="kobolg-Price-amount amount old-price">
+                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
+                                                                                                                            ${Number(product.discount_price).toFixed(2)}
+                                                                                                                        </span>
+                                                                                                                    `
+                                                                                        : `
+                                                                                                                        <span>
+                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
+                                                                                                                            ${Number(product.price).toFixed(2)}
+                                                                                                                        </span>
+                                                                                                                    `
+                                                                                }
                                                                             </span>
-                                                                            ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price">${new Intl.NumberFormat('de-DE').format(product.discount_price)}</span>` : ''}<span class="kobolg-Price-currencySymbol">₫</span>
                                                                         </span>
                                                                         <div class="kobolg-product-details__short-description">
                                                                             <p>${product.tomtat}</p>
@@ -482,14 +497,14 @@
                                                 // Nút trang trước
                                                 if (pagination.prev_page_url) {
                                                     paginationContainer.innerHTML += `
-                                                        <button onclick="fetchFilteredProducts(${pagination.current_page - 1})" 
+                                                        <button onclick="fetchFilteredProducts(${pagination.current_page - 1})"
                                                                 class="pagination-button">«</button>`;
                                                 }
 
                                                 // Các số trang
                                                 for (let page = 1; page <= pagination.last_page; page++) {
                                                     paginationContainer.innerHTML += `
-                                                        <button onclick="fetchFilteredProducts(${page})" 
+                                                        <button onclick="fetchFilteredProducts(${page})"
                                                                 class="pagination-button ${page === pagination.current_page ? 'active' : ''}">
                                                             ${page}
                                                         </button>`;
@@ -498,7 +513,7 @@
                                                 // Nút trang sau
                                                 if (pagination.next_page_url) {
                                                     paginationContainer.innerHTML += `
-                                                        <button onclick="fetchFilteredProducts(${pagination.current_page + 1})" 
+                                                        <button onclick="fetchFilteredProducts(${pagination.current_page + 1})"
                                                                 class="pagination-button">»</button>`;
                                                 }
                                             }
