@@ -26,7 +26,7 @@ class ProductController extends Controller
 
         // dd($products);
         $variants = Attribute::with('attributeValues')->get();
-        $variant_values = AttributeValue::with('attribute','productVariants')->where('attribute_id', '1')->get();
+        $variant_values = AttributeValue::with('attribute', 'productVariants')->where('attribute_id', '1')->get();
 
         $variant_storage_values = AttributeValue::with('attribute')->where('attribute_id', '3')->get();
         // dd($variant_storage_values);
@@ -73,12 +73,15 @@ class ProductController extends Controller
                     break;
             }
         }
-        // 0982723969
-        // 0332141009
+
 
         $minPrice = $request->input('price_min');
         $maxPrice = $request->input('price_max');
         // dd($minPrice);
+
+        if ($request->input('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
 
         $query->whereBetween('discount_price', [$minPrice, $maxPrice]);
 
@@ -177,33 +180,33 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-    
+
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
             });
         });
-    
+
         $colorVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Color'; // Hoặc tên thuộc tính phù hợp
             });
         });
-    
+
         $sizeVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Size'; // Hoặc tên thuộc tính phù hợp
             });
         });
-    
+
         // Lấy danh sách sản phẩm liên quan theo `catalogue_id`
         $relatedProducts = Product::where('catalogue_id', $product->catalogue_id)
             ->where('id', '!=', $product->id) // Loại trừ sản phẩm hiện tại
             ->with('galleries') // Nếu muốn lấy hình ảnh sản phẩm liên quan
             ->limit(6) // Số lượng sản phẩm liên quan cần hiển thị
             ->get();
-    
+
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
             'product',
@@ -353,6 +356,9 @@ class ProductController extends Controller
             });
         }
 
+        if ($request->input('search')) {
+            $productByCatalogues->where('name', 'like', '%' . $request->search . '%');
+        }
 
         // Lọc theo giá nếu có
         $minPrice = $request->input('price_min');
@@ -640,7 +646,7 @@ class ProductController extends Controller
         $user = Auth::user();
         $products = Product::whereHas('favoritedBy.favorites', function ($query) use ($user) {
             $query->where('user_id', $user->id);
-        })->get();
+        })->paginate(12);
         // dd($products);
 
         return view('client.products.product-favorite', compact('products'));

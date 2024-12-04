@@ -123,9 +123,9 @@
                     <div id="widget-area" class="widget-area shop-sidebar">
                         <div id="kobolg_product_search-2" class="widget kobolg widget_product_search">
                             <form class="kobolg-product-search">
-                                <input id="kobolg-product-search-field-0" class="search-field"
-                                    placeholder="Tìm kiếm sản phẩm…" value="" name="s" type="search">
-                                <button type="submit" value="Search">Tìm kiếm</button>
+                                <input id="kobolg-product-search-field-0" class="search-field" placeholder="Tìm kiếm…"
+                                    value="" name="" type="search">
+                                <button type="submit" value="Search" id="search-button">Tìm kiếm</button>
                             </form>
                         </div>
                         <div id="kobolg_price_filter-2" class="widget kobolg widget_price_filter">
@@ -174,7 +174,8 @@
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">{{ $item->productVariants->count() }}(*)</span> </a>
+                                        {{-- <span class="count">{{ $item->productVariants->count() }}(*)</span> --}}
+                                    </a>
                                 @endforeach
 
                             </div>
@@ -236,6 +237,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function(e) {
             const orderBySelect = document.querySelector('.orderby');
+            const searchProduct = document.querySelector('.search-field');
             const colorGroup = document.querySelectorAll('.term-color');
             const storageGroup = document.querySelectorAll('.term-storage');
             // const priceRange = document.getElementById('price-range');
@@ -251,13 +253,21 @@
                 storage: null,
                 price_min: null,
                 price_max: null,
-                orderby: 'price-latest'
+                orderby: 'price-latest',
+                searchProduct: null,
             };
 
             orderBySelect.addEventListener('change', function(e) {
                 activeFilters.orderby = this.value; // Lấy giá trị tùy chọn sắp xếp
                 fetchFilteredProducts();
             })
+
+            document.getElementById('search-button').addEventListener('click', function(e) {
+                e.preventDefault();
+                activeFilters.searchProduct = searchProduct.value.trim();
+                fetchFilteredProducts();
+            });
+
 
             // Cập nhật bộ lọc giá với slider
             const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
@@ -340,6 +350,7 @@
                         price_min: activeFilters.price_min, // Gửi giá min
                         price_max: activeFilters.price_max, // Gửi giá max
                         orderby: activeFilters.orderby,
+                        search: activeFilters.searchProduct,
                         page: page
                     })
                     .then((res) => {
