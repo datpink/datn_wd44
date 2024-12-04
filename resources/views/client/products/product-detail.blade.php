@@ -119,13 +119,13 @@
             cursor: zoom-in;
             /* Hiển thị con trỏ zoom khi hover */
         }
-        .img {
-        width: 200px;
-        height: auto;
-        margin: 0 auto;
-        min-height: 230px;
-    }
 
+        .img {
+            width: 200px;
+            height: auto;
+            margin: 0 auto;
+            min-height: 230px;
+        }
     </style>
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> --}}
 
@@ -142,7 +142,6 @@
         @foreach ($product->variants as $variant)
             variantStock['{{ $variant->id }}'] = {{ $variant->stock }};
         @endforeach
-
     </script>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
@@ -213,32 +212,59 @@
                                     </div>
                                 </div>
                             </div>
-                            @php
-                                if ($product->variants->isNotEmpty()) {
-                                    $prices = $product->variants->pluck('price')->toArray();
-                                    $minPrice = min($prices);
-                                    $maxPrice = max($prices);
-                                } else {
-                                    $minPrice = $product->price;
-                                    $maxPrice = $product->price;
-                                }
-                            @endphp
 
                             <div class="summary entry-summary">
                                 <h1 class="product_title entry-title">{{ $product->name }}</h1>
+
+                                @php
+                                    // Tính toán giá min và max cho biến thể
+                                    if ($product->variants->isNotEmpty()) {
+                                        $prices = $product->variants->pluck('price')->toArray();
+                                        $minPrice = min($prices);
+                                        $maxPrice = max($prices);
+                                        $discountAmount = $product->price - $product->discount_price;
+                                        $minDiscountPrice = $minPrice - $discountAmount;
+                                        $maxDiscountPrice = $maxPrice - $discountAmount;
+                                    } else {
+                                        $minPrice = $product->price;
+                                        $maxPrice = $product->price;
+                                        $minDiscountPrice = $product->discount_price;
+                                        $maxDiscountPrice = $product->discount_price;
+                                    }
+                                @endphp
+
                                 <p class="price">
-                                    {{-- <span class="kobolg-Price-currencySymbol">₫</span> --}}
                                     <span id="product-price">
-                                        @if ($product->variants->isNotEmpty())
-                                            {{ number_format($minPrice, 0, ',', '.') }}₫ - 
-                                            {{ number_format($maxPrice, 0, ',', '.') }}₫
+                                        @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
+                                            @if ($product->variants->isNotEmpty())
+                                                <del>
+                                                    <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                                        {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                </del>
+                                                <span class="text-danger font-weight-bold">
+                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
+                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
+                                                </span>
+                                            @else
+                                                <del>
+                                                    <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                </del>
+                                                <span class="text-danger font-weight-bold">
+                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                                                </span>
+                                            @endif
                                         @else
-                                            {{ number_format($product->price, 0, ',', '.') }}₫
+                                            @if ($product->variants->isNotEmpty())
+                                                <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                            @else
+                                                <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                            @endif
                                         @endif
                                     </span>
                                 </p>
-                                <br>
-                                <span class="sku_wrapper">
+
+                                <p class="stock in-stock">
                                     Sản phẩm còn lại:
                                     <span class="sku">
                                         @if ($product->variants()->exists())
@@ -247,7 +273,7 @@
                                             {{ $product->stock }}
                                         @endif
                                     </span>
-                                </span>
+                                </p>
 
                                 <div class="product-variants">
                                     <div class="product-attributes">
@@ -277,6 +303,7 @@
                                                                 <button class="variant-btn mx-2 mb-2"
                                                                     data-variant="{{ json_encode($variants[0]) }}"
                                                                     data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}₫"
+                                                                    data-discount-price="{{ number_format($variants[0]->price - $discountAmount, 0, ',', '.') }}₫"
                                                                     data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
                                                                     data-dung-luong="{{ $storage }}"
                                                                     data-mau-sac="{{ $color }}">
@@ -285,6 +312,8 @@
                                                                         class="img-fluid">
                                                                     <span>{{ $storage }}</span> -
                                                                     <span>{{ $color }}</span>
+                                                                    <span
+                                                                        class="price-discount">{{ number_format($variants[0]->price - $discountAmount, 0, ',', '.') }}₫</span>
                                                                 </button>
                                                             @endforeach
                                                         @endforeach
@@ -292,15 +321,11 @@
                                                 </div>
                                             </div>
                                         @endif
-
                                     </div>
                                 </div>
 
-                                <div id="error-message" style="color: red;"></div>
-
                                 <p class="stock in-stock">
-                                    Thương hiệu:
-                                    <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
+                                    Thương hiệu: <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
                                 </p>
 
                                 <div class="kobolg-product-details__short-description">
@@ -350,13 +375,13 @@
                                     <div class="yith-wcwl-add-button show">
                                         <a href="#" rel="nofollow" data-product-id="27"
                                             data-product-type="variable" class="add_to_wishlist">
-                                            Thêm vào danh sách yêu thích</a>
+                                            Thêm vào danh sách yêu thích
+                                        </a>
                                     </div>
                                 </div> --}}
 
                                 <div class="clear"></div>
-                                <a href="#" class="compare button" data-product_id="27" rel="nofollow">So
-                                    sánh</a>
+                                <a href="#" class="compare button" data-product_id="27" rel="nofollow">So sánh</a>
 
                                 <div class="product_meta">
                                     <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
@@ -371,12 +396,13 @@
                                     <a target="_blank" class="facebook" href="#"><i
                                             class="fa fa-facebook-f"></i></a>
                                     <a target="_blank" class="twitter" href="#"><i class="fa fa-twitter"></i></a>
-                                    <a target="_blank" class="pinterest" href="#"> <i
-                                            class="fa fa-pinterest"></i></a>
-                                    <a target="_blank" class="googleplus" href="#"><i
-                                            class="fa fa-google-plus"></i></a>
+                                    <a target="_blank" class="pinterest" href="#"><i
+                                            class="fa fa-pinterest-p"></i></a>
+                                    <a target="_blank" class="google" href="#"><i class="fa fa-google"></i></a>
                                 </div>
                             </div>
+
+
 
                         </div>
 
@@ -409,74 +435,87 @@
                             <h3>Sản phẩm liên quan</h3>
                             <div class="product-list row">
                                 @foreach ($relatedProducts as $product)
-                                <div class="col-md-4 col-sm-6 product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
-                                    <div class="product-inner tooltip-top">
-                                        <div class="product-thumb">
-                                            <div class="img" style="width: 200px; height: auto; margin-top: 10px">
-                                                <a class="thumb-link" href="{{ route('client.products.product-detail', $product->slug) }}" tabindex="0">
-                                                    @if ($product->image_url && \Storage::exists($product->image_url))
-                                                        <img src="{{ \Storage::url($product->image_url) }}" alt="{{ $product->name }}">
-                                                    @else
-                                                        <img src="{{ asset('images/default-product.jpg') }}" alt="No image available">
-                                                    @endif
-                                                </a>
-                                            </div>
-                                            <div class="flash">
-                                                @if ($product->condition === 'new')
-                                                <span class="onsale"><span class="number">-18%</span></span>
-                                                <span class="onnew"><span class="text">New</span></span>
-                                                @endif
-                                            </div>
-                                            <a href="{{ route('client.products.product-detail', $product->slug) }}" class="button yith-wcqv-button">Quick View</a>
-                                        </div>
-                                        <div class="product-info">
-                                            <div class="rating-wapper nostar">
-                                                <div class="star-rating">
-                                                    <span style="width:0%">Rated <strong class="rating">0</strong> out of 5</span>
+                                    <div
+                                        class="col-md-4 col-sm-6 product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
+                                        <div class="product-inner tooltip-top">
+                                            <div class="product-thumb">
+                                                <div class="img" style="width: 200px; height: auto; margin-top: 10px">
+                                                    <a class="thumb-link"
+                                                        href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                        tabindex="0">
+                                                        @if ($product->image_url && \Storage::exists($product->image_url))
+                                                            <img src="{{ \Storage::url($product->image_url) }}"
+                                                                alt="{{ $product->name }}">
+                                                        @else
+                                                            <img src="{{ asset('images/default-product.jpg') }}"
+                                                                alt="No image available">
+                                                        @endif
+                                                    </a>
                                                 </div>
-                                                <span class="review">(0)</span>
+                                                <div class="flash">
+                                                    @if ($product->condition === 'new')
+                                                        <span class="onsale"><span class="number">-18%</span></span>
+                                                        <span class="onnew"><span class="text">New</span></span>
+                                                    @endif
+                                                </div>
+                                                <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                    class="button yith-wcqv-button">Quick View</a>
                                             </div>
-                                            <h3 class="product-name product_title">
-                                                <a href="{{ route('client.products.product-detail', $product->slug) }}" tabindex="0">{{ $product->name }}</a>
-                                            </h3>
-                                            @php
-                                                $minVariantPrice = $product->variants->min('price') ?? $product->price;
-                                                $maxVariantPrice = $product->variants->max('price') ?? $product->price;
-                                            @endphp
-                                            <span class="price">
-                                                @if ($product->discount_price && $product->discount_price > 0)
-                                                    <del>
+                                            <div class="product-info">
+                                                <div class="rating-wapper nostar">
+                                                    <div class="star-rating">
+                                                        <span style="width:0%">Rated <strong class="rating">0</strong> out
+                                                            of 5</span>
+                                                    </div>
+                                                    <span class="review">(0)</span>
+                                                </div>
+                                                <h3 class="product-name product_title">
+                                                    <a href="{{ route('client.products.product-detail', $product->slug) }}"
+                                                        tabindex="0">{{ $product->name }}</a>
+                                                </h3>
+                                                @php
+                                                    $minVariantPrice =
+                                                        $product->variants->min('price') ?? $product->price;
+                                                    $maxVariantPrice =
+                                                        $product->variants->max('price') ?? $product->price;
+                                                @endphp
+                                                <span class="price">
+                                                    @if ($product->discount_price && $product->discount_price > 0)
+                                                        <del>
+                                                            <span class="kobolg-Price-amount amount">
+                                                                {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                                            </span>
+                                                        </del>
+                                                        <span
+                                                            class="kobolg-Price-amount amount text-danger font-weight-bold">
+                                                            {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
+                                                        </span>
+                                                    @else
                                                         <span class="kobolg-Price-amount amount">
                                                             {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
                                                         </span>
-                                                    </del>
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold">
-                                                        {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
-                                                    </span>
-                                                @else
-                                                    <span class="kobolg-Price-amount amount">
-                                                        {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
-                                                    </span>
-                                                @endif
-                                            </span>
-                                        </div>
-                                        <div class="group-button clearfix">
-                                            <div class="yith-wcwl-add-to-wishlist">
-                                                <div class="yith-wcwl-add-button show">
-                                                    <a href="#" class="add_to_wishlist" data-product-id="{{ $product->id }}">
-                                                        {{ auth()->check() && auth()->user()->favorites->contains($product->id) ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' }}
-                                                    </a>
+                                                    @endif
+                                                </span>
+                                            </div>
+                                            <div class="group-button clearfix">
+                                                <div class="yith-wcwl-add-to-wishlist">
+                                                    <div class="yith-wcwl-add-button show">
+                                                        <a href="#" class="add_to_wishlist"
+                                                            data-product-id="{{ $product->id }}">
+                                                            {{ auth()->check() &&auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích' }}
+                                                        </a>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="add-to-cart">
-                                                <a href="#" class="button product_type_grouped">View products</a>
-                                            </div>
-                                            <div class="kobolg product compare-button">
-                                                <a href="#" class="compare button">Compare</a>
+                                                <div class="add-to-cart">
+                                                    <a href="#" class="button product_type_grouped">View
+                                                        products</a>
+                                                </div>
+                                                <div class="kobolg product compare-button">
+                                                    <a href="#" class="compare button">Compare</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
                             </div>
                         </div>
@@ -487,15 +526,13 @@
                 <div class="section-001">
 
                     <!-- danh mục 2 -->
-                    
+
                 </div>
             </div>
-
             @include('client.muteki.js')
+            <!-- Truyền giá trị min, max sang JavaScript -->
 
             <script>
-
-                
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
                         var $img = $(this).find('img'); // Lấy ảnh trong phần tử này

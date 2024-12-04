@@ -405,10 +405,29 @@
                                     </h3>
                                     <span class="price">
                                         <span class="kobolg-Price-amount amount text-danger">
-                                            <del><span class="kobolg-Price-currencySymbol">$</span>${Number(product.price).toFixed(2)}</del>
+                                            ${
+                                                product.discount_price && product.discount_price !== product.price
+                                                    ? `
+                                                            <del>
+                                                                <span class="kobolg-Price-currencySymbol">$</span>
+                                                                ${Number(product.price).toFixed(2)}
+                                                            </del>
+                                                            <span class="kobolg-Price-amount amount old-price">
+                                                                <span class="kobolg-Price-currencySymbol">$</span>
+                                                                ${Number(product.discount_price).toFixed(2)}
+                                                            </span>
+                                                        `
+                                                    : `
+                                                            <span>
+                                                                <span class="kobolg-Price-currencySymbol">$</span>
+                                                                ${Number(product.price).toFixed(2)}
+                                                            </span>
+                                                        `
+                                            }
                                         </span>
-                                        ${product.discount_price ? `<span class="kobolg-Price-amount amount old-price"><span class="kobolg-Price-currencySymbol">$</span>${Number(product.discount_price).toFixed(2)}</span>` : ''}
                                     </span>
+
+
                                     <div class="kobolg-product-details__short-description">
                                         <p>${product.tomtat}</p>
                                     </div>
