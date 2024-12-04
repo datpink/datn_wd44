@@ -77,7 +77,8 @@
                                                     <i class="bi bi-circle-fill text-primary me-2"></i>
                                                     <div class="d-flex flex-column">
                                                         <h6>Tổng Doanh Số</h6>
-                                                        <h5 class="text-primary">{{ number_format($totalSales, 0, ',', '.') }}
+                                                        <h5 class="text-primary">
+                                                            {{ number_format($totalSales, 0, ',', '.') }}
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
@@ -98,6 +99,15 @@
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
+                                                <div class="reports-summary-block mb-3">
+                                                    <i class="bi bi-circle-fill text-blue me-2"></i>
+                                                    <div class="d-flex flex-column">
+                                                        <h6>Lợi Nhuận</h6>
+                                                        <h5 class="text-danger">
+                                                            {{ number_format($netProfit, 0, ',', '.') }}
+                                                            VNĐ</h5>
+                                                    </div>
+                                                </div>
                                                 <button class="btn btn-info w-100">Xem Báo Cáo</button>
                                             </div>
                                         </div>
@@ -105,11 +115,21 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="graph-day-selection mt-2" role="group">
-                                                        <button type="button" class="btn active">Today</button>
-                                                        <button type="button" class="btn">Yesterday</button>
-                                                        <button type="button" class="btn">7 days</button>
-                                                        <button type="button" class="btn">15 days</button>
-                                                        <button type="button" class="btn">30 days</button>
+                                                        <a href="?period=today"
+                                                            class="btn {{ $period == 'today' ? 'btn active' : 'btn-primary' }}">Today</a>
+                                                        <a href="?period=yesterday"
+                                                            class="btn {{ $period == 'yesterday' ? 'btn active' : 'btn-primary' }}">Yesterday</a>
+                                                        <a href="?period=7days"
+                                                            class="btn {{ $period == '7days' ? 'btn active' : 'btn-primary' }}">7
+                                                            days</a>
+                                                        <a href="?period=15days"
+                                                            class="btn {{ $period == '15days' ? 'btn active' : 'btn-primary' }}">15
+                                                            days</a>
+                                                        <a href="?period=30days"
+                                                            class="btn {{ $period == '30days' ? 'btn active' : 'btn-primary' }}">30
+                                                            days</a>
+                                                        <a href="?period=1years"
+                                                            class="btn {{ $period == '1years' ? 'btn active' : 'btn-primary' }}">1years</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mt-3">
@@ -354,72 +374,99 @@
 
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    var options = {
-                        chart: {
-                            height: 317,
-                            type: 'area',
-                            toolbar: {
-                                show: false,
+                    if (@json($totals).length > 0 && @json($dates).length > 0) {
+                        var options = {
+                            chart: {
+                                height: 317,
+                                type: 'area',
+                                toolbar: {
+                                    show: false,
+                                },
                             },
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'smooth',
-                            width: 3
-                        },
-                        series: [{
-                            name: 'Doanh thu',
-                            data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
-                        }],
-                        grid: {
-                            borderColor: '#e0e6ed',
-                            strokeDashArray: 5,
+                            dataLabels: {
+                                enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+                            },
+                            stroke: {
+                                curve: 'smooth', // Đường cong mượt
+                                width: 3
+                            },
+                            series: [{
+                                name: 'Doanh thu',
+                                data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                            }],
+                            grid: {
+                                borderColor: '#e0e6ed',
+                                strokeDashArray: 5,
+                                xaxis: {
+                                    lines: {
+                                        show: true // Hiển thị đường lưới trên trục X
+                                    }
+                                },
+                                yaxis: {
+                                    lines: {
+                                        show: false, // Tắt đường lưới trên trục Y
+                                    }
+                                },
+                                padding: {
+                                    top: 0,
+                                    right: 0,
+                                    bottom: 10,
+                                    left: 0
+                                },
+                            },
                             xaxis: {
-                                lines: {
-                                    show: true
+                                categories: @json($dates), // Dữ liệu ngày tháng
+                                labels: {
+                                    style: {
+                                        fontSize: '12px',
+                                        colors: ['#6c757d']
+                                    }
                                 }
                             },
                             yaxis: {
-                                lines: {
-                                    show: false,
+                                labels: {
+                                    show: true, // Hiển thị nhãn trên trục Y
+                                    style: {
+                                        fontSize: '12px',
+                                        colors: ['#6c757d']
+                                    }
+                                },
+                            },
+                            colors: ['#4267cd'], // Màu sắc cho biểu đồ
+                            markers: {
+                                size: 4,
+                                colors: ['#4267cd'],
+                                strokeColor: "#ffffff",
+                                strokeWidth: 2,
+                                hover: {
+                                    size: 7, // Kích thước khi di chuột qua
                                 }
                             },
-                            padding: {
-                                top: 0,
-                                right: 0,
-                                bottom: 10,
-                                left: 0
-                            },
-                        },
-                        xaxis: {
-                            categories: @json($dates), // Dữ liệu ngày tháng
-                        },
-                        yaxis: {
-                            labels: {
-                                show: false,
+                            tooltip: {
+                                enabled: true,
+                                x: {
+                                    format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+                                },
+                                y: {
+                                    formatter: function(value) {
+                                        return value.toLocaleString('vi-VN', {
+                                            style: 'currency',
+                                            currency: 'VND'
+                                        });
+                                    }
+                                }
                             }
-                        },
-                        colors: ['#4267cd', '#32b2fa'],
-                        markers: {
-                            size: 0,
-                            opacity: 0.1,
-                            colors: ['#4267cd', '#32b2fa'],
-                            strokeColor: "#ffffff",
-                            strokeWidth: 2,
-                            hover: {
-                                size: 7,
-                            }
-                        },
+                        }
+
+                        var chart = new ApexCharts(
+                            document.querySelector("#revenueGraph"),
+                            options
+                        );
+
+                        chart.render();
+                    } else {
+                        console.log("Không có dữ liệu để hiển thị biểu đồ.");
                     }
-
-                    var chart = new ApexCharts(
-                        document.querySelector("#revenueGraph"),
-                        options
-                    );
-
-                    chart.render();
                 });
             </script>
 

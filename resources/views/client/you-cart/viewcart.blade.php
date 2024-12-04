@@ -198,6 +198,9 @@
                     title: 'Xác nhận',
                     text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                     icon: 'warning',
+                    toast: true,
+                    timer: 4000,
+                    position: 'top-right',
                     showCancelButton: true,
                     confirmButtonText: 'Có',
                     cancelButtonText: 'Không'
