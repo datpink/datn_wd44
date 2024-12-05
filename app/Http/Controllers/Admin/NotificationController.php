@@ -14,8 +14,9 @@ class NotificationController extends Controller
     public function index()
     {
         $title = 'Danh Sách Thông báo';
-        $notifications = Notification::query()->paginate(10); // Lấy danh sách thông báo
-        return view('admin.notifications.index', compact('notifications', 'title'));
+        $notificationAll = Notification::paginate(10); // Lấy danh sách thông báo
+        // dd($notifications);
+        return view('admin.notifications.index', compact('notificationAll', 'title'));
     }
 
     public function create()

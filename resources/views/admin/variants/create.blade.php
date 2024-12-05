@@ -5,66 +5,79 @@
 @section('content')
     <h4>Thêm Biến Thể cho Sản Phẩm: {{ $product->name }}</h4>
 
-    <form action="{{ route('variants.store', $product->id) }}" class="was-validated" method="POST" enctype="multipart/form-data" id="variantForm">
+    <form action="{{ route('variants.store', $product->id) }}" class="was-validated" method="POST"
+        enctype="multipart/form-data" id="variantForm">
         @csrf
-        <div class="form-group">
-            <label for="variant_name">Tên Biến Thể</label>
-            <input type="text" name="variant_name" class="form-control" id="variant_name" required>
-        </div>
-        <div class="form-group">
-            <label for="price">Giá</label>
-            <input type="number" name="price" class="form-control" id="price" required>
-        </div>
-        <div class="form-group">
-            <label for="sku">SKU</label>
-            <input type="text" name="sku" class="form-control" id="sku" readonly required>
-        </div>
-        <div class="form-group">
-            <label for="stock">Số lượng tồn kho</label>
-            <input type="number" name="stock" class="form-control" id="stock" required>
-        </div>
-        <div class="form-group">
-            <label for="weight">Cân nặng (kg)</label>
-            <input type="number" name="weight" class="form-control" id="weight" step="0.01" required>
-        </div>
-        <div class="form-group">
-            <label for="dimension">Kích thước (DxRxC)</label>
-            <input type="text" name="dimension" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="image_url">Hình Ảnh</label>
-            <input type="file" name="image_url" class="form-control" accept="image/*" onchange="previewImage(event)" required>
-            <img id="image-preview" src="" alt="Hình ảnh xem trước"
-                style="max-width: 150px; height: auto; display: none;" class="mt-2">
-        </div>
-        <div class="form-group">
-            <label for="colors">Màu Sắc</label>
-            <select name="attributes[color]" class="form-control" id="colors" required>
-                <option value="" selected>Chọn màu sắc</option>
-                @forelse ($colors as $color)
-                    <option value="{{ $color->id }}">{{ $color->name }}</option>
-                @empty
-                    <option value="" disabled>Không có màu sắc</option>
-                @endforelse
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="storages">Dung Lượng</label>
-            <select name="attributes[storage]" class="form-control" id="storages" required>
-                <option value="" selected>Chọn dung lượng</option>
-                @forelse ($storages as $storage)
-                    <option value="{{ $storage->id }}">{{ $storage->name }}</option>
-                @empty
-                    <option value="" disabled>Không có dung lượng</option>
-                @endforelse
-            </select>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="variant_name">Tên Biến Thể</label>
+                    <input type="text" name="variant_name" class="form-control" id="variant_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Giá</label>
+                    <input type="number" name="price" class="form-control" id="price" required>
+                </div>
+                <div class="form-group">
+                    <label for="sku">SKU</label>
+                    <input type="text" name="sku" class="form-control" id="sku" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="stock">Số lượng tồn kho</label>
+                    <input type="number" name="stock" class="form-control" id="stock" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Cân nặng (kg)</label>
+                    <input type="number" name="weight" class="form-control" id="weight" step="0.01" required>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="dimension">Kích thước (DxRxC)</label>
+                    <input type="text" name="dimension" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="colors">Màu Sắc</label>
+                    <select name="attributes[color]" class="form-control" id="colors" required>
+                        <option value="" selected>Chọn màu sắc</option>
+                        @forelse ($colors as $color)
+                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                        @empty
+                            <option value="" disabled>Không có màu sắc</option>
+                        @endforelse
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="storages">Dung Lượng</label>
+                    <select name="attributes[storage]" class="form-control" id="storages" required>
+                        <option value="" selected>Chọn dung lượng</option>
+                        @forelse ($storages as $storage)
+                            <option value="{{ $storage->id }}">{{ $storage->name }}</option>
+                        @empty
+                            <option value="" disabled>Không có dung lượng</option>
+                        @endforelse
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="image_url">Hình Ảnh</label>
+                    <input type="file" name="image_url" class="form-control" accept="image/*"
+                        onchange="previewImage(event)" required>
+                    <img id="image-preview" src="" alt="Hình ảnh xem trước"
+                        style="max-width: 150px; height: auto; display: none;" class="mt-2">
+                </div>
+            </div>
         </div>
 
         <div class="d-flex justify-content-between mt-3">
             <button type="submit" class="btn btn-success rounded-pill" id="submitButton" disabled>Thêm Biến Thể</button>
             <div>
                 <button type="button" class="btn btn-secondary rounded-pill me-2" id="generateSkuBtn">Tạo SKU</button>
-                <a href="{{ route('products.variants.index', $product->id) }}" class="btn btn-secondary rounded-pill">Quay lại</a>
+                <a href="{{ route('products.variants.index', $product->id) }}" class="btn btn-secondary rounded-pill">Quay
+                    lại</a>
             </div>
         </div>
     </form>

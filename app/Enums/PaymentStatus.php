@@ -4,16 +4,18 @@ namespace App\Enums;
 
 class PaymentStatus
 {
-    const PENDING = 'pending';
-    const PAID = 'paid';
-    const FAILED = 'failed';
+    const unpaid = 'unpaid';
+    const paid = 'paid';
+    const refunded = 'refunded';
+    const payment_failed = 'payment_failed';
 
     public static function all()
     {
         return [
-            self::PENDING,
-            self::PAID,
-            self::FAILED,
+            self::unpaid,
+            self::paid,
+            self::refunded,
+            self::payment_failed,
         ];
     }
 }

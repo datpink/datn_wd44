@@ -29,7 +29,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($notifications as $notification)
+                             
+                                @foreach ($notificationAll as $notification)
                                     <tr>
                                         <td>{{ $notification->id }}</td>
                                         <td>{{ $notification->title }}</td>
@@ -69,9 +70,9 @@
                             </tbody>
                         </table>
                     </div>
-                    {{-- <div class="pagination justify-content-center mt-3">
-                        {{ $notifications->links() }}
-                    </div> --}}
+                    <div class="pagination justify-content-center mt-3">
+                        {{ $notificationAll->links() }}
+                    </div>
                 </div>
             </div>
         </div>

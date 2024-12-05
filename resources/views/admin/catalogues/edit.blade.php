@@ -22,48 +22,64 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('catalogues.update', $catalogue) }}" method="POST" enctype="multipart/form-data" id="catalogueForm">
+                    <form action="{{ route('catalogues.update', $catalogue) }}" method="POST" enctype="multipart/form-data"
+                        id="catalogueForm">
                         @csrf
                         @method('PUT')
 
-                        <div class="card-body">
-                            <div class="was-validated">
-                                <label for="name" class="form-label">Tên danh mục:</label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name', $catalogue->name) }}" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <div class="was-validated">
+                                        <label for="name" class="form-label">Tên danh mục:</label>
+                                        <input type="text" name="name" id="name" class="form-control"
+                                            value="{{ old('name', $catalogue->name) }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="was-validated">
+                                        <label for="slug" class="form-label">Slug:</label>
+                                        <input type="text" name="slug" id="slug" class="form-control"
+                                            value="{{ old('slug', $catalogue->slug) }}" required>
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3" disabled>
+                                    Cập nhật
+                                </button>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <div class="was-validated">
+                                        <label for="status" class="form-label">Trạng thái:</label>
+                                        <select name="status" id="status" class="form-control" required>
+                                            <option value="active" {{ $catalogue->status === 'active' ? 'selected' : '' }}>
+                                                Kích hoạt</option>
+                                            <option value="inactive"
+                                                {{ $catalogue->status === 'inactive' ? 'selected' : '' }}>Không kích hoạt
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="was-validated">
+                                        <label for="image" class="form-label">Hình ảnh:</label>
+                                        <input type="file" name="image" id="image" class="form-control"
+                                            onchange="previewImage(event)">
+
+                                        @if ($catalogue->image)
+                                            <img id="imagePreview" src="{{ asset('storage/' . $catalogue->image) }}"
+                                                alt="{{ $catalogue->name }}" style="width: 100px; margin-top: 10px;">
+                                        @else
+                                            <p class="text-danger mt-2">Hình ảnh không tồn tại</p>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="card-body">
-                            <div class="was-validated">
-                                <label for="slug" class="form-label">Slug:</label>
-                                <input type="text" name="slug" id="slug" class="form-control" value="{{ old('slug', $catalogue->slug) }}" required>
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="was-validated">
-                                <label for="status" class="form-label">Trạng thái:</label>
-                                <select name="status" id="status" class="form-control" required>
-                                    <option value="active" {{ $catalogue->status === 'active' ? 'selected' : '' }}>Kích hoạt</option>
-                                    <option value="inactive" {{ $catalogue->status === 'inactive' ? 'selected' : '' }}>Không kích hoạt</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <div class="was-validated">
-                                <label for="image" class="form-label">Hình ảnh:</label>
-                                <input type="file" name="image" id="image" class="form-control" onchange="previewImage(event)">
-
-                                @if ($catalogue->image)
-                                    <img id="imagePreview" src="{{ asset('storage/' . $catalogue->image) }}" alt="{{ $catalogue->name }}" style="width: 100px; margin-top: 10px;">
-                                @else
-                                    <p class="text-danger mt-2">Hình ảnh không tồn tại</p>
-                                @endif
-                            </div>
-                        </div>
-
-                        <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3" disabled>Cập nhật</button>
                     </form>
                 </div>
             </div>

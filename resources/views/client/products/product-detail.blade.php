@@ -272,6 +272,7 @@
                                         @else
                                             {{ $product->stock }}
                                         @endif
+                                        <input type="hidden" id="total-stock" value="{{ $product->stock }}">
                                     </span>
                                 </p>
 
@@ -362,10 +363,10 @@
                                                     class="single_add_to_cart_button button alt">
                                                     Thêm vào giỏ hàng
                                                 </button>
-                                                <button type="submit" id="buy-now"
+                                                {{-- <button type="submit" id="buy-now"
                                                     class="single_add_to_cart_button button buy-now">
                                                     Mua ngay
-                                                </button>
+                                                </button> --}}
                                             </div>
                                         </div>
                                     </div>

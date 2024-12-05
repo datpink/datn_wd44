@@ -324,8 +324,8 @@ class OrderController extends Controller
         // Tìm đơn hàng theo ID
         $order = Order::findOrFail($id);
 
-        // Kiểm tra trạng thái đơn hàng, chỉ cho phép trả hàng nếu trạng thái là 'shipped'
-        if ($order->status !== 'shipped') {
+        // Kiểm tra trạng thái đơn hàng, chỉ cho phép trả hàng nếu trạng thái là 'delivered'
+        if ($order->status !== 'delivered') {
             return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể trả hàng.');
         }
 
@@ -334,8 +334,8 @@ class OrderController extends Controller
 
         // Lưu lý do trả hàng
         $order->refund_reason = $request->input('refund_reason');
-        $order->status = 'refunded';  // Cập nhật trạng thái đơn hàng thành 'refunded'
-        $order->payment_status = 'failed';  // Cập nhật trạng thái thanh toán thành 'failed'
+        $order->status = 'returned';  // Cập nhật trạng thái đơn hàng thành 'refunded'
+        $order->payment_status = 'refunded';  // Cập nhật trạng thái thanh toán thành 'failed'
 
         // Xử lý hình ảnh trả hàng (nếu có)
         if ($request->hasFile('refund_image')) {
@@ -360,6 +360,38 @@ class OrderController extends Controller
 
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hoàn trả và trạng thái thanh toán đã được cập nhật.');
+    }
+
+    // OrderController.php
+    // app/Http/Controllers/OrderController.php
+
+    // app/Http/Controllers/Admin/OrderController.php
+
+    public function confirmDelivered($id)
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::findOrFail($id);
+
+            // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
+            if ($order->status !== 'pending_delivery') {
+                \Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+                return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
+            }
+
+            // Cập nhật trạng thái và lưu
+            $order->status = 'delivered';
+            $order->payment_status = 'paid';
+            $order->save();
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Đơn hàng đã được xác nhận là đã nhận!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Có lỗi khi cập nhật trạng thái đơn hàng.'], 500);
+        }
     }
 
 }
