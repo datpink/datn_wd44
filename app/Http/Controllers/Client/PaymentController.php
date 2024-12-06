@@ -41,7 +41,7 @@ class PaymentController extends Controller
                 'promotion_id' => $request->promotion_id,
                 'total_amount' => $request->totalAmount,
                 'discount_amount' => $request->input('discount_display', 0),
-                'payment_status' => $paymentMethodName === 'cod' ? 'pending' : 'paid',
+                'payment_status' => $paymentMethodName === 'cod' ? 'unpaid' : 'paid',
                 'shipping_address' => $request->full_address,
                 'description' => $request->description,
                 'payment_method_id' => $paymentMethodId,
@@ -71,7 +71,7 @@ class PaymentController extends Controller
             // Xử lý theo phương thức thanh toán
             if ($paymentMethodName === 'cod') {
                 // Phương thức thanh toán khi nhận hàng (COD)
-                $order->payment_status = 'pending';
+                $order->payment_status = 'unpaid';
                 $order->save();
                 foreach ($request->products as $product) {
                     if ($product['variant_id']) {
