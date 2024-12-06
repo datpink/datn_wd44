@@ -340,8 +340,7 @@
 
             // Xử lý sự kiện cho giá
 
-
-            window.fetchFilteredProducts = function(page = 1) {
+            fetchFilteredProducts = function(page = 1) {
                 axios.post('/api/shop/products/filter-catalogies-api', {
                         parent_id: parent_id ? parent_id.value : null,
                         child_id: child_id ? child_id.value : null,
@@ -361,7 +360,6 @@
                             'paginationContainer'); // Container chứa các nút phân trang
                         // console.log(products););
                         // return;
-
 
                         if (res.data.data.length > 0) {
                             let productsHTML = '';

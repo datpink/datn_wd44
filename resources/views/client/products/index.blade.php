@@ -257,17 +257,11 @@
                                 const searchProduct = document.querySelector('.search-field');
                                 const colorGroup = document.querySelectorAll('.term-color');
                                 const storageGroup = document.querySelectorAll('.term-storage');
-                                // const priceRange = document.getElementById('price-range');
-                                // const parent_id = document.getElementById('catalogues-id');
-                                // const child_id = document.getElementById('child-catalogues-id');
                                 const priceFilterForm = document.getElementById('priceFilterForm');
                                 const priceFrom = document.getElementById('priceFrom');
                                 const priceTo = document.getElementById('priceTo');
 
                                 // console.log(searchProduct);
-
-
-
                                 let activeFilters = {
                                     color: null,
                                     storage: null,
@@ -277,19 +271,16 @@
                                     searchProduct: null
 
                                 };
-
                                 orderBySelect.addEventListener('change', function(e) {
 
                                     activeFilters.orderby = this.value; // Lấy giá trị tùy chọn sắp xếp
                                     fetchFilteredProducts();
                                 })
-
                                 document.getElementById('search-button').addEventListener('click', function(e) {
                                     e.preventDefault();
                                     activeFilters.searchProduct = searchProduct.value.trim();
                                     fetchFilteredProducts();
                                 });
-
 
                                 // Cập nhật bộ lọc giá với slider
                                 const minPrice = parseFloat(priceFilterForm.querySelector('.price_slider').getAttribute(
@@ -383,7 +374,7 @@
                                 });
 
 
-                                window.fetchFilteredProducts = function(page = 1) {
+                                fetchFilteredProducts = function(page = 1) {
                                     // console.log("Fetching filtered products with filters:", activeFilters);
                                     axios.post('/api/shop/products', {
                                             // parent_id: parent_id ? parent_id.value : null,
