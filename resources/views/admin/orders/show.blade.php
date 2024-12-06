@@ -67,6 +67,19 @@
                                             <p><strong>Phương thức thanh toán:</strong>
                                                 {{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}
                                             </p>
+
+                                            <p><strong>Ngày Đặt Hàng:</strong>
+                                                {{ $order->created_at ? $order->created_at : 'N/A' }}</p>
+                                            <p><strong>Ngày Giao Hàng:</strong>
+                                                {{ $order->delivered_at ? \Carbon\Carbon::parse($order->delivered_at) : 'N/A' }}
+                                            </p>
+                                            <p><strong>Ngày Hủy:</strong>
+                                                {{ $order->canceled_at ? \Carbon\Carbon::parse($order->canceled_at) : 'N/A' }}
+                                            </p>
+                                            <p><strong>Ngày Hoàn Trả:</strong>
+                                                {{ $order->refund_at ? \Carbon\Carbon::parse($order->refund_at) : 'N/A' }}
+                                            </p>
+
                                             @if ($order->cancellation_reason)
                                                 <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
                                             @endif
@@ -81,6 +94,20 @@
                                                     @endforeach
                                                 </div>
                                             @endif
+
+                                            <!-- Hiển thị QR Code -->
+                                            @if ($order->status === 'delivered' && $order->qr_code)
+                                                <p><strong>QR Code:</strong></p>
+                                                <img src="{{ Storage::url($order->qr_code) }}" alt="QR Code"
+                                                    class="img-fluid" style="max-width: 150px;">
+                                            @endif
+
+                                            <!-- Hiển thị Số tài khoản -->
+                                            @if ($order->status === 'delivered' && $order->account_number)
+                                                <p><strong>Số tài khoản:</strong></p>
+                                                <span>{{ $order->account_number }}</span>
+                                            @endif
+
 
                                         </div>
                                     </div>

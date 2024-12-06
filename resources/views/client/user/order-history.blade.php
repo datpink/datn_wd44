@@ -53,7 +53,17 @@
                                             <p><strong>Địa Chỉ:</strong> {{ $order->shipping_address }}</p>
                                             <p><strong>Số Điện Thoại:</strong> {{ $order->phone_number }}</p>
                                             <p><strong>Ngày Đặt Hàng:</strong>
-                                                {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</p>
+                                                {{ $order->created_at ? $order->created_at : 'N/A' }}</p>
+                                            <p><strong>Ngày Giao Hàng:</strong>
+                                                {{ $order->delivered_at ? \Carbon\Carbon::parse($order->delivered_at) : 'N/A' }}
+                                            </p>
+                                            <p><strong>Ngày Hủy:</strong>
+                                                {{ $order->canceled_at ? \Carbon\Carbon::parse($order->canceled_at) : 'N/A' }}
+                                            </p>
+                                            <p><strong>Ngày Hoàn Trả:</strong>
+                                                {{ $order->refund_at ? \Carbon\Carbon::parse($order->refund_at) : 'N/A' }}
+                                            </p>
+
                                         </div>
                                     </div>
                                 </div>
@@ -187,6 +197,19 @@
                                                     @endforeach
                                                 </div>
                                             @endif
+
+                                            @if ($order->admin_status === 'pending' && $order->refund_reason)
+                                                <p class="text-warning">Yêu cầu hoàn trả của bạn đang được xử lý. Vui lòng
+                                                    chờ phê duyệt từ quản trị viên.</p>
+                                            @elseif ($order->admin_status === 'approved')
+                                                <p class="text-success">Yêu cầu hoàn trả của bạn đã được chấp nhận. Vui lòng
+                                                    kiểm tra thông tin hoàn tiền.</p>
+                                            @elseif ($order->admin_status === 'rejected')
+                                                <p class="text-danger">Yêu cầu hoàn trả của bạn đã bị từ chối. Vui lòng liên
+                                                    hệ hỗ trợ để biết thêm chi tiết.</p>
+                                            @endif
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -217,6 +240,69 @@
                                         <!-- Preview các hình ảnh đã chọn -->
                                         <div class="image-preview-container" id="imagePreview"></div>
 
+                                        <div class="form-group">
+                                            <label for="refund_method">Phương thức hoàn tiền:</label>
+                                            <select name="refund_method" id="refund_method" class="form-control" required>
+                                                <option value="cash">Tiền mặt</option>
+                                                <option value="store_credit">Store Credit</option>
+                                                <option value="exchange">Đổi sản phẩm</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Các trường hiển thị khi chọn phương thức Store Credit -->
+                                        <div id="storeCreditFields" style="display: none;">
+                                            <div class="form-group">
+                                                <label for="qr_code" class="font-weight-bold">Tải QR (Chỉ chọn hình
+                                                    ảnh):</label>
+                                                <div class="custom-file">
+                                                    <input type="file" name="qr_code" id="qr_code"
+                                                        class="custom-file-input" accept="image/*">
+                                                    <label class="custom-file-label" for="qr_code">Chọn file...</label>
+                                                </div>
+                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải lên.</small>
+                                            </div>
+
+                                            <!-- Preview ảnh QR -->
+                                            <div class="image-preview-container" id="qrPreview"></div>
+
+
+                                            <script>
+                                                document.getElementById('qr_code').addEventListener('change', function(event) {
+                                                    var file = event.target.files[0]; // Chỉ lấy file đầu tiên
+                                                    var previewContainer = document.getElementById('qrPreview');
+                                                    previewContainer.innerHTML = ''; // Xóa preview cũ trước khi hiển thị mới
+
+                                                    if (file) {
+                                                        var reader = new FileReader();
+
+                                                        reader.onload = function(e) {
+                                                            var imgElement = document.createElement('img');
+                                                            imgElement.src = e.target.result;
+                                                            previewContainer.appendChild(imgElement); // Thêm ảnh vào container
+                                                        };
+
+                                                        reader.readAsDataURL(file); // Đọc tệp hình ảnh
+                                                    }
+                                                });
+                                            </script>
+
+                                            <style>
+                                                .image-preview-container img {
+                                                    max-width: 150px;
+                                                    /* Giới hạn kích thước ảnh */
+                                                    margin: 5px;
+                                                    /* Khoảng cách giữa các ảnh */
+                                                    border: 1px solid #ddd;
+                                                    padding: 5px;
+                                                }
+                                            </style>
+
+                                            <div class="form-group">
+                                                <label for="account_number">Nhập số tài khoản:</label>
+                                                <input type="text" name="account_number" id="account_number"
+                                                    class="form-control" placeholder="Số tài khoản">
+                                            </div>
+                                        </div>
 
                                         <button type="submit" class="btn btn-warning">Xác Nhận</button>
                                     </form>
@@ -298,6 +384,22 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Lắng nghe sự kiện thay đổi của select phương thức hoàn tiền
+        document.getElementById('refund_method').addEventListener('change', function() {
+            var method = this.value;
+            var storeCreditFields = document.getElementById('storeCreditFields');
+
+            if (method === 'store_credit') {
+                // Hiển thị các trường nhập liệu cho Store Credit
+                storeCreditFields.style.display = 'block';
+            } else {
+                // Ẩn các trường nhập liệu cho Store Credit khi chọn các phương thức khác
+                storeCreditFields.style.display = 'none';
+            }
+        });
+    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {

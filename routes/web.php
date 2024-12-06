@@ -284,6 +284,10 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Route Order
     Route::get('/orders/new', [OrderController::class, 'newOrders'])->name('orders.new');
     Route::resource('orders', OrderController::class);
+    // Định nghĩa routes cho duyệt và từ chối yêu cầu hoàn tiền trong web.php
+    Route::post('orders/refund/approve/{id}', [OrderController::class, 'approveRefund'])->name('orders.refund.approve');
+    Route::post('orders/refund/reject/{id}', [OrderController::class, 'rejectRefund'])->name('orders.refund.reject');
+
 
 
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');

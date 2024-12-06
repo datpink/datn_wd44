@@ -58,7 +58,6 @@ trait ManagesOrders
                 $order->payment_status = 'unpaid'; // Chưa thanh toán
             }
 
-
             $order->save();
 
             DB::commit();

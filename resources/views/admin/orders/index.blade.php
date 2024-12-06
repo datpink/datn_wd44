@@ -51,13 +51,15 @@
                                         <select name="status" class="form-select form-select-sm">
                                             <option value="">Chọn trạng thái</option>
                                             <option value="pending_confirmation"
-                                                {{ request()->status === 'pending_confirmation' ? 'selected' : '' }}>Chờ xác nhận
+                                                {{ request()->status === 'pending_confirmation' ? 'selected' : '' }}>Chờ xác
+                                                nhận
                                             </option>
                                             <option value="pending_pickup"
                                                 {{ request()->status === 'pending_pickup' ? 'selected' : '' }}>Chờ lấy hàng
                                             </option>
                                             <option value="pending_delivery"
-                                                {{ request()->status === 'pending_delivery' ? 'selected' : '' }}>Chờ giao hàng
+                                                {{ request()->status === 'pending_delivery' ? 'selected' : '' }}>Chờ giao
+                                                hàng
                                             </option>
                                             <option value="returned"
                                                 {{ request()->status === 'returned' ? 'selected' : '' }}>Trả hàng
@@ -83,7 +85,8 @@
                                                 {{ request()->payment_status === 'refunded' ? 'selected' : '' }}>Hoàn trả
                                             </option>
                                             <option value="payment_failed"
-                                                {{ request()->payment_status === 'payment_failed' ? 'selected' : '' }}>Thanh toán thất bại
+                                                {{ request()->payment_status === 'payment_failed' ? 'selected' : '' }}>
+                                                Thanh toán thất bại
                                             </option>
                                         </select>
                                     </div>
@@ -158,9 +161,79 @@
                                                 </td>
                                                 <td>
                                                     <div class="actions">
+
+                                                        @if ($order->refund_reason && $order->admin_status === 'pending')
+                                                            <!-- Icon duyệt hoàn tiền -->
+                                                            <form
+                                                                action="{{ route('orders.refund.approve', ['id' => $order->id]) }}"
+                                                                method="POST" style="display:inline;">
+                                                                @csrf
+                                                                <button type="button" class="btn btn-icon"
+                                                                    title="Duyệt hoàn tiền"
+                                                                    style="border: none; background: none;"
+                                                                    onclick="confirmApproveRefund(event)">
+                                                                    <i class="bi bi-check-circle text-success"></i>
+                                                                </button>
+                                                            </form>
+
+                                                            <!-- Icon từ chối hoàn tiền -->
+                                                            <form
+                                                                action="{{ route('orders.refund.reject', ['id' => $order->id]) }}"
+                                                                method="POST" style="display:inline;">
+                                                                @csrf
+                                                                <button type="button" class="btn btn-icon"
+                                                                    title="Từ chối hoàn tiền"
+                                                                    style="border: none; background: none;"
+                                                                    onclick="confirmRejectRefund(event)">
+                                                                    <i class="bi bi-x-circle text-danger"></i>
+                                                                </button>
+                                                            </form>
+                                                            <script>
+                                                                function confirmApproveRefund(event) {
+                                                                    event.preventDefault(); // Ngừng form mặc định
+                                                                    Swal.fire({
+                                                                        title: 'Bạn có chắc chắn muốn duyệt hoàn tiền?',
+                                                                        icon: 'warning',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonText: 'Duyệt',
+                                                                        cancelButtonText: 'Hủy',
+                                                                        position: 'top',
+                                                                        timer: 3500,
+                                                                        toast: true,
+                                                                        reverseButtons: true
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            event.target.closest('form').submit(); // Gửi form nếu xác nhận
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                                function confirmRejectRefund(event) {
+                                                                    event.preventDefault(); // Ngừng form mặc định
+                                                                    Swal.fire({
+                                                                        title: 'Bạn có chắc chắn muốn từ chối hoàn tiền?',
+                                                                        icon: 'error',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonText: 'Từ chối',
+                                                                        cancelButtonText: 'Hủy',
+                                                                        position: 'top',
+                                                                        timer: 3500,
+                                                                        toast: true,
+                                                                        reverseButtons: true
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            event.target.closest('form').submit(); // Gửi form nếu xác nhận
+                                                                        }
+                                                                    });
+                                                                }
+                                                            </script>
+                                                        @endif
+
                                                         <a href="{{ route('orders.show', $order->id) }}" class="editRow">
                                                             <i class="bi bi-eye text-green"></i>
                                                         </a>
+
+
 
                                                         <a href="#" class="viewRow" data-bs-toggle="modal"
                                                             data-bs-target="#editOrderStatus{{ $order->id }}"
@@ -232,7 +305,8 @@
 
 
                                                                                 @if (in_array($order->status, ['returned', 'delivered', 'canceled']))
-                                                                                    <small class="text-danger">Trạng thái
+                                                                                    <small class="text-danger">Trạng
+                                                                                        thái
                                                                                         này không thể sửa đổi.</small>
                                                                                 @endif
                                                                             </div>
@@ -343,9 +417,11 @@
                     const newStatus = select.value; // Trạng thái mới
                     const nonRevertibleStatuses = {
                         pending_delivery: ['pending_confirmation',
-                        'pending_pickup'], // Đang giao hàng không thể về Chờ xác nhận hoặc Chờ lấy hàng
+                            'pending_pickup'
+                        ], // Đang giao hàng không thể về Chờ xác nhận hoặc Chờ lấy hàng
                         pending_pickup: [
-                        'pending_confirmation'], // Chờ lấy hàng không thể về Chờ xác nhận
+                            'pending_confirmation'
+                        ], // Chờ lấy hàng không thể về Chờ xác nhận
                     };
 
                     // Kiểm tra nếu trạng thái không hợp lệ
