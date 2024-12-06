@@ -1,5 +1,5 @@
-<div class="kobolg-Tabs-panel kobolg-Tabs-panel--additional_information panel entry-content kobolg-tab"
-    id="tab-additional_information" role="tabpanel" aria-labelledby="tab-title-additional_information">
+<div class="kobolg-Tabs-panel kobolg-Tabs-panel--comments panel entry-content kobolg-tab" id="tab-comments" role="tabpanel"
+    aria-labelledby="tab-title-comments">
 
     <h2>Bình luận ({{ $product->comments->count() }})</h2>
 

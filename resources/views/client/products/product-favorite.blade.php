@@ -19,9 +19,9 @@
                         <div class="product-inner tooltip-left">
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
-                                    <img class="img-responsive"
+                                    <img class="img-responsive mt-3"
                                         src=" {{ \Storage::url($product->image_url)}}"
-                                        alt="Gaming Mouse" width="500" height="678">
+                                        alt="Gaming Mouse" width="300">
                                 </a>
                                 <div class="flash">
                                     <span class="onnew"><span class="text">New</span></span>

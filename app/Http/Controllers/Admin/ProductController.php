@@ -130,6 +130,7 @@ class ProductController extends Controller
                 'dimensions' => $request->dimensions,
                 'image_url' => $imagePath,
                 'description' => $request->description,
+                'specifications' => $request->specifications,
                 'is_active' => $request->is_active,
                 'is_featured' => $request->has('is_featured'),
                 'condition' => $request->condition,
@@ -195,6 +196,7 @@ class ProductController extends Controller
                 'weight' => 'nullable|numeric',
                 'stock' => 'nullable|numeric',
                 'description' => 'nullable|string',
+                'specifications' => 'nullable|string',
                 'dimensions' => 'nullable|string|max:255',
                 'is_featured' => 'nullable|boolean',
                 'condition' => 'required|in:new,used,refurbished',
@@ -219,6 +221,7 @@ class ProductController extends Controller
                 'condition' => $request->condition,
                 'brand_id' => $request->brand_id,
                 'description' => $request->description,
+                'specifications' => $request->specifications,
                 'catalogue_id' => $request->catalogue_id,
                 'tomtat' => $request->tomtat,
             ]);

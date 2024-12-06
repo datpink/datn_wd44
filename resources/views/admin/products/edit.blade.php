@@ -121,32 +121,11 @@
                                                 value="{{ $product->weight }}">
                                         </div>
 
-                                        <div class="form-group d-flex align-items-center mt-4">
-                                            <button type="button" class="btn btn-rounded btn-secondary add-image"
-                                                style="margin-right: 15px;">Thêm Hình
-                                                Ảnh</button>
-                                            <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
                                         <!-- Kích thước (Dimensions) -->
                                         <div class="form-group">
                                             <label for="dimensions">Kích thước (DxRxC)</label>
                                             <input type="text" name="dimensions" id="dimensions" class="form-control"
                                                 value="{{ $product->dimensions }}">
-                                        </div>
-
-                                        <!-- Tóm tắt sản phẩm -->
-                                        <div class="form-group">
-                                            <label for="tomtat">Tóm tắt</label>
-                                            <textarea name="tomtat" id="tomtat" class="form-control" rows="2">{{ $product->tomtat }}</textarea>
-                                        </div>
-
-                                        <!-- Mô tả sản phẩm -->
-                                        <div class="form-group">
-                                            <label for="editor">Mô tả sản phẩm</label>
-                                            <textarea name="description" id="editor" class="form-control" rows="4">{{ $product->description }}</textarea>
                                         </div>
 
                                         <div class="mb-3">
@@ -167,12 +146,6 @@
                                             </select>
                                         </div>
 
-                                        <div class="mb-3">
-                                            <label for="is_featured" class="form-label">Nổi bật</label>
-                                            <input type="checkbox" id="is_featured" name="is_featured" value="1"
-                                                {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
-                                        </div>
-
                                         <div id="image-inputs">
                                             @foreach ($product->galleries as $index => $gallery)
                                                 <div class="form-group d-flex align-items-center">
@@ -191,6 +164,40 @@
                                                 </div>
                                             @endforeach
                                         </div>
+
+                                        <div class="form-group d-flex align-items-center mt-4">
+                                            <button type="button" class="btn btn-rounded btn-secondary add-image"
+                                                style="margin-right: 15px;">Thêm Hình
+                                                Ảnh</button>
+                                            <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <!-- Mô tả sản phẩm -->
+                                        <div class="form-group">
+                                            <label for="editor">Mô tả sản phẩm</label>
+                                            <textarea name="description" id="editor" class="form-control" rows="4">{{ $product->description }}</textarea>
+                                        </div>
+
+                                        <!-- tomtat sản phẩm -->
+                                        <div class="form-group">
+                                            <label for="editors">Tóm Tắt</label>
+                                            <textarea name="tomtat" id="editors" class="form-control" rows="4">{{ $product->tomtat }}</textarea>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="editorss">Thông số kĩ thuật</label>
+                                            <textarea name="specifications" id="editorss" class="form-control" rows="4">{{ $product->specifications }}</textarea>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="is_featured" class="form-label">Nổi bật</label>
+                                            <input type="checkbox" id="is_featured" name="is_featured" value="1"
+                                                {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
+                                        </div>
+
                                         {{-- <button type="button" class="btn btn-secondary add-image">Thêm</button> --}}
                                         <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
                                     </div>
@@ -206,6 +213,12 @@
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor');
+    </script>
+    <script>
+        CKEDITOR.replace('editors');
+    </script>
+    <script>
+        CKEDITOR.replace('editorss');
     </script>
 
     <script>

@@ -147,29 +147,6 @@
                                             });
                                         </script>
 
-
-                                        <div class="mb-3 was-validated">
-                                            <label for="is_featured" class="form-label">Nổi bật</label>
-                                            <input type="checkbox" id="is_featured" name="is_featured" value="1"
-                                                {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}
-                                                required>
-                                        </div>
-
-                                        <button type="button" id="generateSkuBtn"
-                                            class="btn btn-rounded btn-secondary">Tạo
-                                            SKU</button>
-                                        <button type="submit" class="btn btn-rounded btn-primary">Thêm Mới</button>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="mb-3 was-validated">
-                                            <label for="editor" class="form-label">Mô Tả</label>
-                                            <textarea class="form-control @error('description') is-invalid @enderror" id="editor" name="description" required>{{ old('description') }}</textarea>
-                                            @error('description')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
                                         <div class="mb-3 was-validated">
                                             <label for="is_active" class="form-label">Trạng Thái</label>
                                             <select class="form-control" id="is_active" name="is_active" required>
@@ -200,11 +177,6 @@
                                                 <option value="refurbished">Tái chế</option>
                                             </select>
                                         </div>
-                                        <!-- Thêm trường Tóm Tắt -->
-                                        <div class="mb-3 was-validated">
-                                            <label for="tomtat" class="form-label">Tóm Tắt</label>
-                                            <textarea class="form-control" id="tomtat" name="tomtat" required>{{ old('tomtat') }}</textarea>
-                                        </div>
 
                                         <div id="image-inputs">
                                             <div class="form-group d-flex align-items-center">
@@ -216,6 +188,46 @@
                                             </div>
                                         </div>
                                         <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
+
+                                        <button type="button" id="generateSkuBtn"
+                                            class="btn btn-rounded btn-secondary">Tạo
+                                            SKU</button>
+                                        <button type="submit" class="btn btn-rounded btn-primary">Thêm Mới</button>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3 was-validated">
+                                            <label for="editor" class="form-label">Mô Tả</label>
+                                            <textarea class="form-control @error('description') is-invalid @enderror" id="editor" name="description" required>{{ old('description') }}</textarea>
+                                            @error('description')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3 was-validated">
+                                            <label for="editors" class="form-label">Thông số kĩ thuật</label>
+                                            <textarea class="form-control @error('specifications') is-invalid @enderror" id="editors" name="specifications"
+                                                required>{{ old('specifications') }}</textarea>
+                                            @error('specifications')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3 was-validated">
+                                            <label for="editorss" class="form-label">Tóm tắt</label>
+                                            <textarea class="form-control @error('stomtat') is-invalid @enderror" id="editorss" name="tomtat"
+                                                required>{{ old('tomtat') }}</textarea>
+                                            @error('tomtat')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3 was-validated">
+                                            <label for="is_featured" class="form-label">Nổi bật</label>
+                                            <input type="checkbox" id="is_featured" name="is_featured" value="1"
+                                                {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}
+                                                required>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -229,6 +241,12 @@
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor');
+    </script>
+    <script>
+        CKEDITOR.replace('editors');
+    </script>
+    <script>
+        CKEDITOR.replace('editorss');
     </script>
 
     <script>

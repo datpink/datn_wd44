@@ -330,7 +330,7 @@
                                 </p>
 
                                 <div class="kobolg-product-details__short-description">
-                                    <p>{{ $product->tomtat }}</p>
+                                    <p>{!! $product->tomtat !!}</p>
                                 </div>
 
                                 <form class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
@@ -415,7 +415,11 @@
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Bình luận
+                                    <a href="#tab-additional_information">Thông số kĩ thuật</a>
+                                </li>
+                                <li class="comments_tab" id="tab-title-comments" role="tab"
+                                    aria-controls="tab-comments">
+                                    <a href="#tab-comments">Bình luận
                                         ({{ $product->comments->count() }})</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
@@ -425,6 +429,8 @@
                             </ul>
 
                             @include('client.muteki.description')
+
+                            @include('client.muteki.specifications')
 
                             @include('client.muteki.comment')
 
