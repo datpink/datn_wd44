@@ -312,8 +312,6 @@
                                                                         class="img-fluid">
                                                                     <span>{{ $storage }}</span> -
                                                                     <span>{{ $color }}</span>
-                                                                    <span
-                                                                        class="price-discount">{{ number_format($variants[0]->price - $discountAmount, 0, ',', '.') }}₫</span>
                                                                 </button>
                                                             @endforeach
                                                         @endforeach
@@ -344,7 +342,7 @@
                                                 <label class="qty-label" for="quantity">Số lượng:</label>
                                                 <div class="control">
                                                     <a class="btn-number qtyminus quantity-minus" href="#">-</a>
-                                                    <input type="text" data-step="1" min="0" max=""
+                                                    <input type="text" data-step="1" min="1" max=""
                                                         name="quantity" value="1" title="Qty"
                                                         class="input-qty input-text qty text" size="4"
                                                         pattern="[0-9]*" inputmode="numeric" id="quantity">
@@ -487,7 +485,7 @@
                                                             </span>
                                                         </del>
                                                         <span
-                                                            class="kobolg-Price-amount amount text-danger font-weight-bold">
+                                                            class="kobolg-Price-amount amount text-danger">
                                                             {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
                                                         </span>
                                                     @else
@@ -531,7 +529,7 @@
             </div>
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
-
+{{--
             <script>
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
@@ -561,5 +559,5 @@
                         });
                     });
                 });
-            </script>
+            </script> --}}
         @endsection
