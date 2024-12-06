@@ -92,9 +92,10 @@ class PaymentController extends Controller
             }
 
             if ($paymentMethodName === 'vnpay') {
+
                 $userToken = Crypt::encryptString(auth()->id()); // Mã hóa ID người dùng
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-                $vnp_Returnurl = "http://127.0.0.1:8000/vnpay_return";
+                $vnp_Returnurl = route('vnpayReturn');
                 // $vnp_Returnurl = "http://127.0.0.1:8000/vnpay_return?token={$userToken}";
                 $vnp_TmnCode = "6NK2ISZ9"; // Mã website tại VNPAY
                 $vnp_HashSecret = "65TDBHY5NLK43Y566EFLVM6ATI1X79YF"; // Chuỗi bí mật
@@ -157,6 +158,7 @@ class PaymentController extends Controller
                 DB::commit();
 
                 return redirect()->away($vnp_Url);
+
             }
         } catch (\Exception $e) {
             DB::rollBack();

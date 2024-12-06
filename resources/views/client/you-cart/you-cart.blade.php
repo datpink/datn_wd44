@@ -95,10 +95,9 @@
                                 style="background: none; border: none; color: red; font-size: 16px; cursor: pointer;">×</button>
                         </li>
                         @php
-                        $price = is_numeric($item['price']) ? floatval($item['price']) : 0;
-                        $subtotal += $item['quantity'] * $price;
-                    @endphp
-
+                            $price = is_numeric($item['price']) ? floatval($item['price']) : 0;
+                            $subtotal += $item['quantity'] * $price;
+                        @endphp
                     @endforeach
                 @else
                     <li class="kobolg-mini-cart-item mini_cart_item">Giỏ hàng trống.</li>
@@ -138,6 +137,9 @@
                 title: 'Xác nhận',
                 text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                 icon: 'warning',
+                toast: true,
+                timer: 4000,
+                position: 'top',
                 showCancelButton: true,
                 confirmButtonText: 'Có',
                 cancelButtonText: 'Không'
@@ -156,7 +158,9 @@
                                     icon: 'success',
                                     title: 'Đã xóa!',
                                     text: data.message,
-                                    timer: 1500,
+                                    toast: true,
+                                    timer: 4000,
+                                    position: 'top',
                                     showConfirmButton: false
                                 });
                                 document.querySelector(`.remove[data-id="${cartItemId}"]`)
