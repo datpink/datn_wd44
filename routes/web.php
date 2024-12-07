@@ -126,6 +126,7 @@ Route::prefix('shop')->group(function () {
     Route::get('/blog-by-category/{id}', [PostController::class, 'PostByCategory'])->name('client.posts.byCategory');
 
 
+
     // Route::get('/search', [SearchController::class, 'search'])->name('search');
 
     Route::get('/privacy-policy', function () {

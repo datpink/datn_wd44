@@ -93,12 +93,15 @@
                                             <div class="col-md-4">
                                                 <div class="kobolg-listitem style-01">
                                                     <div class="listitem-inner">
-                                                        <h4 class="title">{{ $category->name }}</h4>
+                                                        <h4 class="title"><a
+                                                                href="{{ route('client.posts.byCategory', $category->id) }}">
+                                                                {{ $category->name }}</a></h4>
                                                         <ul class="listitem-list mb-3">
                                                             @foreach ($category->children as $child)
                                                                 @if ($child->status === 'active')
                                                                     <li>
-                                                                        <a href="#">
+                                                                        <a
+                                                                            href="{{ route('client.posts.byCategory', $child->id) }}">
                                                                             {{ $child->name }}
                                                                         </a>
                                                                     </li>
@@ -226,14 +229,14 @@
 
                         <li id="menu-item-230"
                             class="menu-item menu-item-type-post_type menu-item-object-megamenu menu-item-230 parent parent-megamenu item-megamenu menu-item-has-children">
-                            <a class="kobolg-menu-item-title" title="Home" href="{{ route('client.listProductFavorites') }}">Sản phẩm yêu thích</a>
+                            <a class="kobolg-menu-item-title" title="Home"
+                                href="{{ route('client.listProductFavorites') }}">Sản phẩm yêu thích</a>
                             <span class="toggle-submenu"></span>
                         </li>
 
                         <li id="menu-item-238"
                             class="menu-item menu-item-type-custom menu-item-object-custom menu-item-238">
-                            <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100"
-                                href="#">
+                            <a class="kobolg-menu-item-title" title="Free Shipping on Orders $100" href="#">
                             </a>
                         </li>
                     </ul>
