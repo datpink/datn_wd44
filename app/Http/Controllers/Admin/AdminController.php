@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -84,7 +85,7 @@ class AdminController extends Controller
                 break;
         }
 
-        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total, SUM(discount_amount) as discount_amount')
             ->whereDate('created_at', '>=', $startDate->toDateString())
             ->whereDate('created_at', '<=', $endDate->toDateString())
             ->where('status', 'delivered')
@@ -103,7 +104,9 @@ class AdminController extends Controller
         $totals = $dailyRevenue->pluck('total')->toArray();
 
 
-        $discounts = $dailyRevenue->pluck('discount')->sum(); // Tính tổng giảm giá
+        $discounts = $dailyRevenue->sum('discount_amount');
+
+        // dd($totals, $discounts);
 
         // Tính tổng doanh số
         $totalSales = Order::where('status', 'delivered') // Thay 'shipped' thành 'delivered'
@@ -114,7 +117,7 @@ class AdminController extends Controller
         // Lấy danh sách đơn hàng và các sản phẩm kèm theo
         $orders = Order::with(['user', 'items.productVariant.product']) // Đảm bảo lấy đúng thông tin sản phẩm
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(8)
             ->get();
 
 
@@ -185,12 +188,33 @@ class AdminController extends Controller
         // Tính lãi sau khi trừ giảm giá
         $netProfit = $totalProfit - $discounts; // Trừ tổng giảm giá
 
+
+        // Lọc các đơn hàng đã giao và đã thanh toán
+        $statistics = Order::where('status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->groupBy('payment_method_id') // Nhóm theo phương thức thanh toán
+            ->select('payment_method_id', DB::raw('SUM(total_amount) as total_amount'), DB::raw('COUNT(*) as total_orders'))
+            ->get();
+
+        // Lấy tên và mô tả phương thức thanh toán từ bảng payment_methods
+        $paymentMethods = PaymentMethod::where('status', 'active')->get()->keyBy('id');
+
+        // Kết hợp thông tin phương thức thanh toán với thống kê
+        $statisticsWithPaymentMethod = $statistics->map(function ($statistic) use ($paymentMethods) {
+            $paymentMethod = $paymentMethods->get($statistic->payment_method_id);
+            $statistic->payment_method_name = $paymentMethod->name ?? 'Unknown';
+            $statistic->payment_method_description = $paymentMethod->description ?? 'No description available';
+            return $statistic;
+        });
+
+
         return view('admin.index', compact(
             'title',
             'recentBuyers',
             'totalProfit',
             'profits',
             'netProfit',
+            'statisticsWithPaymentMethod',
             'catalogueCount',
             'orderCount',
             'userCount',

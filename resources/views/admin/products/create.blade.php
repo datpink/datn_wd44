@@ -104,6 +104,16 @@
                                         </div>
 
                                         <div class="mb-3 was-validated">
+                                            <label for="discount_price" class="form-label">Giảm Giá</label>
+                                            <input type="number" step="0.01"
+                                                class="form-control @error('discount_price') is-invalid @enderror" id="discount_price"
+                                                name="discount_price" value="{{ old('discount_price') }}" required>
+                                            @error('discount_price')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="mb-3 was-validated">
                                             <label for="stock" class="form-label">Số Lượng</label>
                                             <input type="number" class="form-control @error('stock') is-invalid @enderror"
                                                 id="stock" name="stock" value="{{ old('stock') }}" required>

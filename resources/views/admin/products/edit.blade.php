@@ -100,11 +100,23 @@
                                         <div class="form-group mb-3">
                                             <label for="price">Giá sản phẩm</label>
                                             <input type="number" name="price" id="price" class="form-control"
-                                                value="{{ $product->price }}" required>
+                                                value="{{ intval($product->price) == $product->price ? intval($product->price) : $product->price }}"
+                                                required>
                                         </div>
 
-                                        <input type="hidden" name="discount_price" id="discount_price" class="form-control"
-                                            value="{{ $product->discount_price }}">
+
+                                        <!-- Giá sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="discount_price">Giảm Giá</label>
+                                            <input type="number" name="discount_price" id="discount_price"
+                                                class="form-control"
+                                                value="{{ intval($product->discount_price) == $product->discount_price ? intval($product->discount_price) : $product->discount_price }}"
+                                                required>
+                                        </div>
+
+
+                                        {{-- <input type="hidden" name="discount_price" id="discount_price" class="form-control"
+                                            value="{{ $product->discount_price }}"> --}}
 
 
                                         <!-- SKU -->
