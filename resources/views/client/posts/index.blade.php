@@ -78,7 +78,7 @@
                     </nav>
                 </div>
 
-                @include('client.layouts.sidebar_post',['latestPosts' => $latestPosts])
+                @include('client.layouts.sidebar_post')
 
             </div>
         </div>

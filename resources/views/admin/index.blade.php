@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="col-xxl-9  col-sm-12 col-12">
                     <!-- Row start -->
-                    <div class="row mt-4">
+                    <div class="row">
                         <div class="col-xxl-12 col-sm-12 col-12">
 
                             <div class="card">
@@ -265,35 +265,40 @@
                                                     <td>{{ $order->created_at->format('d/m/Y') }}</td>
                                                     <td>${{ number_format($order->total_amount, 2) }}</td>
                                                     <td>
-                                                        @if ($order->payment_status === 'pending')
+                                                        @if ($order->status === 'pending_confirmation')
+                                                            <span class="badge rounded-pill bg-info">Chờ xác nhận</span>
+                                                        @elseif ($order->status === 'pending_pickup')
+                                                            <span class="badge rounded-pill bg-warning">Chờ lấy hàng</span>
+                                                        @elseif ($order->status === 'pending_delivery')
+                                                            <span class="badge rounded-pill bg-primary">Chờ giao
+                                                                hàng</span>
+                                                        @elseif ($order->status === 'returned')
+                                                            <span class="badge rounded-pill bg-danger">Trả hàng</span>
+                                                        @elseif ($order->status === 'delivered')
+                                                            <span class="badge rounded-pill bg-secondary">Đã giao</span>
+                                                        @elseif ($order->status === 'canceled')
+                                                            <span class="badge rounded-pill bg-secondary">Đã hủy</span>
+                                                        @else
+                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($order->payment_status === 'unpaid')
                                                             <span class="badge rounded-pill bg-warning">Chưa thanh
                                                                 toán</span>
                                                         @elseif ($order->payment_status === 'paid')
                                                             <span class="badge rounded-pill bg-success">Đã thanh
                                                                 toán</span>
-                                                        @elseif ($order->payment_status === 'failed')
+                                                        @elseif ($order->payment_status === 'refunded')
+                                                            <span class="badge rounded-pill bg-danger">Hoàn trả</span>
+                                                        @elseif ($order->payment_status === 'payment_failed')
                                                             <span class="badge rounded-pill bg-danger">Thanh toán thất
                                                                 bại</span>
                                                         @else
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        @if ($order->status === 'processing')
-                                                            <span class="badge rounded-pill bg-info">Đang xử lý</span>
-                                                        @elseif ($order->status === 'Delivering')
-                                                            <span class="badge rounded-pill bg-warning">Đang giao
-                                                                hàng</span>
-                                                        @elseif ($order->status === 'shipped')
-                                                            <span class="badge rounded-pill bg-primary">Đã giao hàng</span>
-                                                        @elseif ($order->status === 'canceled')
-                                                            <span class="badge rounded-pill bg-danger">Đã hủy</span>
-                                                        @elseif ($order->status === 'refunded')
-                                                            <span class="badge rounded-pill bg-secondary">Hoàn trả</span>
-                                                        @else
-                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
-                                                        @endif
-                                                    </td>
+
                                                 </tr>
                                             @endforeach
                                         @endforeach
@@ -371,288 +376,289 @@
                 </div>
             </div>
             <!-- Row end -->
+        </div>
+    </div>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    if (@json($totals).length > 0 && @json($dates).length > 0) {
-                        var options = {
-                            chart: {
-                                height: 317,
-                                type: 'area',
-                                toolbar: {
-                                    show: false,
-                                },
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (@json($totals).length > 0 && @json($dates).length > 0) {
+                var options = {
+                    chart: {
+                        height: 317,
+                        type: 'area',
+                        toolbar: {
+                            show: false,
+                        },
+                    },
+                    dataLabels: {
+                        enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+                    },
+                    stroke: {
+                        curve: 'smooth', // Đường cong mượt
+                        width: 3
+                    },
+                    series: [{
+                        name: 'Doanh thu',
+                        data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                    }],
+                    grid: {
+                        borderColor: '#e0e6ed',
+                        strokeDashArray: 5,
+                        xaxis: {
+                            lines: {
+                                show: true // Hiển thị đường lưới trên trục X
+                            }
+                        },
+                        yaxis: {
+                            lines: {
+                                show: false, // Tắt đường lưới trên trục Y
+                            }
+                        },
+                        padding: {
+                            top: 0,
+                            right: 0,
+                            bottom: 10,
+                            left: 0
+                        },
+                    },
+                    xaxis: {
+                        categories: @json($dates), // Dữ liệu ngày tháng
+                        labels: {
+                            style: {
+                                fontSize: '12px',
+                                colors: ['#6c757d']
+                            }
+                        }
+                    },
+                    yaxis: {
+                        labels: {
+                            show: true, // Hiển thị nhãn trên trục Y
+                            style: {
+                                fontSize: '12px',
+                                colors: ['#6c757d']
+                            }
+                        },
+                    },
+                    colors: ['#4267cd'], // Màu sắc cho biểu đồ
+                    markers: {
+                        size: 4,
+                        colors: ['#4267cd'],
+                        strokeColor: "#ffffff",
+                        strokeWidth: 2,
+                        hover: {
+                            size: 7, // Kích thước khi di chuột qua
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        x: {
+                            format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+                        },
+                        y: {
+                            formatter: function(value) {
+                                return value.toLocaleString('vi-VN', {
+                                    style: 'currency',
+                                    currency: 'VND'
+                                });
+                            }
+                        }
+                    }
+                }
+
+                var chart = new ApexCharts(
+                    document.querySelector("#revenueGraph"),
+                    options
+                );
+
+                chart.render();
+            } else {
+                console.log("Không có dữ liệu để hiển thị biểu đồ.");
+            }
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Lấy dữ liệu ordersByStatus từ Laravel và chuyển thành mảng JSON
+            const ordersByStatusForChart = @json($ordersByStatusForChart);
+
+            // Tạo dữ liệu cho series và labels từ ordersByStatusForChart
+            const seriesData = [
+                ordersByStatusForChart['pending_confirmation'], // Chờ xác nhận
+                ordersByStatusForChart['pending_delivery'], // Chờ giao hàng
+                ordersByStatusForChart['delivered'], // Đã giao hàng
+                ordersByStatusForChart['canceled'], // Đã hủy
+                ordersByStatusForChart['returned'] // Trả hàng
+            ];
+
+            const labelsData = ['Chờ xác nhận', 'Chờ giao hàng', 'Đã giao hàng', 'Đã hủy', 'Trả hàng'];
+
+            var options = {
+                chart: {
+                    height: 300, // Thay đổi chiều cao của biểu đồ
+                    width: '100%',
+                    type: 'radialBar',
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                plotOptions: {
+                    radialBar: {
+                        dataLabels: {
+                            name: {
+                                fontSize: '12px',
+                                fontFamily: 'Roboto', // Sử dụng font Roboto
+                                fontWeight: 'bold',
+                                fontColor: 'black',
                             },
-                            dataLabels: {
-                                enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+                            value: {
+                                fontSize: '21px',
+                                fontFamily: 'Roboto', // Sử dụng font Roboto
+                                fontWeight: 'bold',
+                                fontColor: 'black',
                             },
-                            stroke: {
-                                curve: 'smooth', // Đường cong mượt
-                                width: 3
-                            },
-                            series: [{
-                                name: 'Doanh thu',
-                                data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
-                            }],
-                            grid: {
-                                borderColor: '#e0e6ed',
-                                strokeDashArray: 5,
-                                xaxis: {
-                                    lines: {
-                                        show: true // Hiển thị đường lưới trên trục X
-                                    }
-                                },
-                                yaxis: {
-                                    lines: {
-                                        show: false, // Tắt đường lưới trên trục Y
-                                    }
-                                },
-                                padding: {
-                                    top: 0,
-                                    right: 0,
-                                    bottom: 10,
-                                    left: 0
-                                },
-                            },
-                            xaxis: {
-                                categories: @json($dates), // Dữ liệu ngày tháng
-                                labels: {
-                                    style: {
-                                        fontSize: '12px',
-                                        colors: ['#6c757d']
-                                    }
-                                }
-                            },
-                            yaxis: {
-                                labels: {
-                                    show: true, // Hiển thị nhãn trên trục Y
-                                    style: {
-                                        fontSize: '12px',
-                                        colors: ['#6c757d']
-                                    }
-                                },
-                            },
-                            colors: ['#4267cd'], // Màu sắc cho biểu đồ
-                            markers: {
-                                size: 4,
-                                colors: ['#4267cd'],
-                                strokeColor: "#ffffff",
-                                strokeWidth: 2,
-                                hover: {
-                                    size: 7, // Kích thước khi di chuột qua
-                                }
-                            },
-                            tooltip: {
-                                enabled: true,
-                                x: {
-                                    format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
-                                },
-                                y: {
-                                    formatter: function(value) {
-                                        return value.toLocaleString('vi-VN', {
-                                            style: 'currency',
-                                            currency: 'VND'
-                                        });
-                                    }
+                            total: {
+                                show: true,
+                                label: 'Đơn Hàng',
+                                fontFamily: 'Roboto', // Sử dụng font Roboto
+                                fontWeight: 'bold',
+                                formatter: function(w) {
+                                    return w.globals.series.reduce((a, b) => a + b, 0);
                                 }
                             }
                         }
-
-                        var chart = new ApexCharts(
-                            document.querySelector("#revenueGraph"),
-                            options
-                        );
-
-                        chart.render();
-                    } else {
-                        console.log("Không có dữ liệu để hiển thị biểu đồ.");
                     }
-                });
-            </script>
+                },
+                series: seriesData,
+                labels: labelsData,
+                colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00'],
+            };
+
+            var chart = new ApexCharts(
+                document.querySelector("#taskGraph"),
+                options
+            );
+            chart.render();
+        });
+    </script>
 
 
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    // Lấy dữ liệu ordersByStatus từ Laravel và chuyển thành mảng JSON
-                    const ordersByStatusForChart = @json($ordersByStatusForChart);
 
-                    // Tạo dữ liệu cho series và labels từ ordersByStatusForChart
-                    const seriesData = [
-                        ordersByStatusForChart['processing'],
-                        ordersByStatusForChart['Delivering'],
-                        ordersByStatusForChart['shipped'],
-                        ordersByStatusForChart['canceled'],
-                        ordersByStatusForChart['refunded']
-                    ];
-
-                    const labelsData = ['Chờ xử lý', 'Đang giao hàng', 'Hoàn thành', 'Hủy', 'Hoàn tiền'];
-
-                    var options = {
-                        chart: {
-                            height: 300, // Thay đổi chiều cao của biểu đồ
-                            width: '100%',
-                            type: 'radialBar',
-                            toolbar: {
-                                show: false,
-                            },
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var options = {
+                chart: {
+                    height: 300,
+                    type: 'bar',
+                    dropShadow: {
+                        enabled: true,
+                        opacity: 0.1,
+                        blur: 5,
+                        left: -10,
+                        top: 10
+                    },
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            position: 'top', // top, center, bottom
                         },
-                        plotOptions: {
-                            radialBar: {
-                                dataLabels: {
-                                    name: {
-                                        fontSize: '12px',
-                                        fontFamily: 'Roboto', // Sử dụng font Roboto
-                                        fontWeight: 'bold',
-                                        fontColor: 'black',
-                                    },
-                                    value: {
-                                        fontSize: '21px',
-                                        fontFamily: 'Roboto', // Sử dụng font Roboto
-                                        fontWeight: 'bold',
-                                        fontColor: 'black',
-                                    },
-                                    total: {
-                                        show: true,
-                                        label: 'Đơn Hàng',
-                                        fontFamily: 'Roboto', // Sử dụng font Roboto
-                                        fontWeight: 'bold',
-                                        formatter: function(w) {
-                                            return w.globals.series.reduce((a, b) => a + b, 0);
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        series: seriesData,
-                        labels: labelsData,
-                        colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00'],
-                    };
-
-                    var chart = new ApexCharts(
-                        document.querySelector("#taskGraph"),
-                        options
-                    );
-                    chart.render();
-                });
-            </script>
-
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    var options = {
-                        chart: {
-                            height: 300,
-                            type: 'bar',
-                            dropShadow: {
-                                enabled: true,
-                                opacity: 0.1,
-                                blur: 5,
-                                left: -10,
-                                top: 10
-                            },
-                        },
-                        plotOptions: {
-                            bar: {
-                                dataLabels: {
-                                    position: 'top', // top, center, bottom
-                                },
-                            }
-                        },
-                        series: [{
-                            name: 'Sản phẩm đã bán',
-                            data: @json($topSellingProductQuantities), // Dữ liệu số lượng bán
-                        }],
-                        xaxis: {
-                            categories: @json($topSellingProductNames), // Dữ liệu tên sản phẩm
-                            position: 'top',
-                            labels: {
-                                offsetY: -18,
-                            },
-                            axisBorder: {
-                                show: false
-                            },
-                            axisTicks: {
-                                show: false
-                            },
-                            crosshairs: {
-                                fill: {
-                                    type: 'gradient',
-                                    gradient: {
-                                        colorFrom: '#435EEF',
-                                        colorTo: '#95c5ff',
-                                        stops: [0, 100],
-                                        opacityFrom: 0.4,
-                                        opacityTo: 0.5,
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                enabled: true,
-                                offsetY: -35,
-                            }
-                        },
+                    }
+                },
+                series: [{
+                    name: 'Sản phẩm đã bán',
+                    data: @json($topSellingProductQuantities), // Dữ liệu số lượng bán
+                }],
+                xaxis: {
+                    categories: @json($topSellingProductNames), // Dữ liệu tên sản phẩm
+                    position: 'top',
+                    labels: {
+                        offsetY: -18,
+                    },
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    crosshairs: {
                         fill: {
+                            type: 'gradient',
                             gradient: {
-                                shade: 'light',
-                                type: "horizontal",
-                                shadeIntensity: 0.25,
-                                gradientToColors: undefined,
-                                inverseColors: true,
-                                opacityFrom: 1,
-                                opacityTo: 1,
-                                stops: [50, 0, 100, 100]
-                            },
-                        },
-                        yaxis: {
-                            axisBorder: {
-                                show: false
-                            },
-                            axisTicks: {
-                                show: false,
-                            },
-                            labels: {
-                                show: false,
-                                formatter: function(val) {
-                                    return val + " Sản Phẩm";
-                                }
+                                colorFrom: '#435EEF',
+                                colorTo: '#95c5ff',
+                                stops: [0, 100],
+                                opacityFrom: 0.4,
+                                opacityTo: 0.5,
                             }
-                        },
-                        title: {
-                            floating: true,
-                            offsetY: 320,
-                            align: 'center',
-                            style: {
-                                color: '#2e323c'
-                            }
-                        },
-                        grid: {
-                            borderColor: '#e0e6ed',
-                            strokeDashArray: 5,
-                            xaxis: {
-                                lines: {
-                                    show: true
-                                }
-                            },
-                            yaxis: {
-                                lines: {
-                                    show: false,
-                                }
-                            },
-                            padding: {
-                                top: 0,
-                                right: 0,
-                                bottom: 0,
-                                left: 0
-                            },
-                        },
-                        colors: ['#435EEF', '#2b86f5', '#63a9ff', '#95c5ff', '#c6e0ff'],
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        offsetY: -35,
                     }
+                },
+                fill: {
+                    gradient: {
+                        shade: 'light',
+                        type: "horizontal",
+                        shadeIntensity: 0.25,
+                        gradientToColors: undefined,
+                        inverseColors: true,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [50, 0, 100, 100]
+                    },
+                },
+                yaxis: {
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false,
+                    },
+                    labels: {
+                        show: false,
+                        formatter: function(val) {
+                            return val + " Sản Phẩm";
+                        }
+                    }
+                },
+                title: {
+                    floating: true,
+                    offsetY: 320,
+                    align: 'center',
+                    style: {
+                        color: '#2e323c'
+                    }
+                },
+                grid: {
+                    borderColor: '#e0e6ed',
+                    strokeDashArray: 5,
+                    xaxis: {
+                        lines: {
+                            show: true
+                        }
+                    },
+                    yaxis: {
+                        lines: {
+                            show: false,
+                        }
+                    },
+                    padding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                    },
+                },
+                colors: ['#435EEF', '#2b86f5', '#63a9ff', '#95c5ff', '#c6e0ff'],
+            }
 
-                    var chart = new ApexCharts(document.querySelector("#basic-column-graph-datalables"), options);
-                    chart.render();
-                });
-            </script>
+            var chart = new ApexCharts(document.querySelector("#basic-column-graph-datalables"), options);
+            chart.render();
+        });
+    </script>
 
-
-
-        @endsection
+@endsection

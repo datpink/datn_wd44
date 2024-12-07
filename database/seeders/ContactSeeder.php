@@ -13,7 +13,7 @@ class ContactSeeder extends Seeder
         $faker = Faker::create();
 
         // Tạo 50 liên hệ giả
-        foreach (range(1, 10) as $index) {
+        foreach (range(1, 5) as $index) {
             Contact::create([
                 'name' => $faker->name,
                 'email' => $faker->unique()->safeEmail,

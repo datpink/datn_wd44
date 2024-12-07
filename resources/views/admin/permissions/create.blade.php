@@ -17,27 +17,34 @@
                     <form action="{{ route('permissions.store') }}" method="POST">
                         @csrf
 
-                        <div class="form-group">
-                            <label for="name">Tên Quyền:</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Tên Quyền:</label>
+                                    <input type="text" name="name" id="name" class="form-control"
+                                        value="{{ old('name') }}" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="guard_name">Guard Name:</label>
-                            <input type="text" name="guard_name" id="guard_name" class="form-control" value="{{ old('guard_name', 'web') }}" required>
-                        </div>
+                                <div class="form-group">
+                                    <label for="guard_name">Guard Name:</label>
+                                    <input type="text" name="guard_name" id="guard_name" class="form-control"
+                                        value="{{ old('guard_name', 'web') }}" required>
+                                </div>
 
-                        <div class="form-group">
-                            <label for="group">Nhóm:</label>
-                            <input type="text" name="group" id="group" class="form-control" value="{{ old('group') }}">
-                        </div>
+                                <div class="form-group">
+                                    <label for="group">Nhóm:</label>
+                                    <input type="text" name="group" id="group" class="form-control"
+                                        value="{{ old('group') }}">
+                                </div>
 
-                        <div class="form-group">
-                            <label for="description">Mô Tả:</label>
-                            <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
-                        </div>
+                                <div class="form-group">
+                                    <label for="description">Mô Tả:</label>
+                                    <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
+                                </div>
 
-                        <button type="submit" class="btn rounded-pill btn-primary mt-3">Thêm Quyền</button>
+                                <button type="submit" class="btn rounded-pill btn-primary mt-3">Thêm Quyền</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>

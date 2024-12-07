@@ -19,9 +19,9 @@
                         <div class="product-inner tooltip-left">
                             <div class="product-thumb">
                                 <a class="thumb-link" href="#">
-                                    <img class="img-responsive"
-                                        src="https://danviet.mediacdn.vn/upload/2-2019/images/2019-06-25/3-1561430885-width660height440.jpg"
-                                        {{-- {{ \Storage::url($product->image_url)}} --}} alt="Gaming Mouse" width="600" height="778">
+                                    <img class="img-responsive mt-3"
+                                        src=" {{ \Storage::url($product->image_url)}}"
+                                        alt="Gaming Mouse" width="300">
                                 </a>
                                 <div class="flash">
                                     <span class="onnew"><span class="text">New</span></span>

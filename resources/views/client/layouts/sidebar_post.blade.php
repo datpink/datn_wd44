@@ -9,7 +9,7 @@
             </form>
 
         </div>
-        <div id="categories-3" class="widget widget_categories">
+        {{-- <div id="categories-3" class="widget widget_categories">
             <h2 class="widgettitle">Thể loại<span class="arrow"></span></h2>
             <ul>
                 <li class="cat-item cat-item-51"><a href="#">Camera</a>
@@ -24,7 +24,7 @@
                         Style</a>
                 </li>
             </ul>
-        </div>
+        </div> --}}
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
             <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
@@ -57,7 +57,7 @@
 
             </div>
         </div>
-        <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
+        {{-- <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
             <h2 class="widgettitle">Theo dõi chúng tôi<span class="arrow"></span></h2>
             <div class="content-socials">
                 <ul class="socials-list">
@@ -127,6 +127,6 @@
                 <a href="#" class="tag-cloud-link tag-link-45 tag-link-position-5"
                     aria-label="Life Style (7 items)">Life Style</a>
             </div>
-        </div>
+        </div> --}}
     </div><!-- .widget-area -->
 </div>

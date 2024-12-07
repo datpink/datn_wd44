@@ -34,58 +34,66 @@
                         @csrf
                         @method('PUT')
 
-                        <div class="form-group mb-3">
-                            <label for="image">Hình ảnh:</label>
-                            <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
-                                name="image" id="image" accept="image/*" onchange="previewPostImage(event)">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="image">Hình ảnh:</label>
+                                    <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
+                                        name="image" id="image" accept="image/*" onchange="previewPostImage(event)">
 
-                            @if ($banner->image)
-                                <img id="currentImage" src="{{ asset('storage/' . $banner->image) }}" alt=""
-                                    style="width: 150px; height: auto;" class="mt-2">
-                            @else
-                                <p id="noImageText">Không có ảnh</p>
-                            @endif
+                                    @if ($banner->image)
+                                        <img id="currentImage" src="{{ asset('storage/' . $banner->image) }}" alt=""
+                                            style="width: 150px; height: auto;" class="mt-2">
+                                    @else
+                                        <p id="noImageText">Không có ảnh</p>
+                                    @endif
 
-                            <img id="newImagePreview" src="" alt="Hình ảnh xem trước"
-                                style="max-width: 150px; height: auto; display: none;" class="mt-2">
+                                    <img id="newImagePreview" src="" alt="Hình ảnh xem trước"
+                                        style="max-width: 150px; height: auto; display: none;" class="mt-2">
+                                </div>
+
+
+                                <div class="form-group mb-3">
+                                    <label for="title">Tiêu đề:</label>
+                                    <input type="text" class="form-control" id="title" name="title"
+                                        value="{{ old('title', $banner->title) }}" placeholder="Nhập tiêu đề">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="button_text">Nút văn bản:</label>
+                                    <input type="text" class="form-control" id="button_text" name="button_text"
+                                        value="{{ old('button_text', $banner->button_text) }}"
+                                        placeholder="Nhập văn bản nút">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="button_link">Liên kết nút:</label>
+                                    <input type="text" class="form-control" id="button_link" name="button_link"
+                                        value="{{ old('button_link', $banner->button_link) }}"
+                                        placeholder="Nhập liên kết nút">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="status">Trạng thái:</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="active"
+                                            {{ old('status', $banner->status) == 'active' ? 'selected' : '' }}>
+                                            Kích hoạt</option>
+                                        <option value="inactive"
+                                            {{ old('status', $banner->status) == 'inactive' ? 'selected' : '' }}>Vô hiệu hóa
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-rounded btn-success">Cập nhật Banner</button>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="description">Mô tả:</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả">{{ old('description', $banner->description) }}</textarea>
+                                </div>
+                            </div>
                         </div>
-
-
-                        <div class="form-group mb-3">
-                            <label for="title">Tiêu đề:</label>
-                            <input type="text" class="form-control" id="title" name="title"
-                                value="{{ old('title', $banner->title) }}" placeholder="Nhập tiêu đề">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="description">Mô tả:</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả">{{ old('description', $banner->description) }}</textarea>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="button_text">Nút văn bản:</label>
-                            <input type="text" class="form-control" id="button_text" name="button_text"
-                                value="{{ old('button_text', $banner->button_text) }}" placeholder="Nhập văn bản nút">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="button_link">Liên kết nút:</label>
-                            <input type="text" class="form-control" id="button_link" name="button_link"
-                                value="{{ old('button_link', $banner->button_link) }}" placeholder="Nhập liên kết nút">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="status">Trạng thái:</label>
-                            <select class="form-control" id="status" name="status">
-                                <option value="active" {{ old('status', $banner->status) == 'active' ? 'selected' : '' }}>
-                                    Kích hoạt</option>
-                                <option value="inactive"
-                                    {{ old('status', $banner->status) == 'inactive' ? 'selected' : '' }}>Vô hiệu hóa
-                                </option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-rounded btn-success">Cập nhật Banner</button>
                     </form>
                 </div>
             </div>

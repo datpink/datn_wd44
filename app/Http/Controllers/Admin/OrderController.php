@@ -284,6 +284,7 @@ class OrderController extends Controller
         // Cập nhật trạng thái và lý do hủy
         $order->status = 'canceled';
         $order->cancellation_reason = $request->input('cancellation_reason');
+        $order->canceled_at = now();
         $order->save();
 
         // Hoàn lại stock cho từng sản phẩm trong đơn hàng
@@ -319,23 +320,74 @@ class OrderController extends Controller
 
 
 
+    // public function refund(Request $request, $id)
+    // {
+    //     // Tìm đơn hàng theo ID
+    //     $order = Order::findOrFail($id);
+
+    //     // Kiểm tra trạng thái đơn hàng, chỉ cho phép trả hàng nếu trạng thái là 'delivered'
+    //     if ($order->status !== 'delivered') {
+    //         return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể trả hàng.');
+    //     }
+
+    //     // Trước khi cập nhật trạng thái
+    //     Log::info('Trạng thái trước khi cập nhật: ' . $order->status);
+
+    //     // Lưu lý do trả hàng
+    //     $order->refund_reason = $request->input('refund_reason');
+    //     $order->status = 'returned';  // Cập nhật trạng thái đơn hàng thành 'refunded'
+    //     $order->payment_status = 'refunded';  // Cập nhật trạng thái thanh toán thành 'failed'
+
+    //     // Xử lý hình ảnh trả hàng (nếu có)
+    //     if ($request->hasFile('refund_image')) {
+    //         $images = $request->file('refund_image');
+    //         $imagePaths = [];
+
+    //         foreach ($images as $image) {
+    //             // Lưu hình ảnh vào thư mục 'refunds' trong storage
+    //             $imagePaths[] = $image->store('refunds', 'public');
+    //         }
+
+    //         // Lưu đường dẫn các hình ảnh vào database dưới dạng JSON
+    //         $order->refund_images = json_encode($imagePaths);
+    //     }
+
+    //     // Lưu các thay đổi vào cơ sở dữ liệu
+    //     $order->save();
+
+    //     // Sau khi lưu
+    //     Log::info('Trạng thái sau khi cập nhật: ' . $order->status);
+    //     Log::info('Trạng thái thanh toán sau khi cập nhật: ' . $order->payment_status);
+
+    //     // Quay lại trang lịch sử đơn hàng với thông báo thành công
+    //     return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hoàn trả và trạng thái thanh toán đã được cập nhật.');
+    // }
     public function refund(Request $request, $id)
     {
-        // Tìm đơn hàng theo ID
         $order = Order::findOrFail($id);
 
-        // Kiểm tra trạng thái đơn hàng, chỉ cho phép trả hàng nếu trạng thái là 'shipped'
-        if ($order->status !== 'shipped') {
+        if ($order->status !== 'delivered') {
             return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể trả hàng.');
         }
 
-        // Trước khi cập nhật trạng thái
-        Log::info('Trạng thái trước khi cập nhật: ' . $order->status);
-
         // Lưu lý do trả hàng
         $order->refund_reason = $request->input('refund_reason');
-        $order->status = 'refunded';  // Cập nhật trạng thái đơn hàng thành 'refunded'
-        $order->payment_status = 'failed';  // Cập nhật trạng thái thanh toán thành 'failed'
+        $order->refund_method = $request->input('refund_method', 'store_credit');
+
+        // Chuyển trạng thái thanh toán sang 'refunded'
+        $order->payment_status = 'refunded';
+        $order->admin_status = 'pending';
+
+        // Nếu phương thức hoàn tiền là 'store_credit', xử lý tải lên QR và số tài khoản
+        if ($order->refund_method === 'store_credit') {
+            // Kiểm tra nếu có tải QR
+            if ($request->hasFile('qr_code')) {
+                $order->qr_code = $request->file('qr_code')->store('qr_codes', 'public');
+            }
+
+            // Lưu số tài khoản (nếu có)
+            $order->account_number = $request->input('account_number', '');
+        }
 
         // Xử lý hình ảnh trả hàng (nếu có)
         if ($request->hasFile('refund_image')) {
@@ -343,23 +395,91 @@ class OrderController extends Controller
             $imagePaths = [];
 
             foreach ($images as $image) {
-                // Lưu hình ảnh vào thư mục 'refunds' trong storage
                 $imagePaths[] = $image->store('refunds', 'public');
             }
 
-            // Lưu đường dẫn các hình ảnh vào database dưới dạng JSON
             $order->refund_images = json_encode($imagePaths);
         }
 
-        // Lưu các thay đổi vào cơ sở dữ liệu
+        $order->refund_at = now(); 
+
         $order->save();
 
-        // Sau khi lưu
-        Log::info('Trạng thái sau khi cập nhật: ' . $order->status);
-        Log::info('Trạng thái thanh toán sau khi cập nhật: ' . $order->payment_status);
+        return redirect()->route('order.history', ['userId' => $order->user_id])
+            ->with('success', 'Yêu cầu hoàn trả đã được gửi và đang chờ duyệt.');
+    }
 
-        // Quay lại trang lịch sử đơn hàng với thông báo thành công
-        return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hoàn trả và trạng thái thanh toán đã được cập nhật.');
+
+    public function approveRefund($id)
+    {
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
+
+        // Xác nhận hoàn trả, chuyển trạng thái đơn hàng thành 'returned'
+        $order->status = 'returned';
+        $order->payment_status = 'refunded';  // Cập nhật trạng thái thanh toán thành 'refunded'
+        $order->admin_status = 'approved';   // Đặt trạng thái admin là 'approved' (đã duyệt)
+
+        $order->save();
+
+        // Quay lại trang trước với thông báo thành công
+        return back()->with('success', 'Hoàn tiền đã được duyệt và đơn hàng đã chuyển sang trạng thái trả hàng.');
+    }
+
+    public function rejectRefund($id)
+    {
+        // Tìm đơn hàng theo ID
+        $order = Order::findOrFail($id);
+
+        // Từ chối hoàn trả, khôi phục trạng thái thanh toán ban đầu
+        $order->payment_status = 'paid';  // Trạng thái thanh toán quay lại 'paid' (hoàn thành)
+        $order->admin_status = 'rejected';   // Đặt trạng thái admin là 'rejected' (bị từ chối)
+
+        // Không lưu hình ảnh hay lý do hoàn trả khi từ chối
+        $order->refund_reason = null;
+        $order->refund_images = null;
+        $order->refund_at = null;  // Xóa th��i gian hoàn trả
+        $order->qr_code = null;
+        $order->account_number = null;  // Xóa số tài khoản
+
+        $order->save();
+
+        // Quay lại trang trước với thông báo từ chối
+        return back()->with('success', 'Hoàn tiền đã bị từ chối và trạng thái thanh toán đã được khôi phục.');
+    }
+
+
+    // OrderController.php
+    // app/Http/Controllers/OrderController.php
+
+    // app/Http/Controllers/Admin/OrderController.php
+
+    public function confirmDelivered($id)
+    {
+        DB::beginTransaction();
+        try {
+            $order = Order::findOrFail($id);
+
+            // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
+            if ($order->status !== 'pending_delivery') {
+                \Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+                return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
+            }
+
+            // Cập nhật trạng thái và lưu
+            $order->status = 'delivered';
+            $order->payment_status = 'paid';
+            $order->delivered_at = now();
+            $order->save();
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Đơn hàng đã được xác nhận là đã nhận!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
+            return response()->json(['success' => false, 'message' => 'Có lỗi khi cập nhật trạng thái đơn hàng.'], 500);
+        }
     }
 
 }

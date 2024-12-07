@@ -38,7 +38,7 @@ class BannerSeeder extends Seeder
             'description' => 'Check out the latest fashion and gadgets!',
             'button_text' => 'Browse Now',
             'button_link' => 'http://127.0.0.1:8000',
-            'status' => 'inactive', // Đảm bảo 'inactive' là chuỗi
+            'status' => 'active', // Đảm bảo 'inactive' là chuỗi
         ]);
     }
 }

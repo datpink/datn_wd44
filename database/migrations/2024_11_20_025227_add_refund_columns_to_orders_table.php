@@ -13,6 +13,13 @@ return new class extends Migration {
         Schema::table('orders', function (Blueprint $table) {
             $table->string('refund_reason')->nullable()->after('cancellation_reason');
             $table->string('refund_images')->nullable()->after('refund_reason');
+            $table->enum('refund_method', ['store_credit', 'cash', 'exchange'])->default('store_credit');
+            $table->enum('admin_status', ['pending', 'approved', 'rejected'])->default('pending'); // Xác nhận admin
+            $table->string('qr_code')->nullable(); // Để lưu đường dẫn QR
+            $table->string('account_number')->nullable(); // Để lưu số tài khoản
+            $table->timestamp('delivered_at')->nullable();  // Thời gian giao hàng
+            $table->timestamp('refund_at')->nullable();     // Thời gian hoàn trả
+            $table->timestamp('canceled_at')->nullable();
         });
     }
 
