@@ -207,6 +207,7 @@ class ProductController extends Controller
             ->limit(6) // Số lượng sản phẩm liên quan cần hiển thị
             ->get();
 
+            // dd($product);
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
             'product',

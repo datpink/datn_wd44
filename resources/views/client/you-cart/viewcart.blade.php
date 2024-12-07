@@ -55,21 +55,27 @@
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4"
                                             data-price="{{ $item['price'] }}">
-                                            {{ number_format($item['price'], 0, ',', '.') }}₫
+                                            {{ number_format(floatval($item['price']), 0, ',', '.') }}₫
+
                                         </td>
                                         <td class="align-middle p-4">
                                             <input type="number" class="form-control text-center quantity"
                                                 value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
                                         </td>
                                         <td class="text-right font-weight-semibold align-middle p-4 total">
-                                            {{ number_format($item['quantity'] * $item['price'], 0, ',', '.') }}₫
+                                            {{ number_format(floatval($item['quantity']) * floatval($item['price']), 0, ',', '.') }}₫
                                         </td>
                                         <td class="text-center align-middle px-0">
                                             <button type="button" class="btn btn-warning remove-from-cart"
                                                 data-id="{{ $key }}">Xóa</button>
                                         </td>
                                     </tr>
-                                    @php $subtotal += $item['quantity'] * $item['price']; @endphp
+                                    @php
+                                    $quantity = is_numeric($item['quantity']) ? floatval($item['quantity']) : 0;
+                                    $price = is_numeric($item['price']) ? floatval($item['price']) : 0;
+                                    $subtotal += $quantity * $price;
+                                @endphp
+
                                 @endforeach
                             @else
                                 <tr>
