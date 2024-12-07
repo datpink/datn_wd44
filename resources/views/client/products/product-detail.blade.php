@@ -261,6 +261,7 @@
                                             {{ $product->updateTotalStock2() }}
                                         @else
                                             {{ $product->stock }}
+                                            <input type="hidden" id="product-stock" value="{{ $product->stock }}">
                                         @endif
                                         <input type="hidden" id="total-stock" value="{{ $product->stock }}">
                                     </span>
@@ -375,7 +376,7 @@
                                 <a href="#" class="compare button" data-product_id="27" rel="nofollow">So sánh</a>
 
                                 <div class="product_meta">
-                                    <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
+                                    <span class="sku_wrapper">SKU: <span class="sku2">{{ $product->sku }}</span></span>
                                     <span class="posted_in">Danh mục:
                                         <a href="#"
                                             rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>
