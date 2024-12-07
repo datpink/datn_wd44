@@ -1,3 +1,28 @@
+<style>
+    .cat-item a {
+        display: inline-block;
+        padding-right: 20px;
+        position: relative;
+        text-decoration: none;
+        color: #333;
+    }
+
+    .cat-item a.active {
+        font-weight: bold;
+        color: #007bff;
+        /* Màu sắc khi được chọn */
+    }
+
+    .cat-item a.active::after {
+        content: '✔';
+        /* Dấu tích */
+        position: absolute;
+        right: 0;
+        /* Căn bên phải */
+        color: #007bff;
+        font-size: 16px;
+    }
+</style>
 <div class="sidebar kobolg_sidebar col-xl-3 col-lg-4 col-md-12 col-sm-12">
     <div id="widget-area" class="widget-area sidebar-blog">
         <div id="search-3" class="widget widget_search">
@@ -9,22 +34,23 @@
             </form>
 
         </div>
-        {{-- <div id="categories-3" class="widget widget_categories">
-            <h2 class="widgettitle">Thể loại<span class="arrow"></span></h2>
+        <div id="categories-3" class="widget widget_categories">
+            <h2 class="widgettitle">Danh mục<span class="arrow"></span></h2>
             <ul>
-                <li class="cat-item cat-item-51"><a href="#">Camera</a>
-                </li>
-                <li class="cat-item cat-item-49"><a href="#">Fashion</a>
-                </li>
-                <li class="cat-item cat-item-52"><a href="#">Game & Consoles</a>
-                </li>
-                <li class="cat-item cat-item-53"><a href="#">Collection</a>
-                </li>
-                <li class="cat-item cat-item-50"><a href="#">Life
-                        Style</a>
-                </li>
+                <ul>
+                    @foreach ($categories as $item)
+                        <li class="cat-item">
+                            <a href="{{ route('client.posts.byCategory', $item->id) }}"
+                                class="{{ request()->route('id') == $item->id ? 'active' : '' }}">
+                                {{ $item->name }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+
             </ul>
-        </div> --}}
+
+        </div>
         <div id="widget_kobolg_post-2" class="widget widget-kobolg-post">
             <h2 class="widgettitle">Bài đăng gần đây<span class="arrow"></span></h2>
             <div class="kobolg-posts">
@@ -57,6 +83,8 @@
 
             </div>
         </div>
+
+
         {{-- <div id="widget_kobolg_socials-2" class="widget widget-kobolg-socials">
             <h2 class="widgettitle">Theo dõi chúng tôi<span class="arrow"></span></h2>
             <div class="content-socials">

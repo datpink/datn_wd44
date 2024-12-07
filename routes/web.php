@@ -15,8 +15,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
-use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
-;
+use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;;
 
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -25,8 +24,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\ClientController;
-use App\Http\Controllers\Client\DiscountController as ClientDiscountController;
-;
+use App\Http\Controllers\Client\DiscountController as ClientDiscountController;;
 
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
@@ -125,6 +123,7 @@ Route::prefix('shop')->group(function () {
     Route::get('/posts/latest', [PostController::class, 'latest'])->name('posts.latest'); // Chỉ cần nếu bạn tạo phương thức này
     Route::post('/post/{id}/comments', [PostController::class, 'storeComment'])->name('post.comments.store');
     Route::get('post/{id}', [PostController::class, 'show'])->name('post.show');
+    Route::get('/blog-by-category/{id}', [PostController::class, 'PostByCategory'])->name('client.posts.byCategory');
 
 
     // Route::get('/search', [SearchController::class, 'search'])->name('search');
