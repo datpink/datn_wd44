@@ -24,7 +24,7 @@
                         <textarea name="description" class="form-control" id="description" required></textarea>
                     </div>
 
-                    <div class="card-body">
+                    <div class="form-group">
                         <label for="user_id" class="form-label">Chọn người dùng:</label>
                         <select name="user_id" id="user_id" class="form-select" required>
                             <option value="">Chọn người dùng</option>
@@ -35,7 +35,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="card-body">
+                    <div class="form-group">
                         <label for="url" class="form-label">URL:</label>
                         <input type="url" name="url" id="url" class="form-control" value="{{ old('url') }}" placeholder="https://example.com">
                     </div>
