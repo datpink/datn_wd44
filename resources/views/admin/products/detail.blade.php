@@ -15,22 +15,22 @@
                                 <i class="bi bi-arrow-left me-2"></i> Trở về
                             </a>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <!-- Tên sản phẩm -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="name">Tên sản phẩm</label>
                                     <p class="form-control">{{ $product->name }}</p>
                                 </div>
 
                                 <!-- Thương hiệu -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="brand_id">Thương hiệu</label>
                                     <p class="form-control">{{ $product->brand ? $product->brand->name : 'Không có' }}</p>
                                 </div>
 
                                 <!-- Danh mục -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="catalogue_id">Danh mục</label>
                                     <p class="form-control">
                                         {{ $product->catalogue ? $product->catalogue->name : 'Không có' }}
@@ -38,7 +38,7 @@
                                 </div>
 
                                 <!-- Hình ảnh sản phẩm -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="image_url">Hình ảnh</label>
                                     <br>
                                     @if ($product->image_url && \Storage::exists($product->image_url))
@@ -55,26 +55,26 @@
                                     @foreach ($product->galleries as $gallery)
                                         <div class="image-item me-2 mb-2">
                                             <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
-                                                class="img-thumbnail" style="width: 150px;">
+                                                class="img-thumbnail" style="width: 100px;">
                                         </div>
                                     @endforeach
                                 </div>
 
                                 <!-- Trạng thái hoạt động -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="is_active">Trạng thái hoạt động</label>
                                     <p class="form-control">{{ $product->is_active ? 'Hoạt động' : 'Không hoạt động' }}</p>
                                 </div>
 
                                 <!-- Giá sản phẩm -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="price">Giá sản phẩm</label>
                                     <p class="form-control">{{ number_format($product->price, 0, ',', '.') }}đ</p>
                                 </div>
 
                                 <!-- Giá khuyến mãi -->
                                 @if ($product->discount_price)
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group">
                                         <label for="discount_price">Giá khuyến mãi</label>
                                         <p class="form-control">
                                             {{ number_format($product->discount_price, 0, ',', '.') }}đ</p>
@@ -82,13 +82,15 @@
                                 @endif
 
                                 <!-- Slug -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="slug">Slug</label>
                                     <p class="form-control">{{ $product->slug }}</p>
                                 </div>
+                            </div>
 
+                            <div class="col-md-6">
                                 <!-- SKU -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     <label for="sku">SKU (Mã sản phẩm)</label>
                                     <p class="form-control">{{ $product->sku }}</p>
                                 </div>
@@ -98,17 +100,17 @@
                                     <p class="form-control">{{ $product->stock }}</p>
                                 </div>
 
-                                <!-- Cân nặng (Weight) -->
-                                <div class="form-group col-md-6">
+                                {{-- <!-- Cân nặng (Weight) -->
+                                <div class="form-group">
                                     <label for="weight">Cân nặng (kg)</label>
                                     <p class="form-control">{{ $product->weight }}</p>
                                 </div>
 
                                 <!-- Kích thước (Dimensions) -->
-                                <div class="form-group col-md-6">
+                                <div class="form-group mb-3">
                                     <label for="dimensions">Kích thước (DxRxC)</label>
                                     <p class="form-control">{{ $product->dimensions }}</p>
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-3">
                                     <label for="is_featured" class="form-label">Nổi bật</label>
@@ -132,17 +134,25 @@
                                 </div>
 
                                 <!-- Tóm tắt sản phẩm -->
-                                <div class="form-group col-md-6">
-                                    <label for="tomtat">Tóm tắt</label>
-                                    <p class="card">{{ $product->tomtat }}</p>
-                                </div>
-
-                                <!-- Mô tả sản phẩm -->
                                 <div class="form-group">
-                                    <label for="description">Mô tả sản phẩm</label>
-                                    <p class="card">{!! $product->description !!}</p>
+                                    <label for="tomtat">Tóm tắt</label>
+                                    <p>{!! $product->tomtat !!}</p>
                                 </div>
                             </div>
+
+
+                            <!-- Mô tả sản phẩm -->
+                            <div class="form-group">
+                                <label for="description">Mô tả sản phẩm</label>
+                                <p>{!! $product->description !!}</p>
+                            </div>
+
+                            <!-- Mô tả sản phẩm -->
+                            <div class="form-group">
+                                <label for="specifications">Thông số kĩ thuật</label>
+                                <p>{!! $product->specifications !!}</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>

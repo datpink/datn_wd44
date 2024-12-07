@@ -21,30 +21,35 @@
                 <div class="card-body mt-4">
                     <form action="{{ route('brands.store') }}" method="POST" id="brandForm" class="was-validated">
                         @csrf
-                        <div class="form-group mt-4">
-                            <label for="name">Tên thương hiệu:</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ old('name') }}" placeholder="Nhập tên thương hiệu" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mt-4">
+                                    <label for="name">Tên thương hiệu:</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ old('name') }}" placeholder="Nhập tên thương hiệu" required>
 
-                            @if ($errors->has('name'))
-                                <ul>
-                                    <li class="text-danger mb-1">{{ $errors->first('name') }}</li>
-                                </ul>
-                            @endif
+                                    @if ($errors->has('name'))
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $errors->first('name') }}</li>
+                                        </ul>
+                                    @endif
+                                </div>
+
+                                <div class="form-group mb-3 mt-4">
+                                    <label for="description">Mô tả:</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả" required>{{ old('description') }}</textarea>
+
+                                    @if ($errors->has('description'))
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
+                                        </ul>
+                                    @endif
+                                </div>
+
+                                <button type="submit" id="submitButton" class="btn btn-rounded btn-success" disabled>Thêm
+                                    Mới</button>
+                            </div>
                         </div>
-
-                        <div class="form-group mb-3 mt-4">
-                            <label for="description">Mô tả:</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả" required>{{ old('description') }}</textarea>
-
-                            @if ($errors->has('description'))
-                                <ul>
-                                    <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
-                                </ul>
-                            @endif
-                        </div>
-
-                        <button type="submit" id="submitButton" class="btn btn-rounded btn-success" disabled>Thêm Mới</button>
                     </form>
                 </div>
             </div>

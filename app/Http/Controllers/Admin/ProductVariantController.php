@@ -113,8 +113,8 @@ class ProductVariantController extends Controller
             'stock' => 'required|integer',
             'attributes' => 'required|array|min:1',
             'attributes.*' => 'integer|exists:attribute_values,id',
-            'weight' => 'required|numeric',
-            'dimension' => 'required|string',
+            // 'weight' => 'required|numeric',
+            // 'dimension' => 'required|string',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png',
         ]);
 
@@ -130,7 +130,7 @@ class ProductVariantController extends Controller
         }
 
         // Tạo biến thể mới và lưu vào cơ sở dữ liệu
-        $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
+        $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock']) + [
             'status' => 'inactive', // Mặc định là không kích hoạt
             'image_url' => $imageUrl,
         ]);
@@ -164,7 +164,6 @@ class ProductVariantController extends Controller
     public function edit(Product $product, ProductVariant $variant)
     {
         $title = 'Chỉnh Sửa Biến Thể';
-        // Lấy tất cả các sản phẩm để hiển thị trong dropdown
         $products = Product::all();
 
         return view('admin.variants.edit', compact('product', 'variant', 'products', 'title'));
@@ -237,8 +236,8 @@ class ProductVariantController extends Controller
         $request->validate([
             'variant_name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'weight' => 'nullable|numeric',
-            'dimension' => 'nullable|string|max:255',
+            // 'weight' => 'nullable|numeric',
+            // 'dimension' => 'nullable|string|max:255',
             'stock' => 'required|integer',
             'sku' => 'required|string|unique:product_variants,sku,' . $variant->id,
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh
@@ -251,8 +250,8 @@ class ProductVariantController extends Controller
         // Cập nhật thông tin biến thể
         $variant->variant_name = $request->variant_name;
         $variant->price = $request->price;
-        $variant->weight = $request->weight;
-        $variant->dimension = $request->dimension;
+        // $variant->weight = $request->weight;
+        // $variant->dimension = $request->dimension;
         $variant->stock = $request->stock;
         $variant->status = $request->status;
 

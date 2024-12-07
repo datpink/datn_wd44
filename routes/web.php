@@ -15,7 +15,8 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\ProductVariantController;
-use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;;
+use App\Http\Controllers\Admin\DiscountController as AdminDiscountController;
+;
 
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -24,7 +25,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\AboutController;
 use App\Http\Controllers\Client\ClientController;
-use App\Http\Controllers\Client\DiscountController as ClientDiscountController;;
+use App\Http\Controllers\Client\DiscountController as ClientDiscountController;
+;
 
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\MenuController;
@@ -153,6 +155,11 @@ Route::prefix('shop')->group(function () {
     Route::patch('/orders/{id}/refund', [OrderController::class, 'refund'])->name('orders.refund');
 
 
+    Route::patch('/orders/{id}/confirm-delivered', [OrderController::class, 'confirmDelivered'])->name('orders.confirm-delivered');
+
+
+
+
     //route cho trang nhập mã giảm giá
     Route::post('/add-promotion', [ClientDiscountController::class, 'addPromotion'])->name('promotion.add');
     Route::get('/promotions', [ClientDiscountController::class, 'showPromotions'])->name('promotion.index');
@@ -168,6 +175,7 @@ Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.temporary');
 Route::get('cart/view', [CartController::class, 'view'])->name(name: 'cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('cart.check_stock');
 
 
 
@@ -194,11 +202,11 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 //
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-    // giảm giá catalogues 
+    // giảm giá catalogues
     Route::get('admin/catalogues', [AdminDiscountController::class, 'showDiscountToCatalogue'])->name('admin.catalogueList');
     Route::post('/catalogues/{catalogueId}/apply-discount', [AdminDiscountController::class, 'applyDiscount'])->name('admin.catalogues.applyDiscount');
     Route::post('/catalogues/{catalogueId}/remove-discount', [AdminDiscountController::class, 'removeDiscount'])
-    ->name('admin.catalogues.removeDiscount');
+        ->name('admin.catalogues.removeDiscount');
     // Route hiển thị danh sách giảm giá
     Route::resource('discounts', AdminDiscountController::class);
 
@@ -277,6 +285,10 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Route Order
     Route::get('/orders/new', [OrderController::class, 'newOrders'])->name('orders.new');
     Route::resource('orders', OrderController::class);
+    // Định nghĩa routes cho duyệt và từ chối yêu cầu hoàn tiền trong web.php
+    Route::post('orders/refund/approve/{id}', [OrderController::class, 'approveRefund'])->name('orders.refund.approve');
+    Route::post('orders/refund/reject/{id}', [OrderController::class, 'rejectRefund'])->name('orders.refund.reject');
+
 
 
     Route::get('/posts-trash', [PostController::class, 'trash'])->name('posts.trash');

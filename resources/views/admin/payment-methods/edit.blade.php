@@ -20,30 +20,37 @@
                                 @csrf
                                 @method('PUT')
 
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Tên phương thức</label>
-                                    <input type="text" class="form-control" id="name" name="name"
-                                        value="{{ old('name', $paymentMethod->name) }}" required>
-                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Tên phương thức</label>
+                                            <input type="text" class="form-control" id="name" name="name"
+                                                value="{{ old('name', $paymentMethod->name) }}" required>
+                                        </div>
 
-                                <div class="mb-3">
-                                    <label for="description" class="form-label">Mô tả</label>
-                                    <textarea class="form-control" id="description" name="description">{{ old('description', $paymentMethod->description) }}</textarea>
-                                </div>
+                                        <div class="mb-3">
+                                            <label for="description" class="form-label">Mô tả</label>
+                                            <textarea class="form-control" id="description" name="description">{{ old('description', $paymentMethod->description) }}</textarea>
+                                        </div>
 
-                                <div class="mb-3">
-                                    <label for="status" class="form-label">Trạng thái</label>
-                                    <select name="status" id="status" class="form-control" required>
-                                        <option value="active" {{ $paymentMethod->status === 'active' ? 'selected' : '' }}>
-                                            Kích hoạt</option>
-                                        <option value="inactive"
-                                            {{ $paymentMethod->status === 'inactive' ? 'selected' : '' }}>Không kích hoạt
-                                        </option>
-                                    </select>
-                                </div>
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label">Trạng thái</label>
+                                            <select name="status" id="status" class="form-control" required>
+                                                <option value="active"
+                                                    {{ $paymentMethod->status === 'active' ? 'selected' : '' }}>
+                                                    Kích hoạt</option>
+                                                <option value="inactive"
+                                                    {{ $paymentMethod->status === 'inactive' ? 'selected' : '' }}>Không kích
+                                                    hoạt
+                                                </option>
+                                            </select>
+                                        </div>
 
-                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary" disabled>Cập
-                                    nhật</button>
+                                        <button type="submit" id="submitButton" class="btn rounded-pill btn-primary"
+                                            disabled>Cập
+                                            nhật</button>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                     </div>

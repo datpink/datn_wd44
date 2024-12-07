@@ -24,7 +24,7 @@ class CartController extends Controller
             $id = auth()->id();
             $user = auth()->user();
 
-            // dd(session("cart_{$id}"));
+            dd(session("cart_{$id}"));
             // Lấy các mã giảm giá chưa dùng và có trạng thái active
             $discountCodes = $user->promotions()
                 ->wherePivot('is_used', false)
@@ -101,6 +101,48 @@ class CartController extends Controller
 
 
 
+
+    public function checkStock(Request $request)
+    {
+        $userId = auth()->id();
+        $productId = $request->input('product_id');
+        $variantId = $request->input('variant_id');
+
+        // Lấy tồn kho ban đầu
+        $remainingStock = 0;
+        if ($variantId) {
+            // Nếu là biến thể
+            $variant = ProductVariant::find($variantId);
+            if ($variant) {
+                $remainingStock = $variant->stock;
+            }
+        } else {
+            // Nếu là sản phẩm chính
+            $product = Product::find($productId);
+            if ($product) {
+                $remainingStock = $product->stock;
+            }
+        }
+
+        // Kiểm tra số lượng đã có trong giỏ hàng
+        $cart = session()->get("cart_{$userId}", []);
+        $quantityInCart = 0;
+
+        foreach ($cart as $item) {
+            if (
+                $item['id'] == $productId &&
+                $item['options']['variant_id'] == $variantId
+            ) {
+                $quantityInCart = $item['quantity'];
+                break;
+            }
+        }
+
+        // Phản hồi tồn kho còn lại (không trừ tồn kho thực tế)
+        return response()->json([
+            'remainingStock' => $remainingStock - $quantityInCart,
+        ]);
+    }
 
 
 

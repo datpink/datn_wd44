@@ -25,6 +25,8 @@ class Order extends Model
         'cancellation_reason',
         'refund_reason',
         'refund_images',
+        'refund_method',
+        'admin_status',
         'is_new'
     ];
 

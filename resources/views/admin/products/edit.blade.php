@@ -21,168 +21,186 @@
                                 @csrf
                                 @method('PATCH')
 
-                                <!-- Tên sản phẩm -->
-                                <div class="form-group">
-                                    <label for="name">Tên sản phẩm</label>
-                                    <input type="text" name="name" id="productName" class="form-control"
-                                        value="{{ $product->name }}" oninput="ChangeToSlug()">
-                                </div>
-
-                                <!-- Slug -->
-                                <div class="form-group">
-                                    <label for="slug">Slug</label>
-                                    <input type="text" name="slug" id="slug" class="form-control"
-                                        value="{{ $product->slug }}" readonly>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="stock" class="form-label">Số Lượng</label>
-                                    <input type="number" class="form-control" id="stock" name="stock"
-                                        value="{{ $product->stock }}" min="0" required>
-                                </div>
-
-
-                                <!-- Thương hiệu -->
-                                <div class="form-group">
-                                    <label for="brand_id">Thương hiệu</label>
-                                    <select name="brand_id" id="brand_id" class="form-control">
-                                        @foreach ($brands as $brand)
-                                            <option value="{{ $brand->id }}"
-                                                {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
-                                                {{ $brand->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <!-- Danh mục -->
-                                <div class="form-group">
-                                    <label for="catalogue_id">Danh mục</label>
-                                    <select name="catalogue_id" id="catalogue_id" class="form-control">
-                                        @foreach ($catalogues as $catalogue)
-                                            <option value="{{ $catalogue->id }}"
-                                                {{ $product->catalogue_id == $catalogue->id ? 'selected' : '' }}>
-                                                {{ $catalogue->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <!-- Hình ảnh sản phẩm -->
-                                <div class="form-group">
-                                    <label for="image_url">Hình ảnh</label>
-                                    <input type="file" name="image_url" id="image_url" class="form-control"
-                                        onchange="previewImageUrl(event)"><br>
-
-                                    @if ($product->image_url && \Storage::exists($product->image_url))
-                                        <img id="imageUrlPreview" src="{{ \Storage::url($product->image_url) }}"
-                                            alt="{{ $product->name }}" style="max-width: 100px; height: auto;"
-                                            class="mt-2">
-                                    @else
-                                        <p>Không có ảnh</p>
-                                    @endif
-                                </div>
-                                <!-- Trạng thái hoạt động (is_active) -->
-                                <div class="form-group">
-                                    <label for="is_active">Trạng thái hoạt động</label>
-                                    <select name="is_active" id="is_active" class="form-control">
-                                        <option value="1" {{ $product->is_active ? 'selected' : '' }}>Hoạt động
-                                        </option>
-                                        <option value="0" {{ !$product->is_active ? 'selected' : '' }}>Không hoạt động
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <!-- Giá sản phẩm -->
-                                <div class="form-group">
-                                    <label for="price">Giá sản phẩm</label>
-                                    <input type="number" name="price" id="price" class="form-control"
-                                        value="{{ $product->price }}" required>
-                                </div>
-
-                                <input type="hidden" name="discount_price" id="discount_price" class="form-control"
-                                    value="{{ $product->discount_price }}">
-
-
-                                <!-- SKU -->
-                                <div class="form-group">
-                                    <label for="sku">SKU (Mã sản phẩm)</label>
-                                    <input type="text" name="sku" id="sku" class="form-control"
-                                        value="{{ $product->sku }}">
-                                </div>
-
-                                <!-- Cân nặng (Weight) -->
-                                <div class="form-group">
-                                    <label for="weight">Cân nặng (kg)</label>
-                                    <input type="text" name="weight" id="weight" class="form-control"
-                                        value="{{ $product->weight }}">
-                                </div>
-
-                                <!-- Kích thước (Dimensions) -->
-                                <div class="form-group">
-                                    <label for="dimensions">Kích thước (DxRxC)</label>
-                                    <input type="text" name="dimensions" id="dimensions" class="form-control"
-                                        value="{{ $product->dimensions }}">
-                                </div>
-
-                                <!-- Tóm tắt sản phẩm -->
-                                <div class="form-group">
-                                    <label for="tomtat">Tóm tắt</label>
-                                    <textarea name="tomtat" id="tomtat" class="form-control" rows="2">{{ $product->tomtat }}</textarea>
-                                </div>
-
-                                <!-- Mô tả sản phẩm -->
-                                <div class="form-group">
-                                    <label for="editor">Mô tả sản phẩm</label>
-                                    <textarea name="description" id="editor" class="form-control" rows="4">{{ $product->description }}</textarea>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="is_featured" class="form-label">Nổi bật</label>
-                                    <input type="checkbox" id="is_featured" name="is_featured" value="1"
-                                        {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="condition" class="form-label">Tình trạng</label>
-                                    <select class="form-select" id="condition" name="condition" required>
-                                        <option value="">Chọn tình trạng</option>
-                                        <option value="new"
-                                            {{ old('condition', $product->condition) == 'new' ? 'selected' : '' }}>Mới
-                                        </option>
-                                        <option value="used"
-                                            {{ old('condition', $product->condition) == 'used' ? 'selected' : '' }}>Đã qua
-                                            sử dụng</option>
-                                        <option value="refurbished"
-                                            {{ old('condition', $product->condition) == 'refurbished' ? 'selected' : '' }}>
-                                            Tái chế</option>
-                                    </select>
-                                </div>
-
-                                <div id="image-inputs">
-                                    @foreach ($product->galleries as $index => $gallery)
-                                        <div class="form-group d-flex align-items-center">
-                                            <label for="image{{ $index + 1 }}" class="me-2">Hình ảnh
-                                                {{ $index + 1 }}</label>
-                                            <input type="file" name="images[]" id="image{{ $index + 1 }}"
-                                                class="form-control me-2" accept="image/*"
-                                                onchange="previewGalleryImage(event, this)">
-                                            <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
-                                            <input type="hidden" name="existing_images[]"
-                                                value="{{ $gallery->image_url }}">
-                                            <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
-                                                style="width: 100px; height: auto; margin-left: 10px;"
-                                                data-input-id="image{{ $index + 1 }}" class="gallery-image">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- Tên sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="name">Tên sản phẩm</label>
+                                            <input type="text" name="name" id="productName" class="form-control"
+                                                value="{{ $product->name }}" oninput="ChangeToSlug()">
                                         </div>
-                                    @endforeach
-                                </div>
-                                {{-- <button type="button" class="btn btn-secondary add-image">Thêm</button> --}}
-                                <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
 
-                                <div class="form-group d-flex align-items-center">
-                                    <button type="button" class="btn btn-rounded btn-secondary add-image"
-                                        style="margin-right: 15px;">Thêm Hình
-                                        Ảnh</button>
-                                    <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
+                                        <!-- Slug -->
+                                        <div class="form-group mb-3">
+                                            <label for="slug">Slug</label>
+                                            <input type="text" name="slug" id="slug" class="form-control"
+                                                value="{{ $product->slug }}" readonly>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="stock" class="form-label">Số Lượng</label>
+                                            <input type="number" class="form-control" id="stock" name="stock"
+                                                value="{{ $product->stock }}" min="0" required>
+                                        </div>
+
+
+                                        <!-- Thương hiệu -->
+                                        <div class="form-group mb-3">
+                                            <label for="brand_id">Thương hiệu</label>
+                                            <select name="brand_id" id="brand_id" class="form-control">
+                                                @foreach ($brands as $brand)
+                                                    <option value="{{ $brand->id }}"
+                                                        {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
+                                                        {{ $brand->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <!-- Danh mục -->
+                                        <div class="form-group mb-3">
+                                            <label for="catalogue_id">Danh mục</label>
+                                            <select name="catalogue_id" id="catalogue_id" class="form-control">
+                                                @foreach ($catalogues as $catalogue)
+                                                    <option value="{{ $catalogue->id }}"
+                                                        {{ $product->catalogue_id == $catalogue->id ? 'selected' : '' }}>
+                                                        {{ $catalogue->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <!-- Hình ảnh sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="image_url">Hình ảnh</label>
+                                            <input type="file" name="image_url" id="image_url" class="form-control"
+                                                onchange="previewImageUrl(event)"><br>
+
+                                            @if ($product->image_url && \Storage::exists($product->image_url))
+                                                <img id="imageUrlPreview" src="{{ \Storage::url($product->image_url) }}"
+                                                    alt="{{ $product->name }}" style="max-width: 100px; height: auto;"
+                                                    class="mt-2">
+                                            @else
+                                                <p>Không có ảnh</p>
+                                            @endif
+                                        </div>
+                                        <!-- Trạng thái hoạt động (is_active) -->
+                                        <div class="form-group mb-3">
+                                            <label for="is_active">Trạng thái hoạt động</label>
+                                            <select name="is_active" id="is_active" class="form-control">
+                                                <option value="1" {{ $product->is_active ? 'selected' : '' }}>Hoạt
+                                                    động
+                                                </option>
+                                                <option value="0" {{ !$product->is_active ? 'selected' : '' }}>Không
+                                                    hoạt động
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Giá sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="price">Giá sản phẩm</label>
+                                            <input type="number" name="price" id="price" class="form-control"
+                                                value="{{ $product->price }}" required>
+                                        </div>
+
+                                        <input type="hidden" name="discount_price" id="discount_price" class="form-control"
+                                            value="{{ $product->discount_price }}">
+
+
+                                        <!-- SKU -->
+                                        <div class="form-group mb-3">
+                                            <label for="sku">SKU (Mã sản phẩm)</label>
+                                            <input type="text" name="sku" id="sku" class="form-control"
+                                                value="{{ $product->sku }}">
+                                        </div>
+
+                                        {{-- <!-- Cân nặng (Weight) -->
+                                        <div class="form-group">
+                                            <label for="weight">Cân nặng (kg)</label>
+                                            <input type="text" name="weight" id="weight" class="form-control"
+                                                value="{{ $product->weight }}">
+                                        </div>
+
+                                        <!-- Kích thước (Dimensions) -->
+                                        <div class="form-group">
+                                            <label for="dimensions">Kích thước (DxRxC)</label>
+                                            <input type="text" name="dimensions" id="dimensions" class="form-control"
+                                                value="{{ $product->dimensions }}">
+                                        </div> --}}
+
+                                        <div class="form-group mb-3">
+                                            <label for="condition" class="form-label">Tình trạng</label>
+                                            <select class="form-select" id="condition" name="condition" required>
+                                                <option value="">Chọn tình trạng</option>
+                                                <option value="new"
+                                                    {{ old('condition', $product->condition) == 'new' ? 'selected' : '' }}>
+                                                    Mới
+                                                </option>
+                                                <option value="used"
+                                                    {{ old('condition', $product->condition) == 'used' ? 'selected' : '' }}>
+                                                    Đã qua
+                                                    sử dụng</option>
+                                                <option value="refurbished"
+                                                    {{ old('condition', $product->condition) == 'refurbished' ? 'selected' : '' }}>
+                                                    Tái chế</option>
+                                            </select>
+                                        </div>
+
+                                        <div id="image-inputs">
+                                            @foreach ($product->galleries as $index => $gallery)
+                                                <div class="form-group d-flex align-items-center">
+                                                    <label for="image{{ $index + 1 }}" class="me-2">Hình ảnh
+                                                        {{ $index + 1 }}</label>
+                                                    <input type="file" name="images[]" id="image{{ $index + 1 }}"
+                                                        class="form-control me-2" accept="image/*"
+                                                        onchange="previewGalleryImage(event, this)">
+                                                    <button type="button"
+                                                        class="btn btn-danger ms-2 remove-image">Xóa</button>
+                                                    <input type="hidden" name="existing_images[]"
+                                                        value="{{ $gallery->image_url }}">
+                                                    <img src="{{ Storage::url($gallery->image_url) }}" alt="Hình ảnh"
+                                                        style="width: 100px; height: auto; margin-left: 10px;"
+                                                        data-input-id="image{{ $index + 1 }}" class="gallery-image">
+                                                </div>
+                                            @endforeach
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center">
+                                            <button type="button" class="btn btn-rounded btn-secondary add-image"
+                                                style="margin-right: 15px;">Thêm Hình
+                                                Ảnh</button>
+                                            <button type="submit" class="btn btn-rounded btn-primary">Cập nhật</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+
+                                        <!-- Mô tả sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="editor">Mô tả sản phẩm</label>
+                                            <textarea name="description" id="editor" class="form-control" rows="4">{{ $product->description }}</textarea>
+                                        </div>
+
+                                        <!-- tomtat sản phẩm -->
+                                        <div class="form-group mb-3">
+                                            <label for="editors">Tóm Tắt</label>
+                                            <textarea name="tomtat" id="editors" class="form-control" rows="4">{{ $product->tomtat }}</textarea>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="editorss">Thông số kĩ thuật</label>
+                                            <textarea name="specifications" id="editorss" class="form-control" rows="4">{{ $product->specifications }}</textarea>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="is_featured" class="form-label">Nổi bật</label>
+                                            <input type="checkbox" id="is_featured" name="is_featured" value="1"
+                                                {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>
+                                        </div>
+
+                                        {{-- <button type="button" class="btn btn-secondary add-image">Thêm</button> --}}
+                                        <div id="gallery" class="mt-3 d-flex flex-wrap"></div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -195,6 +213,12 @@
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('editor');
+    </script>
+    <script>
+        CKEDITOR.replace('editors');
+    </script>
+    <script>
+        CKEDITOR.replace('editorss');
     </script>
 
     <script>
