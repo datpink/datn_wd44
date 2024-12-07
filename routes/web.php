@@ -175,6 +175,7 @@ Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.temporary');
 Route::get('cart/view', [CartController::class, 'view'])->name(name: 'cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('cart.check_stock');
 
 
 
@@ -201,7 +202,7 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 //
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-    // giảm giá catalogues 
+    // giảm giá catalogues
     Route::get('admin/catalogues', [AdminDiscountController::class, 'showDiscountToCatalogue'])->name('admin.catalogueList');
     Route::post('/catalogues/{catalogueId}/apply-discount', [AdminDiscountController::class, 'applyDiscount'])->name('admin.catalogues.applyDiscount');
     Route::post('/catalogues/{catalogueId}/remove-discount', [AdminDiscountController::class, 'removeDiscount'])
