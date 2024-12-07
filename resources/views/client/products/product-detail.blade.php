@@ -483,6 +483,7 @@
                                                                 {{ $product->price + $maxVariantPrice }}₫
                                                             </span>
                                                         </del>
+
                                                         <span class="kobolg-Price-amount amount text-danger">
                                                             {{ $product->discount_price + $minVariantPrice }}₫
                                                         </span>
@@ -527,6 +528,7 @@
             </div>
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
+
             {{--
             <script>
                 $(document).ready(function() {

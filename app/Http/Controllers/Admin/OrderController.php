@@ -401,7 +401,7 @@ class OrderController extends Controller
             $order->refund_images = json_encode($imagePaths);
         }
 
-        $order->refund_at = now(); 
+        $order->refund_at = now();
 
         $order->save();
 
@@ -413,18 +413,52 @@ class OrderController extends Controller
     public function approveRefund($id)
     {
         // Tìm đơn hàng theo ID
-        $order = Order::findOrFail($id);
+        $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
 
-        // Xác nhận hoàn trả, chuyển trạng thái đơn hàng thành 'returned'
+        // Kiểm tra trạng thái đơn hàng để đảm bảo hợp lệ
+        if ($order->status !== 'delivered') {
+            return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể xác nhận hoàn trả.');
+        }
+
+        // Cập nhật trạng thái đơn hàng
         $order->status = 'returned';
-        $order->payment_status = 'refunded';  // Cập nhật trạng thái thanh toán thành 'refunded'
-        $order->admin_status = 'approved';   // Đặt trạng thái admin là 'approved' (đã duyệt)
+        $order->payment_status = 'refunded';  // Trạng thái thanh toán
+        $order->admin_status = 'approved';   // Trạng thái duyệt
+        $order->refund_at = now();           // Ghi lại thời gian hoàn trả
 
+        // Hoàn lại stock cho từng sản phẩm/biến thể trong đơn hàng
+        foreach ($order->orderItems as $orderItem) {
+            if ($orderItem->product_variant_id) {
+                // Nếu sản phẩm có biến thể
+                $productVariant = ProductVariant::find($orderItem->product_variant_id);
+                if ($productVariant) {
+                    $productVariant->stock += $orderItem->quantity;
+                    $productVariant->save();
+
+                    // Đồng thời cập nhật stock sản phẩm chính
+                    $product = $productVariant->product;
+                    if ($product) {
+                        $product->stock += $orderItem->quantity;
+                        $product->save();
+                    }
+                }
+            } else {
+                // Nếu sản phẩm không có biến thể
+                $product = $orderItem->product;
+                if ($product) {
+                    $product->stock += $orderItem->quantity;
+                    $product->save();
+                }
+            }
+        }
+
+        // Lưu đơn hàng
         $order->save();
 
-        // Quay lại trang trước với thông báo thành công
-        return back()->with('success', 'Hoàn tiền đã được duyệt và đơn hàng đã chuyển sang trạng thái trả hàng.');
+        // Quay lại với thông báo thành công
+        return back()->with('success', 'Hoàn tiền đã được duyệt, kho hàng đã được cập nhật, và trạng thái đơn hàng chuyển thành trả hàng.');
     }
+
 
     public function rejectRefund($id)
     {

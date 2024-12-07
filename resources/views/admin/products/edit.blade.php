@@ -24,20 +24,20 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <!-- Tên sản phẩm -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="name">Tên sản phẩm</label>
                                             <input type="text" name="name" id="productName" class="form-control"
                                                 value="{{ $product->name }}" oninput="ChangeToSlug()">
                                         </div>
 
                                         <!-- Slug -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="slug">Slug</label>
                                             <input type="text" name="slug" id="slug" class="form-control"
                                                 value="{{ $product->slug }}" readonly>
                                         </div>
 
-                                        <div class="mb-3">
+                                        <div class="form-group mb-3">
                                             <label for="stock" class="form-label">Số Lượng</label>
                                             <input type="number" class="form-control" id="stock" name="stock"
                                                 value="{{ $product->stock }}" min="0" required>
@@ -45,7 +45,7 @@
 
 
                                         <!-- Thương hiệu -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="brand_id">Thương hiệu</label>
                                             <select name="brand_id" id="brand_id" class="form-control">
                                                 @foreach ($brands as $brand)
@@ -58,7 +58,7 @@
                                         </div>
 
                                         <!-- Danh mục -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="catalogue_id">Danh mục</label>
                                             <select name="catalogue_id" id="catalogue_id" class="form-control">
                                                 @foreach ($catalogues as $catalogue)
@@ -70,7 +70,7 @@
                                             </select>
                                         </div>
                                         <!-- Hình ảnh sản phẩm -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="image_url">Hình ảnh</label>
                                             <input type="file" name="image_url" id="image_url" class="form-control"
                                                 onchange="previewImageUrl(event)"><br>
@@ -84,7 +84,7 @@
                                             @endif
                                         </div>
                                         <!-- Trạng thái hoạt động (is_active) -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="is_active">Trạng thái hoạt động</label>
                                             <select name="is_active" id="is_active" class="form-control">
                                                 <option value="1" {{ $product->is_active ? 'selected' : '' }}>Hoạt
@@ -97,7 +97,7 @@
                                         </div>
 
                                         <!-- Giá sản phẩm -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="price">Giá sản phẩm</label>
                                             <input type="number" name="price" id="price" class="form-control"
                                                 value="{{ $product->price }}" required>
@@ -108,13 +108,13 @@
 
 
                                         <!-- SKU -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="sku">SKU (Mã sản phẩm)</label>
                                             <input type="text" name="sku" id="sku" class="form-control"
                                                 value="{{ $product->sku }}">
                                         </div>
 
-                                        <!-- Cân nặng (Weight) -->
+                                        {{-- <!-- Cân nặng (Weight) -->
                                         <div class="form-group">
                                             <label for="weight">Cân nặng (kg)</label>
                                             <input type="text" name="weight" id="weight" class="form-control"
@@ -126,9 +126,9 @@
                                             <label for="dimensions">Kích thước (DxRxC)</label>
                                             <input type="text" name="dimensions" id="dimensions" class="form-control"
                                                 value="{{ $product->dimensions }}">
-                                        </div>
+                                        </div> --}}
 
-                                        <div class="mb-3">
+                                        <div class="form-group mb-3">
                                             <label for="condition" class="form-label">Tình trạng</label>
                                             <select class="form-select" id="condition" name="condition" required>
                                                 <option value="">Chọn tình trạng</option>
@@ -165,7 +165,7 @@
                                             @endforeach
                                         </div>
 
-                                        <div class="form-group d-flex align-items-center mt-4">
+                                        <div class="form-group d-flex align-items-center">
                                             <button type="button" class="btn btn-rounded btn-secondary add-image"
                                                 style="margin-right: 15px;">Thêm Hình
                                                 Ảnh</button>
@@ -176,23 +176,23 @@
                                     <div class="col-md-6">
 
                                         <!-- Mô tả sản phẩm -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="editor">Mô tả sản phẩm</label>
                                             <textarea name="description" id="editor" class="form-control" rows="4">{{ $product->description }}</textarea>
                                         </div>
 
                                         <!-- tomtat sản phẩm -->
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="editors">Tóm Tắt</label>
                                             <textarea name="tomtat" id="editors" class="form-control" rows="4">{{ $product->tomtat }}</textarea>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group mb-3">
                                             <label for="editorss">Thông số kĩ thuật</label>
                                             <textarea name="specifications" id="editorss" class="form-control" rows="4">{{ $product->specifications }}</textarea>
                                         </div>
 
-                                        <div class="mb-3">
+                                        <div class="form-group mb-3">
                                             <label for="is_featured" class="form-label">Nổi bật</label>
                                             <input type="checkbox" id="is_featured" name="is_featured" value="1"
                                                 {{ old('is_featured', $product->is_featured ?? false) ? 'checked' : '' }}>

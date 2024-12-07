@@ -100,7 +100,7 @@
                                     <p class="form-control">{{ $product->stock }}</p>
                                 </div>
 
-                                <!-- Cân nặng (Weight) -->
+                                {{-- <!-- Cân nặng (Weight) -->
                                 <div class="form-group">
                                     <label for="weight">Cân nặng (kg)</label>
                                     <p class="form-control">{{ $product->weight }}</p>
@@ -110,7 +110,7 @@
                                 <div class="form-group mb-3">
                                     <label for="dimensions">Kích thước (DxRxC)</label>
                                     <p class="form-control">{{ $product->dimensions }}</p>
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-3">
                                     <label for="is_featured" class="form-label">Nổi bật</label>
@@ -140,20 +140,19 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6 mt-3">
-                                <!-- Mô tả sản phẩm -->
-                                <div class="form-group">
-                                    <label for="description">Mô tả sản phẩm</label>
-                                    <p>{!! $product->description !!}</p>
-                                </div>
+
+                            <!-- Mô tả sản phẩm -->
+                            <div class="form-group">
+                                <label for="description">Mô tả sản phẩm</label>
+                                <p>{!! $product->description !!}</p>
                             </div>
-                            <div class="col-md-6">
-                                <!-- Mô tả sản phẩm -->
-                                <div class="form-group">
-                                    <label for="specifications">Thông số kĩ thuật</label>
-                                    <p>{!! $product->specifications !!}</p>
-                                </div>
+
+                            <!-- Mô tả sản phẩm -->
+                            <div class="form-group">
+                                <label for="specifications">Thông số kĩ thuật</label>
+                                <p>{!! $product->specifications !!}</p>
                             </div>
+
                         </div>
                     </div>
                 </div>

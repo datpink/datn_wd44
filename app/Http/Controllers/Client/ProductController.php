@@ -597,7 +597,7 @@ class ProductController extends Controller
 
         // Kiểm tra xem người dùng đã có đơn hàng hay chưa
         $hasOrder = Order::where('user_id', Auth::id())
-            ->where('status', 'completed') // hoặc trạng thái phù hợp với yêu cầu
+            ->where('status', 'delivered') // hoặc trạng thái phù hợp với yêu cầu
             ->exists();
 
         if (!$hasOrder) {
