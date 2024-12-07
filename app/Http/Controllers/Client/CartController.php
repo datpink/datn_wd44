@@ -24,7 +24,7 @@ class CartController extends Controller
             $id = auth()->id();
             $user = auth()->user();
 
-            // dd(session("cart_{$id}"));
+            dd(session("cart_{$id}"));
             // Lấy các mã giảm giá chưa dùng và có trạng thái active
             $discountCodes = $user->promotions()
                 ->wherePivot('is_used', false)

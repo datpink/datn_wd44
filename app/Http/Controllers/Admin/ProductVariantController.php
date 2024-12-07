@@ -164,7 +164,6 @@ class ProductVariantController extends Controller
     public function edit(Product $product, ProductVariant $variant)
     {
         $title = 'Chỉnh Sửa Biến Thể';
-        // Lấy tất cả các sản phẩm để hiển thị trong dropdown
         $products = Product::all();
 
         return view('admin.variants.edit', compact('product', 'variant', 'products', 'title'));

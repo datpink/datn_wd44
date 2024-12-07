@@ -132,17 +132,6 @@
     @include('components.breadcrumb-client2')
 
     @include('client.muteki.css')
-    <script>
-        var hasVariants = @json($product->variants->isNotEmpty()); // Kiểm tra sản phẩm có biến thể hay không
-
-        // Thông tin về số lượng sản phẩm còn lại
-        var stockQuantity = @json($product->stock); // Số lượng sản phẩm còn lại (không có biến thể)
-        var variantStock = {}; // Đối tượng để lưu trữ số lượng tồn kho của các biến thể (nếu có)
-
-        @foreach ($product->variants as $variant)
-            variantStock['{{ $variant->id }}'] = {{ $variant->stock }};
-        @endforeach
-    </script>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
             <div class="row">
@@ -238,31 +227,32 @@
                                         @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
                                             @if ($product->variants->isNotEmpty())
                                                 <del>
-                                                    <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                        {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                    <span>{{ $minPrice }}₫ -
+                                                        {{ $maxPrice }}₫</span>
                                                 </del>
                                                 <span class="text-danger font-weight-bold">
-                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
+                                                    {{ $minDiscountPrice }}₫ -
+                                                    {{ $maxDiscountPrice }}₫
                                                 </span>
                                             @else
                                                 <del>
-                                                    <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                    <span>{{ $product->price }}₫</span>
                                                 </del>
                                                 <span class="text-danger font-weight-bold">
-                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                                                    {{ $product->discount_price }}₫
                                                 </span>
                                             @endif
                                         @else
                                             @if ($product->variants->isNotEmpty())
-                                                <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                <span>{{ $minPrice }}₫ -
+                                                    {{ $maxPrice }}₫</span>
                                             @else
-                                                <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                <span>{{ $product->price }}₫</span>
                                             @endif
                                         @endif
                                     </span>
                                 </p>
+
 
                                 <p class="stock in-stock">
                                     Sản phẩm còn lại:
@@ -303,8 +293,8 @@
                                                             @foreach ($colors as $color => $variants)
                                                                 <button class="variant-btn mx-2 mb-2"
                                                                     data-variant="{{ json_encode($variants[0]) }}"
-                                                                    data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}₫"
-                                                                    data-discount-price="{{ number_format($variants[0]->price - $discountAmount, 0, ',', '.') }}₫"
+                                                                    data-price="{{ $variants[0]->price }}₫"
+                                                                    data-discount-price="{{ $variants[0]->price - $discountAmount }}₫"
                                                                     data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
                                                                     data-dung-luong="{{ $storage }}"
                                                                     data-mau-sac="{{ $color }}">
@@ -358,7 +348,9 @@
                                             <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
                                             <div class="action-buttons">
                                                 <button type="submit" id="add-to-cart"
-                                                    class="single_add_to_cart_button button alt">
+                                                    class="single_add_to_cart_button button alt"
+                                                    data-original-price="{{ $product->price }}₫"
+                                                    data-discount-price="{{ $product->discount_price }}₫">
                                                     Thêm vào giỏ hàng
                                                 </button>
                                                 {{-- <button type="submit" id="buy-now"
@@ -488,16 +480,16 @@
                                                     @if ($product->discount_price && $product->discount_price > 0)
                                                         <del>
                                                             <span class="kobolg-Price-amount amount">
-                                                                {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                                                {{ $product->price + $maxVariantPrice }}₫
                                                             </span>
                                                         </del>
-                                                        <span
-                                                            class="kobolg-Price-amount amount text-danger">
-                                                            {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
+
+                                                        <span class="kobolg-Price-amount amount text-danger">
+                                                            {{ $product->discount_price + $minVariantPrice }}₫
                                                         </span>
                                                     @else
                                                         <span class="kobolg-Price-amount amount">
-                                                            {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                                            {{ $product->price + $maxVariantPrice }}₫
                                                         </span>
                                                     @endif
                                                 </span>
@@ -536,7 +528,8 @@
             </div>
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
-{{--
+
+            {{--
             <script>
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
