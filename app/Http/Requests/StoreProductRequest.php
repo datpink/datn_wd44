@@ -27,8 +27,8 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:0',
             'condition' => 'required|in:new,used,refurbished',
-            'weight' => 'nullable|numeric|min:0',
-            'dimensions' => 'nullable|string',
+            // 'weight' => 'nullable|numeric|min:0',
+            // 'dimensions' => 'nullable|string',
             'image_url' => 'nullable|image|max:2048',  // Định dạng ảnh, tối đa 2MB
             'images.*' => 'nullable|image|max:2048',    // Các file gallery, mỗi ảnh tối đa 2MB
             'description' => 'nullable|string',
@@ -55,9 +55,9 @@ class StoreProductRequest extends FormRequest
             'stock.numeric' => 'Số lượng phải là một số.',
             'condition.required' => 'Tình trạng sản phẩm là bắt buộc.',
             'condition.in' => 'Tình trạng sản phẩm không hợp lệ.',
-            'weight.numeric' => 'Cân nặng phải là một số.',
-            'weight.min' => 'Cân nặng phải lớn hơn hoặc bằng 0.',
-            'dimensions.string' => 'Kích thước phải là một chuỗi ký tự.',
+            // 'weight.numeric' => 'Cân nặng phải là một số.',
+            // 'weight.min' => 'Cân nặng phải lớn hơn hoặc bằng 0.',
+            // 'dimensions.string' => 'Kích thước phải là một chuỗi ký tự.',
             'image_url.image' => 'Ảnh sản phẩm phải là file hình ảnh.',
             'image_url.max' => 'Ảnh sản phẩm không được vượt quá 2MB.',
             'images.*.image' => 'Các file gallery phải là hình ảnh.',

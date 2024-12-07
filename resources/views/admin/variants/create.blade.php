@@ -27,17 +27,10 @@
                     <label for="stock">Số lượng tồn kho</label>
                     <input type="number" name="stock" class="form-control" id="stock" required>
                 </div>
-                <div class="form-group">
-                    <label for="weight">Cân nặng (kg)</label>
-                    <input type="number" name="weight" class="form-control" id="weight" step="0.01" required>
-                </div>
+
             </div>
 
             <div class="col-md-6">
-                <div class="form-group">
-                    <label for="dimension">Kích thước (DxRxC)</label>
-                    <input type="text" name="dimension" class="form-control" required>
-                </div>
 
                 <div class="form-group">
                     <label for="colors">Màu Sắc</label>

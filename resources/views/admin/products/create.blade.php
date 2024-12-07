@@ -73,7 +73,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="form-group was-validated">
+                                        {{-- <div class="form-group was-validated">
                                             <label for="weight" class="form-label">Cân nặng (kg)</label>
                                             <input type="number" name="weight" step="0.01"
                                                 class="form-control @error('weight') is-invalid @enderror" id="weight"
@@ -91,7 +91,7 @@
                                             @error('dimensions')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                        </div>
+                                        </div> --}}
 
                                         <div class="mb-3 was-validated">
                                             <label for="price" class="form-label">Giá</label>
@@ -114,7 +114,7 @@
 
                                         <script>
                                             document.addEventListener('DOMContentLoaded', function() {
-                                                const weightInput = document.getElementById('weight');
+                                                // const weightInput = document.getElementById('weight');
                                                 const priceInput = document.getElementById('price');
                                                 const stockInput = document.getElementById('stock');
 
@@ -141,7 +141,7 @@
                                                 }
 
                                                 // Apply validation for weight, price, and stock
-                                                validateInput(weightInput, 0);
+                                                // validateInput(weightInput, 0);
                                                 validateInput(priceInput, 1); // Price should be at least 1
                                                 validateInput(stockInput, 0);
                                             });
