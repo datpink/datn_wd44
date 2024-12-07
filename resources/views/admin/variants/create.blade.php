@@ -41,7 +41,7 @@
 
                 <div class="form-group">
                     <label for="colors">Màu Sắc</label>
-                    <select name="attributes[color]" class="form-control" id="colors" required>
+                    <select name="attributes[color]" class="form-control" id="colors" >
                         <option value="" selected>Chọn màu sắc</option>
                         @forelse ($colors as $color)
                             <option value="{{ $color->id }}">{{ $color->name }}</option>
@@ -52,7 +52,7 @@
                 </div>
                 <div class="form-group">
                     <label for="storages">Dung Lượng</label>
-                    <select name="attributes[storage]" class="form-control" id="storages" required>
+                    <select name="attributes[storage]" class="form-control" id="storages" >
                         <option value="" selected>Chọn dung lượng</option>
                         @forelse ($storages as $storage)
                             <option value="{{ $storage->id }}">{{ $storage->name }}</option>
