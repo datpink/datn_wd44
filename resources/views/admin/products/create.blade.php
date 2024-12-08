@@ -317,9 +317,9 @@
             const newIndex = container.children.length + 1; // Tính số lượng trường hiện tại
 
             const newInput = document.createElement('div');
-            newInput.classList.add('form-group', 'd-flex', 'align-items-center');
+            newInput.classList.add('form-group', 'd-flex', 'align-items-center','mb-3');
             newInput.innerHTML = `
-            <label for="image${newIndex}" class="me-2">Gallery ${newIndex}</label>
+            <label for="image${newIndex}" class="me-2 col-md-1">Gallery ${newIndex}</label>
             <input type="file" name="images[]" id="image${newIndex}" class="form-control me-2" accept="image/*" onchange="previewGalleryImage(event, this)">
             <button type="button" class="btn btn-danger ms-2 remove-image">Xóa</button>
         `;
