@@ -41,16 +41,28 @@
                             <form method="GET" action="{{ route('users.index') }}" class="mb-3">
                                 <div class="row g-2">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search"
-                                            class="form-control form-control-sm" placeholder="Tìm kiếm Người dùng"
+                                        <input type="text" id="search" name="search" 
+                                            class="form-control form-control-sm" 
+                                            placeholder="Tìm kiếm Người dùng" 
                                             value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
-                                        <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
+                                        <select id="status" name="status" class="form-select form-select-sm">
+                                            <option value="">Tất cả trạng thái</option>
+                                            <option value="unlocked" {{ request()->status == 'unlocked' ? 'selected' : '' }}>Mở khóa</option>
+                                            <option value="locked" {{ request()->status == 'locked' ? 'selected' : '' }}>Bị khóa</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="date" name="date" class="form-control form-control-sm" value="{{ request()->date }}">
+                                    </div>
+                            
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-sm btn-primary">Lọc</button>
                                     </div>
                                 </div>
                             </form>
-
+                            
                             <div class="table-responsive">
                                 <table class="table v-middle m-0">
                                     <thead>

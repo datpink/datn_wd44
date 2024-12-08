@@ -16,10 +16,32 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
     // Hiển thị danh sách người dùng
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Danh Sách Người Dùng';
-        $users = User::paginate(10);
+        // Lấy từ khóa tìm kiếm và trạng thái từ request
+        $search = $request->input('search');
+        $status = $request->input('status');
+    
+        // Lọc người dùng dựa trên từ khóa và trạng thái
+        $query = User::query();
+    
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                  ->orWhere('email', 'like', "%$search%")
+                  ->orWhere('phone', 'like', "%$search%");
+            });
+        }
+    
+        if ($status) {
+            $query->where('status', $status);
+        }
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+        $users = $query->paginate(10); // Phân trang và giữ lại các tham số query
+    
         return view('admin.users.index', compact('users', 'title'));
     }
 
