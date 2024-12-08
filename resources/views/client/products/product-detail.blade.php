@@ -278,8 +278,8 @@
                                                         $attributeValue->name;
                                                 }
 
-                                                $variantGroups[$attributes['Storage'] ?? 'Không có'][
-                                                    $attributes['Color'] ?? 'Không có'
+                                                $variantGroups[$attributes['Storage'] ?? ''][
+                                                    $attributes['Color'] ?? ''
                                                 ][] = $variant;
                                             }
                                         @endphp
@@ -292,23 +292,36 @@
                                                     <div class="variant-options d-flex flex-wrap">
                                                         @foreach ($variantGroups as $storage => $colors)
                                                             @foreach ($colors as $color => $variants)
+                                                                @php
+                                                                    $hasStorage = $storage !== null && $storage !== '';
+                                                                    $hasColor = $color !== null && $color !== '';
+                                                                @endphp
                                                                 <button class="variant-btn mx-2 mb-2"
                                                                     data-variant="{{ json_encode($variants[0]) }}"
                                                                     data-price="{{ $variants[0]->price }}₫"
                                                                     data-discount-price="{{ $variants[0]->price - $discountAmount }}₫"
                                                                     data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
-                                                                    data-dung-luong="{{ $storage }}"
-                                                                    data-mau-sac="{{ $color }}">
+                                                                    @if ($hasStorage) data-dung-luong="{{ $storage }}" @endif
+                                                                    @if ($hasColor) data-mau-sac="{{ $color }}" @endif>
+
                                                                     <img src="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
                                                                         alt="Product Image" width="40px" height="40px"
                                                                         class="img-fluid">
-                                                                    <span>{{ $storage }}</span> -
-                                                                    <span>{{ $color }}</span>
+
+                                                                    {{-- Hiển thị các thuộc tính theo điều kiện --}}
+                                                                    @if ($hasStorage && $hasColor)
+                                                                        <span>{{ $storage }}</span> - <span>{{ $color }}</span>
+                                                                    @elseif ($hasStorage)
+                                                                        <span>{{ $storage }}</span>
+                                                                    @elseif ($hasColor)
+                                                                        <span>{{ $color }}</span>
+                                                                    @endif
                                                                 </button>
                                                             @endforeach
                                                         @endforeach
                                                     </div>
                                                 </div>
+
                                             </div>
                                         @endif
                                     </div>
@@ -530,7 +543,7 @@
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
 
-            {{--
+{{-- 
             <script>
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
