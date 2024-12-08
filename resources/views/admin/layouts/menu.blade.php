@@ -85,7 +85,7 @@
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('admin.notifications.index') }}">Danh sách Người Dùng</a>
+                                <a href="{{ route('admin.notifications.index') }}">Danh sách Thông Báo</a>
                             </li>
                         </ul>
                     </div>
