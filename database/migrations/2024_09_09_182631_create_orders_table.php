@@ -27,6 +27,7 @@ return new class extends Migration {
             $table->enum('payment_status', [
                 'unpaid',               // Chưa thanh toán
                 'paid',                 // Đã thanh toán
+                'pending',              // Đang thanh toán
                 'refunded',             // Hoàn trả
                 'payment_failed'        // Thanh toán thất bại
             ])->default('unpaid');
