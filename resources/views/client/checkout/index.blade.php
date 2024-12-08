@@ -228,6 +228,10 @@
                                                                         @endforeach
                                                                     </div>
                                                                 @endif
+                                                                @php
+                                                                    $product['price'] = preg_replace('/[^\d.]/', '', $product['price']); // Loại bỏ ký tự không phải số
+                                                                    $product['price'] = (float)$product['price']; // Chuyển về dạng float
+                                                                @endphp
                                                                 <span style="font-size: 0.8vw">{{ $product['quantity'] }}
                                                                     × {{ number_format($product['price'], 0) }}₫</span>
                                                             </div>
