@@ -11,14 +11,32 @@ use Illuminate\Support\Facades\Mail;
 
 class NotificationController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $title = 'Danh Sách Thông báo';
-        $notificationAll = Notification::paginate(10); // Lấy danh sách thông báo
-        // dd($notifications);
+        $title = 'Danh Sách Thông Báo';
+        $query = Notification::query();
+    
+        // Tìm kiếm theo tiêu đề hoặc mô tả
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'LIKE', '%' . $request->search . '%')
+                  ->orWhere('description', 'LIKE', '%' . $request->search . '%');
+            });
+        }
+    
+        // Lọc theo trạng thái (đã đọc/chưa đọc)
+        if ($request->filled('status')) {
+            if ($request->status === 'read') {
+                $query->whereNotNull('read_at');
+            } elseif ($request->status === 'unread') {
+                $query->whereNull('read_at');
+            }
+        }
+    
+        $notificationAll = $query->paginate(10);
+    
         return view('admin.notifications.index', compact('notificationAll', 'title'));
     }
-
     public function create()
     {
         $title = 'Thêm Mới Thông Báo';
