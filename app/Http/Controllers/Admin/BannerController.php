@@ -15,13 +15,16 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh sách Banner';
-        // Thực hiện tìm kiếm nếu có
         $search = $request->input('search');
+        $status = $request->input('status');
+    
         $banners = Banner::when($search, function ($query, $search) {
             return $query->where('title', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
+                         ->orWhere('description', 'like', "%{$search}%");
+        })->when($status, function ($query, $status) {
+            return $query->where('status', $status);
         })->paginate(10);
-
+    
         return view('admin.banners.index', compact('banners', 'title'));
     }
 
