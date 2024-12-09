@@ -177,7 +177,8 @@
                                         data-attribute_id="{{ $item->id }}">
                                         <i style="color: {{ $item->name }}"></i>
                                         <span class="term-name-color">{{ $item->name }}</span>
-                                        <span class="count">{{ $item->productVariants->count() }}(*)</span> </a>
+                                        {{-- <span class="count">{{ $item->productVariants->count() }}(*)</span>  --}}
+                                    </a>
                                 @endforeach
 
 
