@@ -53,13 +53,15 @@ class CheckoutController extends Controller
             // Cập nhật số lượng từ request
             $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
             $product['quantity'] = $newQuantity;
-            $product['total_price'] = $product['price'] * $newQuantity;
+            $product['total_price'] = (float) $product['price'] * (int) $newQuantity;
+
 
             // Cập nhật lại session
             session([$cartSessionKey => $product]);
 
             $products[] = $product;
-            $totalAmount += $product['price'] * $newQuantity;
+            $totalAmount += (float) $product['price'] * (int) $newQuantity;
+
         }
 
         $user = Auth::user(); // Lấy thông tin người dùng đã đăng nhập
@@ -82,7 +84,7 @@ class CheckoutController extends Controller
                 $ward = Ward::where('name', 'like', "%$wardName%")->first();
             }
         }
-
+        // dd($products)
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
