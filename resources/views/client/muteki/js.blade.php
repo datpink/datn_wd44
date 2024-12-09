@@ -108,7 +108,7 @@
                     return;
                 }
                 stock = $('.variant-btn.active').data('variant')
-                .stock; // Lấy tồn kho từ biến thể đã chọn
+                    .stock; // Lấy tồn kho từ biến thể đã chọn
             } else {
                 // Nếu không có biến thể, lấy tồn kho sản phẩm chính
                 stock = parseInt($('#product-stock').val());
@@ -311,6 +311,30 @@
         // Khi rời hover, đưa ảnh về mặc định
         $('.variant-btn').on('mouseleave', function() {
             $('#main-image').attr('src', defaultImage); // Trả lại ảnh gốc
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var content = document.getElementById("description-content");
+        var toggleLink = document.getElementById("toggle-link");
+        var icon = toggleLink.querySelector(".toggle-icon");
+
+        // Kiểm tra nếu nội dung vượt quá giới hạn chiều cao
+        if (content.scrollHeight > content.clientHeight) {
+            toggleLink.style.display = "inline-flex"; // Hiển thị link "Xem thêm"
+        }
+
+        // Thêm sự kiện click cho link "Xem thêm"
+        toggleLink.addEventListener("click", function() {
+            if (content.classList.contains("content-collapsed")) {
+                content.classList.remove("content-collapsed");
+                content.classList.add("content-expanded");
+                this.innerHTML = '<i class="fa fa-chevron-up toggle-icon"></i> Thu gọn nội dung';
+            } else {
+                content.classList.remove("content-expanded");
+                content.classList.add("content-collapsed");
+                this.innerHTML = '<i class="fa fa-chevron-down toggle-icon"></i> Xem thêm nội dung';
+            }
         });
     });
 </script>
