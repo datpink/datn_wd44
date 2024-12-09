@@ -26,17 +26,48 @@
                     <div class="card-body">
                         <form method="GET" action="{{ route('promotions.index') }}" class="mb-3">
                             <div class="row g-2">
+                                <!-- Tìm kiếm mã giảm giá -->
                                 <div class="col-auto">
-                                    <input type="text" id="search" name="search"
-                                        class="form-control form-control-sm" placeholder="Tìm kiếm mã giảm giá"
-                                        value="{{ request()->search }}">
+                                    <input type="text" id="search" name="search" class="form-control form-control-sm"
+                                        placeholder="Tìm kiếm mã giảm giá" value="{{ request()->search }}">
                                 </div>
+                        
+                                <!-- Lọc theo trạng thái -->
+                                <div class="col-auto">
+                                    <select name="status" class="form-select form-select-sm">
+                                        <option value="">Trạng thái</option>
+                                        <option value="active" {{ request()->status == 'active' ? 'selected' : '' }}>Kích hoạt</option>
+                                        <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không kích hoạt</option>
+                                    </select>
+                                </div>
+                        
+                                <!-- Lọc áp dụng cho đơn hàng -->
+                                <div class="col-auto">
+                                    <select name="applies_to_order" class="form-select form-select-sm">
+                                        <option value="">Áp dụng cho đơn hàng</option>
+                                        <option value="1" {{ request()->applies_to_order == '1' ? 'selected' : '' }}>Có</option>
+                                        <option value="0" {{ request()->applies_to_order == '0' ? 'selected' : '' }}>Không</option>
+                                    </select>
+                                </div>
+                        
+                                <!-- Lọc áp dụng cho phí vận chuyển -->
+                                <div class="col-auto">
+                                    <select name="applies_to_shipping" class="form-select form-select-sm">
+                                        <option value="">Áp dụng cho phí vận chuyển</option>
+                                        <option value="1" {{ request()->applies_to_shipping == '1' ? 'selected' : '' }}>Có</option>
+                                        <option value="0" {{ request()->applies_to_shipping == '0' ? 'selected' : '' }}>Không</option>
+                                    </select>
+                                </div>
+                        
+                        
+                                <!-- Nút tìm kiếm -->
                                 <div class="col-auto">
                                     <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                 </div>
+                        
+                                <!-- Nút xóa lọc -->
                                 <div class="col-auto">
-                                    <button type="button" id="filterRemove" class="btn btn-sm btn-warning">Xóa
-                                        lọc</button>
+                                    <a href="{{ route('promotions.index') }}" class="btn btn-sm btn-warning">Xóa lọc</a>
                                 </div>
                             </div>
                         </form>
