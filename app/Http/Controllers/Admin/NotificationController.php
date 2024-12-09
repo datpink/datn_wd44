@@ -50,22 +50,37 @@ class NotificationController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'url' => 'nullable|url',  // Kiểm tra định dạng URL hợp lệ
+            'url' => 'nullable|url', // Kiểm tra định dạng URL hợp lệ
+            'send_to_all' => 'nullable|boolean', // Nếu checkbox "Gửi đến tất cả" được chọn
+            'user_ids' => 'nullable|array', // Nếu không chọn "Tất cả", phải có user_ids
+            'user_ids.*' => 'exists:users,id', // Kiểm tra từng user_id có tồn tại trong bảng users
         ]);
-
-        // Lấy user_id từ request và tạo thông báo
-        $validated['user_id'] = $request->input('user_id');  // Lấy user_id từ form
-        $notification = Notification::create($validated);
-
-        // Gửi email thông báo
-        $user = User::find($validated['user_id']);
-        if ($user) {
+    
+        if ($request->filled('send_to_all') && $request->send_to_all) {
+            // Lấy tất cả người dùng
+            $users = User::all();
+        } else {
+            // Lấy danh sách người dùng được chọn
+            $users = User::whereIn('id', $validated['user_ids'])->get();
+        }
+    
+        // Lưu thông báo và gửi email cho từng người dùng
+        foreach ($users as $user) {
+            $notification = Notification::create([
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'url' => $validated['url'],
+                'user_id' => $user->id,
+            ]);
+    
+            // Gửi email thông báo
             Mail::to($user->email)->send(new NotificationCreated($notification));
         }
-
-        return redirect()->route('admin.notifications.index', compact('notification'))->with('success', 'Thông báo đã được tạo thành công.');
+    
+        return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được tạo thành công.');
     }
-    public function destroy($id)
+    
+        public function destroy($id)
     {
         // Tìm thông báo theo ID
         $notification = Notification::find($id);
