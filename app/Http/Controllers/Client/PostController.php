@@ -22,7 +22,7 @@ class PostController extends Controller
         $categories = Category::where('status', 'active')->get();
         // dd($posts);
         // Trả về view với danh sách bài viết
-        return view('client.posts.index', compact('posts','categories'));
+        return view('client.posts.index', compact('posts', 'categories'));
     }
 
     // Lấy 5 bài viết mới nhất
@@ -45,7 +45,9 @@ class PostController extends Controller
             ->where('posts.id', $id)
             ->firstOrFail();
         $post1 = Post::with('comments')->findOrFail($id);
-        return view('client.posts.post-detail', compact('post', 'post1'));
+        $categories = Category::where('status', 'active')->get();
+
+        return view('client.posts.post-detail', compact('post', 'post1', 'categories'));
     }
     public function storeComment(Request $request, $id)
     {
@@ -81,9 +83,9 @@ class PostController extends Controller
             ->orWhere('posts.tomtat', 'LIKE', "%{$query}%")
             ->orWhere('posts.slug', 'LIKE', "%{$query}%")
             ->paginate(9); // Thêm phân trang nếu cần
-            $categories = Category::where('status', 'active')->get();
+        $categories = Category::where('status', 'active')->get();
 
-        return view('client.posts.search-results', compact('posts','categories'));
+        return view('client.posts.search-results', compact('posts', 'categories'));
     }
 
     public function PostByCategory($id)
@@ -91,11 +93,10 @@ class PostController extends Controller
         // Lấy bài viết thuộc danh mục
         $posts = Post::with('user')->where('category_id', $id)->paginate(10); // Số lượng bài viết mỗi trang
         $categories = Category::where('status', 'active')->get();
-    
+
         // Lấy thông tin danh mục
-    
+
         // Trả về view với dữ liệu bài viết
-        return view('client.posts.index', compact('posts','categories'));
+        return view('client.posts.index', compact('posts', 'categories'));
     }
-    
 }
