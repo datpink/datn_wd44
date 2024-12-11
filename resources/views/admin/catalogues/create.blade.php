@@ -25,7 +25,8 @@
                                     <div class="was-validated">
                                         <label for="name" class="form-label">Tên danh mục:</label>
                                         <input type="text" name="name" id="name" class="form-control"
-                                            value="{{ old('name') }}" required>
+                                            value="{{ old('name') }}" required
+                                            placeholder="Tên danh mục">
                                     </div>
                                 </div>
 
@@ -69,7 +70,9 @@
                                 <div class="card-body">
                                     <div class="was-validated">
                                         <label for="description" class="form-label">Mô tả:</label>
-                                        <textarea name="description" id="description" class="form-control" required>{{ old('description') }}</textarea>
+                                        <textarea name="description" id="description" class="form-control"
+                                        placeholder="Mô tả"
+                                        required>{{ old('description') }}</textarea>
                                     </div>
                                 </div>
 
