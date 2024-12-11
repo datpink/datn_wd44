@@ -274,7 +274,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         // Các trạng thái không cho phép hủy
-        $nonCancelableStatuses = ['shipped', 'canceled', 'refunded', 'Delivering'];
+        $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'canceled'];
 
         // Kiểm tra trạng thái đơn hàng có thể hủy
         if (in_array($order->status, $nonCancelableStatuses)) {
@@ -410,8 +410,14 @@ class OrderController extends Controller
     }
 
 
-    public function approveRefund($id)
+    public function approveRefund(Request $request, $id)
     {
+        // Xác thực dữ liệu từ request
+        $request->validate([
+            'proof_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'admin_message' => 'required|string|max:1000',
+        ]);
+
         // Tìm đơn hàng theo ID
         $order = Order::with('orderItems.productVariant.product')->findOrFail($id);
 
@@ -420,11 +426,16 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Chỉ đơn hàng đã giao mới có thể xác nhận hoàn trả.');
         }
 
+        // Upload hình ảnh chứng minh
+        $proofImagePath = $request->file('proof_image')->store('proof_images', 'public');
+
         // Cập nhật trạng thái đơn hàng
         $order->status = 'returned';
         $order->payment_status = 'refunded';  // Trạng thái thanh toán
         $order->admin_status = 'approved';   // Trạng thái duyệt
         $order->refund_at = now();           // Ghi lại thời gian hoàn trả
+        $order->proof_image = $proofImagePath; // Lưu đường dẫn hình ảnh chứng minh
+        $order->admin_message = $request->input('admin_message'); // Lưu lời nhắn
 
         // Hoàn lại stock cho từng sản phẩm/biến thể trong đơn hàng
         foreach ($order->orderItems as $orderItem) {

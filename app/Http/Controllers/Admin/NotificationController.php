@@ -15,15 +15,15 @@ class NotificationController extends Controller
     {
         $title = 'Danh Sách Thông Báo';
         $query = Notification::query();
-    
+
         // Tìm kiếm theo tiêu đề hoặc mô tả
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'LIKE', '%' . $request->search . '%')
-                  ->orWhere('description', 'LIKE', '%' . $request->search . '%');
+                    ->orWhere('description', 'LIKE', '%' . $request->search . '%');
             });
         }
-    
+
         // Lọc theo trạng thái (đã đọc/chưa đọc)
         if ($request->filled('status')) {
             if ($request->status === 'read') {
@@ -32,9 +32,9 @@ class NotificationController extends Controller
                 $query->whereNull('read_at');
             }
         }
-    
+
         $notificationAll = $query->paginate(10);
-    
+
         return view('admin.notifications.index', compact('notificationAll', 'title'));
     }
     public function create()
@@ -55,7 +55,7 @@ class NotificationController extends Controller
             'user_ids' => 'nullable|array', // Nếu không chọn "Tất cả", phải có user_ids
             'user_ids.*' => 'exists:users,id', // Kiểm tra từng user_id có tồn tại trong bảng users
         ]);
-    
+
         if ($request->filled('send_to_all') && $request->send_to_all) {
             // Lấy tất cả người dùng
             $users = User::all();
@@ -63,7 +63,7 @@ class NotificationController extends Controller
             // Lấy danh sách người dùng được chọn
             $users = User::whereIn('id', $validated['user_ids'])->get();
         }
-    
+
         // Lưu thông báo và gửi email cho từng người dùng
         foreach ($users as $user) {
             $notification = Notification::create([
@@ -72,15 +72,15 @@ class NotificationController extends Controller
                 'url' => $validated['url'],
                 'user_id' => $user->id,
             ]);
-    
+
             // Gửi email thông báo
             Mail::to($user->email)->send(new NotificationCreated($notification));
         }
-    
+
         return redirect()->route('admin.notifications.index')->with('success', 'Thông báo đã được tạo thành công.');
     }
-    
-        public function destroy($id)
+
+    public function destroy($id)
     {
         // Tìm thông báo theo ID
         $notification = Notification::find($id);

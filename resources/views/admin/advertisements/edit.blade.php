@@ -20,16 +20,6 @@
 
                 <div class="card-body mt-4">
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <form action="{{ route('advertisements.update', $advertisement->id) }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
@@ -51,6 +41,10 @@
 
                                     <img id="newImagePreview" src="" alt="Hình ảnh xem trước"
                                         style="max-width: 150px; height: auto; display: none;" class="mt-2">
+
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -58,6 +52,9 @@
                                     <input type="text" class="form-control" id="button_text" name="button_text"
                                         value="{{ old('button_text', $advertisement->button_text) }}"
                                         placeholder="Nhập văn bản nút">
+                                    @error('button_text')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -65,6 +62,9 @@
                                     <input type="text" class="form-control" id="button_link" name="button_link"
                                         value="{{ old('button_link', $advertisement->button_link) }}"
                                         placeholder="Nhập liên kết nút">
+                                    @error('button_link')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -72,7 +72,10 @@
                                     <input type="number" class="form-control @error('position') is-invalid @enderror"
                                         id="position" name="position"
                                         value="{{ old('position', $advertisement->position) }}" placeholder="Nhập vị trí"
-                                        min="1" required>
+                                        min="1">
+                                    @error('position')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -87,6 +90,9 @@
                                             Vô hiệu hóa
                                         </option>
                                     </select>
+                                    @error('status')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <button type="submit" class="btn btn-rounded btn-success">Cập nhật Banner</button>
@@ -96,11 +102,17 @@
                                     <label for="title">Tiêu đề:</label>
                                     <input type="text" class="form-control" id="title" name="title"
                                         value="{{ old('title', $advertisement->title) }}" placeholder="Nhập tiêu đề">
+                                    @error('title')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="description">Mô tả:</label>
                                     <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả">{{ old('description', $advertisement->description) }}</textarea>
+                                    @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
