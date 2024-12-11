@@ -18,6 +18,10 @@ class AdvertisementController extends Controller
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
+            // Lọc theo trạng thái
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
 
         $advertisements = $query->paginate(10); // Phân trang 10 quảng cáo mỗi trang
         return view('admin.advertisements.index', compact('advertisements', 'title'));
