@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OrderCanceledMail;
+use App\Mail\RefundApprovedMail;
 use App\Models\Order;
 use App\Models\ProductVariant;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
@@ -313,6 +316,10 @@ class OrderController extends Controller
             }
         }
 
+        // Gửi email thông báo hủy đơn hàng
+        Mail::to($order->user->email)->send(new OrderCanceledMail($order));
+
+
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công và số lượng sản phẩm đã được hoàn lại vào kho.');
     }
@@ -362,6 +369,7 @@ class OrderController extends Controller
     //     // Quay lại trang lịch sử đơn hàng với thông báo thành công
     //     return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hoàn trả và trạng thái thanh toán đã được cập nhật.');
     // }
+
     public function refund(Request $request, $id)
     {
         $order = Order::findOrFail($id);
@@ -465,6 +473,9 @@ class OrderController extends Controller
 
         // Lưu đơn hàng
         $order->save();
+
+        // Gửi email xác nhận hoàn tiền
+        Mail::to($order->user->email)->send(new RefundApprovedMail($order));
 
         // Quay lại với thông báo thành công
         return back()->with('success', 'Hoàn tiền đã được duyệt, kho hàng đã được cập nhật, và trạng thái đơn hàng chuyển thành trả hàng.');

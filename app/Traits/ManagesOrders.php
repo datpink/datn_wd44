@@ -2,9 +2,11 @@
 
 namespace App\Traits;
 
+use App\Mail\OrderStatusUpdated;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 trait ManagesOrders
 {
@@ -59,6 +61,15 @@ trait ManagesOrders
             }
 
             $order->save();
+
+            // Gửi email thông báo cho người dùng khi trạng thái thay đổi
+        if (in_array($newStatus, ['pending_delivery', 'delivered'])) {
+            // Lấy email người dùng
+            $user = $order->user; // Giả sử quan hệ `user` được định nghĩa trong model `Order`
+
+            // Gửi email
+            Mail::to($user->email)->send(new OrderStatusUpdated($order, $newStatus));
+        }
 
             DB::commit();
 

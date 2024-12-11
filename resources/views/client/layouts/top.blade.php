@@ -1,4 +1,4 @@
-<div class="header-top-inner">
+{{-- <div class="header-top-inner">
     <ul id="menu-top-left-menu" class="kobolg-nav top-bar-menu">
         <li id="menu-item-864" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-864"><a
                 class="kobolg-menu-item-title" title="Store Direction" href="#"><span
@@ -9,7 +9,7 @@
     </ul>
     <div class="kobolg-nav top-bar-menu right">
         <ul class="wpml-menu">
-            {{-- <li class="menu-item kobolg-dropdown block-language">
+            <li class="menu-item kobolg-dropdown block-language">
                 <a href="#" data-kobolg="kobolg-dropdown">
                     <img src="{{ asset('theme/client/assets/images/en.png') }}" alt="en" width="18" height="12">
                     English
@@ -37,7 +37,7 @@
                         </li>
                     </ul>
                 </div>
-            </li> --}}
+            </li>
         </ul>
     </div>
-</div>
+</div> --}}
