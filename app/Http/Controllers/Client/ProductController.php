@@ -170,8 +170,18 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-        // Lấy sản phẩm theo slug cùng với hình ảnh v
-        
+        // Lấy sản phẩm theo slug cùng với hình ảnh và biến thể
+        $product = Product::where('slug', $slug)
+            ->with([
+                'galleries',
+                'variants' => function ($query) {
+                    $query->where('status', 'active')
+                        ->with('attributeValues.attribute');
+                }
+            ])
+            ->firstOrFail();
+
+        // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
                 return $attributeValue->attribute->name === 'Storage'; // Hoặc tên thuộc tính phù hợp
