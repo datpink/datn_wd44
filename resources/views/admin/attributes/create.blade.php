@@ -18,14 +18,13 @@
                         @csrf
                         <div class="form-group">
                             <label for="name">Tên Attribute:</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                name="name" id="name" value="{{ old('name') }}" required>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name"
+                                value="{{ old('name') }}" required>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
-                        <div class="mt-3">
+                                                <div class="mt-3">
                             <button type="submit" id="submitButton" class="btn btn-primary rounded-pill d-flex align-items-center" disabled>
                                 <i class="bi bi-plus-circle me-2"></i> Tạo Attribute
                             </button>

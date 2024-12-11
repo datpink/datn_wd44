@@ -27,12 +27,21 @@ class AttributeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255'
         ]);
-
+    
+        // Kiểm tra trùng lặp tên Attribute
+        $existingAttribute = Attribute::where('name', $request->name)->first();
+        if ($existingAttribute) {
+            return redirect()->back()->withErrors([
+                'name' => 'Thuộc tính đã tồn tại.'
+            ])->withInput();
+        }
+    
+        // Tạo mới Attribute nếu không trùng lặp
         Attribute::create($request->all());
-
+    
         return redirect()->route('attributes.index')->with('success', 'Tạo mới thuộc tính thành công.');
     }
-
+    
     public function edit($id)
     {
         $title = 'Chỉnh Sửa Thuộc Tính';
