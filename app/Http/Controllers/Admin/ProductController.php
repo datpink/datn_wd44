@@ -109,13 +109,24 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
+            // Kiểm tra trùng lặp sản phẩm dựa trên 'name' hoặc 'sku'
+            $duplicateProduct = Product::where('name', $request->name)
+                ->orWhere('sku', $request->sku)
+                ->first();
+    
+            if ($duplicateProduct) {
+                return back()->withErrors([
+                    'error' => 'Sản phẩm với tên hoặc mã SKU đã tồn tại!'
+                ])->withInput();
+            }
+    
             // Xử lý ảnh chính
             $imagePath = null;
             if ($request->hasFile('image_url')) {
                 $imagePath = Storage::put('images', $request->image_url);
             }
-
+    
             // Tạo mới sản phẩm
             $product = Product::create([
                 'name' => $request->name,
@@ -126,8 +137,6 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'discount_price' => $request->filled('discount_price') ? $request->discount_price : null,
                 'stock' => $request->stock,
-                // 'weight' => $request->weight,
-                // 'dimensions' => $request->dimensions,
                 'image_url' => $imagePath,
                 'description' => $request->description,
                 'specifications' => $request->specifications,
@@ -136,7 +145,7 @@ class ProductController extends Controller
                 'condition' => $request->condition,
                 'tomtat' => $request->tomtat,
             ]);
-
+    
             // Lưu ảnh vào galleries
             if ($request->hasFile('images')) {
                 $galleryImages = collect($request->file('images'))->map(function ($image) {
@@ -144,16 +153,15 @@ class ProductController extends Controller
                 });
                 $product->galleries()->createMany($galleryImages->toArray());
             }
-
+    
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with('errors', 'Có lỗi xảy ra: ' . $th->getMessage());
+            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
-
-
+    
 
     /**
      * Display the specified resource.
