@@ -15,15 +15,9 @@
                 </div>
 
                 <div class="card-body mt-4">
-                    @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
 
                     <form action="{{ route('categories.update', $category) }}" method="POST" enctype="multipart/form-data"
-                        id="categoryForm" class="was-validated">
+                        id="categoryForm">
                         @csrf
                         @method('PUT')
 
@@ -32,21 +26,24 @@
                                 <div class="form-group mt-4">
                                     <label for="name">Tên danh mục:</label>
                                     <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        id="name" name="name" value="{{ old('name', $category->name) }}" required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                        id="name" name="name" value="{{ old('name', $category->name) }}">
+                                    @if ($errors->has('name'))
+                                        <div class="text-danger">{{ $errors->first('name') }}</div>
+                                    @endif
                                 </div>
 
                                 <div class="form-group mt-4">
                                     <label for="description">Mô tả:</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description', $category->description) }}</textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="3">{{ old('description', $category->description) }}</textarea>
+                                    @if ($errors->has('description'))
+                                        <div class="text-danger">{{ $errors->first('description') }}</div>
+                                    @endif
                                 </div>
 
                                 <div class="form-group  mt-4">
                                     <label for="status">Trạng thái:</label>
                                     <select class="form-control @error('status') is-invalid @enderror" id="status"
-                                        name="status" required>
+                                        name="status">
                                         <option value="active" {{ $category->status === 'active' ? 'selected' : '' }}>Kích
                                             hoạt
                                         </option>
@@ -59,8 +56,7 @@
                                     @enderror
                                 </div>
 
-                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3"
-                                    disabled>Cập
+                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-4">Cập
                                     nhật</button>
                             </div>
                         </div>
@@ -69,25 +65,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function validateForm() {
-            const name = document.getElementById('name').value.trim();
-            const description = document.getElementById('description').value.trim();
-            const submitButton = document.getElementById('submitButton');
-
-            // Kiểm tra xem các trường bắt buộc có giá trị không
-            if (name && description) {
-                submitButton.disabled = false; // Kích hoạt nút nếu tất cả các trường có giá trị
-            } else {
-                submitButton.disabled = true; // Khóa nút nếu có trường trống
-            }
-        }
-
-        // Thêm sự kiện input cho các trường
-        document.getElementById('name').addEventListener('input', validateForm);
-        document.getElementById('description').addEventListener('input', validateForm);
-    </script>
 @endsection

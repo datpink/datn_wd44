@@ -50,10 +50,19 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:categories,name', // Kiểm tra tên danh mục đã tồn tại chưa
             'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:active,inactive', // Trạng thái chỉ có thể là 'active' hoặc 'inactive'
+        ], [
+            'name.required' => 'Tên danh mục là bắt buộc.',
+            'name.string' => 'Tên danh mục phải là chuỗi.',
+            'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên danh mục đã tồn tại.',
+            'description.string' => 'Mô tả phải là chuỗi.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
+
 
         DB::beginTransaction();
 
@@ -84,10 +93,20 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'max:255',
-            'status' => 'required|in:active,inactive',
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id, // Đảm bảo tên không trùng với các danh mục khác
+            'description' => 'nullable|string|max:255', // Giới hạn mô tả không quá 255 ký tự
+            'status' => 'required|in:active,inactive', // Trạng thái phải là active hoặc inactive
+        ], [
+            'name.required' => 'Tên danh mục là bắt buộc.',
+            'name.string' => 'Tên danh mục phải là chuỗi.',
+            'name.max' => 'Tên danh mục không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên danh mục đã tồn tại.',
+            'description.string' => 'Mô tả phải là chuỗi.',
+            'description.max' => 'Mô tả không được vượt quá 255 ký tự.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
+
 
         DB::beginTransaction();
 

@@ -27,6 +27,8 @@ class Order extends Model
         'refund_images',
         'refund_method',
         'admin_status',
+        'proof_image',
+        'admin_message',
         'is_new'
     ];
 

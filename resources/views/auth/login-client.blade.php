@@ -27,9 +27,9 @@
 
 <style>
     .user-avatar {
-        width: 30px;
+        width: 40px;
         /* Đặt chiều rộng cho hình avatar */
-        height: 30px;
+        height: 40px;
         /* Đặt chiều cao cho hình avatar */
         border-radius: 50%;
         /* Làm cho hình tròn */

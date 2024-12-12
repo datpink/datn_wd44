@@ -17,14 +17,14 @@ class BannerController extends Controller
         $title = 'Danh sách Banner';
         $search = $request->input('search');
         $status = $request->input('status');
-    
+
         $banners = Banner::when($search, function ($query, $search) {
             return $query->where('title', 'like', "%{$search}%")
-                         ->orWhere('description', 'like', "%{$search}%");
+                ->orWhere('description', 'like', "%{$search}%");
         })->when($status, function ($query, $status) {
             return $query->where('status', $status);
         })->paginate(10);
-    
+
         return view('admin.banners.index', compact('banners', 'title'));
     }
 
@@ -40,6 +40,7 @@ class BannerController extends Controller
     // Lưu banner mới vào cơ sở dữ liệu
     public function store(Request $request)
     {
+        // Kiểm tra và xác nhận các trường dữ liệu
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'title' => 'nullable|string|max:255',
@@ -47,6 +48,20 @@ class BannerController extends Controller
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|url',
             'status' => 'required|in:active,inactive',
+        ], [
+            'image.required' => 'Hình ảnh là bắt buộc.',
+            'image.image' => 'Vui lòng chọn tệp hình ảnh hợp lệ.',
+            'image.mimes' => 'Chỉ chấp nhận tệp hình ảnh có đuôi: jpeg, png, jpg, gif.',
+            'image.max' => 'Hình ảnh không được vượt quá 2MB.',
+
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'description.string' => 'Mô tả phải là một chuỗi văn bản.',
+
+            'button_text.max' => 'Văn bản nút không được vượt quá 255 ký tự.',
+            'button_link.url' => 'Liên kết nút phải là một URL hợp lệ.',
+
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
 
         // Lưu hình ảnh vào thư mục storage
@@ -64,6 +79,7 @@ class BannerController extends Controller
 
         return redirect()->route('banners.index')->with('success', 'Thêm banner thành công!');
     }
+
 
     /**
      * Display the specified resource.
@@ -87,12 +103,26 @@ class BannerController extends Controller
     {
         // Xác thực dữ liệu đầu vào
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
-            'button_text' => 'nullable|string|max:50',
-            'button_link' => 'nullable|url|max:255',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'button_text' => 'nullable|string|max:255',
+            'button_link' => 'nullable|url',
             'status' => 'required|in:active,inactive',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'image.required' => 'Hình ảnh là bắt buộc.',
+            'image.image' => 'Vui lòng chọn tệp hình ảnh hợp lệ.',
+            'image.mimes' => 'Chỉ chấp nhận tệp hình ảnh có đuôi: jpeg, png, jpg, gif.',
+            'image.max' => 'Hình ảnh không được vượt quá 2MB.',
+
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'description.string' => 'Mô tả phải là một chuỗi văn bản.',
+
+            'button_text.max' => 'Văn bản nút không được vượt quá 255 ký tự.',
+            'button_link.url' => 'Liên kết nút phải là một URL hợp lệ.',
+
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
 
         // Cập nhật thông tin banner
@@ -110,7 +140,7 @@ class BannerController extends Controller
             }
 
             // Lưu hình ảnh mới
-            $path = $request->file('image')->store('banners');
+            $path = $request->file('image')->store('banners', 'public');
             $banner->image = $path;
         }
 
@@ -120,6 +150,7 @@ class BannerController extends Controller
         // Chuyển hướng với thông báo thành công
         return redirect()->route('banners.index')->with('success', 'Cập nhật thành công');
     }
+
 
     /**
      * Remove the specified resource from storage.
