@@ -15,10 +15,10 @@ class PostController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh Sách Bài Viết';
-    
+
         // Lấy danh sách bài viết với điều kiện tìm kiếm và lọc
         $query = Post::with('category');
-    
+
         // Tìm kiếm theo từ khóa trong tiêu đề hoặc tóm tắt
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
@@ -26,23 +26,23 @@ class PostController extends Controller
                     ->orWhere('tomtat', 'like', '%' . $request->search . '%');
             });
         }
-    
+
         // Lọc theo nổi bật
         if ($request->filled('is_featured')) {
             $query->where('is_featured', $request->is_featured);
         }
-    
+
         // Lọc theo ngày tạo (từ ngày và đến ngày)
         if ($request->has('date') && $request->date) {
             $query->whereDate('created_at', $request->date);
         }
-    
+
         // Sắp xếp bài viết theo mới nhất
         $posts = $query->latest()->paginate(10);
-    
+
         return view('admin.posts.index', compact('posts', 'title'));
     }
-    
+
     public function create()
     {
         $title = 'Thêm Mới Bài Viết';
@@ -53,15 +53,35 @@ class PostController extends Controller
     {
         // Xác thực dữ liệu
         $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:posts',
-            'tomtat' => 'nullable|string',
-            'content' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'nullable|boolean',
+            'title' => 'required|string|max:255', // Tiêu đề là bắt buộc và tối đa 255 ký tự
+            'slug' => 'required|string|max:255|unique:posts,slug,' . ($post->id ?? 'NULL'), // Slug phải duy nhất, ngoại trừ bản ghi hiện tại
+            'tomtat' => 'nullable|string', // Tóm tắt là tùy chọn, nếu có phải là chuỗi
+            'content' => 'required|string', // Nội dung là bắt buộc và phải là chuỗi
+            'category_id' => 'required|exists:categories,id', // Kiểm tra category_id có tồn tại trong bảng categories
+            'user_id' => 'required|integer', // user_id là bắt buộc và phải là số nguyên
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Ảnh là tùy chọn, nếu có phải là ảnh và không quá 2MB
+            'is_featured' => 'nullable|boolean', // is_featured là tùy chọn, nếu có phải là giá trị boolean
+        ], [
+            'title.required' => 'Tiêu đề là bắt buộc.',
+            'title.string' => 'Tiêu đề phải là chuỗi.',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'slug.required' => 'Slug là bắt buộc.',
+            'slug.string' => 'Slug phải là chuỗi.',
+            'slug.max' => 'Slug không được vượt quá 255 ký tự.',
+            'slug.unique' => 'Slug này đã tồn tại, vui lòng chọn slug khác.',
+            'tomtat.string' => 'Tóm tắt phải là chuỗi.',
+            'content.required' => 'Nội dung là bắt buộc.',
+            'content.string' => 'Nội dung phải là chuỗi.',
+            'category_id.required' => 'Danh mục là bắt buộc.',
+            'category_id.exists' => 'Danh mục không hợp lệ.',
+            'user_id.required' => 'ID người dùng là bắt buộc.',
+            'user_id.integer' => 'ID người dùng phải là số nguyên.',
+            'image.image' => 'Ảnh phải là file hình ảnh.',
+            'image.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            'image.max' => 'Ảnh không được vượt quá 2MB.',
+            'is_featured.boolean' => 'Nổi bật phải là giá trị boolean.',
         ]);
+
 
         DB::beginTransaction();
 
@@ -107,15 +127,35 @@ class PostController extends Controller
     {
         // Xác thực dữ liệu
         $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:posts,slug,' . $id,
-            'tomtat' => 'nullable|string',
-            'content' => 'required|string',
-            'category_id' => 'required|exists:categories,id',
-            'user_id' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'nullable|boolean',
+            'title' => 'required|string|max:255', // Tiêu đề bắt buộc, chuỗi, tối đa 255 ký tự
+            'slug' => 'required|string|max:255|unique:posts,slug,' . $id, // Slug phải duy nhất, bỏ qua bản ghi hiện tại
+            'tomtat' => 'nullable|string', // Tóm tắt tùy chọn, nếu có phải là chuỗi
+            'content' => 'required|string', // Nội dung bắt buộc và phải là chuỗi
+            'category_id' => 'required|exists:categories,id', // Kiểm tra category_id có tồn tại trong bảng categories
+            'user_id' => 'required|integer', // user_id bắt buộc và phải là số nguyên
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Ảnh là tùy chọn, nếu có phải là ảnh và không quá 2MB
+            'is_featured' => 'nullable|boolean', // is_featured tùy chọn, nếu có phải là giá trị boolean
+        ], [
+            'title.required' => 'Tiêu đề là bắt buộc.',
+            'title.string' => 'Tiêu đề phải là chuỗi.',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'slug.required' => 'Slug là bắt buộc.',
+            'slug.string' => 'Slug phải là chuỗi.',
+            'slug.max' => 'Slug không được vượt quá 255 ký tự.',
+            'slug.unique' => 'Slug này đã tồn tại, vui lòng chọn slug khác.',
+            'tomtat.string' => 'Tóm tắt phải là chuỗi.',
+            'content.required' => 'Nội dung là bắt buộc.',
+            'content.string' => 'Nội dung phải là chuỗi.',
+            'category_id.required' => 'Danh mục là bắt buộc.',
+            'category_id.exists' => 'Danh mục không hợp lệ.',
+            'user_id.required' => 'ID người dùng là bắt buộc.',
+            'user_id.integer' => 'ID người dùng phải là số nguyên.',
+            'image.image' => 'Ảnh phải là file hình ảnh.',
+            'image.mimes' => 'Ảnh phải có định dạng: jpeg, png, jpg, gif.',
+            'image.max' => 'Ảnh không được vượt quá 2MB.',
+            'is_featured.boolean' => 'Nổi bật phải là giá trị boolean.',
         ]);
+
 
         DB::beginTransaction();
 

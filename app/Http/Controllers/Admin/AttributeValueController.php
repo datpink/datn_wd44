@@ -32,8 +32,17 @@ class AttributeValueController extends Controller
     {
         $request->validate([
             'attribute_id' => 'required|exists:attributes,id',
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:attribute_values,name', // Kiểm tra trùng tên trong bảng attribute_values
+        ], [
+            'attribute_id.required' => 'Thuộc tính là bắt buộc.',
+            'attribute_id.exists' => 'Thuộc tính không tồn tại trong cơ sở dữ liệu.',
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là một chuỗi ký tự.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên thuộc tính đã tồn tại.', // Thông báo khi tên bị trùng
         ]);
+
+
 
         AttributeValue::create([
             'attribute_id' => $request->attribute_id,
@@ -63,9 +72,17 @@ class AttributeValueController extends Controller
     public function update(Request $request, $attributeId, $valueId)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            // Thêm các quy tắc xác thực khác nếu cần
+            'attribute_id' => 'required|exists:attributes,id',
+            'name' => 'required|string|max:255|unique:attribute_values,name', // Kiểm tra trùng tên trong bảng attribute_values
+        ], [
+            'attribute_id.required' => 'Thuộc tính là bắt buộc.',
+            'attribute_id.exists' => 'Thuộc tính không tồn tại trong cơ sở dữ liệu.',
+            'name.required' => 'Tên là bắt buộc.',
+            'name.string' => 'Tên phải là một chuỗi ký tự.',
+            'name.max' => 'Tên không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên thuộc tính đã tồn tại.', // Thông báo khi tên bị trùng
         ]);
+
 
         $value = AttributeValue::findOrFail($valueId);
         $value->name = $request->name;

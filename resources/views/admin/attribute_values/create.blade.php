@@ -14,7 +14,7 @@
                 </div>
                 <div class="card-body mt-4">
 
-                    <form action="{{ route('attributes.attribute_values.store', $attribute->id) }}" method="POST" id="attributeValueForm" class="was-validated">
+                    <form action="{{ route('attributes.attribute_values.store', $attribute->id) }}" method="POST" id="attributeValueForm">
                         @csrf
 
                         <div class="form-group">
@@ -30,14 +30,14 @@
                         <div class="form-group mt-4">
                             <label for="name">Tên Attribute Value:</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                name="name" id="name" value="{{ old('name') }}" required>
+                                name="name" id="name" value="{{ old('name') }}">
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mt-3">
-                            <button type="submit" id="submitButton" class="btn btn-primary rounded-pill d-flex align-items-center" disabled>
+                            <button type="submit" id="submitButton" class="btn btn-primary rounded-pill d-flex align-items-center">
                                 <i class="bi bi-plus-circle me-2"></i> Tạo Attribute Value
                             </button>
                         </div>
@@ -46,23 +46,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function validateForm() {
-            const name = document.getElementById('name').value.trim();
-            const submitButton = document.getElementById('submitButton');
-
-            // Kiểm tra xem trường "Tên Attribute Value" có giá trị không
-            if (name) {
-                submitButton.disabled = false; // Kích hoạt nút nếu trường có giá trị
-            } else {
-                submitButton.disabled = true; // Khóa nút nếu trường trống
-            }
-        }
-
-        // Thêm sự kiện input cho trường "Tên Attribute Value"
-        document.getElementById('name').addEventListener('input', validateForm);
-    </script>
 @endsection
