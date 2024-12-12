@@ -18,7 +18,7 @@
 
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header">
-                    <div class="card-title mb-3">Thêm Mới Người Dùng</div>
+                    <div class="card-title mb-3">Thêm mới người dùng</div>
                     <a href="{{ route('users.index') }}" class="btn rounded-pill btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
@@ -44,7 +44,7 @@
                                     <input type="password" name="password" id="password" class="form-control" required>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary rounded-pill">Thêm Người Dùng</button>
+                                <button type="submit" class="btn btn-primary rounded-pill">Thêm người dùng</button>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
@@ -54,7 +54,7 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="status">Trạng Thái:</label>
+                                    <label for="status">Trạng thái:</label>
                                     <select name="status" id="status" class="form-control" required>
                                         <option value="unlocked">Mở Khóa</option>
                                         <option value="locked">Bị Khóa</option>

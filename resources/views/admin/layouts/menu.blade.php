@@ -32,7 +32,7 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-box"></i>
-                        <span class="menu-text"> Sản Phẩm</span>
+                        <span class="menu-text"> Sản phẩm</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
@@ -61,18 +61,18 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-person"></i>
-                        <span class="menu-text"> Người Dùng</span>
+                        <span class="menu-text"> Người dùng</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('users.index') }}">Danh sách Người Dùng</a>
+                                <a href="{{ route('users.index') }}">Danh sách người dùng</a>
                             </li>
                             <li>
-                                <a href="{{ route('roles.index') }}">Danh sách Vai Trò</a>
+                                <a href="{{ route('roles.index') }}">Danh sách vai trò</a>
                             </li>
                             <li>
-                                <a href="{{ route('permissions.index') }}">Danh sách Quyền Hạn</a>
+                                <a href="{{ route('permissions.index') }}">Danh sách quyền hạn</a>
                             </li>
                         </ul>
                     </div>
@@ -80,12 +80,12 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-messenger"></i>
-                        <span class="menu-text"> Thông Báo</span>
+                        <span class="menu-text"> Thông báo</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('admin.notifications.index') }}">Danh sách Thông Báo</a>
+                                <a href="{{ route('admin.notifications.index') }}">Danh sách thông báo</a>
                             </li>
                         </ul>
                     </div>
@@ -94,12 +94,12 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-newspaper"></i>
-                        <span class="menu-text"> Tin Tức</span>
+                        <span class="menu-text"> Tin tức</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('categories.index') }}">Danh sách danh mục</a>
+                                <a href="{{ route('categories.index') }}">Tin tức danh mục</a>
                             </li>
                             <li>
                                 <a href="{{ route('posts.index') }}">Danh sách tin</a>
@@ -114,12 +114,12 @@
                 <li class="sidebar-dropdown">
                     <a href="#">
                         <i class="bi bi-tag"></i>
-                        <span class="menu-text"> Nhãn Hiệu</span>
+                        <span class="menu-text"> Thương Hiệu</span>
                     </a>
                     <div class="sidebar-submenu">
                         <ul>
                             <li>
-                                <a href="{{ route('brands.index') }}">Danh sách Nhãn hiệu</a>
+                                <a href="{{ route('brands.index') }}">Danh sách Thương hiệu</a>
                             </li>
                         </ul>
                     </div>

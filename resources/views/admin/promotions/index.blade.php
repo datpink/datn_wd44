@@ -18,7 +18,7 @@
                         <div>
                             <a href="{{ route('promotions.create') }}"
                                 class="btn btn-sm rounded-pill btn-primary d-flex align-items-center">
-                                <i class="bi bi-plus-circle me-2"></i> Thêm Mã Giảm Giá
+                                <i class="bi bi-plus-circle me-2"></i> Thêm mã giảm giá
                             </a>
                         </div>
                     </div>
@@ -78,15 +78,15 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Code</th>
-                                        <th>Mức Giảm Giá</th>
+                                        <th>Mức giảm giá</th>
                                         <th>Min Order Value</th>  <!-- Thêm cột min_order_value -->
-                                        <th>Trạng Thái</th>
-                                        <th>Áp Dụng Cho Đơn Hàng</th>
-                                        <th>Áp Dụng Cho Phí Vận Chuyển</th>
-                                        <th>Ngày Bắt Đầu</th>
-                                        <th>Ngày Kết Thúc</th>
-                                        <th>Ngày Sửa Mã</th>
-                                        <th colspan="2">Hành Động</th>
+                                        <th>Trạng thái</th>
+                                        <th>Áp dụng cho đơn hàng</th>
+                                        <th>Áp dụng cho phí vận chuyển</th>
+                                        <th>Ngày bắt đầu</th>
+                                        <th>Ngày kết thúc</th>
+                                        <th>Ngày sửa mã</th>
+                                        <th colspan="2">Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
