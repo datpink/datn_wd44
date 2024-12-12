@@ -22,6 +22,7 @@ return new class extends Migration
         $table->boolean('applies_to_order');
         $table->boolean('applies_to_shipping');
         $table->decimal('min_order_value', 10, 2)->nullable();  // Cho phép NULL ở đây
+        $table->decimal('max_value', 10, 2)->nullable();  // Cho phép NULL ở đây
         $table->timestamps();
     });
 }

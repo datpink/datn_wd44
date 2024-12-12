@@ -62,71 +62,63 @@
                                         value="{{ old('start_date') }}" required>
                                 </div>
 
-                                <div class="form-group mt-4">
-                                    <label for="end_date">Ngày Kết Thúc:</label>
-                                    <input type="date" name="end_date" id="end_date" class="form-control"
-                                        value="{{ old('end_date') }}" required>
-                                </div>
+                    <div class="form-group mt-4">
+                        <label for="end_date">Ngày Kết Thúc:</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control"
+                            value="{{ old('end_date') }}" required>
+                    </div>
+                    <div class="form-group mt-4">
+                        <label for="min_order_value">Đơn Hàng Tối Tiểu:</label>
+                        <input type="number" name="min_order_value" id="min_order_value" class="form-control"
+                            value="{{ old('min_order_value') }}" step="0.01" min="0">
+                        @if ($errors->has('min_order_value'))
+                        <ul>
+                            <li class="text-danger mb-1">{{ $errors->first('min_order_value') }}</li>
+                        </ul>
+                        @endif
+                    </div>
+                    <div class="form-group mt-4">
+                        <label for="max_value">Đơn Hàng Tối Đa:</label>
+                        <input type="number" name="max_value" id="max_value" class="form-control"
+                            value="{{ old('max_value') }}" step="0.01" min="0">
+                        @if ($errors->has('max_value'))
+                        <ul>
+                            <li class="text-danger mb-1">{{ $errors->first('max_value') }}</li>
+                        </ul>
+                        @endif
+                    </div>
 
-                                <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3" disabled>Thêm
-                                    Khuyến Mãi</button>
-                            </div>
+                    <div class="form-group mt-4">
+                        <label for="type">Loại Giảm Giá:</label>
+                        <select id="type" name="type" class="form-control" required>
+                            <option value="percentage" {{ old('type') == 'percentage' ? 'selected' : '' }}>Giảm Theo %</option>
+                            <option value="fixed_amount" {{ old('type') == 'fixed_amount' ? 'selected' : '' }}>Giảm Theo Tiền</option>
+                            <option value="free_shipping" {{ old('type') == 'free_shipping' ? 'selected' : '' }}>Miễn Phí Vận Chuyển</option>
+                        </select>
+                    </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="type">Loại Giảm Giá:</label>
-                                    <select id="type" name="type" class="form-control" required>
-                                        <option value="percentage" {{ old('type') == 'percentage' ? 'selected' : '' }}>Giảm
-                                            Theo %
-                                        </option>
-                                        <option value="fixed_amount" {{ old('type') == 'fixed_amount' ? 'selected' : '' }}>
-                                            Giảm
-                                            Theo Tiền</option>
-                                        <option value="free_shipping"
-                                            {{ old('type') == 'free_shipping' ? 'selected' : '' }}>Miễn
-                                            Phí Vận Chuyển</option>
-                                    </select>
-                                </div>
+                    <div class="form-group mt-4">
+                        <label for="applies_to_order">Áp Dụng Cho Đơn Hàng:</label>
+                        <select id="applies_to_order" name="applies_to_order" class="form-control" required>
+                            <option value="1" {{ old('applies_to_order') == '1' ? 'selected' : '' }}>Có</option>
+                            <option value="0" {{ old('applies_to_order') == '0' ? 'selected' : '' }}>Không</option>
+                        </select>
+                    </div>
 
-                                <div class="form-group mt-4">
-                                    <label for="applies_to_order">Áp Dụng Cho Đơn Hàng:</label>
-                                    <select id="applies_to_order" name="applies_to_order" class="form-control" required>
-                                        <option value="1" {{ old('applies_to_order') == '1' ? 'selected' : '' }}>Có
-                                        </option>
-                                        <option value="0" {{ old('applies_to_order') == '0' ? 'selected' : '' }}>Không
-                                        </option>
-                                    </select>
-                                </div>
+                    <div class="form-group mt-4">
+                        <label for="applies_to_shipping">Áp Dụng Cho Phí Vận Chuyển:</label>
+                        <select id="applies_to_shipping" name="applies_to_shipping" class="form-control" required>
+                            <option value="1" {{ old('applies_to_shipping') == '1' ? 'selected' : '' }}>Có</option>
+                            <option value="0" {{ old('applies_to_shipping') == '0' ? 'selected' : '' }}>Không</option>
+                        </select>
+                    </div>
 
-                                <div class="form-group mt-4">
-                                    <label for="applies_to_shipping">Áp Dụng Cho Phí Vận Chuyển:</label>
-                                    <select id="applies_to_shipping" name="applies_to_shipping" class="form-control"
-                                        required>
-                                        <option value="1" {{ old('applies_to_shipping') == '1' ? 'selected' : '' }}>Có
-                                        </option>
-                                        <option value="0" {{ old('applies_to_shipping') == '0' ? 'selected' : '' }}>
-                                            Không
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group mt-4">
-                                    <label for="order_value">Giá Trị Đơn Hàng:</label>
-                                    <input type="number" name="order_value" id="order_value" class="form-control"
-                                        value="{{ old('order_value') }}" step="0.01" min="0">
-                                    @if ($errors->has('order_value'))
-                                        <ul>
-                                            <li class="text-danger mb-1">{{ $errors->first('order_value') }}</li>
-                                        </ul>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3" disabled>Thêm Khuyến Mãi</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @section('scripts')
