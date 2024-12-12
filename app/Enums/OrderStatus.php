@@ -4,20 +4,22 @@ namespace App\Enums;
 
 class OrderStatus
 {
-    const PROCESSING = 'processing';
-    const DELIVERING = 'Delivering';
-    const SHIPPED = 'shipped';
-    const CANCELED = 'canceled';
-    const REFUNDED = 'refunded';
+    const pending_confirmation = 'pending_confirmation';
+    const pending_pickup = 'pending_pickup';
+    const pending_delivery = 'pending_delivery';
+    const refunded = 'returned';
+    const delivered = 'delivered';
+    const canceled = 'canceled';
 
     public static function all()
     {
         return [
-            self::PROCESSING,
-            self::DELIVERING,
-            self::SHIPPED,
-            self::CANCELED,
-            self::REFUNDED,
+            self::pending_confirmation,
+            self::pending_pickup,
+            self::pending_delivery,
+            self::refunded,
+            self::delivered,
+            self::canceled,
         ];
     }
 }

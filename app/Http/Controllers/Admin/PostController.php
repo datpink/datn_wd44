@@ -12,13 +12,37 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Danh Sách Bài Viết';
-        $posts = Post::with('category')->latest()->paginate(10);
+    
+        // Lấy danh sách bài viết với điều kiện tìm kiếm và lọc
+        $query = Post::with('category');
+    
+        // Tìm kiếm theo từ khóa trong tiêu đề hoặc tóm tắt
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('tomtat', 'like', '%' . $request->search . '%');
+            });
+        }
+    
+        // Lọc theo nổi bật
+        if ($request->filled('is_featured')) {
+            $query->where('is_featured', $request->is_featured);
+        }
+    
+        // Lọc theo ngày tạo (từ ngày và đến ngày)
+        if ($request->has('date') && $request->date) {
+            $query->whereDate('created_at', $request->date);
+        }
+    
+        // Sắp xếp bài viết theo mới nhất
+        $posts = $query->latest()->paginate(10);
+    
         return view('admin.posts.index', compact('posts', 'title'));
     }
-
+    
     public function create()
     {
         $title = 'Thêm Mới Bài Viết';

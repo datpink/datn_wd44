@@ -10,6 +10,8 @@ use App\Models\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+
 
 class ProductVariantController extends Controller
 {
@@ -44,94 +46,119 @@ class ProductVariantController extends Controller
     // Lưu biến thể mới cahs 1
 
     //     public function store(Request $request, Product $product)
-// {
-//     $request->validate([
-//         'variant_name' => 'required|string',
-//         'price' => 'required|numeric',
-//         'sku' => 'required|string|unique:product_variants,sku',
-//         'stock' => 'required|integer',
-//         'attributes' => 'required|array|min:1',
-//         'attributes.*' => 'integer|exists:attribute_values,id',
-//         'weight' => 'required|numeric',
-//         'dimension' => 'required|string',
-//         'image_url' => 'nullable|image|mimes:jpg,jpeg,png',
-//     ]);
+    // {
+    //     $request->validate([
+    //         'variant_name' => 'required|string',
+    //         'price' => 'required|numeric',
+    //         'sku' => 'required|string|unique:product_variants,sku',
+    //         'stock' => 'required|integer',
+    //         'attributes' => 'required|array|min:1',
+    //         'attributes.*' => 'integer|exists:attribute_values,id',
+    //         'weight' => 'required|numeric',
+    //         'dimension' => 'required|string',
+    //         'image_url' => 'nullable|image|mimes:jpg,jpeg,png',
+    //     ]);
 
     //     // Xử lý ảnh nếu có
-//     $imageUrl = $request->file('image_url') ? $request->file('image_url')->store('product_images', 'public') : null;
+    //     $imageUrl = $request->file('image_url') ? $request->file('image_url')->store('product_images', 'public') : null;
 
     //     // Kiểm tra và lọc các thuộc tính hợp lệ
-//     $validAttributes = array_filter($request->input('attributes', []), 'is_numeric');
+    //     $validAttributes = array_filter($request->input('attributes', []), 'is_numeric');
 
     //     if (empty($validAttributes)) {
-//         return redirect()->route('products.variants.index', $product->id)
-//             ->with('error', 'Không thể thêm biến thể do thiếu thuộc tính hợp lệ.');
-//     }
+    //         return redirect()->route('products.variants.index', $product->id)
+    //             ->with('error', 'Không thể thêm biến thể do thiếu thuộc tính hợp lệ.');
+    //     }
 
     //     // Tạo biến thể mới và lưu vào cơ sở dữ liệu
-//     $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
-//         'status' => 'inactive', // Mặc định là không kích hoạt
-//         'image_url' => $imageUrl,
-//     ]);
+    //     $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
+    //         'status' => 'inactive', // Mặc định là không kích hoạt
+    //         'image_url' => $imageUrl,
+    //     ]);
 
     //     // Kiểm tra stock của sản phẩm
-//     if ($product->stock >= $request->stock) {
-//         // Lưu biến thể vào cơ sở dữ liệu
-//         $product->variants()->save($variant);
+    //     if ($product->stock >= $request->stock) {
+    //         // Lưu biến thể vào cơ sở dữ liệu
+    //         $product->variants()->save($variant);
 
     //         // Trừ stock của sản phẩm chính
-//         $product->stock -= $request->stock;
-//         $product->save();
+    //         $product->stock -= $request->stock;
+    //         $product->save();
 
     //         // Chèn các thuộc tính trực tiếp vào bảng trung gian
-//         try {
-//             foreach ($validAttributes as $validAttributeId) {
-//                 DB::table('product_variant_attributes')->insert([
-//                     'product_variant_id' => $variant->id,
-//                     'attribute_value_id' => $validAttributeId,
-//                 ]);
-//             }
-//         } catch (\Exception $e) {
-//             Log::error('Failed to insert into product_variant_attributes: ' . $e->getMessage());
-//             return redirect()->back()->with('error', 'Có lỗi xảy ra khi thêm thuộc tính.');
-//         }
+    //         try {
+    //             foreach ($validAttributes as $validAttributeId) {
+    //                 DB::table('product_variant_attributes')->insert([
+    //                     'product_variant_id' => $variant->id,
+    //                     'attribute_value_id' => $validAttributeId,
+    //                 ]);
+    //             }
+    //         } catch (\Exception $e) {
+    //             Log::error('Failed to insert into product_variant_attributes: ' . $e->getMessage());
+    //             return redirect()->back()->with('error', 'Có lỗi xảy ra khi thêm thuộc tính.');
+    //         }
 
     //         return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
-//     } else {
-//         return redirect()->back()->with('error', 'Sản phẩm không đủ stock để trừ.');
-//     }
-// }
+    //     } else {
+    //         return redirect()->back()->with('error', 'Sản phẩm không đủ stock để trừ.');
+    //     }
+    // }
 
 
     // Lưu biến thể mới cahs 2
+
     public function store(Request $request, Product $product)
     {
+        // Validate input
         $request->validate([
             'variant_name' => 'required|string',
-            'price' => 'required|numeric',
-            'sku' => 'required|string|unique:product_variants,sku',
-            'stock' => 'required|integer',
-            'attributes' => 'required|array|min:1',
-            'attributes.*' => 'integer|exists:attribute_values,id',
-            'weight' => 'required|numeric',
-            'dimension' => 'required|string',
-            'image_url' => 'nullable|image|mimes:jpg,jpeg,png',
+            'price' => 'required|numeric|min:0',
+            'sku' => 'nullable|string|unique:product_variants,sku', // SKU là tùy chọn
+            'stock' => 'required|integer|min:0',
+            'attributes' => 'nullable|array',
+            'attributes.*' => 'nullable|integer|exists:attribute_values,id',
+            'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Nếu SKU không được nhập, tạo SKU ngẫu nhiên
+        $sku = $request->input('sku') ?: 'SKU-' . strtoupper(Str::random(9));
+
         // Xử lý ảnh nếu có
-        $imageUrl = $request->file('image_url') ? $request->file('image_url')->store('product_images', 'public') : null;
+        $imageUrl = $request->file('image_url')
+            ? $request->file('image_url')->store('product_images', 'public')
+            : null;
 
-        // Kiểm tra và lọc các thuộc tính hợp lệ
-        $validAttributes = array_filter($request->input('attributes', []), 'is_numeric');
+        // Lọc các thuộc tính hợp lệ
+        $validAttributes = array_filter($request->input('attributes', []), function ($value) {
+            return is_numeric($value) && !is_null($value);
+        });
 
+        // Kiểm tra nếu không có thuộc tính nào được chọn
         if (empty($validAttributes)) {
-            return redirect()->route('products.variants.index', $product->id)
-                ->with('error', 'Không thể thêm biến thể do thiếu thuộc tính hợp lệ.');
+            return back()->withInput()->withErrors(['attributes' => 'Bạn phải chọn ít nhất một thuộc tính.']);
         }
 
-        // Tạo biến thể mới và lưu vào cơ sở dữ liệu
-        $variant = new ProductVariant($request->only(['variant_name', 'price', 'sku', 'stock', 'weight', 'dimension']) + [
-            'status' => 'inactive', // Mặc định là không kích hoạt
+        // Kiểm tra trùng lặp biến thể dựa trên thuộc tính
+        $existingVariant = DB::table('product_variants')
+            ->select('product_variants.id')
+            ->join('product_variant_attributes', 'product_variants.id', '=', 'product_variant_attributes.product_variant_id')
+            ->where('product_variants.product_id', $product->id)
+            ->whereIn('product_variant_attributes.attribute_value_id', $validAttributes)
+            ->groupBy('product_variants.id')
+            ->havingRaw('COUNT(DISTINCT product_variant_attributes.attribute_value_id) = ?', [count($validAttributes)])
+            ->exists();
+
+        if ($existingVariant) {
+            return back()->withInput()->withErrors(['duplicate' => 'Biến thể đã tồn tại với tổ hợp thuộc tính này.']);
+        }
+
+        // Tạo biến thể mới
+        $variant = new ProductVariant([
+            'variant_name' => $request->variant_name,
+            'price' => $request->price,
+            'sku' => $sku,  // Dùng SKU đã tạo
+            'stock' => $request->stock,
+            'status' => 'inactive',
             'image_url' => $imageUrl,
         ]);
 
@@ -139,24 +166,26 @@ class ProductVariantController extends Controller
         $product->variants()->save($variant);
 
         // Cộng dồn stock của sản phẩm gốc từ biến thể
-        $product->stock += $request->stock;
-        $product->save();
+        $product->increment('stock', $request->stock);
 
-        // Chèn các thuộc tính trực tiếp vào bảng trung gian
-        try {
-            foreach ($validAttributes as $validAttributeId) {
-                DB::table('product_variant_attributes')->insert([
+        // Lưu các thuộc tính hợp lệ vào bảng trung gian nếu có
+        if (!empty($validAttributes)) {
+            $attributesData = array_map(function ($attributeId) use ($variant) {
+                return [
                     'product_variant_id' => $variant->id,
-                    'attribute_value_id' => $validAttributeId,
-                ]);
-            }
-        } catch (\Exception $e) {
-            Log::error('Failed to insert into product_variant_attributes: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Có lỗi xảy ra khi thêm thuộc tính.');
+                    'attribute_value_id' => $attributeId,
+                ];
+            }, $validAttributes);
+
+            DB::table('product_variant_attributes')->insert($attributesData);
         }
 
-        return redirect()->route('products.variants.index', $product->id)->with('success', 'Biến thể đã được thêm thành công.');
+        return redirect()->route('products.variants.index', $product->id)
+            ->with('success', 'Biến thể đã được thêm thành công.');
     }
+
+
+
 
 
 
@@ -164,7 +193,6 @@ class ProductVariantController extends Controller
     public function edit(Product $product, ProductVariant $variant)
     {
         $title = 'Chỉnh Sửa Biến Thể';
-        // Lấy tất cả các sản phẩm để hiển thị trong dropdown
         $products = Product::all();
 
         return view('admin.variants.edit', compact('product', 'variant', 'products', 'title'));
@@ -237,8 +265,8 @@ class ProductVariantController extends Controller
         $request->validate([
             'variant_name' => 'required|string|max:255',
             'price' => 'required|numeric',
-            'weight' => 'nullable|numeric',
-            'dimension' => 'nullable|string|max:255',
+            // 'weight' => 'nullable|numeric',
+            // 'dimension' => 'nullable|string|max:255',
             'stock' => 'required|integer',
             'sku' => 'required|string|unique:product_variants,sku,' . $variant->id,
             'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Kiểm tra hình ảnh
@@ -251,8 +279,8 @@ class ProductVariantController extends Controller
         // Cập nhật thông tin biến thể
         $variant->variant_name = $request->variant_name;
         $variant->price = $request->price;
-        $variant->weight = $request->weight;
-        $variant->dimension = $request->dimension;
+        // $variant->weight = $request->weight;
+        // $variant->dimension = $request->dimension;
         $variant->stock = $request->stock;
         $variant->status = $request->status;
 

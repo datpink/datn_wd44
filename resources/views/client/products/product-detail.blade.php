@@ -132,17 +132,6 @@
     @include('components.breadcrumb-client2')
 
     @include('client.muteki.css')
-    <script>
-        var hasVariants = @json($product->variants->isNotEmpty()); // Kiểm tra sản phẩm có biến thể hay không
-
-        // Thông tin về số lượng sản phẩm còn lại
-        var stockQuantity = @json($product->stock); // Số lượng sản phẩm còn lại (không có biến thể)
-        var variantStock = {}; // Đối tượng để lưu trữ số lượng tồn kho của các biến thể (nếu có)
-
-        @foreach ($product->variants as $variant)
-            variantStock['{{ $variant->id }}'] = {{ $variant->stock }};
-        @endforeach
-    </script>
     <div class="single-thumb-vertical main-container shop-page no-sidebar">
         <div class="container">
             <div class="row">
@@ -238,31 +227,32 @@
                                         @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
                                             @if ($product->variants->isNotEmpty())
                                                 <del>
-                                                    <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                        {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                    <span>{{ $minPrice }}₫ -
+                                                        {{ $maxPrice }}₫</span>
                                                 </del>
                                                 <span class="text-danger font-weight-bold">
-                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
+                                                    {{ $minDiscountPrice }}₫ -
+                                                    {{ $maxDiscountPrice }}₫
                                                 </span>
                                             @else
                                                 <del>
-                                                    <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                    <span>{{ $product->price }}₫</span>
                                                 </del>
                                                 <span class="text-danger font-weight-bold">
-                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                                                    {{ $product->discount_price }}₫
                                                 </span>
                                             @endif
                                         @else
                                             @if ($product->variants->isNotEmpty())
-                                                <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                <span>{{ $minPrice }}₫ -
+                                                    {{ $maxPrice }}₫</span>
                                             @else
-                                                <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                <span>{{ $product->price }}₫</span>
                                             @endif
                                         @endif
                                     </span>
                                 </p>
+
 
                                 <p class="stock in-stock">
                                     Sản phẩm còn lại:
@@ -271,7 +261,9 @@
                                             {{ $product->updateTotalStock2() }}
                                         @else
                                             {{ $product->stock }}
+                                            <input type="hidden" id="product-stock" value="{{ $product->stock }}">
                                         @endif
+                                        <input type="hidden" id="total-stock" value="{{ $product->stock }}">
                                     </span>
                                 </p>
 
@@ -286,8 +278,8 @@
                                                         $attributeValue->name;
                                                 }
 
-                                                $variantGroups[$attributes['Storage'] ?? 'Không có'][
-                                                    $attributes['Color'] ?? 'Không có'
+                                                $variantGroups[$attributes['Storage'] ?? ''][
+                                                    $attributes['Color'] ?? ''
                                                 ][] = $variant;
                                             }
                                         @endphp
@@ -300,23 +292,36 @@
                                                     <div class="variant-options d-flex flex-wrap">
                                                         @foreach ($variantGroups as $storage => $colors)
                                                             @foreach ($colors as $color => $variants)
+                                                                @php
+                                                                    $hasStorage = $storage !== null && $storage !== '';
+                                                                    $hasColor = $color !== null && $color !== '';
+                                                                @endphp
                                                                 <button class="variant-btn mx-2 mb-2"
                                                                     data-variant="{{ json_encode($variants[0]) }}"
-                                                                    data-price="{{ number_format($variants[0]->price, 0, ',', '.') }}₫"
-                                                                    data-discount-price="{{ number_format($variants[0]->price - $discountAmount, 0, ',', '.') }}₫"
+                                                                    data-price="{{ $variants[0]->price }}₫"
+                                                                    data-discount-price="{{ $variants[0]->price - $discountAmount }}₫"
                                                                     data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
-                                                                    data-dung-luong="{{ $storage }}"
-                                                                    data-mau-sac="{{ $color }}">
+                                                                    @if ($hasStorage) data-dung-luong="{{ $storage }}" @endif
+                                                                    @if ($hasColor) data-mau-sac="{{ $color }}" @endif>
+
                                                                     <img src="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
                                                                         alt="Product Image" width="40px" height="40px"
                                                                         class="img-fluid">
-                                                                    <span>{{ $storage }}</span> -
-                                                                    <span>{{ $color }}</span>
+
+                                                                    {{-- Hiển thị các thuộc tính theo điều kiện --}}
+                                                                    @if ($hasStorage && $hasColor)
+                                                                        <span>{{ $storage }}</span> - <span>{{ $color }}</span>
+                                                                    @elseif ($hasStorage)
+                                                                        <span>{{ $storage }}</span>
+                                                                    @elseif ($hasColor)
+                                                                        <span>{{ $color }}</span>
+                                                                    @endif
                                                                 </button>
                                                             @endforeach
                                                         @endforeach
                                                     </div>
                                                 </div>
+
                                             </div>
                                         @endif
                                     </div>
@@ -327,7 +332,7 @@
                                 </p>
 
                                 <div class="kobolg-product-details__short-description">
-                                    <p>{{ $product->tomtat }}</p>
+                                    <p>{!! $product->tomtat !!}</p>
                                 </div>
 
                                 <form class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
@@ -357,13 +362,15 @@
                                             <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
                                             <div class="action-buttons">
                                                 <button type="submit" id="add-to-cart"
-                                                    class="single_add_to_cart_button button alt">
+                                                    class="single_add_to_cart_button button alt"
+                                                    data-original-price="{{ $product->price }}₫"
+                                                    data-discount-price="{{ $product->discount_price }}₫">
                                                     Thêm vào giỏ hàng
                                                 </button>
-                                                <button type="submit" id="buy-now"
+                                                {{-- <button type="submit" id="buy-now"
                                                     class="single_add_to_cart_button button buy-now">
                                                     Mua ngay
-                                                </button>
+                                                </button> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -382,7 +389,7 @@
                                 <a href="#" class="compare button" data-product_id="27" rel="nofollow">So sánh</a>
 
                                 <div class="product_meta">
-                                    <span class="sku_wrapper">SKU: <span class="sku">{{ $product->sku }}</span></span>
+                                    <span class="sku_wrapper">SKU: <span class="sku2">{{ $product->sku }}</span></span>
                                     <span class="posted_in">Danh mục:
                                         <a href="#"
                                             rel="tag">{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</a>
@@ -412,7 +419,11 @@
                                 </li>
                                 <li class="additional_information_tab" id="tab-title-additional_information"
                                     role="tab" aria-controls="tab-additional_information">
-                                    <a href="#tab-additional_information">Bình luận
+                                    <a href="#tab-additional_information">Thông số kĩ thuật</a>
+                                </li>
+                                <li class="comments_tab" id="tab-title-comments" role="tab"
+                                    aria-controls="tab-comments">
+                                    <a href="#tab-comments">Bình luận
                                         ({{ $product->comments->count() }})</a>
                                 </li>
                                 <li class="reviews_tab" id="tab-title-reviews" role="tab"
@@ -422,6 +433,8 @@
                             </ul>
 
                             @include('client.muteki.description')
+
+                            @include('client.muteki.specifications')
 
                             @include('client.muteki.comment')
 
@@ -481,16 +494,16 @@
                                                     @if ($product->discount_price && $product->discount_price > 0)
                                                         <del>
                                                             <span class="kobolg-Price-amount amount">
-                                                                {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                                                {{ $product->price + $maxVariantPrice }}₫
                                                             </span>
                                                         </del>
-                                                        <span
-                                                            class="kobolg-Price-amount amount text-danger">
-                                                            {{ number_format($product->discount_price + $minVariantPrice, 0, ',', '.') }}₫
+
+                                                        <span class="kobolg-Price-amount amount text-danger">
+                                                            {{ $product->discount_price + $minVariantPrice }}₫
                                                         </span>
                                                     @else
                                                         <span class="kobolg-Price-amount amount">
-                                                            {{ number_format($product->price + $maxVariantPrice, 0, ',', '.') }}₫
+                                                            {{ $product->price + $maxVariantPrice }}₫
                                                         </span>
                                                     @endif
                                                 </span>
@@ -529,7 +542,8 @@
             </div>
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
-{{--
+
+{{-- 
             <script>
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {

@@ -91,7 +91,7 @@
                             @endphp
 
                             @if ($userReview)
-                                <div class="error">
+                                <div class="error mt-5">
                                     <p>Bạn đã đánh giá sản phẩm này với điểm:
                                         <strong>{{ $userReview->rating }} sao</strong>
                                     </p>

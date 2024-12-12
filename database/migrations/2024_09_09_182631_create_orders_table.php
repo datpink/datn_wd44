@@ -17,13 +17,20 @@ return new class extends Migration {
             $table->decimal('total_amount', 10, 2);
             $table->decimal('discount_amount', 10, 2)->nullable();
             $table->enum('status', [
-                'processing',
-                'Delivering',
-                'shipped',
-                'canceled',
-                'refunded'
-            ])->default('processing');
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+                'pending_confirmation', // Chờ xác nhận
+                'pending_pickup',       // Chờ lấy hàng
+                'pending_delivery',     // Chờ giao hàng
+                'returned',             // Trả hàng
+                'delivered',            // Đã giao
+                'canceled'              // Đã hủy
+            ])->default('pending_confirmation');
+            $table->enum('payment_status', [
+                'unpaid',               // Chưa thanh toán
+                'paid',                 // Đã thanh toán
+                'pending',              // Đang thanh toán
+                'refunded',             // Hoàn trả
+                'payment_failed'        // Thanh toán thất bại
+            ])->default('unpaid');
             $table->string('shipping_address')->nullable();
             $table->string('description')->nullable();
             $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
@@ -32,6 +39,7 @@ return new class extends Migration {
             $table->softDeletes();
             $table->timestamps();
         });
+
     }
 
     /**

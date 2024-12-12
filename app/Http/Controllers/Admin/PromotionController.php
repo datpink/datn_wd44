@@ -8,10 +8,35 @@ use Illuminate\Http\Request;
 
 class PromotionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Danh Sách Mã Giảm Giá';
-        $promotions = Promotion::paginate(10);
+    
+        $query = Promotion::query();
+    
+        // Tìm kiếm theo từ khóa
+        if ($request->filled('search')) {
+            $query->where('code', 'like', '%' . $request->search . '%');
+        }
+    
+        // Lọc theo trạng thái
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+    
+        // Lọc theo "Áp dụng cho đơn hàng"
+        if ($request->filled('applies_to_order')) {
+            $query->where('applies_to_order', $request->applies_to_order);
+        }
+    
+        // Lọc theo "Áp dụng cho phí vận chuyển"
+        if ($request->filled('applies_to_shipping')) {
+            $query->where('applies_to_shipping', $request->applies_to_shipping);
+        }
+    
+    
+        $promotions = $query->paginate(10);
+    
         return view('admin.promotions.index', compact('promotions', 'title'));
     }
 

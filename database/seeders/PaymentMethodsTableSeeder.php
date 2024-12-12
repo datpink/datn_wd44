@@ -17,7 +17,7 @@ class PaymentMethodsTableSeeder extends Seeder
             ],
             [
                 'id'            => 2,
-                'name'          => 'code',
+                'name'          => 'cod',
                 'description'   => 'Thanh toán khi nhận hàng',
             ]
         ]);

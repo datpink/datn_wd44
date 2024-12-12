@@ -33,70 +33,79 @@
 
                     <form action="{{ route('advertisements.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <div class="form-group mb-3">
-                            <label for="image">Hình ảnh:</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*"
-                                onchange="previewImage(event)" required>
 
-                            <img id="imagePreview" src="" alt="Hình ảnh xem trước"
-                                style="max-width: 150px; height: auto; display: none;" class="mt-2">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="image">Hình ảnh:</label>
+                                    <input type="file" class="form-control" id="image" name="image"
+                                        accept="image/*" onchange="previewImage(event)" required>
 
-                            @if ($errors->has('image'))
-                                <ul>
-                                    <li class="text-danger mb-1">{{ $errors->first('image') }}</li>
-                                </ul>
-                            @endif
+                                    <img id="imagePreview" src="" alt="Hình ảnh xem trước"
+                                        style="max-width: 150px; height: auto; display: none;" class="mt-2">
+
+                                    @if ($errors->has('image'))
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $errors->first('image') }}</li>
+                                        </ul>
+                                    @endif
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="button_text">Văn bản nút:</label>
+                                    <input type="text" class="form-control" id="button_text" name="button_text"
+                                        value="{{ old('button_text') }}" placeholder="Nhập văn bản nút">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="button_link">Liên kết nút:</label>
+                                    <input type="url" class="form-control" id="button_link" name="button_link"
+                                        value="{{ old('button_link') }}" placeholder="Nhập liên kết nút">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="position">Vị trí:</label>
+                                    <input type="number" class="form-control" id="position" name="position"
+                                        value="{{ old('position') }}" placeholder="Nhập vị trí">
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="status">Trạng thái:</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Kích hoạt
+                                        </option>
+                                        <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Vô
+                                            hiệu hóa</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-rounded btn-success">Thêm Mới</button>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="title">Tiêu đề:</label>
+                                    <input type="text" class="form-control" id="title" name="title"
+                                        value="{{ old('title') }}" placeholder="Nhập tiêu đề" required>
+                                    @if ($errors->has('title'))
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $errors->first('title') }}</li>
+                                        </ul>
+                                    @endif
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="description">Mô tả:</label>
+                                    <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                                        rows="3" placeholder="Nhập mô tả">{{ old('description') }}</textarea>
+                                    @if ($errors->has('description'))
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
+                                        </ul>
+                                    @endif
+                                </div>
+                            </div>
                         </div>
-
-                        <div class="form-group mb-3">
-                            <label for="title">Tiêu đề:</label>
-                            <input type="text" class="form-control" id="title" name="title"
-                                value="{{ old('title') }}" placeholder="Nhập tiêu đề" required>
-                            @if ($errors->has('title'))
-                                <ul>
-                                    <li class="text-danger mb-1">{{ $errors->first('title') }}</li>
-                                </ul>
-                            @endif
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="description">Mô tả:</label>
-                            <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                rows="3" placeholder="Nhập mô tả">{{ old('description') }}</textarea>
-                            @if ($errors->has('description'))
-                                <ul>
-                                    <li class="text-danger mb-1">{{ $errors->first('description') }}</li>
-                                </ul>
-                            @endif
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="button_text">Văn bản nút:</label>
-                            <input type="text" class="form-control" id="button_text" name="button_text"
-                                value="{{ old('button_text') }}" placeholder="Nhập văn bản nút">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="button_link">Liên kết nút:</label>
-                            <input type="url" class="form-control" id="button_link" name="button_link"
-                                value="{{ old('button_link') }}" placeholder="Nhập liên kết nút">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="position">Vị trí:</label>
-                            <input type="number" class="form-control" id="position" name="position"
-                                value="{{ old('position') }}" placeholder="Nhập vị trí">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="status">Trạng thái:</label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Kích hoạt</option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Vô hiệu hóa</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn btn-rounded btn-success">Thêm Mới</button>
                     </form>
                 </div>
             </div>

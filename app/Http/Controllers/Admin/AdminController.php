@@ -87,7 +87,7 @@ class AdminController extends Controller
         $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
             ->whereDate('created_at', '>=', $startDate->toDateString())
             ->whereDate('created_at', '<=', $endDate->toDateString())
-            ->where('status', 'shipped')
+            ->where('status', 'delivered')
             ->where('payment_status', 'paid')
             ->groupBy('date')
             ->orderBy('date')
@@ -106,9 +106,10 @@ class AdminController extends Controller
         $discounts = $dailyRevenue->pluck('discount')->sum(); // Tính tổng giảm giá
 
         // Tính tổng doanh số
-        $totalSales = Order::where('status', 'shipped')
-            ->where('payment_status', 'paid')
+        $totalSales = Order::where('status', 'delivered') // Thay 'shipped' thành 'delivered'
+            ->where('payment_status', 'paid') // Giữ nguyên trạng thái thanh toán
             ->sum('total_amount');
+
 
         // Lấy danh sách đơn hàng và các sản phẩm kèm theo
         $orders = Order::with(['user', 'items.productVariant.product']) // Đảm bảo lấy đúng thông tin sản phẩm
@@ -119,13 +120,13 @@ class AdminController extends Controller
 
         // Lấy số lượng đơn hàng theo trạng thái, chỉ lấy "processing" và "shipped" cho danh sách
         $ordersByStatusForList = Order::select('status', \DB::raw('COUNT(*) as count'))
-            ->whereIn('status', ['processing', 'shipped']) // Chỉ lấy hai trạng thái này cho danh sách
+            ->whereIn('status', ['pending_confirmation', 'delivered']) // Chỉ lấy hai trạng thái này cho danh sách
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
         // Đảm bảo đủ tất cả các trạng thái cần thiết
-        $statusesForList = ['processing', 'shipped']; // Chỉ cần trạng thái này cho danh sách
+        $statusesForList = ['pending_confirmation', 'delivered']; // Chỉ cần trạng thái này cho danh sách
         $ordersByStatusForList = array_replace(array_fill_keys($statusesForList, 0), $ordersByStatusForList);
 
         // Lấy số lượng đơn hàng cho tất cả các trạng thái để hiển thị trên biểu đồ
@@ -135,7 +136,15 @@ class AdminController extends Controller
             ->toArray();
 
         // Đảm bảo đủ tất cả các trạng thái cho biểu đồ
-        $statusesForChart = ['processing', 'Delivering', 'shipped', 'canceled', 'refunded'];
+        $statusesForChart = [
+            'pending_confirmation', // Chờ xác nhận
+            'pending_pickup',       // Chờ lấy hàng
+            'pending_delivery',     // Chờ giao hàng
+            'delivered',            // Đã giao hàng
+            'returned',             // Trả hàng
+            'canceled'              // Đã hủy
+        ];
+
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
 
 

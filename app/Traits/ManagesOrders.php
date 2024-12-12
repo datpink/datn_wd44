@@ -31,22 +31,31 @@ trait ManagesOrders
                 ]);
             }
 
-            // Nếu trạng thái hiện tại là "Delivering" và trạng thái mới là "processing", từ chối cập nhật
-            if ($currentStatus === 'Delivering' && $newStatus === 'processing') {
+            // Danh sách trạng thái không cho phép cập nhật ngược
+            $nonRevertibleStatuses = [
+                'pending_delivery' => ['pending_confirmation', 'pending_pickup'], // Đang giao hàng không thể về Chờ xác nhận hoặc Chờ lấy hàng
+                'pending_pickup' => ['pending_confirmation'], // Chờ lấy hàng không thể về Chờ xác nhận
+            ];
+
+            // Kiểm tra trạng thái hiện tại và trạng thái mới
+            if (array_key_exists($currentStatus, $nonRevertibleStatuses) && in_array($newStatus, $nonRevertibleStatuses[$currentStatus])) {
                 DB::rollBack();
                 return redirect()->back()->withErrors([
-                    'error' => 'Không thể chuyển từ trạng thái Đang giao hàng về trạng thái Đang xử lý!'
+                    'error' => 'Không thể chuyển từ trạng thái ' . __("statuses.$currentStatus") . ' về trạng thái ' . __("statuses.$newStatus") . '!'
                 ]);
             }
+
 
             // Cập nhật trạng thái đơn hàng
             $order->status = $newStatus;
 
             // Cập nhật trạng thái thanh toán nếu cần
-            if ($newStatus === 'shipped') {
-                $order->payment_status = 'paid';
-            } elseif (in_array($newStatus, ['canceled', 'refunded'])) {
-                $order->payment_status = 'pending';
+            if ($newStatus === 'delivered') {
+                $order->payment_status = 'paid'; // Đã thanh toán
+            } elseif (in_array($newStatus, ['canceled', 'returned'])) {
+                $order->payment_status = 'refunded'; // Hoàn trả
+            } elseif ($newStatus === 'pending_confirmation') {
+                $order->payment_status = 'unpaid'; // Chưa thanh toán
             }
 
             $order->save();

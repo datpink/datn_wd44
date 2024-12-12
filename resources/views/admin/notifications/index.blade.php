@@ -16,6 +16,31 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <form method="GET" action="{{ route('admin.notifications.index') }}" class="mb-3">
+                        <div class="row g-2">
+                            <!-- Tìm kiếm theo tiêu đề hoặc mô tả -->
+                            <div class="col-auto">
+                                <input type="text" name="search" class="form-control form-control-sm"
+                                       placeholder="Tìm kiếm thông báo" value="{{ request()->search }}">
+                            </div>
+                
+                            <!-- Lọc trạng thái -->
+                            <div class="col-auto">
+                                <select name="status" class="form-control form-control-sm">
+                                    <option value="">Tất cả trạng thái</option>
+                                    <option value="read" {{ request()->status === 'read' ? 'selected' : '' }}>Đã đọc</option>
+                                    <option value="unread" {{ request()->status === 'unread' ? 'selected' : '' }}>Chưa đọc</option>
+                                </select>
+                            </div>
+                
+                            <!-- Nút lọc -->
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-sm btn-primary">Lọc</button>
+                            </div>
+                        </div>
+                    </form>
+                
+
                     <div class="table-responsive">
                         <table class="table v-middle m-0">
                             <thead>
@@ -29,7 +54,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($notifications as $notification)
+                             
+                                @foreach ($notificationAll as $notification)
                                     <tr>
                                         <td>{{ $notification->id }}</td>
                                         <td>{{ $notification->title }}</td>
@@ -69,9 +95,9 @@
                             </tbody>
                         </table>
                     </div>
-                    {{-- <div class="pagination justify-content-center mt-3">
-                        {{ $notifications->links() }}
-                    </div> --}}
+                    <div class="pagination justify-content-center mt-3">
+                        {{ $notificationAll->links() }}
+                    </div>
                 </div>
             </div>
         </div>

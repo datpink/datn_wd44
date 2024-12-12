@@ -13,30 +13,36 @@
 
         <form action="{{ route('discounts.store') }}" method="POST">
             @csrf
-            <div class="mb-3">
-                <label for="discount_value" class="form-label">Giá trị giảm giá</label>
-                <input type="number" class="form-control" id="discount_value" name="discount_value" required>
-            </div>
 
-            <div class="mb-3">
-                <label for="type" class="form-label">Loại giảm giá</label>
-                <select class="form-select" id="type" name="type" required>
-                    <option value="percentage">Phần trăm</option>
-                    <option value="fixed">Tiền</option>
-                </select>
-            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="discount_value" class="form-label">Giá trị giảm giá</label>
+                        <input type="number" class="form-control" id="discount_value" name="discount_value" required>
+                    </div>
 
-            <div class="mb-3">
-                <label for="start_date" class="form-label">Ngày bắt đầu</label>
-                <input type="date" class="form-control" id="start_date" name="start_date" required>
-            </div>
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Loại giảm giá</label>
+                        <select class="form-select" id="type" name="type" required>
+                            <option value="percentage">Phần trăm</option>
+                            <option value="fixed">Tiền</option>
+                        </select>
+                    </div>
 
-            <div class="mb-3">
-                <label for="end_date" class="form-label">Ngày kết thúc</label>
-                <input type="date" class="form-control" id="end_date" name="end_date" required>
-            </div>
+                    <button type="submit" class="btn btn-primary rounded-pill">Thêm Giảm Giá</button>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="start_date" class="form-label">Ngày bắt đầu</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
 
-            <button type="submit" class="btn btn-primary">Thêm Giảm Giá</button>
+                    <div class="mb-3">
+                        <label for="end_date" class="form-label">Ngày kết thúc</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 

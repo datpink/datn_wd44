@@ -33,16 +33,21 @@
                     <form action="{{ route('brands.update', $brand) }}" method="POST" id="brandForm" class="was-validated">
                         @csrf
                         @method('PUT')
-                        <div class="form-group mb-3">
-                            <label for="name">Tên thương hiệu:</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ old('name', $brand->name) }}" required>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="name">Tên thương hiệu:</label>
+                                    <input type="text" class="form-control" id="name" name="name"
+                                        value="{{ old('name', $brand->name) }}" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="description">Mô tả:</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description', $brand->description) }}</textarea>
+                                </div>
+                                <button type="submit" id="submitButton" class="btn btn-rounded btn-success" disabled>Cập
+                                    nhật Brand</button>
+                            </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="description">Mô tả:</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description', $brand->description) }}</textarea>
-                        </div>
-                        <button type="submit" id="submitButton" class="btn btn-rounded btn-success" disabled>Cập nhật Brand</button>
                     </form>
                 </div>
             </div>

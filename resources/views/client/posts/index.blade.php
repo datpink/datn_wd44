@@ -35,7 +35,7 @@
                                         <div class="post-meta">
                                             <div class="post-author">
                                                 By: <a
-                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? 'Unknown' }}</a>
+                                                    href="{{ route('post.show', $post->id) }}">{{ $post->author_name ?? $post->user->name ?? ''}}</a>
                                             </div>
                                             <div class="post-comment-icon">
                                                 <a
@@ -78,7 +78,7 @@
                     </nav>
                 </div>
 
-                @include('client.layouts.sidebar_post',['latestPosts' => $latestPosts])
+                @include('client.layouts.sidebar_post')
 
             </div>
         </div>

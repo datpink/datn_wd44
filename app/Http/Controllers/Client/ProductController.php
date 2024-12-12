@@ -207,6 +207,7 @@ class ProductController extends Controller
             ->limit(6) // Số lượng sản phẩm liên quan cần hiển thị
             ->get();
 
+            // dd($product);
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
             'product',
@@ -596,7 +597,7 @@ class ProductController extends Controller
 
         // Kiểm tra xem người dùng đã có đơn hàng hay chưa
         $hasOrder = Order::where('user_id', Auth::id())
-            ->where('status', 'completed') // hoặc trạng thái phù hợp với yêu cầu
+            ->where('status', 'delivered') // hoặc trạng thái phù hợp với yêu cầu
             ->exists();
 
         if (!$hasOrder) {
