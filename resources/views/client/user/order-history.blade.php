@@ -75,7 +75,7 @@
                                             <h4>Chi Tiết Sản Phẩm</h4>
                                         </div>
                                         <div class="card-body" id="productDetails"
-                                            style="max-height: 300px; overflow-y: auto;">
+                                            style="max-height: 400px; overflow-y: auto;">
                                             @foreach ($order->items as $item)
                                                 <div class="row border p-2 mb-2 align-items-center">
                                                     <!-- Cột ảnh sản phẩm -->
@@ -183,20 +183,55 @@
                                                 @endif
                                             </p>
 
-                                            @if ($order->cancellation_reason)
-                                                <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
-                                            @endif
+                                            <div class="card-body" id="productDetails"
+                                                style="max-height: 200px; overflow-y: auto;">
+                                                <!-- Lý do hủy đơn -->
+                                                @if ($order->cancellation_reason)
+                                                    <div class="mb-3">
+                                                        <strong>Lý do hủy đơn:</strong>
+                                                        <p class="m-0">{{ $order->cancellation_reason }}</p>
+                                                    </div>
+                                                @endif
 
-                                            @if ($order->status === 'returned' && $order->refund_images)
-                                                <p><strong>Lý Do Trả Hàng:</strong> {{ $order->refund_reason }}</p>
-                                                <p><strong>Hình Ảnh Minh Họa:</strong></p>
-                                                <div>
-                                                    @foreach (json_decode($order->refund_images) as $image)
-                                                        <img src="{{ Storage::url($image) }}" alt="Refund Image"
-                                                            style="max-width: 50px; margin: 5px;">
-                                                    @endforeach
-                                                </div>
-                                            @endif
+                                                <!-- Lý Do Trả Hàng và Hình Ảnh Minh Họa -->
+                                                @if ($order->status === 'returned' && $order->refund_images)
+                                                    <div class="mb-3">
+                                                        <strong>Lý Do Trả Hàng:</strong>
+                                                        <p class="m-0">{{ $order->refund_reason }}</p>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Hình Ảnh Minh Họa:</strong>
+                                                        <div>
+                                                            @foreach (json_decode($order->refund_images) as $image)
+                                                                <img src="{{ Storage::url($image) }}" alt="Refund Image"
+                                                                    class="img-thumbnail"
+                                                                    style="max-width: 50px; margin: 5px;">
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Hình ảnh chứng minh -->
+                                                @if ($order->status === 'returned' && $order->proof_image)
+                                                    <div class="mb-3">
+                                                        <strong>Hình ảnh chứng minh:</strong>
+                                                        <div>
+                                                            <img src="{{ Storage::url($order->proof_image) }}"
+                                                                alt="Proof Image" class="img-fluid"
+                                                                style="max-width: 150px;">
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Lời nhắn từ Admin -->
+                                                @if ($order->admin_message)
+                                                    <div class="mb-3">
+                                                        <strong>Lời nhắn từ Admin:</strong>
+                                                        <p>{{ $order->admin_message }}</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+
 
                                             @if ($order->admin_status === 'pending' && $order->refund_reason)
                                                 <p class="text-warning">Yêu cầu hoàn trả của bạn đang được xử lý. Vui lòng
@@ -216,7 +251,7 @@
                             </div>
 
 
-                            @if ($order->status === 'delivered' && !$order->refund_reason)
+                            @if ($order->status === 'delivered' && !$order->refund_reason && $order->admin_status !== 'rejected')
                                 <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
                                 <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
                                 <div class="refundOrderForm" style="display: none; margin-top: 20px;">
@@ -259,7 +294,8 @@
                                                         class="custom-file-input" accept="image/*">
                                                     <label class="custom-file-label" for="qr_code">Chọn file...</label>
                                                 </div>
-                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải lên.</small>
+                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải
+                                                    lên.</small>
                                             </div>
 
                                             <!-- Preview ảnh QR -->

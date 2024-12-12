@@ -20,81 +20,89 @@
                         <input type="hidden" class="form-control" name="user_id" id="user_id"
                             value="{{ $post->user_id }}">
 
-                        <div class="form-group">
-                            <label for="title">Tiêu đề:</label>
-                            <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"
-                                id="title" value="{{ old('title', $post->title) }}" onkeyup="generateSlug()">
-                            @error('title')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="title">Tiêu đề:</label>
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                        name="title" id="title" value="{{ old('title', $post->title) }}"
+                                        onkeyup="generateSlug()">
+                                    @error('title')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group">
-                            <label for="slug">Slug:</label>
-                            <input type="text" class="form-control @error('slug') is-invalid @enderror" id="slug"
-                                name='slug' value="{{ old('slug', $post->slug) }}" readonly>
-                            @error('slug')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <div class="form-group mb-3">
+                                    <label for="slug">Slug:</label>
+                                    <input type="text" class="form-control @error('slug') is-invalid @enderror"
+                                        id="slug" name='slug' value="{{ old('slug', $post->slug) }}" readonly>
+                                    @error('slug')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group">
-                            <label for="tomtat">Tóm tắt:</label>
-                            <textarea class="form-control @error('tomtat') is-invalid @enderror" name="tomtat" id="tomtat">{{ old('tomtat', $post->tomtat) }}</textarea>
-                            @error('tomtat')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <div class="form-group mb-3">
+                                    <label for="tomtat">Tóm tắt:</label>
+                                    <textarea class="form-control @error('tomtat') is-invalid @enderror" name="tomtat" id="tomtat">{{ old('tomtat', $post->tomtat) }}</textarea>
+                                    @error('tomtat')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group mb-3">
-                            <label for="category_id">Danh mục:</label>
-                            <select name="category_id" class="form-control @error('category_id') is-invalid @enderror"
-                                id="category_id">
-                                <option value="" disabled selected>Chọn danh mục</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('category_id')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                <div class="form-group mb-3">
+                                    <label for="category_id">Danh mục:</label>
+                                    <select name="category_id"
+                                        class="form-control @error('category_id') is-invalid @enderror" id="category_id">
+                                        <option value="" disabled selected>Chọn danh mục</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group mb-3">
-                            <label for="image">Hình ảnh:</label>
-                            <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
-                                name="image" id="image" onchange="previewPostImage(event)">
+                                <div class="form-group mb-3">
+                                    <label for="image">Hình ảnh:</label>
+                                    <input type="file" class="mb-3 form-control @error('image') is-invalid @enderror"
+                                        name="image" id="image" onchange="previewPostImage(event)">
 
-                            @if ($post->image && \Storage::exists($post->image))
-                                <img id="postImagePreview" src="{{ \Storage::url($post->image) }}"
-                                    alt="{{ $post->name }}" style="max-width: 300px; height: auto;" class="mt-2">
-                            @else
-                                <p id="noImageText">Không có ảnh</p>
-                            @endif
+                                    @if ($post->image && \Storage::exists($post->image))
+                                        <img id="postImagePreview" src="{{ \Storage::url($post->image) }}"
+                                            alt="{{ $post->name }}" style="max-width: 100px; height: auto;"
+                                            class="mt-2">
+                                    @else
+                                        <p id="noImageText">Không có ảnh</p>
+                                    @endif
 
-                            @error('image')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group">
-                            <label for="editor">Nội dung:</label>
-                            <textarea name="content" id="editor" class="form-control @error('content') is-invalid @enderror">{{ old('content', $post->content) }}</textarea>
-                            @error('content')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="editor">Nội dung:</label>
+                                    <textarea name="content" id="editor" class="form-control @error('content') is-invalid @enderror">{{ old('content', $post->content) }}</textarea>
+                                    @error('content')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
 
-                        <div class="form-group">
-                            <label for="is_featured">Bài viết nổi bật:</label>
-                            <input type="checkbox" name="is_featured" id="is_featured" value="1"
-                                {{ old('is_featured', $post->is_featured ?? false) ? 'checked' : '' }}>
-                        </div>
+                                <div class="form-group mb-3">
+                                    <label for="is_featured">Bài viết nổi bật:</label>
+                                    <input type="checkbox" name="is_featured" id="is_featured" value="1"
+                                        {{ old('is_featured', $post->is_featured ?? false) ? 'checked' : '' }}>
+                                </div>
 
-                        <div>
-                            <button type="submit" class="btn rounded-pill btn-primary">Cập nhật</button>
+                                <div>
+                                    <button type="submit" class="btn rounded-pill btn-primary">Cập nhật</button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>

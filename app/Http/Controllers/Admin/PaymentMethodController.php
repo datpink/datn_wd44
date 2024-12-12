@@ -26,9 +26,18 @@ class PaymentMethodController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:payment_methods,name',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+        ], [
+            // Tùy chỉnh thông báo lỗi bằng tiếng Việt
+            'name.required' => 'Tên phương thức thanh toán là bắt buộc.',
+            'name.string' => 'Tên phương thức thanh toán phải là một chuỗi.',
+            'name.max' => 'Tên phương thức thanh toán không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên phương thức thanh toán này đã tồn tại, vui lòng chọn tên khác.',
+            'description.string' => 'Mô tả phải là một chuỗi.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
 
         DB::beginTransaction();
@@ -51,9 +60,15 @@ class PaymentMethodController extends Controller
     public function update(Request $request, PaymentMethod $paymentMethod)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:payment_methods,name,' . $paymentMethod->id,  // Kiểm tra trùng tên, ngoại trừ bản ghi hiện tại
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+        ], [
+            'name.unique' => 'Tên phương thức thanh toán đã tồn tại. Vui lòng chọn tên khác.',  // Thông báo lỗi khi trùng tên
+            'name.required' => 'Tên phương thức là bắt buộc.',
+            'name.max' => 'Tên phương thức không được vượt quá 255 ký tự.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "Kích hoạt" hoặc "Không kích hoạt".',
         ]);
 
         DB::beginTransaction();

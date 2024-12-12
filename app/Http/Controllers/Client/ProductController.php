@@ -204,7 +204,7 @@ class ProductController extends Controller
         $relatedProducts = Product::where('catalogue_id', $product->catalogue_id)
             ->where('id', '!=', $product->id) // Loại trừ sản phẩm hiện tại
             ->with('galleries') // Nếu muốn lấy hình ảnh sản phẩm liên quan
-            ->limit(6) // Số lượng sản phẩm liên quan cần hiển thị
+            ->limit(4) // Số lượng sản phẩm liên quan cần hiển thị
             ->get();
 
             // dd($product);

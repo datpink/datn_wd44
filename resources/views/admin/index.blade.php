@@ -60,7 +60,7 @@
 
             <!-- Row start -->
             <div class="row">
-                <div class="col-xxl-9  col-sm-12 col-12">
+                <div class="col-xxl-12  col-sm-12 col-12">
                     <!-- Row start -->
                     <div class="row">
                         <div class="col-xxl-12 col-sm-12 col-12">
@@ -146,42 +146,11 @@
                     </div>
                     <!-- Row end -->
                 </div>
-                <div class="col-xxl-3  col-sm-12 col-12">
-
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">Người Mua Gần Đây</div>
-                        </div>
-                        <div class="card-body">
-                            <div class="scroll370">
-                                <div class="activity-container">
-                                    @foreach ($recentBuyers as $buyer)
-                                        <div class="activity-block">
-                                            <div class="activity-user">
-                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
-                                                <!-- Hình ảnh người dùng -->
-                                            </div>
-                                            <div class="activity-details">
-                                                <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
-                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
-                                                <!-- Thời gian thực hiện đơn hàng -->
-                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
-                                                <!-- Số lượng đơn hàng -->
-                                                <span class="badge shade-green rounded-pill">Mới</span>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
             <!-- Row end -->
 
             <div class="row">
-                <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                <div class="col-lg-7">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Sản Phẩm Bán Chạy</div>
@@ -191,27 +160,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+
+                <div class="col-lg-5">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
+                            <div class="card-title">Giao Dịch</div>
                         </div>
                         <div class="card-body">
-                            <div id="taskGraph"></div>
-                            <ul class="task-list-container">
-                                @foreach ($ordersByStatusForList as $status => $count)
-                                    <li class="task-list-item">
-                                        <div
-                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
-                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                            <div class="scroll370">
+                                <div class="transactions-container">
+                                    @foreach ($statisticsWithPaymentMethod as $statistic)
+                                        <div class="transaction-block">
+                                            <div class="transaction-icon shade-blue">
+                                                <i class="bi bi-credit-card"></i>
+                                            </div>
+                                            <div class="transaction-details">
+                                                <h4>{{ $statistic->payment_method_name }}</h4>
+                                                <p class="text-truncate">{{ $statistic->payment_method_description }}</p>
+                                            </div>
+                                            <div class="transaction-amount text-blue">
+                                                @if (floor($statistic->total_amount) == $statistic->total_amount)
+                                                    {{ number_format($statistic->total_amount) }} VND
+                                                @else
+                                                    {{ number_format($statistic->total_amount, 2) }} VND
+                                                @endif
+                                            </div>
                                         </div>
-                                        <div class="task-info">
-                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
-                                            <p class="amount-spend">{{ $count }}</p>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -219,10 +196,10 @@
 
             <!-- Row start -->
             <div class="row">
-                <div class="col-sm-8 col-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Orders</div>
+                            <div class="card-title">Đơn Hàng Mới</div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -230,12 +207,12 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Customer</th>
-                                            <th>Product</th>
-                                            <th>Ordered Placed</th>
-                                            <th>Amount</th>
-                                            <th>Payment Status</th>
-                                            <th>Order Status</th>
+                                            <th>Người Dùng</th>
+                                            <th>Sản Phẩm</th>
+                                            <th>Ngày Mua</th>
+                                            <th>Giá</th>
+                                            <th>Phương Thức Thanh Toán</th>
+                                            <th>Trạng Thái Đơn Hàng</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -263,7 +240,13 @@
                                                         </div>
                                                     </td>
                                                     <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                                                    <td>${{ number_format($order->total_amount, 2) }}</td>
+                                                    <td>
+                                                        @if(floor($order->total_amount) == $order->total_amount)
+                                                            {{ number_format($order->total_amount) }} VND
+                                                        @else
+                                                            {{ number_format($order->total_amount, 2) }} VND
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if ($order->status === 'pending_confirmation')
                                                             <span class="badge rounded-pill bg-info">Chờ xác nhận</span>
@@ -308,74 +291,69 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <!-- Row end -->
 
-                <div class="col-sm-4 col-12">
+            <div class="row">
+                <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Notifications</div>
+                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
                         </div>
                         <div class="card-body">
-                            <div class="scroll370">
-                                <ul class="user-messages">
-                                    <li>
-                                        <div class="customer shade-blue">MK</div>
-                                        <div class="delivery-details">
-                                            <span class="badge shade-blue">Sales</span>
-                                            <h5>Marie Kieffer</h5>
-                                            <p>Thanks for choosing Apple product, further if you have any questions
-                                                please
-                                                contact sales
-                                                team.</p>
+                            <div id="taskGraph"></div>
+                            <ul class="task-list-container">
+                                @foreach ($ordersByStatusForList as $status => $count)
+                                    <li class="task-list-item">
+                                        <div
+                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
+                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                                        </div>
+                                        <div class="task-info">
+                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
+                                            <p class="amount-spend">{{ $count }}</p>
                                         </div>
                                     </li>
-                                    <li>
-                                        <div class="customer shade-blue">ES</div>
-                                        <div class="delivery-details">
-                                            <span class="badge shade-blue">Marketing</span>
-                                            <h5>Ewelina Sikora</h5>
-                                            <p>Boost your sales by 50% with the easiest and proven marketing tool for
-                                                customer enggement
-                                                &amp; motivation.</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="customer shade-blue">TN</div>
-                                        <div class="delivery-details">
-                                            <span class="badge shade-blue">Business</span>
-                                            <h5>Teboho Ncube</h5>
-                                            <p>Use an exclusive promo code HKYMM50 and get 50% off on your first order
-                                                in
-                                                the new year.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="customer shade-blue">CJ</div>
-                                        <div class="delivery-details">
-                                            <span class="badge shade-blue">Admin</span>
-                                            <h5>Carla Jackson</h5>
-                                            <p>Befor inviting the administrator, you must create a role that can be
-                                                assigned
-                                                to them.
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="customer shade-red">JK</div>
-                                        <div class="delivery-details">
-                                            <span class="badge shade-red">Security</span>
-                                            <h5>Julie Kemp</h5>
-                                            <p>Your security subscription has expired. Please renew the subscription.
-                                            </p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-4">
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Người Mua Gần Đây</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="scroll370">
+                                <div class="activity-container">
+                                    @foreach ($recentBuyers as $buyer)
+                                        <div class="activity-block">
+                                            <div class="activity-user">
+                                                <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
+                                                <!-- Hình ảnh người dùng -->
+                                            </div>
+                                            <div class="activity-details">
+                                                <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
+                                                <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
+                                                <!-- Thời gian thực hiện đơn hàng -->
+                                                <p>Đã Mua: {{ $buyer->order_count }} đơn hàng</p>
+                                                <!-- Số lượng đơn hàng -->
+                                                <span class="badge shade-green rounded-pill">Mới</span>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <!-- Row end -->
+
+
         </div>
     </div>
 

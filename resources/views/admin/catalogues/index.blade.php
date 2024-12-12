@@ -111,7 +111,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination justify-content-center mt-3">
+                            <div class="mt-3">
                                 {{ $catalogues->links() }}
                             </div>
                         </div>

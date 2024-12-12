@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -126,14 +127,18 @@ class ProductController extends Controller
             if ($request->hasFile('image_url')) {
                 $imagePath = Storage::put('images', $request->image_url);
             }
-    
+
+            // Nếu SKU không được nhập, tạo SKU ngẫu nhiên
+            $sku = $request->input('sku') ?: 'SKU-' . strtoupper(Str::random(9));  // Tạo SKU nếu không có
+
+
             // Tạo mới sản phẩm
             $product = Product::create([
                 'name' => $request->name,
                 'catalogue_id' => $request->catalogue_id,
                 'brand_id' => $request->brand_id,
                 'slug' => $request->slug,
-                'sku' => $request->sku,
+                'sku' => $sku,  // Sử dụng SKU đã tạo hoặc người dùng nhập
                 'price' => $request->price,
                 'discount_price' => $request->filled('discount_price') ? $request->discount_price : null,
                 'stock' => $request->stock,
@@ -162,6 +167,7 @@ class ProductController extends Controller
         }
     }
     
+
 
     /**
      * Display the specified resource.
