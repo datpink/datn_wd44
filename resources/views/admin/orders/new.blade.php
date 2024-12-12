@@ -1,6 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Danh Sách Đơn Hàng mới')
+@section('title', 'Danh Sách Đơn Hàng')
 
 @section('content')
     <div class="content-wrapper-scroll">
@@ -9,7 +9,7 @@
                 <div class="col-sm-12 col-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">Danh Sách Đơn Hàng mới</div>
+                            <div class="card-title">Danh Sách Đơn Hàng</div>
                             {{-- <a href="{{ route('orders.trash') }}" class="btn rounded-pill btn-primary d-flex align-items-center">
                                 <i class="bi bi-trash me-2"></i> Thùng Rác
                             </a> --}}
@@ -166,15 +166,64 @@
                                                             <!-- Icon duyệt hoàn tiền -->
                                                             <form
                                                                 action="{{ route('orders.refund.approve', ['id' => $order->id]) }}"
-                                                                method="POST" style="display:inline;">
+                                                                method="POST" enctype="multipart/form-data">
                                                                 @csrf
                                                                 <button type="button" class="btn btn-icon"
                                                                     title="Duyệt hoàn tiền"
                                                                     style="border: none; background: none;"
-                                                                    onclick="confirmApproveRefund(event)">
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#approveRefundModal">
                                                                     <i class="bi bi-check-circle text-success"></i>
                                                                 </button>
+
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="approveRefundModal"
+                                                                    tabindex="-1" aria-labelledby="approveRefundModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="approveRefundModalLabel">Duyệt Hoàn
+                                                                                    Tiền</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <!-- Trường nhập hình ảnh -->
+                                                                                <div class="mb-3">
+                                                                                    <label for="proofImage"
+                                                                                        class="form-label">Chọn hình ảnh
+                                                                                        chứng minh</label>
+                                                                                    <input type="file"
+                                                                                        class="form-control"
+                                                                                        id="proofImage" name="proof_image"
+                                                                                        accept="image/*" required>
+                                                                                </div>
+                                                                                <!-- Trường nhập lời nhắn -->
+                                                                                <div class="mb-3">
+                                                                                    <label for="adminMessage"
+                                                                                        class="form-label">Lời nhắn của
+                                                                                        Admin</label>
+                                                                                    <textarea class="form-control" id="adminMessage" name="admin_message" rows="4" placeholder="Nhập lời nhắn..."
+                                                                                        required></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">Hủy</button>
+                                                                                <button type="submit"
+                                                                                    class="btn btn-primary">Xác
+                                                                                    Nhận</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </form>
+
+
 
                                                             <!-- Icon từ chối hoàn tiền -->
                                                             <form
@@ -345,7 +394,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination justify-content-center mt-3">
+                            <div class="mt-3">
                                 {{ $newOrders->links() }}
                             </div>
                         </div>

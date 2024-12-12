@@ -21,22 +21,22 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255',
-            'sku' => 'unique:products,sku',
-            'slug' => 'unique:products,slug',
+            'sku' => 'required|unique:products,sku|regex:/^[a-zA-Z0-9\-]+$/', // Kiểm tra định dạng SKU
+            'slug' => 'required|unique:products,slug|regex:/^[a-z0-9\-]+$/', // Kiểm tra định dạng Slug
             'catalogue_id' => 'required|exists:catalogues,id',
             'price' => 'required|numeric|min:0',
-            'stock' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0|lte:price', // Kiểm tra discount_price nếu có
+            'stock' => 'required|numeric|min:0|max:1000000', // Giới hạn stock từ 0 đến 1 triệu
             'condition' => 'required|in:new,used,refurbished',
-            // 'weight' => 'nullable|numeric|min:0',
-            // 'dimensions' => 'nullable|string',
-            'image_url' => 'nullable|image|max:2048',  // Định dạng ảnh, tối đa 2MB
-            'images.*' => 'nullable|image|max:2048',    // Các file gallery, mỗi ảnh tối đa 2MB
-            'description' => 'nullable|string',
+            'image_url' => 'nullable|image|max:2048|mimes:jpeg,png,jpg', // Kiểm tra định dạng ảnh
+            'images.*' => 'nullable|image|max:2048|mimes:jpeg,png,jpg',  // Kiểm tra ảnh gallery
+            'description' => 'nullable|string|max:1000', // Giới hạn độ dài mô tả
             'is_active' => 'required|boolean',
             'is_featured' => 'nullable|boolean',
-            'tomtat' => 'nullable|string',
+            'tomtat' => 'nullable|string|max:500', // Giới hạn độ dài tóm tắt
         ];
     }
+
 
     public function messages()
     {
@@ -50,14 +50,15 @@ class StoreProductRequest extends FormRequest
             'price.required' => 'Giá là bắt buộc.',
             'price.min' => 'Giá phải lớn hơn hoặc bằng 0.',
             'price.numeric' => 'Giá phải là một số.',
+            'discount_price.numeric' => 'Giá giảm phải là một số.',
+            'discount_price.min' => 'Giá khuyến mãi không được âm.',
+            'discount_price.lte' => 'Giá giảm phải nhỏ hơn hoặc bằng giá gốc.',
             'stock.required' => 'Số lượng là bắt buộc.',
             'stock.min' => 'Số lượng phải lớn hơn hoặc bằng 0.',
             'stock.numeric' => 'Số lượng phải là một số.',
+            'stock.max' => 'Số lượng không được vượt quá 1 triệu.',
             'condition.required' => 'Tình trạng sản phẩm là bắt buộc.',
             'condition.in' => 'Tình trạng sản phẩm không hợp lệ.',
-            // 'weight.numeric' => 'Cân nặng phải là một số.',
-            // 'weight.min' => 'Cân nặng phải lớn hơn hoặc bằng 0.',
-            // 'dimensions.string' => 'Kích thước phải là một chuỗi ký tự.',
             'image_url.image' => 'Ảnh sản phẩm phải là file hình ảnh.',
             'image_url.max' => 'Ảnh sản phẩm không được vượt quá 2MB.',
             'images.*.image' => 'Các file gallery phải là hình ảnh.',

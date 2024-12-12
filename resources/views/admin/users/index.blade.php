@@ -130,7 +130,7 @@
                                 </table>
                             </div>
 
-                            <div class="pagination justify-content-center mt-3">
+                            <div class="mt-3">
                                 {{ $users->links() }} <!-- Hiển thị phân trang -->
                             </div>
                         </div>

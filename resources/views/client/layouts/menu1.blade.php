@@ -24,7 +24,7 @@
                         </div>
                     </div>
 
-                    <input name="post_type" value="product" type="hidden">
+                    {{-- <input name="post_type" value="product" type="hidden">
                     <input name="taxonomy" value="product_cat" type="hidden">
                     <div class="category">
                         <select title="catalogues" name="catalogue_slug" id="" class="category-search-option"
@@ -35,7 +35,7 @@
                             @endforeach
 
                         </select>
-                    </div>
+                    </div> --}}
                     <button type="submit" class="btn-submit">
                         <span class="flaticon-search"></span>
                     </button>

@@ -108,6 +108,19 @@
                                                 <span>{{ $order->account_number }}</span>
                                             @endif
 
+                                            <!-- Hiển thị hình ảnh chứng minh -->
+                                            @if ($order->status === 'returned' && $order->proof_image)
+                                                <p><strong>Hình ảnh chứng minh:</strong></p>
+                                                <img src="{{ Storage::url($order->proof_image) }}" alt="Proof Image"
+                                                    class="img-fluid" style="max-width: 150px;">
+                                            @endif
+
+                                            <!-- Hiển thị lời nhắn từ Admin -->
+                                            @if ($order->admin_message)
+                                                <p><strong>Lời nhắn từ Admin:</strong></p>
+                                                <p>{{ $order->admin_message }}</p>
+                                            @endif
+
 
                                         </div>
                                     </div>

@@ -15,8 +15,8 @@
                 @if (isset($allNotifications))
                     @foreach ($allNotifications as $notification)
                         <li class="kobolg-mini-cart-item mini_cart_item">
-                            <strong>{{ \Str::limit($notification->title, 45) }}</strong>
-                            <p class="mb-1">{{ \Str::limit($notification->description, 45) }}</p>
+                            <strong>{{ \Str::limit($notification->title, 40) }}</strong>
+                            <p class="mb-1">{{ \Str::limit($notification->description, 40) }}</p>
                             @if ($notification->url)
                                 <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary">
                                     Xem chi tiết
