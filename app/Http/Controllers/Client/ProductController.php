@@ -210,7 +210,7 @@ class ProductController extends Controller
             // dd($product);
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
-            'product',
+            'product',git 
             'storageVariants',
             'colorVariants',
             'sizeVariants',

@@ -15,6 +15,21 @@
                                 <i class="bi bi-arrow-left me-2"></i> Trở về
                             </a>
                         </div>
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                         <div class="card-body">
                             <form id="productForm" action="{{ route('products.store') }}" method="POST"
                                 enctype="multipart/form-data">
