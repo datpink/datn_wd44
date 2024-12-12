@@ -48,7 +48,7 @@
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="status" class="form-label">Trạng thái</label>
+                                            <label for="status" class="form-label">Trạng Thái</label>
                                             <select id="status" name="status" class="form-control" required>
                                                 <option value="active"
                                                     {{ old('status', $promotion->status) == 'active' ? 'selected' : '' }}>
@@ -62,7 +62,7 @@
                                             @enderror
                                         </div>
                                         <div class="mb-3">
-                                            <label for="order_value" class="form-label">Giá trị đơn hàng</label>
+                                            <label for="order_value" class="form-label">Giá Trị Đơn Hàng</label>
                                             <input type="number" class="form-control" id="order_value" name="order_value"
                                                 value="{{ old('min_order_value', $promotion->min_order_value) }}"
                                                 step="0.01" min="0">

@@ -69,31 +69,45 @@ class CatalogueController extends Controller
             'status.required' => 'Trạng thái là bắt buộc.',
             'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
-
+    
         DB::beginTransaction();
-
+    
         try {
+            // Kiểm tra trùng lặp danh mục theo tên hoặc slug
+            $slug = \Str::slug($request->name);
+            $existingCatalogue = Catalogue::where('name', $request->name)
+                ->orWhere('slug', $slug)
+                ->first();
+    
+            if ($existingCatalogue) {
+                return redirect()->back()->withErrors([
+                    'error' => 'Tên danh mục hoặc slug đã tồn tại.'
+                ])->withInput();
+            }
+    
+            // Tạo mới danh mục
             $catalogue = new Catalogue();
             $catalogue->name = $request->name;
-            $catalogue->slug = \Str::slug($request->name);
+            $catalogue->slug = $slug;
             $catalogue->parent_id = $request->parent_id;
             $catalogue->description = $request->description;
             $catalogue->status = $request->status;
-
+    
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('catalogue_images', 'public');
                 $catalogue->image = $imagePath;
             }
-
+    
             $catalogue->save();
             DB::commit();
-
+    
             return redirect()->route('catalogues.index')->with('success', 'Danh mục đã được thêm mới.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('catalogues.index')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+    
 
 
     public function edit(Catalogue $catalogue)
