@@ -194,6 +194,52 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="container mt-4" style="margin: 10px 20px 30px 40px;">
+    <h5 class="text-left mb-3" style="font-size: 16px;"><strong>Mã giảm giá của bạn</strong></h5>
+    <div class="cart-promotion" style="margin: 20px 0; max-height: 150px; overflow-y: auto;">
+        @if (Auth::check())
+        @foreach ($userPromotions as $userPromotion)
+        @php
+        $isExpired = \Carbon\Carbon::parse($userPromotion->promotion->end_date)->isPast();
+        @endphp
+        <div class="card mb-3 discount-card" style="border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+            <div class="card-body d-flex flex-column" style="font-size: 12px; padding: 10px; position: relative;">
+                <div class="discount-info" style="flex-grow: 1; font-size: 12px;">
+                    <h5>
+                        <strong>
+                            <p style="margin-bottom: 2px;">
+                                @if($userPromotion->promotion->type == 'percentage')
+                                Giảm {{ number_format($userPromotion->promotion->discount_value, 0) }}%
+                                @elseif($userPromotion->promotion->type == 'fixed_amount')
+                                Giảm {{ number_format($userPromotion->promotion->discount_value, 0) }} VND
+                                @elseif($userPromotion->promotion->type == 'free_shipping')
+                                Miễn phí vận chuyển
+                                @else
+                                Loại giảm giá không xác định
+                                @endif
+                                Giảm tối đa {{ number_format($userPromotion->promotion->max_value, 0) }} VND
+                            </p>
+                        </strong>
+                    </h5>
+                    <p style="margin-bottom: 2px;">Đơn Tối Thiểu: <strong>{{ number_format($userPromotion->promotion->min_order_value, 0) }} VND</strong></p>
+                    <p>Có hiệu lực đến: <strong>{{ \Carbon\Carbon::parse($userPromotion->promotion->end_date)->format('d/m/Y') }}</strong></p>
+                </div>
+                <div class="discount-actions" style="position: absolute; top: 10px; right: 10px;">
+                    @if($isExpired)
+                    <button class="btn btn-outline-secondary btn-sm w-auto mt-2" disabled>Đã hết hạn</button>
+                    @else
+                    <button class="btn btn-outline-primary btn-sm w-auto mt-2 apply-discount" data-promotion-id="{{ $userPromotion->promotion->id }}" data-discount="{{ $userPromotion->promotion->discount_value }}" data-max-discount="{{ $userPromotion->promotion->max_value }}" data-type="{{ $userPromotion->promotion->type }}">Áp Dụng</button>
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endforeach
+        @else
+        <p>Bạn cần đăng nhập để áp dụng mã giảm giá.</p>
+        @endif
+    </div>
+</div>
+
                                 <h3 id="order_review_heading">Đơn hàng của bạn</h3>
                                 <div id="order_review" class="kobolg-checkout-review-order">
                                     <table class="shop_table kobolg-checkout-review-order-table">
@@ -352,6 +398,89 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+    // Lắng nghe sự kiện click vào nút "Áp Dụng"
+    const applyButtons = document.querySelectorAll('.apply-discount');
+    
+    applyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const discountValue = parseFloat(this.getAttribute('data-discount')); // giá trị giảm giá
+            const maxDiscount = parseFloat(this.getAttribute('data-max-discount')); // giảm tối đa
+            const type = this.getAttribute('data-type'); // loại giảm giá (phần trăm, cố định, miễn phí vận chuyển)
+            const promotionId = this.getAttribute('data-promotion-id'); // id mã giảm giá
+
+            // Lấy tổng tiền và phí vận chuyển
+            const totalAmountInput = document.querySelector('[name="totalAmount"]');
+            let totalAmount = parseFloat(totalAmountInput?.value || 0);
+            const shippingFee = parseFloat(document.querySelector("#shipping-fee").textContent.replace(/[^\d]/g, "") || 0);
+
+            // Kiểm tra nếu tổng tiền không hợp lệ
+            if (isNaN(totalAmount) || totalAmount <= 0) {
+                alert("Tổng tiền không hợp lệ.");
+                return;
+            }
+
+            let discount = 0;
+
+            if (type === 'percentage') {
+                // Nếu là giảm giá phần trăm
+                discount = totalAmount * (discountValue / 100);
+                if (discount > maxDiscount) {
+                    discount = maxDiscount; // Giới hạn giảm giá tối đa
+                }
+            } else if (type === 'fixed_amount') {
+                // Nếu là giảm giá cố định
+                discount = discountValue;
+                if (discount > maxDiscount) {
+                    discount = maxDiscount; // Giới hạn giảm giá tối đa
+                }
+            } else if (type === 'free_shipping') {
+                // Miễn phí vận chuyển, không trừ vào tổng tiền
+                discount = 0;
+                alert("Miễn phí vận chuyển đã được áp dụng!");
+            }
+
+            // Cập nhật tổng tiền
+            const finalAmount = totalAmount - discount + shippingFee;
+            totalAmountInput.value = finalAmount;
+            // console.log(finalAmount);
+            // return;
+            
+
+            // Hiển thị lại tổng tiền
+            const totalElement = document.querySelector(".order-total .amount");
+            if (totalElement) {
+                totalElement.textContent = new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND"
+                }).format(finalAmount);
+            // console.log(123);
+            // console.log(finalAmount);
+
+
+            }
+            // console.log(finalAmount);
+
+            // Hiển thị giảm giá vào giao diện
+            const discountElement = document.querySelector(".cart-discount .amount");
+            if (discountElement) {
+                discountElement.textContent = `-${new Intl.NumberFormat("vi-VN", {
+                    style: "currency",
+                    currency: "VND"
+                }).format(discount)}`;
+            }
+            // console.log(discount);
+            
+
+            alert("Mã giảm giá đã được áp dụng!");
+        });
+    });
+});
+        document.addEventListener("DOMContentLoaded", function() {
+            console.log(123);
+
+            
+            console.log(document.getElementById('input-total').value);
+
             // Hiển thị/Ẩn form mã giảm giá
             const showCouponButton = document.querySelector(".showcoupon");
             const couponForm = document.querySelector(".checkout_coupon");
@@ -365,6 +494,8 @@
 
             // Xử lý form mã giảm giá
             const couponFormSubmit = document.querySelector(".checkout_coupon.kobolg-form-coupon");
+
+            
             if (couponFormSubmit) {
                 couponFormSubmit.addEventListener("submit", async function(e) {
                     e.preventDefault();
@@ -426,7 +557,8 @@
 
             function updateDiscountInput(discount) {
                 // Kiểm tra giá trị của discount
-                console.log('Discount: ', discount); // Debug
+                // console.log('Discount: ', discount); // Debug
+// console.log(123);
 
                 // Tìm input ẩn 'discount_total'
                 let discountInput = document.querySelector('[name="discount_total"]');
@@ -442,7 +574,7 @@
                 discountInput.value = discount;
 
                 // Debug giá trị đã được gán vào input ẩn
-                console.log('Input Hidden Value: ', discountInput.value); // Kiểm tra giá trị
+                // console.log('Input Hidden Value: ', discountInput.value); // Kiểm tra giá trị    
 
                 // Cập nhật ô input ẩn `discount_display` (nếu tồn tại)
                 const discountDisplayInput = document.querySelector("#discount_display");
@@ -622,13 +754,14 @@
             document.querySelector("#input-total").value = totalAmount;
         }
 
+        
         document.addEventListener('DOMContentLoaded', function() {
             const provinceSelect = document.querySelector('#province');
             const districtSelect = document.querySelector('#district');
             const wardSelect = document.querySelector('#ward');
             const fullAddressInput = document.querySelector('#full_address');
 
-            // Lắng nghe sự thay đổi của các dropdown
+            // Lắng nghe sự thay đổi của các dropdown  
             provinceSelect.addEventListener('change', updateFullAddress);
             districtSelect.addEventListener('change', updateFullAddress);
             wardSelect.addEventListener('change', updateFullAddress);

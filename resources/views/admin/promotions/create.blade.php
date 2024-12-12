@@ -62,12 +62,22 @@
                             value="{{ old('end_date') }}" required>
                     </div>
                     <div class="form-group mt-4">
-                        <label for="order_value">Giá Trị Đơn Hàng:</label>
-                        <input type="number" name="order_value" id="order_value" class="form-control"
-                            value="{{ old('order_value') }}" step="0.01" min="0">
-                        @if ($errors->has('order_value'))
+                        <label for="min_order_value">Đơn Hàng Tối Tiểu:</label>
+                        <input type="number" name="min_order_value" id="min_order_value" class="form-control"
+                            value="{{ old('min_order_value') }}" step="0.01" min="0">
+                        @if ($errors->has('min_order_value'))
                         <ul>
-                            <li class="text-danger mb-1">{{ $errors->first('order_value') }}</li>
+                            <li class="text-danger mb-1">{{ $errors->first('min_order_value') }}</li>
+                        </ul>
+                        @endif
+                    </div>
+                    <div class="form-group mt-4">
+                        <label for="max_value">Đơn Hàng Tối Đa:</label>
+                        <input type="number" name="max_value" id="max_value" class="form-control"
+                            value="{{ old('max_value') }}" step="0.01" min="0">
+                        @if ($errors->has('max_value'))
+                        <ul>
+                            <li class="text-danger mb-1">{{ $errors->first('max_value') }}</li>
                         </ul>
                         @endif
                     </div>

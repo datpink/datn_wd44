@@ -10,6 +10,7 @@ use App\Models\Province;
 use App\Models\Region;
 use App\Models\Ward;
 use Carbon\Carbon;
+use App\Models\UserPromotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -18,12 +19,23 @@ class CheckoutController extends Controller
 {
     public function showCheckout(Request $request)
     {
+        $userPromotions = UserPromotion::with('promotion')
+            ->where('user_id', auth()->id())
+            ->get()
+            ->sortBy(function ($promotion) {
+                // Sắp xếp các mã giảm giá theo trạng thái hết hạn, chưa hết hạn lên đầu
+                return \Carbon\Carbon::parse($promotion->promotion->end_date)->isPast() ? 1 : 0;
+            });
+
         // Lấy danh sách sản phẩm đã chọn từ input
         $selectedProducts = json_decode($request->input('selected_products'), true);
 
         // Kiểm tra nếu không có sản phẩm nào được chọn
         if (empty($selectedProducts)) {
-            return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+            return redirect()->route('cart
+            
+            
+            .view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
         }
 
         // Lấy thông tin người dùng
@@ -96,7 +108,8 @@ class CheckoutController extends Controller
             'provinces',
             'province',
             'district',
-            'ward'
+            'ward',
+            'userPromotions'
         ));
     }
 

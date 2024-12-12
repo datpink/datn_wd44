@@ -20,7 +20,7 @@ class PaymentController extends Controller
 
     public function vnpay(Request $request)
     {
-        // dd($request->all()); // Kiểm tra dữ liệu gửi đến
+        dd($request->all()); // Kiểm tra dữ liệu gửi đến
         // Lấy giá trị từ input
         $paymentMethodRaw = $request->input('payment_method');
 

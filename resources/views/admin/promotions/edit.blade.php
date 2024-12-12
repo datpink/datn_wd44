@@ -52,10 +52,18 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="order_value" class="form-label">Giá Trị Đơn Hàng</label>
-                                <input type="number" class="form-control" id="order_value" name="order_value"
+                                <label for="min_order_value" class="form-label">Giá Trị Đơn Hàng Tối Thiểu</label>
+                                <input type="number" class="form-control" id="min_order_value" name="min_order_value"
                                     value="{{ old('min_order_value', $promotion->min_order_value) }}" step="0.01" min="0">
                                 @error('min_order_value')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label for="max_value" class="form-label">Giá Trị Đơn Hàng Tối Đa</label>
+                                <input type="number" class="form-control" id="max_value" name="max_value"
+                                    value="{{ old('max_value', $promotion->max_value) }}" step="0.01" min="0">
+                                @error('max_value')
                                 <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
