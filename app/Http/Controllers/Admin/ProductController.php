@@ -110,7 +110,18 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-
+    
+            // Kiểm tra trùng lặp sản phẩm dựa trên 'name' hoặc 'sku'
+            $duplicateProduct = Product::where('name', $request->name)
+                ->orWhere('sku', $request->sku)
+                ->first();
+    
+            if ($duplicateProduct) {
+                return back()->withErrors([
+                    'error' => 'Sản phẩm với tên hoặc mã SKU đã tồn tại!'
+                ])->withInput();
+            }
+    
             // Xử lý ảnh chính
             $imagePath = null;
             if ($request->hasFile('image_url')) {
@@ -119,6 +130,7 @@ class ProductController extends Controller
 
             // Nếu SKU không được nhập, tạo SKU ngẫu nhiên
             $sku = $request->input('sku') ?: 'SKU-' . strtoupper(Str::random(9));  // Tạo SKU nếu không có
+
 
             // Tạo mới sản phẩm
             $product = Product::create([
@@ -138,7 +150,7 @@ class ProductController extends Controller
                 'condition' => $request->condition,
                 'tomtat' => $request->tomtat,
             ]);
-
+    
             // Lưu ảnh vào galleries
             if ($request->hasFile('images')) {
                 $galleryImages = collect($request->file('images'))->map(function ($image) {
@@ -146,16 +158,15 @@ class ProductController extends Controller
                 });
                 $product->galleries()->createMany($galleryImages->toArray());
             }
-
+    
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with('errors', 'Có lỗi xảy ra: ' . $th->getMessage());
+            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
-
-
+    
 
 
     /**
