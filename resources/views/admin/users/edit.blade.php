@@ -25,7 +25,7 @@
 
             <div class="card border-0 rounded shadow-sm">
                 <div class="card-header">
-                    <div class="card-title">Cập Nhật Người Dùng</div>
+                    <div class="card-title">Cập nhật người dùng</div>
                     <a href="{{ route('users.index') }}" class="btn rounded-pill btn-sm btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>
@@ -50,7 +50,7 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="address">Địa Chỉ:</label>
+                                    <label for="address">Địa chỉ:</label>
                                     <textarea name="address" id="address" class="form-control" required>{{ $user->address }}</textarea>
                                 </div>
 
@@ -64,18 +64,18 @@
                                     @endforeach
                                 </div>
 
-                                <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập Nhật Người
-                                    Dùng</button>
+                                <button type="submit" class="btn rounded-pill btn-primary mt-3">Cập nhật người
+                                    dùng</button>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
-                                    <label for="phone">Số Điện Thoại:</label>
+                                    <label for="phone">Số điện thoại:</label>
                                     <input type="text" name="phone" id="phone" class="form-control"
                                         value="{{ $user->phone }}" required>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="status">Trạng Thái:</label>
+                                    <label for="status">Trạng thái:</label>
                                     <select name="status" id="status" class="form-control" required>
                                         <option value="unlocked" {{ $user->status === 'unlocked' ? 'selected' : '' }}>Mở
                                             Khóa
@@ -86,7 +86,7 @@
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="image">Hình Ảnh:</label>
+                                    <label for="image">Hình ảnh:</label>
                                     <input type="file" name="image" id="image" class="form-control"
                                         onchange="previewImageUrl(event)">
 

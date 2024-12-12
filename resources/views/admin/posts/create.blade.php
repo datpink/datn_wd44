@@ -7,7 +7,7 @@
         <div class="content-wrapper">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="card-title">Thêm Mới Bài Viết</div>
+                    <div class="card-title">Thêm mới bài viết</div>
                     <a href="{{ route('posts.index') }}" class="btn rounded-pill btn-sm btn-secondary">
                         <i class="bi bi-arrow-left me-2"></i> Trở về
                     </a>

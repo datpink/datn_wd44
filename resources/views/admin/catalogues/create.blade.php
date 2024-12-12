@@ -31,12 +31,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card-body">
+
                                     <label for="name" class="form-label">Tên danh mục:</label>
                                     <input type="text" name="name" id="name" class="form-control"
                                         value="{{ old('name') }}">
                                     @error('name')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
+
                                 </div>
 
                                 <div class="card-body">
@@ -80,11 +82,13 @@
 
                             <div class="col-md-6">
                                 <div class="card-body">
+
                                     <label for="description" class="form-label">Mô tả:</label>
                                     <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
                                     @error('description')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
+
                                 </div>
 
                                 <div class="card-body">
