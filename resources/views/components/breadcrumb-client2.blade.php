@@ -19,6 +19,10 @@
             $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => ''];
             break;
 
+        case 'client.posts.byCategory':
+            $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => ''];
+            break;
+
         case 'post.show':
             $breadcrumbs[] = ['name' => 'Bài Viết', 'url' => route('client.posts.index')];
             $breadcrumbs[] = ['name' => 'Chi Tiết Bài Viết', 'url' => ''];
