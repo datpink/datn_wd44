@@ -366,7 +366,7 @@
                                                         <div class="media align-items-center">
                                                             <div class="media-body">
                                                                 <a href="#"
-                                                                    class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                    class="d-block text-dark" aalt="{{ $product['name'] }}">{{ \Str::limit($product['name'], 30) }}</a>
                                                                 @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
                                                                     <div class="product-attributes">
                                                                         @foreach ($product['options']['variant'] as $attrIndex => $attribute)
