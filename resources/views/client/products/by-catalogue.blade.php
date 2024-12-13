@@ -361,13 +361,13 @@
                             data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                             <div class="product-inner images">
                                 <div class="product-thumb">
-                                    <a class="thumb-link" href="#">
+                                    <a class="thumb-link" href="${routeDetail}">
                                         ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                     </a>
                                     <div class="flash">
                                         ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
                                     </div>
-                                    <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
+                                    <a href="${routeDetail}" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
                                 </div>
                                 <div class="product-info">
                                     <div class="rating-wapper nostar">
