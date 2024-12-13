@@ -108,7 +108,7 @@
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-info w-100">Xem Báo Cáo</button>
+                                                {{-- <button class="btn btn-info w-100">Xem Báo Cáo</button> --}}
                                             </div>
                                         </div>
                                         <div class="col-xxl-9 col-sm-8 col-md-12">
