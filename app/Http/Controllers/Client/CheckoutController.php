@@ -51,10 +51,21 @@ class CheckoutController extends Controller
             // Lấy sản phẩm từ session
             $product = session($cartSessionKey);
 
+            // // Cập nhật số lượng từ request
+            // $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
+            // $product['quantity'] = $newQuantity;
+            // $product['total_price'] = $product['price'] * $newQuantity;
+
             // Cập nhật số lượng từ request
-            $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
+            $newQuantity = isset($selectedProduct['quantity']) ? (int) $selectedProduct['quantity'] : (int) $product['quantity'];
+
+            // Đảm bảo giá trị price là số
+            $product['price'] = (float) $product['price']; // Ép giá trị price thành số thực (float)
             $product['quantity'] = $newQuantity;
+
+            // Tính toán tổng giá
             $product['total_price'] = $product['price'] * $newQuantity;
+
 
             // Cập nhật lại session
             session([$cartSessionKey => $product]);

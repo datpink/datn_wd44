@@ -21,25 +21,27 @@
                             <!-- Tìm kiếm theo tiêu đề hoặc mô tả -->
                             <div class="col-auto">
                                 <input type="text" name="search" class="form-control form-control-sm"
-                                       placeholder="Tìm kiếm thông báo" value="{{ request()->search }}">
+                                    placeholder="Tìm kiếm thông báo" value="{{ request()->search }}">
                             </div>
-                
+
                             <!-- Lọc trạng thái -->
                             <div class="col-auto">
                                 <select name="status" class="form-control form-control-sm">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="read" {{ request()->status === 'read' ? 'selected' : '' }}>Đã đọc</option>
-                                    <option value="unread" {{ request()->status === 'unread' ? 'selected' : '' }}>Chưa đọc</option>
+                                    <option value="read" {{ request()->status === 'read' ? 'selected' : '' }}>Đã đọc
+                                    </option>
+                                    <option value="unread" {{ request()->status === 'unread' ? 'selected' : '' }}>Chưa đọc
+                                    </option>
                                 </select>
                             </div>
-                
+
                             <!-- Nút lọc -->
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-sm btn-primary">Lọc</button>
                             </div>
                         </div>
                     </form>
-                
+
 
                     <div class="table-responsive">
                         <table class="table v-middle m-0">
@@ -54,7 +56,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                             
+
                                 @foreach ($notificationAll as $notification)
                                     <tr>
                                         <td>{{ $notification->id }}</td>
@@ -71,21 +73,18 @@
                                         <td><a href="{{ $notification->url }}">Xem Thử</a></td>
                                         <td class="title-column" style="width: 20%;">
                                             <!-- Nút sửa bài viết -->
-                                            <a href="#" class="editRow"
-                                                 style="margin-right: 15px;">
-                                                <i class="bi bi-pencil-square text-warning"
-                                                    style="font-size: 1.8em;"></i>
+                                            <a href="#" class="editRow" style="margin-right: 15px;">
+                                                <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                             </a>
 
                                             <!-- Form để xóa bài viết -->
-                                            <form action="{{ route('admin.notifications.destroy', $notification->id) }}" method="POST"
-                                                class="d-inline-block delete-form"
+                                            <form action="{{ route('admin.notifications.destroy', $notification->id) }}"
+                                                method="POST" class="d-inline-block delete-form"
                                                 onsubmit="return confirm('Bạn có chắc muốn xóa Thông Báo này không?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="delete-btn"
-                                                    style="background: none; border: none; padding: 0;"
-                                                    >
+                                                    style="background: none; border: none; padding: 0;">
                                                     <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
                                                 </button>
                                             </form>

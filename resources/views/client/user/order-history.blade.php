@@ -52,17 +52,27 @@
                                             <p><strong>Email:</strong> {{ $order->user->email }}</p>
                                             <p><strong>Địa Chỉ:</strong> {{ $order->shipping_address }}</p>
                                             <p><strong>Số Điện Thoại:</strong> {{ $order->phone_number }}</p>
-                                            <p><strong>Ngày Đặt Hàng:</strong>
-                                                {{ $order->created_at ? $order->created_at : 'N/A' }}</p>
-                                            <p><strong>Ngày Giao Hàng:</strong>
-                                                {{ $order->delivered_at ? \Carbon\Carbon::parse($order->delivered_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hủy:</strong>
-                                                {{ $order->canceled_at ? \Carbon\Carbon::parse($order->canceled_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hoàn Trả:</strong>
-                                                {{ $order->refund_at ? \Carbon\Carbon::parse($order->refund_at) : 'N/A' }}
-                                            </p>
+                                            @if ($order->created_at)
+                                                <p><strong>Ngày Đặt Hàng:</strong> {{ $order->created_at }}</p>
+                                            @endif
+
+                                            @if ($order->delivered_at)
+                                                <p><strong>Ngày Giao Hàng:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->delivered_at)->format('d/m/Y H:i') }}
+                                                </p>
+                                            @endif
+
+                                            @if ($order->canceled_at)
+                                                <p><strong>Ngày Hủy:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->canceled_at)->format('d/m/Y H:i') }}
+                                                </p>
+                                            @endif
+
+                                            @if ($order->refund_at)
+                                                <p><strong>Ngày Hoàn Trả:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->refund_at)->format('d/m/Y H:i') }}</p>
+                                            @endif
+
 
                                         </div>
                                     </div>
@@ -75,7 +85,7 @@
                                             <h4>Chi Tiết Sản Phẩm</h4>
                                         </div>
                                         <div class="card-body" id="productDetails"
-                                            style="max-height: 400px; overflow-y: auto;">
+                                            style="max-height: 350px; overflow-y: auto;">
                                             @foreach ($order->items as $item)
                                                 <div class="row border p-2 mb-2 align-items-center">
                                                     <!-- Cột ảnh sản phẩm -->
