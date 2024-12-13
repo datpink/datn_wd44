@@ -8,9 +8,9 @@ use App\Models\PaymentMethod; // Import model PaymentMethod
 use App\Models\Promotion;
 use App\Models\Province;
 use App\Models\Region;
+use App\Models\UserPromotion;
 use App\Models\Ward;
 use Carbon\Carbon;
-use App\Models\UserPromotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -19,23 +19,12 @@ class CheckoutController extends Controller
 {
     public function showCheckout(Request $request)
     {
-        $userPromotions = UserPromotion::with('promotion')
-            ->where('user_id', auth()->id())
-            ->get()
-            ->sortBy(function ($promotion) {
-                // Sắp xếp các mã giảm giá theo trạng thái hết hạn, chưa hết hạn lên đầu
-                return \Carbon\Carbon::parse($promotion->promotion->end_date)->isPast() ? 1 : 0;
-            });
-
         // Lấy danh sách sản phẩm đã chọn từ input
         $selectedProducts = json_decode($request->input('selected_products'), true);
 
         // Kiểm tra nếu không có sản phẩm nào được chọn
         if (empty($selectedProducts)) {
-            return redirect()->route('cart
-            
-            
-            .view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
+            return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
         }
 
         // Lấy thông tin người dùng
@@ -65,42 +54,49 @@ class CheckoutController extends Controller
             // Cập nhật số lượng từ request
             $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
             $product['quantity'] = $newQuantity;
-            $product['total_price'] = (float) $product['price'] * (int) $newQuantity;
-
+            $product['total_price'] = $product['price'] * $newQuantity;
 
             // Cập nhật lại session
             session([$cartSessionKey => $product]);
 
             $products[] = $product;
-            $totalAmount += (float) $product['price'] * (int) $newQuantity;
-
+            $totalAmount += $product['price'] * $newQuantity;
         }
 
-        $user = Auth::user(); // Lấy thông tin người dùng đã đăng nhập
-
-        // Tách địa chỉ
+        // Tách địa chỉ của người dùng
         $province = $district = $ward = null;
         if ($user->address) {
-            // Tách chuỗi địa chỉ thành các phần (Tỉnh - Huyện - Xã)
             $addressParts = explode(' - ', $user->address);
-
-            // Đảm bảo có đủ 3 phần: tỉnh - huyện - xã
             if (count($addressParts) >= 3) {
-                $provinceName = trim($addressParts[0]); // Loại bỏ khoảng trắng thừa
+                $provinceName = trim($addressParts[0]);
                 $districtName = trim($addressParts[1]);
                 $wardName = trim($addressParts[2]);
 
-                // Tìm tỉnh, huyện, xã/phường từ cơ sở dữ liệu
                 $province = Province::where('name', 'like', "%$provinceName%")->first();
                 $district = District::where('name', 'like', "%$districtName%")->first();
                 $ward = Ward::where('name', 'like', "%$wardName%")->first();
             }
         }
-        // dd($products)
+
+        // Lấy mã giảm giá và sắp xếp
+        $userPromotions = UserPromotion::with('promotion')
+            ->where('user_id', $userId)
+            ->get()
+            ->sortBy(function ($userPromotion) use ($totalAmount) {
+                $promotion = $userPromotion->promotion;
+
+                // Kiểm tra điều kiện sử dụng
+                $isExpired = Carbon::parse($promotion->end_date)->isPast();
+                $notEligible = $totalAmount < $promotion->min_order_value;
+
+                // Mã đủ điều kiện và chưa hết hạn được ưu tiên (giá trị ưu tiên = 0)
+                return ($isExpired || $notEligible) ? 1 : 0;
+            });
+
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
-        // dd($products);
+
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',
@@ -114,6 +110,7 @@ class CheckoutController extends Controller
             'userPromotions'
         ));
     }
+
 
 
 
@@ -171,6 +168,65 @@ class CheckoutController extends Controller
             'final_amount' => $finalAmount,
         ]);
     }
+
+    public function applyCoupon2(Request $request)
+    {
+        Log::info('Dữ liệu nhận được từ request: ', $request->all());
+        $promotionId = $request->input('promotion_id');
+        $discount = $request->input('discount');
+        $maxDiscount = $request->input('max_discount');
+        $type = $request->input('type');
+        $totalAmount = $request->input('total_amount');
+        $shippingFee = $request->input('shipping_fee');
+
+        // Tìm kiếm promotion theo promotion_id
+        $promotion = Promotion::find($promotionId);
+
+        if (!$promotion) {
+            return response()->json(['status' => 'error', 'message' => 'Promotion không tồn tại'], 400);
+        }
+
+        // Kiểm tra nếu type là 'percentage' hoặc 'fixed_amount' hoặc 'free_shipping'
+        $finalAmount = $totalAmount;
+        $calculatedDiscount = 0;
+
+        if ($type === 'percentage') {
+            // Tính giảm giá theo phần trăm
+            $calculatedDiscount = ($totalAmount * $discount) / 100;
+        } elseif ($type === 'fixed_amount') {
+            // Giảm giá là một số tiền cố định
+            $calculatedDiscount = $discount;
+        } elseif ($type === 'free_shipping') {
+            // Free shipping, giảm giá bằng phí vận chuyển
+            $calculatedDiscount = $shippingFee;
+            Log::info('Tổng giảm', ['promotion_id' => $calculatedDiscount]);
+        }
+
+        // Đảm bảo rằng số tiền giảm không vượt quá tổng giá trị đơn hàng (dành cho trường hợp percentage)
+        $calculatedDiscount = min($calculatedDiscount, $totalAmount);
+
+        // Nếu type là free_shipping, không cần kiểm tra maxDiscount
+        if ($type !== 'free_shipping') {
+            // Kiểm tra với maxDiscount để đảm bảo không vượt quá giới hạn
+            $calculatedDiscount = min($calculatedDiscount, $maxDiscount);
+        }
+
+        // Tính final amount (tổng tiền sau khi áp dụng giảm giá)
+        $finalAmount = $totalAmount - $calculatedDiscount + ($type === 'free_shipping' ? $shippingFee : 0);
+
+        // Trả về kết quả
+        return response()->json([
+            'status' => 'success',
+            'promotion_id' => $promotionId,
+            'discount' => $calculatedDiscount,
+            'final_amount' => $finalAmount,
+        ]);
+    }
+
+
+
+
+
 
 
 
