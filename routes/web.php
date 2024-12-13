@@ -184,6 +184,7 @@ Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('c
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
+Route::post('/apply-coupon2', [CheckoutController::class, 'applyCoupon2'])->name('applyCoupon2');
 
 // Route để xử lý AJAX lấy danh sách huyện
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
