@@ -21,7 +21,6 @@ class CheckoutController extends Controller
     {
         // Lấy danh sách sản phẩm đã chọn từ input
         $selectedProducts = json_decode($request->input('selected_products'), true);
-
         // Kiểm tra nếu không có sản phẩm nào được chọn
         if (empty($selectedProducts)) {
             return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
@@ -50,11 +49,6 @@ class CheckoutController extends Controller
 
             // Lấy sản phẩm từ session
             $product = session($cartSessionKey);
-
-            // // Cập nhật số lượng từ request
-            // $newQuantity = $selectedProduct['quantity'] ?? $product['quantity'];
-            // $product['quantity'] = $newQuantity;
-            // $product['total_price'] = $product['price'] * $newQuantity;
 
             // Cập nhật số lượng từ request
             $newQuantity = isset($selectedProduct['quantity']) ? (int) $selectedProduct['quantity'] : (int) $product['quantity'];

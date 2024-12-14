@@ -62,18 +62,18 @@
 
                                     <div class="text-center mt-2 mb-3">
                                         <a href="{{ route('login.google') }}" class="btn-light social-button"
-                                            style="margin-right: 70px;">
+                                            >
                                             <img src="{{ asset('images/search.png') }}" alt="Google"
                                                 style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Google</span>
                                         </a>
 
-                                        <a href="{{ route('login.facebook') }}" class="btn-light social-button"
+                                        {{-- <a href="{{ route('login.facebook') }}" class="btn-light social-button"
                                             style="margin-right: 5px;">
                                             <img src="{{ asset('images/facebook.png') }}" alt="Facebook"
                                                 style="width: 30px; height: 30px;">
                                             <span style="margin-left: 5px;">Facebook</span>
-                                        </a>
+                                        </a> --}}
                                     </div>
 
 
