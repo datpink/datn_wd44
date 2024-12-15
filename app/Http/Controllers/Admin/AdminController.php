@@ -215,7 +215,7 @@ class AdminController extends Controller
 
 
         // Lấy số lượng đơn hàng theo trạng thái, chỉ lấy "processing" và "shipped" cho danh sách
-        $ordersByStatusForList = Order::select('status', \DB::raw('COUNT(*) as count'))
+        $ordersByStatusForList = Order::select('status', DB::raw('COUNT(*) as count'))
             ->whereIn('status', ['pending_confirmation', 'delivered']) // Chỉ lấy hai trạng thái này cho danh sách
             ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
             ->groupBy('status')
@@ -227,7 +227,7 @@ class AdminController extends Controller
         $ordersByStatusForList = array_replace(array_fill_keys($statusesForList, 0), $ordersByStatusForList);
 
         // Lấy số lượng đơn hàng cho tất cả các trạng thái để hiển thị trên biểu đồ
-        $ordersByStatusForChart = Order::select('status', \DB::raw('COUNT(*) as count'))
+        $ordersByStatusForChart = Order::select('status', DB::raw('COUNT(*) as count'))
             ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
             ->groupBy('status')
             ->pluck('count', 'status')
@@ -418,7 +418,9 @@ class AdminController extends Controller
             'topSellingProducts',
             'topSellingProductNames',
             'period',
-            'topSellingProductQuantities'
+            'topSellingProductQuantities',
+            'timePeriod',
+            'filterPeriod'
         ));
     }
 
