@@ -118,35 +118,32 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="kobolg-checkout-coupon mb-4">
                                     <div class="kobolg-notices-wrapper"></div>
                                     <div class="kobolg-form-coupon-toggle">
                                         <div class="kobolg-info mb-3">
                                             <span>Bạn có mã giảm giá? </span>
-                                            <a href="#" class="showcoupon">Nhấp vào đây
-                                                để nhập mã của bạn</a>
+                                            <a href="#" class="showcoupon">Nhấp vào đây để nhập mã của bạn</a>
                                         </div>
                                     </div>
-                                    <form class="checkout_coupon kobolg-form-coupon p-3 border rounded" method="post"
-                                        style="display:none">
-                                        <p class="text-muted">Nếu bạn có mã giảm giá, vui lòng áp dụng nó bên dưới.</p>
-                                        <div class="form-row d-flex">
-                                            <div class="form-group col-md-8">
-                                                <input type="text" name="coupon_code" class="form-control"
-                                                    placeholder="Mã giảm giá" id="coupon_code" value="">
+                                    <div class="checkout_coupon_wrapper" style="display: none;">
+                                        <form class="checkout_coupon kobolg-form-coupon p-3 border rounded" method="post">
+                                            <p class="text-muted">Nếu bạn có mã giảm giá, vui lòng áp dụng nó bên dưới.</p>
+                                            <div class="form-row d-flex">
+                                                <div class="form-group col-md-8">
+                                                    <input type="text" name="coupon_code" class="form-control"
+                                                        placeholder="Mã giảm giá" id="coupon_code" value="">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <button type="submit" class="btn btn-dark w-100" name="apply_coupon"
+                                                        value="Apply coupon">Áp dụng mã giảm giá</button>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <button type="submit" class="btn btn-dark w-100" name="apply_coupon"
-                                                    value="Apply coupon">Áp dụng mã giảm giá</button>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
-                                        {{-- ///////////////////////////////////////////////////////////////////// --}}
-
-                                    </form>
-                                    <div class="cart-promotion"
-                                            style="margin: 10px 0; max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px;">
+                                            <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
+                                        </form>
+                                        <!-- Khu vực hiển thị cart promotion -->
+                                        <div class="cart-promotion mt-3"
+                                            style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px;">
                                             @if (Auth::check())
                                                 @foreach ($userPromotions as $userPromotion)
                                                     @php
@@ -188,13 +185,11 @@
                                                             @if ($userPromotion->promotion->type != 'free_shipping')
                                                                 <p class="mb-0">Tối đa:
                                                                     <strong>{{ number_format($userPromotion->promotion->max_value, 0) }}
-                                                                        VND</strong>
-                                                                </p>
+                                                                        VND</strong></p>
                                                             @endif
                                                             <p class="mb-0">Đơn tối thiểu:
                                                                 <strong>{{ number_format($userPromotion->promotion->min_order_value, 0) }}
-                                                                    VND</strong>
-                                                            </p>
+                                                                    VND</strong></p>
                                                             <p class="text-muted mb-0">Hạn sử dụng:
                                                                 <strong>{{ \Carbon\Carbon::parse($userPromotion->promotion->end_date)->format('d/m/Y') }}</strong>
                                                             </p>
@@ -213,7 +208,7 @@
                                                                     data-discount="{{ $userPromotion->promotion->discount_value }}"
                                                                     data-max-discount="{{ $userPromotion->promotion->max_value }}"
                                                                     data-type="{{ $userPromotion->promotion->type }}"
-                                                                    data-total-amount="{{ $totalAmount }}">{{ $userPromotion->promotion->discount_value }}</button>
+                                                                    data-total-amount="{{ $totalAmount }}">Áp dụng</button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -223,8 +218,9 @@
                                                 </p>
                                             @endif
                                         </div>
-
+                                    </div>
                                 </div>
+
 
                             </div>
                             <form method="post" class="checkout kobolg-checkout" action="{{ route('vnpay') }}"
@@ -510,14 +506,16 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Hiển thị/Ẩn form mã giảm giá
+            // Hiển thị/Ẩn form mã giảm giá và cart promotion
             const showCouponButton = document.querySelector(".showcoupon");
-            const couponForm = document.querySelector(".checkout_coupon");
-            if (showCouponButton && couponForm) {
+            const couponWrapper = document.querySelector(".checkout_coupon_wrapper");
+
+            if (showCouponButton && couponWrapper) {
                 showCouponButton.addEventListener("click", function(e) {
                     e.preventDefault();
-                    couponForm.style.display =
-                        couponForm.style.display === "none" ? "block" : "none";
+                    // Toggle hiển thị
+                    couponWrapper.style.display =
+                        couponWrapper.style.display === "none" ? "block" : "none";
                 });
             }
 
