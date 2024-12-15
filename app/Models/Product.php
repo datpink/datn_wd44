@@ -19,6 +19,7 @@ class Product extends Model
         'specifications',
         'image_url',
         'price',
+        'views', // Thêm trường views
         'discount_price',
         'discount_percentage',
         'stock',

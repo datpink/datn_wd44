@@ -44,6 +44,8 @@ class PostController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('posts.id', $id)
             ->firstOrFail();
+             // Tăng lượt xem
+    $post->increment('views');
         $post1 = Post::with('comments')->findOrFail($id);
         $categories = Category::where('status', 'active')->get();
 

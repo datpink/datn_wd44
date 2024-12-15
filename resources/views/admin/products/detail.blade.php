@@ -21,6 +21,7 @@
                                 <div class="form-group">
                                     <label for="name">Tên sản phẩm</label>
                                     <p class="form-control">{{ $product->name }}</p>
+                                  
                                 </div>
 
                                 <!-- Thương hiệu -->
@@ -100,18 +101,6 @@
                                     <p class="form-control">{{ $product->stock }}</p>
                                 </div>
 
-                                {{-- <!-- Cân nặng (Weight) -->
-                                <div class="form-group">
-                                    <label for="weight">Cân nặng (kg)</label>
-                                    <p class="form-control">{{ $product->weight }}</p>
-                                </div>
-
-                                <!-- Kích thước (Dimensions) -->
-                                <div class="form-group mb-3">
-                                    <label for="dimensions">Kích thước (DxRxC)</label>
-                                    <p class="form-control">{{ $product->dimensions }}</p>
-                                </div> --}}
-
                                 <div class="mb-3">
                                     <label for="is_featured" class="form-label">Nổi bật</label>
                                     <input type="checkbox" id="is_featured" name="is_featured"
@@ -137,6 +126,10 @@
                                 <div class="form-group">
                                     <label for="tomtat">Tóm tắt</label>
                                     <p>{!! $product->tomtat !!}</p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tomtat">Lượt xem</label>
+                                    <p>Lượt xem: {{ $product->views }}</p>
                                 </div>
                             </div>
 

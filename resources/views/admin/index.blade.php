@@ -441,12 +441,14 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
 
 
         </div>
+        
     </div>
 
     <script>
@@ -730,5 +732,63 @@
             chart.render();
         });
     </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+   // Dữ liệu thống kê sản phẩm
+   const productLabels = @json($topProducts->pluck('name'));
+    const productViews = @json($topProducts->pluck('views'));
 
+    const ctxProduct = document.getElementById('productViewsChart').getContext('2d');
+    new Chart(ctxProduct, {
+        type: 'bar', // Loại biểu đồ
+        data: {
+            labels: productLabels, // Tên sản phẩm
+            datasets: [{
+                label: 'Lượt xem',
+                data: productViews, // Lượt xem sản phẩm
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true // Bắt đầu từ 0
+                }
+            }
+        }
+    });
+ // Dữ liệu thống kê bài viết
+ const postLabels = @json($topPosts->pluck('title'));
+    const postViews = @json($topPosts->pluck('views'));
+
+    const ctxPost = document.getElementById('postViewsChart').getContext('2d');
+    new Chart(ctxPost, {
+        type: 'bar', // Loại biểu đồ
+        data: {
+            labels: postLabels, // Tên bài viết
+            datasets: [{
+                label: 'Lượt xem',
+                data: postViews, // Lượt xem bài viết
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>
+   
 @endsection
