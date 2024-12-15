@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_points', function (Blueprint $table) {
+        Schema::create('user_point_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('order_id')->nullable()->constrained()->onDelete('set null');
-            $table->integer('total_points')->default(0);
+            $table->foreignId('user_point_id')->constrained('user_points')->onDelete('cascade');
+            $table->enum('type', ['earn', 'redeem']);
+            $table->integer('points');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_points');
+        Schema::dropIfExists('user_point_transactions');
     }
 };
