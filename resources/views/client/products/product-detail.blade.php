@@ -226,28 +226,28 @@
                                     <span id="product-price">
                                         @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
                                             @if ($product->variants->isNotEmpty())
+                                                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
+                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
+                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
+                                                </span>
                                                 <del>
                                                     <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
                                                         {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
                                                 </del>
-                                                <span class="text-danger font-weight-bold">
-                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
-                                                </span>
                                             @else
+                                                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
+                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                                                </span>
                                                 <del>
                                                     <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
                                                 </del>
-                                                <span class="text-danger font-weight-bold">
-                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
-                                                </span>
                                             @endif
                                         @else
                                             @if ($product->variants->isNotEmpty())
-                                                <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                                <span style="font-size: 1.6vw">{{ number_format($minPrice, 0, ',', '.') }}₫ -
                                                     {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
                                             @else
-                                                <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                <span style="font-size: 1.6vw">{{ number_format($product->price, 0, ',', '.') }}₫</span>
                                             @endif
                                         @endif
                                     </span>
@@ -549,7 +549,7 @@
             @include('client.muteki.js')
             <!-- Truyền giá trị min, max sang JavaScript -->
 
-            {{-- 
+            {{--
             <script>
                 $(document).ready(function() {
                     $('.kobolg-product-gallery__image').on('mousemove', function(e) {
