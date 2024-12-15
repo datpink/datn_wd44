@@ -180,7 +180,7 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-
+            $product->increment('views');
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
@@ -210,7 +210,7 @@ class ProductController extends Controller
             // dd($product);
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
-            'product',git 
+            'product',
             'storageVariants',
             'colorVariants',
             'sizeVariants',

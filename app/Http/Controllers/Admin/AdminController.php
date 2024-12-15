@@ -7,6 +7,7 @@ use App\Models\Catalogue;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -206,8 +207,9 @@ class AdminController extends Controller
             $statistic->payment_method_description = $paymentMethod->description ?? 'No description available';
             return $statistic;
         });
-
-
+        $topProducts = Product::orderBy('views', 'desc')->take(5)->get(); // Lấy 5 sản phẩm có lượt xem cao nhất
+        // Lấy 5 bài viết được xem nhiều nhất
+        $topPosts = Post::orderBy('views', 'desc')->take(5)->get();
         return view('admin.index', compact(
             'title',
             'recentBuyers',
@@ -229,7 +231,9 @@ class AdminController extends Controller
             'topSellingProducts',
             'topSellingProductNames',
             'period',
-            'topSellingProductQuantities'
+            'topSellingProductQuantities',
+            'topProducts',
+            'topPosts',
         ));
     }
 
