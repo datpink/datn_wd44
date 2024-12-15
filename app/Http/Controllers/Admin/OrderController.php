@@ -518,7 +518,7 @@ class OrderController extends Controller
 
             // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
             if ($order->status !== 'pending_delivery') {
-                \Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+                Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
                 return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
             }
 
@@ -533,7 +533,7 @@ class OrderController extends Controller
             return response()->json(['success' => true, 'message' => 'Đơn hàng đã được xác nhận là đã nhận!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
+            Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Có lỗi khi cập nhật trạng thái đơn hàng.'], 500);
         }
     }

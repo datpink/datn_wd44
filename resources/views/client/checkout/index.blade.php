@@ -185,11 +185,13 @@
                                                             @if ($userPromotion->promotion->type != 'free_shipping')
                                                                 <p class="mb-0">Tối đa:
                                                                     <strong>{{ number_format($userPromotion->promotion->max_value, 0) }}
-                                                                        VND</strong></p>
+                                                                        VND</strong>
+                                                                </p>
                                                             @endif
                                                             <p class="mb-0">Đơn tối thiểu:
                                                                 <strong>{{ number_format($userPromotion->promotion->min_order_value, 0) }}
-                                                                    VND</strong></p>
+                                                                    VND</strong>
+                                                            </p>
                                                             <p class="text-muted mb-0">Hạn sử dụng:
                                                                 <strong>{{ \Carbon\Carbon::parse($userPromotion->promotion->end_date)->format('d/m/Y') }}</strong>
                                                             </p>
@@ -208,7 +210,8 @@
                                                                     data-discount="{{ $userPromotion->promotion->discount_value }}"
                                                                     data-max-discount="{{ $userPromotion->promotion->max_value }}"
                                                                     data-type="{{ $userPromotion->promotion->type }}"
-                                                                    data-total-amount="{{ $totalAmount }}">Áp dụng</button>
+                                                                    data-total-amount="{{ $totalAmount }}">Áp
+                                                                    dụng</button>
                                                             @endif
                                                         </div>
                                                     </div>
@@ -361,8 +364,8 @@
                                                         <!-- Mở rộng thêm chút nữa cột này -->
                                                         <div class="media align-items-center">
                                                             <div class="media-body">
-                                                                <a href="#"
-                                                                    class="d-block text-dark" aalt="{{ $product['name'] }}">{{ \Str::limit($product['name'], 30) }}</a>
+                                                                <a href="#" class="d-block text-dark"
+                                                                    aalt="{{ $product['name'] }}">{{ \Str::limit($product['name'], 30) }}</a>
                                                                 @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
                                                                     <div class="product-attributes">
                                                                         @foreach ($product['options']['variant'] as $attrIndex => $attribute)
@@ -388,8 +391,12 @@
                                                         </div>
                                                     </td>
                                                     <td class="total-col" style="text-align: right;">
-                                                        <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
+                                                        <strong><span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}</span>
+                                                            <span class="kobolg-Price-currencySymbol">₫</span></strong>
                                                     </td>
+                                                    <span class="kobolg-Price-amount amount" style="color: red;">
+
+                                                    </span>
                                                 </tr>
 
                                                 <!-- Hidden inputs to include product data in form submission -->
@@ -406,41 +413,68 @@
                                         </tbody>
 
                                         <tfoot>
+                                            <!-- Phí vận chuyển -->
                                             <tr class="cart-shipping">
                                                 <td colspan="2" class="text-left">Phí vận chuyển</td>
-                                                <td class="shipping-fee" style="text-align: right;">
+                                                <td class="text-right shipping-fee">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount" style="color: red;">
+                                                            -<span id="shipping-fee">0</span>
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            <span id="shipping-fee">0</span>
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
 
+                                            <!-- Giảm giá -->
                                             <tr class="cart-discount" style="display: none;">
                                                 <td colspan="2" class="text-left">Giảm giá</td>
-                                                <td style="text-align: right;">
-                                                    <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol"
-                                                            style="color: red"></span>
-                                                        0
-                                                    </span>
+                                                <td class="text-right">
+                                                    <span class="kobolg-Price-amount amount" style="color: red;">0</span>
                                                 </td>
                                             </tr>
 
+
+                                            <!-- Áp dụng Xu -->
+                                            <tr class="apply-points-row">
+                                                <td colspan="2" class="text-left">
+                                                    <div class="d-flex align-items-center" style="margin-left: 20px">
+                                                        <!-- Checkbox -->
+                                                        <input type="checkbox" class="form-check-input me-2"
+                                                            id="apply-points-checkbox" onchange="togglePoints()">
+                                                        <!-- Nội dung chữ -->
+                                                        <div>
+                                                            <div class="fw-bold">Áp dụng Xu</div>
+                                                            <div id="points-info" data-points="200">
+                                                                Dùng 200 Xu
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <!-- Số Xu trừ -->
+                                                <td class="text-right">
+                                                    <strong id="points-discount" style="color: red;">
+                                                        -<span id="points-amount">200</span>
+                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                    </strong>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Tổng cộng -->
                                             <tr class="order-total">
                                                 <td colspan="2" class="text-left">Tổng cộng</td>
-                                                <td style="text-align: right;">
+                                                <td class="text-right">
                                                     <strong>
-                                                        <span class="kobolg-Price-amount amount">
+                                                        <span class="kobolg-Price-amount amount" style="color: red;">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            {{ number_format($totalAmount, 0, ',', '.') }}
+                                                            <span
+                                                                id="total-amount">{{ number_format($totalAmount, 0, ',', '.') }}</span>
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
                                         </tfoot>
+
 
                                     </table>
 
@@ -856,6 +890,78 @@
                 fullAddressInput.value = fullAddress;
             }
         });
+
+        // Khởi tạo trang khi load
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('apply-points-checkbox');
+            const pointsDiscount = document.getElementById('points-discount');
+            const ml = document.getElementById('points-info');
+
+            // Mặc định khi load trang, điểm xu làm mờ và màu đen
+            if (!checkbox.checked) {
+                pointsDiscount.style.color = 'black';
+                pointsDiscount.style.opacity = '0.3';
+                ml.style.color = 'black';
+                ml.style.opacity = '0.3';
+
+
+            }
+        });
+
+        function togglePoints() {
+            const checkbox = document.getElementById('apply-points-checkbox');
+            const pointsDiscount = document.getElementById('points-discount');
+            const ml = document.getElementById('points-info');
+            const pointsAmountElement = document.getElementById('points-amount');
+            const totalAmountElement = document.querySelector('.order-total .amount');
+            const inputTotal = document.getElementById('input-total'); // Lấy phần tử input totalAmount
+
+            // Lấy số xu từ data attribute (hoặc từ giá trị tính toán)
+            let pointsValue = parseInt(document.getElementById('points-info').dataset.points) || 0;
+            console.log(pointsValue);
+
+            if (!totalAmountElement) {
+                console.error("Phần tử tổng tiền không tồn tại.");
+                return;
+            }
+
+            // Lưu giá trị tổng tiền ban đầu nếu chưa lưu
+            if (typeof checkbox.initialTotal === 'undefined') {
+                checkbox.initialTotal = parseInt(totalAmountElement.textContent.replace(/[^\d]/g, ''));
+            }
+
+            let currentTotal = checkbox.initialTotal; // Gán lại tổng tiền ban đầu khi bỏ check
+
+            if (checkbox.checked) {
+                // Nếu số xu lớn hơn tổng tiền, chỉ trừ đúng bằng tổng tiền
+                if (pointsValue > currentTotal) {
+                    pointsValue = currentTotal; // Giới hạn số xu trừ
+                }
+
+                currentTotal -= pointsValue; // Giảm số xu
+                pointsDiscount.style.color = 'red';
+                pointsDiscount.style.opacity = '1';
+
+                ml.style.color = 'black';
+                ml.style.opacity = '1';
+            } else {
+                // Bỏ chọn, quay lại tổng tiền ban đầu
+                pointsDiscount.style.color = 'black';
+                pointsDiscount.style.opacity = '0.3';
+
+                ml.style.color = 'black';
+                ml.style.opacity = '0.3';
+            }
+
+            // Cập nhật lại tổng tiền hiển thị
+            totalAmountElement.textContent = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(currentTotal);
+
+            // Cập nhật giá trị của ô input hidden
+            inputTotal.value = currentTotal;
+        }
     </script>
 
 @endsection

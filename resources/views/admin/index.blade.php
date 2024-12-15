@@ -340,7 +340,7 @@
                                             @endforeach
                                         @endforeach
                                     </tbody>
-                                    
+
                                 </table>
                             </div>
                         </div>
@@ -448,7 +448,7 @@
 
 
         </div>
-        
+
     </div>
 
     <script>
@@ -733,7 +733,7 @@
         });
     </script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
+{{-- <script>
    // Dữ liệu thống kê sản phẩm
    const productLabels = @json($topProducts->pluck('name'));
     const productViews = @json($topProducts->pluck('views'));
@@ -789,6 +789,6 @@
             }]
         }
     });
-</script>
-   
+</script> --}}
+
 @endsection
