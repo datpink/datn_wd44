@@ -180,7 +180,7 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-
+            $product->increment('views');
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
@@ -277,7 +277,7 @@ class ProductController extends Controller
         $productByCatalogues = Product::with('catalogue')
             ->whereIn('catalogue_id', $childCatalogues)
             ->where('is_active', 1)
-            ->paginate(2);
+            ->paginate(6);
 
         // dd($productByCatalogues);
         foreach ($productByCatalogues as $product) {
@@ -385,7 +385,7 @@ class ProductController extends Controller
         }
 
         // Lấy dữ liệu sản phẩm
-        $productByCatalogues = $productByCatalogues->paginate(2);
+        $productByCatalogues = $productByCatalogues->paginate(6);
 
         foreach ($productByCatalogues as $product) {
             $product->image_url = $product->image_url ? Storage::url($product->image_url) : null;

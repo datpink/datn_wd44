@@ -34,9 +34,9 @@
                     </div>
                 </section>
 
-                <div class="container">
+
                     @yield('content')
-                </div>
+
             </div>
 
             @include('admin.layouts.footer')

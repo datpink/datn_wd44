@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
 class Order extends Model
 {
     use HasFactory;
@@ -31,7 +31,33 @@ class Order extends Model
         'admin_message',
         'is_new'
     ];
+    public function checkAndUpdatePendingOrders()
+    {
+        $pendingOrders = self::where('payment_status', 'pending')
+            ->where('created_at', '<=', Carbon::now()->subMinutes(3))
+            ->get();
 
+        foreach ($pendingOrders as $order) {
+            $order->update(['payment_status' => 'failed']);
+
+            // Hoàn trả lại tồn kho
+            foreach ($order->orderItems as $item) {
+                if ($item->product_variant_id) {
+                    $productVariant = ProductVariant::find($item->product_variant_id);
+                    if ($productVariant) {
+                        $productVariant->stock += $item->quantity;
+                        $productVariant->save();
+                    }
+                } else {
+                    $product = Product::find($item->product_id);
+                    if ($product) {
+                        $product->stock += $item->quantity;
+                        $product->save();
+                    }
+                }
+            }
+        }
+    }
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

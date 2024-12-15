@@ -18,7 +18,7 @@
                         data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                         <div class="product-inner tooltip-left">
                             <div class="product-thumb">
-                                <a class="thumb-link" href="#">
+                                <a class="thumb-link" href="{{ url('shop/products/chi-tiet', $product->slug) }}">
                                     <img class="img-responsive mt-3"
                                         src=" {{ \Storage::url($product->image_url)}}"
                                         alt="Gaming Mouse" width="300">

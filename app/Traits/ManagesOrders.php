@@ -3,10 +3,12 @@
 namespace App\Traits;
 
 use App\Mail\OrderStatusUpdated;
+use App\Models\Notification;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+
 
 trait ManagesOrders
 {
@@ -63,13 +65,19 @@ trait ManagesOrders
             $order->save();
 
             // Gửi email thông báo cho người dùng khi trạng thái thay đổi
-        if (in_array($newStatus, ['pending_delivery', 'delivered'])) {
-            // Lấy email người dùng
-            $user = $order->user; // Giả sử quan hệ `user` được định nghĩa trong model `Order`
-
-            // Gửi email
-            Mail::to($user->email)->send(new OrderStatusUpdated($order, $newStatus));
-        }
+            if (in_array($newStatus, ['pending_delivery', 'delivered'])) {
+                // Lấy email người dùng
+                $user = $order->user; // Giả sử quan hệ `user` được định nghĩa trong model `Order`
+// dd($user);
+                Notification::create([
+                    'title' => 'Thông báo trạng thái đơn hàng',
+                    'description' => 'Đơn hàng #' . $order->id . 'đã chuyển sang trạng thái ' . __("statuses.$newStatus"),
+                    'url' => route('order.history', $order->id),
+                    'user_id' => $user->id,
+                ]);
+                // Gửi email
+                Mail::to($user->email)->send(new OrderStatusUpdated($order, $newStatus));
+            }
 
             DB::commit();
 
@@ -77,7 +85,7 @@ trait ManagesOrders
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors([
-                'error' => 'Đã xảy ra lỗi khi cập nhật đơn hàng. Vui lòng thử lại!'
+                'error' => $e->getMessage(),
             ]);
         }
     }

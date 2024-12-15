@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\NewOrdersCount::class,
+            \App\Http\Middleware\CheckPendingOrdersMiddleware::class, 
         ],
 
         'api' => [
@@ -69,6 +70,7 @@ class Kernel extends HttpKernel
         'verified'          => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'permission'        => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role'              =>  \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'count.product.view' => \App\Http\Middleware\CountProductView::class,
 
     ];
 }
