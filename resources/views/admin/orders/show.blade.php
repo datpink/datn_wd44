@@ -21,8 +21,11 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <p><strong>Người dùng:</strong> {{ $order->user->name }}</p>
-                                            <p><strong>Promotion:</strong>
-                                                {{ $order->promotion ? $order->promotion->code : 'N/A' }}</p>
+
+                                            @if ($order->promotion)
+                                                <p><strong>Promotion:</strong> {{ $order->promotion->code }}</p>
+                                            @endif
+
                                             <p><strong>Số điện thoại:</strong> {{ $order->phone_number }}</p>
                                             <p>
                                                 <strong>Tổng tiền:</strong>
@@ -68,17 +71,25 @@
                                                 {{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}
                                             </p>
 
-                                            <p><strong>Ngày Đặt Hàng:</strong>
-                                                {{ $order->created_at ? $order->created_at : 'N/A' }}</p>
-                                            <p><strong>Ngày Giao Hàng:</strong>
-                                                {{ $order->delivered_at ? \Carbon\Carbon::parse($order->delivered_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hủy:</strong>
-                                                {{ $order->canceled_at ? \Carbon\Carbon::parse($order->canceled_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hoàn Trả:</strong>
-                                                {{ $order->refund_at ? \Carbon\Carbon::parse($order->refund_at) : 'N/A' }}
-                                            </p>
+                                            @if ($order->created_at)
+                                                <p><strong>Ngày Đặt Hàng:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->created_at)->format('d/m/Y') }}</p>
+                                            @endif
+
+                                            @if ($order->delivered_at)
+                                                <p><strong>Ngày Giao Hàng:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->delivered_at)->format('d/m/Y') }}</p>
+                                            @endif
+
+                                            @if ($order->canceled_at)
+                                                <p><strong>Ngày Hủy:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->canceled_at)->format('d/m/Y') }}</p>
+                                            @endif
+
+                                            @if ($order->refund_at)
+                                                <p><strong>Ngày Hoàn Trả:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->refund_at)->format('d/m/Y') }}</p>
+                                            @endif
 
                                             @if ($order->cancellation_reason)
                                                 <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>

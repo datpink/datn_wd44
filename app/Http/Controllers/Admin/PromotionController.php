@@ -11,32 +11,32 @@ class PromotionController extends Controller
     public function index(Request $request)
     {
         $title = 'Danh Sách Mã Giảm Giá';
-    
+
         $query = Promotion::query();
-    
+
         // Tìm kiếm theo từ khóa
         if ($request->filled('search')) {
             $query->where('code', 'like', '%' . $request->search . '%');
         }
-    
+
         // Lọc theo trạng thái
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-    
+
         // Lọc theo "Áp dụng cho đơn hàng"
         if ($request->filled('applies_to_order')) {
             $query->where('applies_to_order', $request->applies_to_order);
         }
-    
+
         // Lọc theo "Áp dụng cho phí vận chuyển"
         if ($request->filled('applies_to_shipping')) {
             $query->where('applies_to_shipping', $request->applies_to_shipping);
         }
-    
-    
+
+
         $promotions = $query->paginate(10);
-    
+
         return view('admin.promotions.index', compact('promotions', 'title'));
     }
 
@@ -58,7 +58,6 @@ class PromotionController extends Controller
                 'numeric',
                 'min:0',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
                     if ($request->input('type') === 'percentage' && $value > 100) {
                         $fail('Giá trị giảm giá không thể vượt quá 100%.');
                     }
@@ -71,10 +70,10 @@ class PromotionController extends Controller
             'applies_to_order' => [
                 'required',
                 'boolean',
-                function($attribute, $value, $fail) use ($request){
-                    if($request->input('type') === 'free_shipping' && $value == 1){
-                        $fail('Mã giảm giá cho đơn hàng Free Shipping ');
-                    };
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input('type') === 'free_shipping' && $value == 1) {
+                        $fail('Mã giảm giá cho đơn hàng không thể áp dụng cho Free Shipping.');
+                    }
                 }
             ],
             'applies_to_shipping' => 'required|boolean',
@@ -83,24 +82,48 @@ class PromotionController extends Controller
                 'numeric',
                 'min:0',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
-                    if ($request->input('max_value') <= $value ) {
-                        $fail('Giá Trị đơn hàng tối thiểu không được lớn hơn hoặc bằng giá trị đơn hàng tối đa');
+                    if ($request->input('max_value') <= $value) {
+                        $fail('Giá trị đơn hàng tối thiểu không được lớn hơn hoặc bằng giá trị đơn hàng tối đa.');
                     }
                 },
-            ], 
+            ],
             'max_value' => [
                 'nullable',
                 'numeric',
                 'min:0',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
-                    if ($request->input('min_order_value') >= $value ) {
-                        $fail('Giá Trị đơn hàng tối đa không được nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu');
+                    if ($request->input('min_order_value') >= $value) {
+                        $fail('Giá trị đơn hàng tối đa không được nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu.');
                     }
                 },
             ],
+        ], [
+            'code.required' => 'Mã giảm giá là bắt buộc.',
+            'code.unique' => 'Mã giảm giá này đã tồn tại.',
+            'code.max' => 'Mã giảm giá không được vượt quá :max ký tự.',
+            'discount_value.required' => 'Giá trị giảm giá là bắt buộc.',
+            'discount_value.numeric' => 'Giá trị giảm giá phải là một số.',
+            'discount_value.min' => 'Giá trị giảm giá không được nhỏ hơn :min.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái không hợp lệ.',
+            'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
+            'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
+            'start_date.before' => 'Ngày bắt đầu phải trước ngày kết thúc.',
+            'end_date.required' => 'Ngày kết thúc là bắt buộc.',
+            'end_date.date' => 'Ngày kết thúc không hợp lệ.',
+            'end_date.after' => 'Ngày kết thúc phải sau ngày bắt đầu.',
+            'type.required' => 'Loại mã giảm giá là bắt buộc.',
+            'type.in' => 'Loại mã giảm giá không hợp lệ.',
+            'applies_to_order.required' => 'Áp dụng cho đơn hàng là bắt buộc.',
+            'applies_to_order.boolean' => 'Áp dụng cho đơn hàng phải là giá trị đúng hoặc sai.',
+            'applies_to_shipping.required' => 'Áp dụng cho vận chuyển là bắt buộc.',
+            'applies_to_shipping.boolean' => 'Áp dụng cho vận chuyển phải là giá trị đúng hoặc sai.',
+            'min_order_value.numeric' => 'Giá trị đơn hàng tối thiểu phải là một số.',
+            'min_order_value.min' => 'Giá trị đơn hàng tối thiểu không được nhỏ hơn :min.',
+            'max_value.numeric' => 'Giá trị đơn hàng tối đa phải là một số.',
+            'max_value.min' => 'Giá trị đơn hàng tối đa không được nhỏ hơn :min.',
         ]);
+
         // Create the new promotion
         $promotion = new Promotion();
         $promotion->code = $request->input('code');
@@ -140,7 +163,7 @@ class PromotionController extends Controller
     {
         $promotion = Promotion::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'code' => 'required|unique:promotions,code,' . $promotion->id . '|max:255',
             'discount_value' => [
                 'required',
@@ -160,10 +183,10 @@ class PromotionController extends Controller
             'applies_to_shipping' => [
                 'required',
                 'boolean',
-                function($attribute, $value, $fail) use ($request){
-                    if($request->input('type') !== 'free_shipping' && $value === 1){
-                        $fail('Mã giảm giá cho đơn hàng Free Shipping ');
-                    };
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input('type') !== 'free_shipping' && $value === 1) {
+                        $fail('Mã giảm giá cho đơn hàng Free Shipping không hợp lệ.');
+                    }
                 }
             ],
             'min_order_value' => [
@@ -171,24 +194,46 @@ class PromotionController extends Controller
                 'numeric',
                 'min:0',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
-                    if ($request->input('max_value') <= $value ) {
-                        $fail('Giá Trị đơn hàng tối thiểu không được lớn hơn hoặc bằng giá trị đơn hàng tối đa');
+                    if ($request->input('max_value') <= $value) {
+                        $fail('Giá trị đơn hàng tối thiểu không được lớn hơn hoặc bằng giá trị đơn hàng tối đa.');
                     }
                 },
-            ], 
+            ],
             'max_value' => [
                 'nullable',
                 'numeric',
                 'min:0',
                 function ($attribute, $value, $fail) use ($request) {
-                    // Kiểm tra nếu loại mã giảm giá là 'percentage', giá trị không vượt quá 100
-                    if ($request->input('min_order_value') >= $value ) {
-                        $fail('Giá Trị đơn hàng tối đa không được nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu');
+                    if ($request->input('min_order_value') >= $value) {
+                        $fail('Giá trị đơn hàng tối đa không được nhỏ hơn hoặc bằng giá trị đơn hàng tối thiểu.');
                     }
                 },
             ],
+        ], [
+            'code.required' => 'Mã giảm giá là bắt buộc.',
+            'code.unique' => 'Mã giảm giá này đã tồn tại.',
+            'code.max' => 'Mã giảm giá không được vượt quá :max ký tự.',
+            'discount_value.required' => 'Giá trị giảm giá là bắt buộc.',
+            'discount_value.numeric' => 'Giá trị giảm giá phải là một số.',
+            'discount_value.min' => 'Giá trị giảm giá không được nhỏ hơn :min.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái không hợp lệ.',
+            'start_date.required' => 'Ngày bắt đầu là bắt buộc.',
+            'start_date.date' => 'Ngày bắt đầu không hợp lệ.',
+            'end_date.date' => 'Ngày kết thúc không hợp lệ.',
+            'end_date.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
+            'type.required' => 'Loại mã giảm giá là bắt buộc.',
+            'type.in' => 'Loại mã giảm giá không hợp lệ.',
+            'applies_to_order.required' => 'Áp dụng cho đơn hàng là bắt buộc.',
+            'applies_to_order.boolean' => 'Áp dụng cho đơn hàng phải là giá trị đúng hoặc sai.',
+            'applies_to_shipping.required' => 'Áp dụng cho vận chuyển là bắt buộc.',
+            'applies_to_shipping.boolean' => 'Áp dụng cho vận chuyển phải là giá trị đúng hoặc sai.',
+            'min_order_value.numeric' => 'Giá trị đơn hàng tối thiểu phải là một số.',
+            'min_order_value.min' => 'Giá trị đơn hàng tối thiểu không được nhỏ hơn :min.',
+            'max_value.numeric' => 'Giá trị đơn hàng tối đa phải là một số.',
+            'max_value.min' => 'Giá trị đơn hàng tối đa không được nhỏ hơn :min.',
         ]);
+
 
         $promotion->update($request->all());
 

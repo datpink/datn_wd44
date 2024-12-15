@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->timestamp('delivered_at')->nullable();  // Thời gian giao hàng
             $table->timestamp('refund_at')->nullable();     // Thời gian hoàn trả
             $table->timestamp('canceled_at')->nullable();
+            $table->string('proof_image')->nullable();  // Add the proof_image column
+            $table->text('admin_message')->nullable();  // Thêm cột admin_message
         });
     }
 
