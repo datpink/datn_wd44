@@ -13,7 +13,8 @@ class Post extends Model
     protected $fillable = [
         'title',
         'tomtat',  // Tóm tắt
-        'content', // Nội dung
+        'content',// Nội dung
+        'views', 
         'image',   // Đường dẫn ảnh
         'category_id',
         'user_id',

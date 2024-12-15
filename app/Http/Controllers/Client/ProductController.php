@@ -180,7 +180,7 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-
+            $product->increment('views');
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {

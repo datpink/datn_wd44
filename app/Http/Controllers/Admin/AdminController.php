@@ -7,6 +7,7 @@ use App\Models\Catalogue;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
+use App\Models\Post;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -368,10 +369,6 @@ class AdminController extends Controller
             return $statistic;
         });
 
-        // dd($statisticsWithPaymentMethod);
-        // dd($statistics);
-
-
 
         return view('admin.index', compact(
             'title',
@@ -397,8 +394,6 @@ class AdminController extends Controller
             'topSellingProducts',
             'topSellingProductNames',
             'period',
-            'timePeriod',
-            'filterPeriod',
             'topSellingProductQuantities'
         ));
     }
