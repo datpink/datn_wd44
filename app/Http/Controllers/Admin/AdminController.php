@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class AdminController extends Controller
@@ -38,17 +39,41 @@ class AdminController extends Controller
         $userCount = User::count();
         $productCount = Product::count();
 
-        // Lấy danh sách người dùng mua hàng gần đây
+        // Lấy tham số selectedPeriod từ query string
+        $selectedPeriod = $request->input('selectedPeriod', '1day'); // Mặc định là '1day'
+
+        // Khởi tạo mốc thời gian
+        $periodStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số selectedPeriod
+        switch ($selectedPeriod) {
+            case '1day':
+                $periodStart = Carbon::today()->subDay(); // Lùi lại 1 ngày
+                break;
+            case '2weeks':
+                $periodStart = Carbon::today()->subWeeks(2); // Lùi lại 2 tuần
+                break;
+            case '1month':
+                $periodStart = Carbon::today()->subMonth(); // Lùi lại 1 tháng
+                break;
+            default:
+                $periodStart = Carbon::today()->subDay(); // Mặc định là 1 ngày
+                break;
+        }
+
+        // Lấy danh sách người dùng mua hàng gần đây trong khoảng thời gian đã xác định
         $recentBuyers = Order::with('user')
             ->select(
                 'user_id',
                 DB::raw('COUNT(*) as order_count'),
                 DB::raw('MAX(created_at) as last_order_time')
             )
+            ->where('created_at', '>=', $periodStart) // Lọc theo khoảng thời gian
             ->groupBy('user_id')
             ->orderBy('last_order_time', 'desc')
-            ->take(5)
+            ->take(1010)
             ->get();
+
 
         // Chuyển đổi last_order_time từ chuỗi thành Carbon
         foreach ($recentBuyers as $buyer) {
@@ -115,16 +140,84 @@ class AdminController extends Controller
             ->sum('total_amount');
 
 
-        // Lấy danh sách đơn hàng và các sản phẩm kèm theo
-        $orders = Order::with(['user', 'items.productVariant.product']) // Đảm bảo lấy đúng thông tin sản phẩm
+        // Lấy tham số selectedOrderPeriod từ query string
+        $selectedOrderPeriod = $request->input('selectedOrderPeriod', '1day'); // Mặc định là '1week'
+
+        // Khởi tạo mốc thời gian
+        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        // Xử lý khoảng thời gian dựa trên tham số selectedOrderPeriod
+        switch ($selectedOrderPeriod) {
+            case '1day':
+                $startDate = Carbon::today();
+                break;
+            case '1week':
+                $startDate = Carbon::today()->subWeeks(1);
+                break;
+            case '2weeks':
+                $startDate = Carbon::today()->subWeeks(2);
+                break;
+            case '3weeks':
+                $startDate = Carbon::today()->subWeeks(3);
+                break;
+            case '4weeks':
+                $startDate = Carbon::today()->subWeeks(4);
+                break;
+            default:
+                $startDate = Carbon::today();
+                break;
+        }
+
+        // Truy vấn danh sách đơn hàng và các sản phẩm
+        $orders = Order::with(['user', 'items.productVariant.product', 'items.product']) // Đảm bảo lấy đúng thông tin sản phẩm
+            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
             ->orderBy('created_at', 'desc')
             ->take(8)
             ->get();
+
+        // dd($orders);
+
+
+        // Lấy tham số filterPeriod từ query string
+        $filterPeriod = $request->input('filterPeriod', 'today'); // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+        $filterStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $filterEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        // Xử lý khoảng thời gian dựa trên tham số filterPeriod
+        switch ($filterPeriod) {
+            case 'yesterday':
+                $filterStart = Carbon::yesterday();
+                $filterEnd = Carbon::yesterday();
+                break;
+            case '7days':
+                $filterStart = Carbon::today()->subDays(6);
+                $filterEnd = Carbon::today();
+                break;
+            case '15days':
+                $filterStart = Carbon::today()->subDays(14);
+                $filterEnd = Carbon::today();
+                break;
+            case '30days':
+                $filterStart = Carbon::today()->subDays(29);
+                $filterEnd = Carbon::today();
+                break;
+            case '1years':
+                $filterStart = Carbon::today()->subDays(364);
+                $filterEnd = Carbon::today();
+                break;
+            default:
+                $filterStart = Carbon::today();
+                break;
+        }
 
 
         // Lấy số lượng đơn hàng theo trạng thái, chỉ lấy "processing" và "shipped" cho danh sách
         $ordersByStatusForList = Order::select('status', \DB::raw('COUNT(*) as count'))
             ->whereIn('status', ['pending_confirmation', 'delivered']) // Chỉ lấy hai trạng thái này cho danh sách
+            ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -135,6 +228,7 @@ class AdminController extends Controller
 
         // Lấy số lượng đơn hàng cho tất cả các trạng thái để hiển thị trên biểu đồ
         $ordersByStatusForChart = Order::select('status', \DB::raw('COUNT(*) as count'))
+            ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
@@ -152,22 +246,63 @@ class AdminController extends Controller
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
 
 
-        // Truy vấn Top 10 sản phẩm bán chạy, bao gồm eager load product
-        $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
-            ->groupBy('product_variant_id')
+        // Lấy tham số timePeriod từ query string
+        $timePeriod = $request->input('timePeriod', 'today'); // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+        $timeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+        $timeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số timePeriod
+        switch ($timePeriod) {
+            case 'yesterday':
+                $timeStart = Carbon::yesterday();
+                $timeEnd = Carbon::yesterday();
+                break;
+            case '7days':
+                $timeStart = Carbon::today()->subDays(6);
+                $timeEnd = Carbon::today();
+                break;
+            case '15days':
+                $timeStart = Carbon::today()->subDays(14);
+                $timeEnd = Carbon::today();
+                break;
+            case '30days':
+                $timeStart = Carbon::today()->subDays(29);
+                $timeEnd = Carbon::today();
+                break;
+            case '1years':
+                $timeStart = Carbon::today()->subDays(364);
+                $timeEnd = Carbon::today();
+                break;
+            default:
+                // Mặc định là hôm nay
+                $timeStart = Carbon::today();
+                break;
+        }
+
+        // Truy vấn Top 10 sản phẩm bán chạy trong khoảng thời gian đã xác định
+        $topSellingProducts = OrderItem::select('product_id', 'product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->whereBetween('created_at', [$timeStart->startOfDay(), $timeEnd->endOfDay()]) // Thêm điều kiện thời gian
+            ->groupBy('product_id', 'product_variant_id') // Group theo cả product_id và product_variant_id
             ->orderByDesc('total_quantity') // Sắp xếp theo số lượng bán
             ->limit(10) // Lấy 10 sản phẩm bán chạy nhất
-            ->with('productVariant.product') // Eager load quan hệ product từ product_variant
+            ->with(['product', 'productVariant.product']) // Eager load quan hệ product và product từ product_variant
             ->get();
 
-        // Lấy tên sản phẩm hoặc mã sản phẩm tương ứng với `product_variant_id`
+        // Lấy tên sản phẩm hoặc mã sản phẩm tương ứng và giới hạn tên
         $topSellingProductNames = $topSellingProducts->map(function ($item) {
-            // Kiểm tra sự tồn tại của product_variant và product trước khi truy cập thuộc tính name
             if ($item->productVariant && $item->productVariant->product) {
-                return $item->productVariant->product->name;
+                // Nếu tồn tại productVariant và product
+                return Str::limit($item->productVariant->product->name, 10, '...'); // Giới hạn tên 10 ký tự
+            } elseif ($item->product) {
+                // Nếu chỉ tồn tại product
+                return Str::limit($item->product->name, 10, '...'); // Giới hạn tên 10 ký tự
             }
-            return 'Không xác định';
+            return 'Không xác định'; // Không xác định nếu cả hai đều không tồn tại
         });
+
+
 
 
         $topSellingProductQuantities = $topSellingProducts->pluck('total_quantity');
@@ -190,9 +325,35 @@ class AdminController extends Controller
         $netProfit = $totalProfit - $discounts; // Trừ tổng giảm giá
 
 
-        // Lọc các đơn hàng đã giao và đã thanh toán
+        // Lấy tham số timeRange từ query string
+        $timeRange = $request->input('timeRange', '4months'); // Mặc định là '4months'
+
+        // Khởi tạo mốc thời gian
+        $rangeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số timeRange
+        switch ($timeRange) {
+            case '4months':
+                $rangeStart = Carbon::today()->subMonths(4); // Lùi lại 4 tháng
+                break;
+            case '8months':
+                $rangeStart = Carbon::today()->subMonths(8); // Lùi lại 8 tháng
+                break;
+            case '1year':
+                $rangeStart = Carbon::today()->subYear(); // Lùi lại 1 năm
+                break;
+            default:
+                $rangeStart = Carbon::today()->subMonths(4); // Mặc định là 4 tháng
+                break;
+        }
+
+        // Lấy ngày kết thúc là ngày hiện tại
+        $rangeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        // Truy vấn thống kê từ cơ sở dữ liệu dựa trên khoảng thời gian đã xác định
         $statistics = Order::where('status', 'delivered')
             ->where('payment_status', 'paid')
+            ->whereBetween('created_at', [$rangeStart, $rangeEnd]) // Lọc theo khoảng thời gian
             ->groupBy('payment_method_id') // Nhóm theo phương thức thanh toán
             ->select('payment_method_id', DB::raw('SUM(total_amount) as total_amount'), DB::raw('COUNT(*) as total_orders'))
             ->get();
@@ -207,11 +368,13 @@ class AdminController extends Controller
             $statistic->payment_method_description = $paymentMethod->description ?? 'No description available';
             return $statistic;
         });
-        $topProducts = Product::orderBy('views', 'desc')->take(5)->get(); // Lấy 5 sản phẩm có lượt xem cao nhất
-        // Lấy 5 bài viết được xem nhiều nhất
-        $topPosts = Post::orderBy('views', 'desc')->take(5)->get();
+
+
         return view('admin.index', compact(
             'title',
+            'timeRange',
+            'selectedOrderPeriod',
+            'selectedPeriod',
             'recentBuyers',
             'totalProfit',
             'profits',
@@ -231,9 +394,7 @@ class AdminController extends Controller
             'topSellingProducts',
             'topSellingProductNames',
             'period',
-            'topSellingProductQuantities',
-            'topProducts',
-            'topPosts',
+            'topSellingProductQuantities'
         ));
     }
 

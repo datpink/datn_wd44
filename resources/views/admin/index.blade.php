@@ -108,7 +108,7 @@
                                                             VNĐ</h5>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-info w-100">Xem Báo Cáo</button>
+                                                {{-- <button class="btn btn-info w-100">Xem Báo Cáo</button> --}}
                                             </div>
                                         </div>
                                         <div class="col-xxl-9 col-sm-8 col-md-12">
@@ -150,13 +150,41 @@
             <!-- Row end -->
 
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-lg-7 col-sm-12 col-12">
                     <div class="card">
+                        <!-- Header -->
                         <div class="card-header">
-                            <div class="card-title">Sản Phẩm Bán Chạy</div>
+                            <h4 class="card-title mb-0">Sản Phẩm Bán Chạy</h4>
                         </div>
+
+                        <!-- Body -->
                         <div class="card-body">
-                            <div id="basic-column-graph-datalables"></div>
+                            <!-- Bộ lọc thời gian -->
+                            <div class="d-flex justify-content-end mb-3">
+                                <div class="btn-group" role="group" aria-label="Filter Time Period">
+                                    <a href="?timePeriod=today"
+                                        class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Today</a>
+                                    <a href="?timePeriod=yesterday"
+                                        class="btn btn-sm {{ $timePeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Yesterday</a>
+                                    <a href="?timePeriod=7days"
+                                        class="btn btn-sm {{ $timePeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
+                                        days</a>
+                                    <a href="?timePeriod=15days"
+                                        class="btn btn-sm {{ $timePeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
+                                        days</a>
+                                    <a href="?timePeriod=30days"
+                                        class="btn btn-sm {{ $timePeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
+                                        days</a>
+                                    <a href="?timePeriod=1years"
+                                        class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                        year</a>
+                                </div>
+                            </div>
+
+                            <!-- Biểu đồ -->
+                            <div id="basic-column-graph-datalables" style="height: 300px;">
+                                <!-- Nội dung biểu đồ được render bởi JavaScript -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -167,6 +195,17 @@
                             <div class="card-title">Giao Dịch</div>
                         </div>
                         <div class="card-body">
+                            <div>
+                                <a href="?timeRange=4months"
+                                    class="btn btn-sm {{ $timeRange == '4months' ? 'btn-primary' : 'btn-outline-primary' }}">4
+                                    tháng</a>
+                                <a href="?timeRange=8months"
+                                    class="btn btn-sm {{ $timeRange == '8months' ? 'btn-primary' : 'btn-outline-primary' }}">8
+                                    tháng</a>
+                                <a href="?timeRange=1year"
+                                    class="btn btn-sm {{ $timeRange == '1year' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                    năm</a>
+                            </div>
                             <div class="scroll370">
                                 <div class="transactions-container">
                                     @foreach ($statisticsWithPaymentMethod as $statistic)
@@ -192,6 +231,8 @@
                         </div>
                     </div>
                 </div>
+
+
             </div>
 
             <!-- Row start -->
@@ -200,8 +241,21 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Đơn Hàng Mới</div>
+                            <div class="mb-3">
+                                <a href="?selectedOrderPeriod=1day"
+                                    class="btn btn-sm {{ $selectedOrderPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">1day</a>
+                                <a href="?selectedOrderPeriod=1week"
+                                    class="btn btn-sm {{ $selectedOrderPeriod == '1week' ? 'btn-primary' : 'btn-outline-primary' }}">1week</a>
+                                <a href="?selectedOrderPeriod=2weeks"
+                                    class="btn btn-sm {{ $selectedOrderPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }}">2weeks</a>
+                                <a href="?selectedOrderPeriod=3weeks"
+                                    class="btn btn-sm {{ $selectedOrderPeriod == '3weeks' ? 'btn-primary' : 'btn-outline-primary' }}">3weeks</a>
+                                <a href="?selectedOrderPeriod=44weeks"
+                                    class="btn btn-sm {{ $selectedOrderPeriod == '44weeks' ? 'btn-primary' : 'btn-outline-primary' }}">4weeks</a>
+                            </div>
                         </div>
                         <div class="card-body">
+
                             <div class="table-responsive">
                                 <table class="table v-middle">
                                     <thead>
@@ -211,7 +265,7 @@
                                             <th>Sản Phẩm</th>
                                             <th>Ngày Mua</th>
                                             <th>Giá</th>
-                                            <th>Phương Thức Thanh Toán</th>
+                                            <th>Trạng Thái Thanh Toán</th>
                                             <th>Trạng Thái Đơn Hàng</th>
                                         </tr>
                                     </thead>
@@ -221,12 +275,12 @@
                                                 <!-- Lặp qua các sản phẩm trong đơn hàng -->
                                                 <tr>
                                                     <td>{{ $order->id }}</td>
-
                                                     <td>
                                                         <div class="media-box">
                                                             <div class="media-box-body">
                                                                 <div class="text-truncate">
-                                                                    {{ $order->user->name ?? 'Unknown' }}</div>
+                                                                    {{ $order->user->name ?? 'Unknown' }}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </td>
@@ -234,17 +288,35 @@
                                                         <div class="media-box">
                                                             <div class="media-box-body">
                                                                 <div class="text-truncate">
-                                                                    {{ $item->productVariant->product->name ?? 'Unknown Product' }}
+                                                                    <!-- Kiểm tra nếu có productVariant, nếu không thì lấy từ product -->
+                                                                    @if ($item->productVariant)
+                                                                        {{ $item->productVariant->product->name ?? 'Unknown Product' }}
+                                                                    @else
+                                                                        {{ $item->product->name ?? 'Unknown Product' }}
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </td>
                                                     <td>{{ $order->created_at->format('d/m/Y') }}</td>
                                                     <td>
-                                                        @if(floor($order->total_amount) == $order->total_amount)
+                                                        @if (floor($order->total_amount) == $order->total_amount)
                                                             {{ number_format($order->total_amount) }} VND
                                                         @else
                                                             {{ number_format($order->total_amount, 2) }} VND
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        @if ($order->payment_status === 'unpaid')
+                                                            <span class="badge rounded-pill bg-warning">Chưa thanh toán</span>
+                                                        @elseif ($order->payment_status === 'paid')
+                                                            <span class="badge rounded-pill bg-success">Đã thanh toán</span>
+                                                        @elseif ($order->payment_status === 'refunded')
+                                                            <span class="badge rounded-pill bg-danger">Hoàn trả</span>
+                                                        @elseif ($order->payment_status === 'payment_failed')
+                                                            <span class="badge rounded-pill bg-danger">Thanh toán thất bại</span>
+                                                        @else
+                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
                                                     </td>
                                                     <td>
@@ -253,8 +325,7 @@
                                                         @elseif ($order->status === 'pending_pickup')
                                                             <span class="badge rounded-pill bg-warning">Chờ lấy hàng</span>
                                                         @elseif ($order->status === 'pending_delivery')
-                                                            <span class="badge rounded-pill bg-primary">Chờ giao
-                                                                hàng</span>
+                                                            <span class="badge rounded-pill bg-primary">Chờ giao hàng</span>
                                                         @elseif ($order->status === 'returned')
                                                             <span class="badge rounded-pill bg-danger">Trả hàng</span>
                                                         @elseif ($order->status === 'delivered')
@@ -265,54 +336,65 @@
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        @if ($order->payment_status === 'unpaid')
-                                                            <span class="badge rounded-pill bg-warning">Chưa thanh
-                                                                toán</span>
-                                                        @elseif ($order->payment_status === 'paid')
-                                                            <span class="badge rounded-pill bg-success">Đã thanh
-                                                                toán</span>
-                                                        @elseif ($order->payment_status === 'refunded')
-                                                            <span class="badge rounded-pill bg-danger">Hoàn trả</span>
-                                                        @elseif ($order->payment_status === 'payment_failed')
-                                                            <span class="badge rounded-pill bg-danger">Thanh toán thất
-                                                                bại</span>
-                                                        @else
-                                                            <span class="badge rounded-pill bg-secondary">Không rõ</span>
-                                                        @endif
-                                                    </td>
-
                                                 </tr>
                                             @endforeach
                                         @endforeach
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- Row end -->
 
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-title">Thống Kê Theo Trạng Thái</div>
+                            <h4 class="card-title mb-0">Thống Kê Theo Trạng Thái</h4>
                         </div>
                         <div class="card-body">
-                            <div id="taskGraph"></div>
-                            <ul class="task-list-container">
+                            <!-- Bộ lọc thời gian -->
+                            <div class="mb-3 d-flex gap-2">
+                                <a href="?filterPeriod=today"
+                                    class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Today</a>
+                                <a href="?filterPeriod=yesterday"
+                                    class="btn btn-sm {{ $filterPeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Yesterday</a>
+                                <a href="?filterPeriod=7days"
+                                    class="btn btn-sm {{ $filterPeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
+                                    days</a>
+                                <a href="?filterPeriod=15days"
+                                    class="btn btn-sm {{ $filterPeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
+                                    days</a>
+                                <a href="?filterPeriod=30days"
+                                    class="btn btn-sm {{ $filterPeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
+                                    days</a>
+                                <a href="?filterPeriod=1years"
+                                    class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                    year</a>
+                            </div>
+
+                            <!-- Biểu đồ thống kê -->
+                            <div id="taskGraph" class="mb-4">
+                                <!-- Nội dung biểu đồ (được render bởi JS hoặc PHP) -->
+                            </div>
+
+                            <!-- Danh sách thống kê -->
+                            <ul class="list-group">
                                 @foreach ($ordersByStatusForList as $status => $count)
-                                    <li class="task-list-item">
-                                        <div
-                                            class="task-icon shade-{{ $loop->index % 4 === 0 ? 'blue' : ($loop->index % 3 === 0 ? 'green' : 'red') }}">
-                                            <i class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                                    <li class="list-group-item d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="task-icon bg-{{ $loop->index % 4 === 0 ? 'primary' : ($loop->index % 3 === 0 ? 'success' : 'danger') }} text-white rounded-circle d-flex justify-content-center align-items-center"
+                                                style="width: 40px; height: 40px;">
+                                                <i
+                                                    class="bi bi-clipboard-{{ $status === 'shipped' ? 'check' : 'plus' }}"></i>
+                                            </div>
+                                            <span class="fw-bold">{{ ucfirst($status) }}</span>
                                         </div>
-                                        <div class="task-info">
-                                            <h5 class="task-title">{{ ucfirst($status) }}</h5>
-                                            <p class="amount-spend">{{ $count }}</p>
-                                        </div>
+                                        <span class="badge bg-secondary rounded-pill">{{ $count }}</span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -321,12 +403,22 @@
                 </div>
 
                 <div class="col-lg-4">
-
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Người Mua Gần Đây</div>
                         </div>
                         <div class="card-body">
+                            <div>
+                                <a href="?selectedPeriod=1day"
+                                    class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                    Ngày</a>
+                                <a href="?selectedPeriod=2weeks"
+                                    class="btn btn-sm {{ $selectedPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }}">2
+                                    Tuần</a>
+                                <a href="?selectedPeriod=1month"
+                                    class="btn btn-sm {{ $selectedPeriod == '1month' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                    Tháng</a>
+                            </div>
                             <div class="scroll370">
                                 <div class="activity-container">
                                     @foreach ($recentBuyers as $buyer)
@@ -351,21 +443,7 @@
                     </div>
 
                 </div>
-                <div class="row">
-                    <!-- Biểu đồ lượt xem sản phẩm -->
-                    <div class="col-md-6">
-                        <h3>Lượt xem Sản phẩm</h3>
-                        <canvas id="productViewsChart" width="400" height="200">
-                           
-                        </canvas>
-                    </div>
-            
-                    <!-- Biểu đồ lượt xem bài viết -->
-                    <div class="col-md-6">
-                        <h3>Lượt xem Bài viết</h3>
-                        <canvas id="postViewsChart"></canvas>
-                    </div>
-                </div>
+
             </div>
 
 
@@ -568,7 +646,7 @@
                     categories: @json($topSellingProductNames), // Dữ liệu tên sản phẩm
                     position: 'top',
                     labels: {
-                        offsetY: -18,
+                        // offsetY: -18,
                     },
                     axisBorder: {
                         show: false

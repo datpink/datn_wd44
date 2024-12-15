@@ -38,7 +38,7 @@ class PaymentController extends Controller
 
                     if ($productVariant->stock < $product['quantity']) {
                         DB::rollBack();
-                        return back()
+                        return redirect()->route('cart.view')
                             ->with('error', "Sản phẩm {$productVariant->product->name} đã hết hàng hoặc không đủ số lượng. Vui lòng thử lại.");
                     }
                 } else {
@@ -48,19 +48,20 @@ class PaymentController extends Controller
 
                     if ($productModel->stock < $product['quantity']) {
                         DB::rollBack();
-                        return back()
+                        return redirect()->route('cart.view')
                             ->with('error', "Sản phẩm {$productModel->name} đã hết hàng hoặc không đủ số lượng. Vui lòng thử lại.");
                     }
                 }
             }
 
             // Chuẩn bị dữ liệu cho đơn hàng
+            $pmst = $paymentMethodName === 'cod' ? 'unpaid' : 'pending';
             $data = [
                 'user_id' => auth()->id(),
                 'promotion_id' => $request->promotion_id,
                 'total_amount' => $request->totalAmount,
-                'discount_amount' => $request->input('discount_display', 0),
-                'payment_status' => $paymentMethodName === 'cod' ? 'unpaid' : 'paid',
+                'discount_amount' => $request->input('discount_display', default: 0),
+                'payment_status' => $pmst,
                 'shipping_address' => $request->full_address,
                 'description' => $request->description,
                 'payment_method_id' => $paymentMethodId,
@@ -165,7 +166,7 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('order.failed')
-                ->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+                ->with('error', 'Có lỗi xảy ra 2: ' . $e->getMessage());
         }
     }
 
@@ -198,7 +199,7 @@ class PaymentController extends Controller
 
                     Mail::to($order->user->email)->send(new OrderConfirmation($order));
                     DB::commit();
-                    return view('client.vnpay.success', ['order' => $transaction]);
+                    return view('client.vnpay.success', ['order' => $order]);
                 } else {
                     foreach ($order->orderItems as $item) {
                         if ($item->product_variant_id) {
@@ -223,10 +224,9 @@ class PaymentController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+            return redirect()->route('cart.view')->with('error', 'hehe : ' . $e->getMessage());
         }
     }
-
 
 
     public function orderFailed()
