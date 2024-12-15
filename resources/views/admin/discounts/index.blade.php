@@ -108,6 +108,13 @@
                                                                 style="font-size: 1.8em;"></i>
                                                         </button>
                                                     </form>
+                                                    <a href="{{ route('products.apply', $discount->id) }}" class="btn-sm"
+                                                        title="Áp dụng cho sản phẩm" style="margin-right: 15px;">
+                                                        <i class="bi bi-sort-down"
+                                                        style="font-size: 1.8em;"></i>
+                                                        
+                                                    </a>
+                                                    
                                                 </td>
                                             </tr>
                                         @endforeach

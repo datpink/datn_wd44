@@ -85,7 +85,7 @@
                                         <th>Áp dụng cho phí vận chuyển</th>
                                         <th>Ngày bắt đầu</th>
                                         <th>Ngày kết thúc</th>
-                                        <th>Ngày sửa mã</th>
+                                        <th>Đơn hàng tối đa</th>
                                         <th colspan="2">Hành động</th>
                                     </tr>
                                 </thead>
@@ -133,7 +133,7 @@
                                         </td>
                                         <td>{{ $promotion->start_date }}</td>
                                         <td>{{ $promotion->end_date }}</td>
-                                        <td>{{ $promotion->updated_at ?? 'Trống' }}</td>
+                                        <td>{{ $promotion->max_value ?? 'Trống' }}</td>
                                         <td>
                                             <a href="{{ route('promotions.edit', $promotion->id) }}" class="editRow"
                                                 title="Sửa" style="margin-right: 15px;">
