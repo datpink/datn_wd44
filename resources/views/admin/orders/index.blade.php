@@ -64,8 +64,11 @@
                                             <option value="returned"
                                                 {{ request()->status === 'returned' ? 'selected' : '' }}>Trả hàng
                                             </option>
+                                            <option value="confirm_delivered"
+                                                {{ request()->status === 'confirm_delivered' ? 'selected' : '' }}>Đã giao
+                                            </option>
                                             <option value="delivered"
-                                                {{ request()->status === 'delivered' ? 'selected' : '' }}>Đã giao
+                                                {{ request()->status === 'delivered' ? 'selected' : '' }}>Đã giao xác nhận
                                             </option>
                                             <option value="canceled"
                                                 {{ request()->status === 'canceled' ? 'selected' : '' }}>Đã hủy
@@ -133,6 +136,8 @@
                                                         <span class="badge rounded-pill bg-danger">Trả hàng</span>
                                                     @elseif ($order->status === 'delivered')
                                                         <span class="badge rounded-pill bg-secondary">Đã giao</span>
+                                                    @elseif ($order->status === 'confirm_delivered')
+                                                        <span class="badge rounded-pill bg-primary">Đã giao</span>
                                                     @elseif ($order->status === 'canceled')
                                                         <span class="badge rounded-pill bg-secondary">Đã hủy</span>
                                                     @else
@@ -336,8 +341,8 @@
                                                                                         {{ $order->status === 'returned' ? 'selected' : '' }}>
                                                                                         Trả hàng
                                                                                     </option>
-                                                                                    <option value="delivered"
-                                                                                        {{ $order->status === 'delivered' ? 'selected' : '' }}>
+                                                                                    <option value="confirm_delivered"
+                                                                                        {{ $order->status === 'confirm_delivered' ? 'selected' : '' }}>
                                                                                         Đã giao
                                                                                     </option>
                                                                                     <option value="canceled"
@@ -365,7 +370,7 @@
                                                                         <button type="button"
                                                                             class="btn btn-secondary rounded-pill"
                                                                             data-bs-dismiss="modal">Đóng</button>
-                                                                        @if (!in_array($order->status, ['returned', 'delivered', 'canceled']))
+                                                                        @if (!in_array($order->status, ['returned', 'confirm_delivered', 'canceled']))
                                                                             <button type="submit"
                                                                                 class="btn btn-success rounded-pill"
                                                                                 form="orderStatusForm{{ $order->id }}">Lưu
@@ -376,7 +381,7 @@
                                                             </div>
                                                         </div>
                                                         <!-- Kiểm tra trạng thái đơn hàng -->
-                                                        @if ($order->status === 'delivered')
+                                                        @if ($order->status === 'confirm_delivered')
                                                             <!-- Thay 'completed' bằng giá trị trạng thái hoàn thành của bạn -->
                                                             <a href="{{ route('orders.invoice', $order->id) }}"
                                                                 target="_blank" class="exportInvoice">

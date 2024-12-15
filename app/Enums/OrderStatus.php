@@ -10,6 +10,7 @@ class OrderStatus
     const refunded = 'returned';
     const delivered = 'delivered';
     const canceled = 'canceled';
+    const confirm_delivered = 'confirm_delivered';
 
     public static function all()
     {
@@ -20,6 +21,7 @@ class OrderStatus
             self::refunded,
             self::delivered,
             self::canceled,
+            self::confirm_delivered,
         ];
     }
 }

@@ -114,7 +114,7 @@ class AdminController extends Controller
         $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total, SUM(discount_amount) as discount_amount')
             ->whereDate('created_at', '>=', $startDate->toDateString())
             ->whereDate('created_at', '<=', $endDate->toDateString())
-            ->where('status', 'delivered')
+            ->whereIn('status', ['delivered', 'confirm_delivered'])
             ->where('payment_status', 'paid')
             ->groupBy('date')
             ->orderBy('date')
@@ -135,7 +135,7 @@ class AdminController extends Controller
         // dd($totals, $discounts);
 
         // Tính tổng doanh số
-        $totalSales = Order::where('status', 'delivered') // Thay 'shipped' thành 'delivered'
+        $totalSales = Order::whereIn('status', ['delivered', 'confirm_delivered'])
             ->where('payment_status', 'paid') // Giữ nguyên trạng thái thanh toán
             ->sum('total_amount');
 
@@ -239,9 +239,12 @@ class AdminController extends Controller
             'pending_pickup',       // Chờ lấy hàng
             'pending_delivery',     // Chờ giao hàng
             'delivered',            // Đã giao hàng
+            'confirm_delivered',    // Chờ xác nhận giao
             'returned',             // Trả hàng
             'canceled'              // Đã hủy
         ];
+
+        // dd($ordersByStatusForChart);
 
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
 
@@ -369,9 +372,30 @@ class AdminController extends Controller
             return $statistic;
         });
 
+        // Lấy 10 sản phẩm có lượt xem cao nhất
+        $topProducts = Product::orderBy('views', 'desc')->take(7)->get();
+
+        // Cắt tên sản phẩm và bài viết nếu quá 10 ký tự
+        $topProducts = $topProducts->map(function ($product) {
+            $product->name = strlen($product->name) > 10 ? substr($product->name, 0, 5) . '...' : $product->name;
+            return $product;
+        });
+
+        // Lấy 10 bài viết có lượt xem cao nhất
+        $topPosts = Post::orderBy('views', 'desc')->take(7)->get();
+
+        $topPosts = $topPosts->map(function ($post) {
+            $post->title = strlen($post->title) > 10 ? substr($post->title, 0, 5) . '...' : $post->title;
+            return $post;
+        });
+
 
         return view('admin.index', compact(
             'title',
+            'topProducts',
+            'topPosts',
+            'timePeriod',
+            'filterPeriod',
             'timeRange',
             'selectedOrderPeriod',
             'selectedPeriod',
