@@ -51,9 +51,14 @@ trait ManagesOrders
 
             // Kiểm tra trạng thái cập nhật chỉ được phép là 'confirm_delivered'
             if ($newStatus === 'confirm_delivered') {
-                $order->status = 'delivered'; // Đổi trạng thái đơn hàng thành 'delivered'
-                $order->confirm_delivered = true; // Đánh dấu trạng thái đã xác nhận giao hàng
+                $order->payment_status = 'paid'; // Đánh dấu trạng thái đã xác nhận giao hàng
                 $order->delivered_at = now(); // Cập nhật thời gian giao hàng
+                $order->status = $newStatus;
+
+                // dd($newStatus);
+            } elseif (in_array($newStatus, ['pending_delivery', 'pending_pickup'])) {
+                $order->status = $newStatus; // Đ��i trạng thái đơn hàng thành 'pending_delivery' hoặc 'pending_pickup'
+
             } elseif (in_array($newStatus, ['canceled', 'returned'])) {
                 // Chỉ cập nhật nếu trạng thái là 'canceled' hoặc 'returned'
                 $order->payment_status = 'refunded'; // Hoàn trả

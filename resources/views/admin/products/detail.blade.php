@@ -21,7 +21,7 @@
                                 <div class="form-group">
                                     <label for="name">Tên sản phẩm</label>
                                     <p class="form-control">{{ $product->name }}</p>
-                                  
+
                                 </div>
 
                                 <!-- Thương hiệu -->
@@ -123,29 +123,88 @@
                                 </div>
 
                                 <!-- Tóm tắt sản phẩm -->
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="tomtat">Tóm tắt</label>
                                     <p>{!! $product->tomtat !!}</p>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="tomtat">Lượt xem</label>
                                     <p>Lượt xem: {{ $product->views }}</p>
                                 </div>
+
+                                <!-- Mô tả sản phẩm -->
+                                <div class="form-group mb-4">
+                                    <label for="description">Mô tả sản phẩm</label>
+
+                                    <!-- Modal Dark -->
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#modalFullScreen">
+                                        Xem Ngay
+                                    </button>
+
+                                    <!-- Modal Fade -->
+                                    <div class="modal fade" id="modalFullScreen" tabindex="-1"
+                                        aria-labelledby="modalFullScreenLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-fullscreen">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalFullScreenLabel">Mô Tả Sản Phẩm</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body mx-auto">
+                                                    {!! $product->description !!}
+                                                </div>
+
+                                                <style>
+                                                    .modal-body img {
+                                                        max-width: 70%;
+                                                        height: auto;
+                                                        display: block;
+                                                        margin: 0 auto;
+                                                    }
+                                                </style>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thông số k�� thuật -->
+                                <div class="form-group mb-4">
+                                    <label for="specifications">Thông số kĩ thuật</label>
+
+                                    <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#modalDark">
+                                        Xem Ngay
+                                    </button>
+
+                                    <!-- Modal Fade -->
+                                    <div class="modal fade" id="modalDark" tabindex="-1"
+                                        aria-labelledby="modalDarkLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalDarkLabel">Thông số kĩ thuật</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {!! $product->specifications !!}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-dark"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-
-                            <!-- Mô tả sản phẩm -->
-                            <div class="form-group">
-                                <label for="description">Mô tả sản phẩm</label>
-                                <p>{!! $product->description !!}</p>
-                            </div>
-
-                            <!-- Mô tả sản phẩm -->
-                            <div class="form-group">
-                                <label for="specifications">Thông số kĩ thuật</label>
-                                <p>{!! $product->specifications !!}</p>
-                            </div>
-
                         </div>
                     </div>
                 </div>

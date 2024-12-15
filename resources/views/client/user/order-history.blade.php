@@ -13,13 +13,13 @@
         @else
             @php
                 $statusClasses = [
-                    'pending_confirmation' => 'bg-info', // Chờ xác nhận
-                    'pending_pickup' => 'bg-warning', // Chờ lấy hàng
-                    'pending_delivery' => 'bg-primary', // Chờ giao hàng
-                    'delivered' => 'bg-success', // Đã giao hàng
-                    'confirm_delivered' => 'bg-success', // Đã giao hàng
-                    'canceled' => 'bg-danger', // Đã hủy
-                    'returned' => 'bg-secondary', // Trả hàng
+                    'pending_confirmation' => 'bg-primary', // Chờ xác nhận
+                    'pending_pickup' => 'bg-secondary', // Chờ lấy hàng
+                    'pending_delivery' => 'bg-success', // Chờ giao hàng (sử dụng lớp Bootstrap có sẵn)
+                    'delivered' => 'bg-warning', // Đã giao hàng (sử dụng lớp Bootstrap có sẵn)
+                    'confirm_delivered' => 'bg-info', // Đã xác nhận giao hàng
+                    'canceled' => 'bg-dark', // Đã hủy
+                    'returned' => 'bg-light', // Trả hàng
                 ];
 
                 $statusLabels = [
@@ -37,7 +37,7 @@
             <div class="orders">
                 @foreach ($orders as $order)
                     @php
-                        $statusClass = $statusClasses[$order->status] ?? 'bg-primary';
+                        $statusClass = $statusClasses[$order->status] ?? 'bg-white';
                         $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
                     @endphp
                     <div class="card mb-4 shadow-sm">
@@ -191,7 +191,7 @@
                                                     <!-- Thêm trạng thái trả hàng -->
                                                     <span class="badge rounded-pill bg-secondary text-white">Trả hàng</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-secondary text-white">Không rõ</span>
+                                                    <span class="badge rounded-pill bg-infoinfo text-white">Không rõ</span>
                                                 @endif
                                             </p>
 
