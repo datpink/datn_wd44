@@ -16,7 +16,7 @@
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{{ route('promotions.update', $promotion->id) }}"
-                                id="promotionForm" class="was-validated">
+                                id="promotionForm">
                                 @csrf
                                 @method('PUT')
 
@@ -25,7 +25,7 @@
                                         <div class="mb-3">
                                             <label for="code" class="form-label">Mã giảm giá</label>
                                             <input type="text" class="form-control" id="code" name="code"
-                                                value="{{ old('code', $promotion->code) }}" required>
+                                                value="{{ old('code', $promotion->code) }}">
                                             @if ($errors->has('code'))
                                                 <ul>
                                                     <li class="text-danger mb-1">{{ $errors->first('code') }}</li>
@@ -38,7 +38,7 @@
                                             <input type="number"
                                                 class="form-control @error('discount_value') is-invalid @enderror"
                                                 id="discount_value" name="discount_value"
-                                                value="{{ old('discount_value', $promotion->discount_value) }}" required
+                                                value="{{ old('discount_value', $promotion->discount_value == (int) $promotion->discount_value ? (int) $promotion->discount_value : number_format($promotion->discount_value, 2)) }}"
                                                 step="0.01" min="0">
                                             @if ($errors->has('discount_value'))
                                                 <ul>
@@ -47,9 +47,10 @@
                                             @endif
                                         </div>
 
+
                                         <div class="mb-3">
                                             <label for="status" class="form-label">Trạng Thái</label>
-                                            <select id="status" name="status" class="form-control" required>
+                                            <select id="status" name="status" class="form-control">
                                                 <option value="active"
                                                     {{ old('status', $promotion->status) == 'active' ? 'selected' : '' }}>
                                                     Kích hoạt</option>
@@ -61,27 +62,28 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
                                         <div class="mb-3">
                                             <label for="order_value" class="form-label">Giá Trị Đơn Hàng</label>
                                             <input type="number" class="form-control" id="order_value" name="order_value"
-                                                value="{{ old('min_order_value', $promotion->min_order_value) }}"
+                                                value="{{ old('min_order_value', $promotion->min_order_value == (int) $promotion->min_order_value ? (int) $promotion->min_order_value : number_format($promotion->min_order_value, 2)) }}"
                                                 step="0.01" min="0">
                                             @error('min_order_value')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
+
                                         <div class="mb-3">
                                             <label for="start_date" class="form-label">Ngày bắt đầu</label>
                                             <input type="date" class="form-control" id="start_date" name="start_date"
-                                                value="{{ old('start_date', $promotion->start_date) }}" required>
+                                                value="{{ old('start_date', $promotion->start_date) }}">
                                             @error('start_date')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <button type="submit" id="submitButton"
-                                            class="btn rounded-pill btn-primary">Cập
+                                        <button type="submit" id="submitButton" class="btn rounded-pill btn-primary">Cập
                                             nhật</button>
                                     </div>
 
@@ -90,14 +92,11 @@
                                             <label for="end_date" class="form-label">Ngày kết thúc</label>
                                             <input type="date" class="form-control" id="end_date" name="end_date"
                                                 value="{{ old('end_date', $promotion->end_date) }}">
-                                            @error('end_date')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="type" class="form-label">Loại giảm giá</label>
-                                            <select id="type" name="type" class="form-control" required>
+                                            <select id="type" name="type" class="form-control">
                                                 <option value="percentage"
                                                     {{ old('type', $promotion->type) == 'percentage' ? 'selected' : '' }}>
                                                     Phần Trăm
@@ -118,8 +117,7 @@
 
                                         <div class="mb-3">
                                             <label for="applies_to_order" class="form-label">Áp Dụng Cho Đơn Hàng</label>
-                                            <select id="applies_to_order" name="applies_to_order" class="form-control"
-                                                required>
+                                            <select id="applies_to_order" name="applies_to_order" class="form-control">
                                                 <option value="1"
                                                     {{ old('applies_to_order', $promotion->applies_to_order) == 1 ? 'selected' : '' }}>
                                                     Có</option>
@@ -136,7 +134,7 @@
                                             <label for="applies_to_shipping" class="form-label">Áp Dụng Cho Vận
                                                 Chuyển</label>
                                             <select id="applies_to_shipping" name="applies_to_shipping"
-                                                class="form-control" required>
+                                                class="form-control">
                                                 <option value="1"
                                                     {{ old('applies_to_shipping', $promotion->applies_to_shipping) == 1 ? 'selected' : '' }}>
                                                     Có</option>
@@ -158,38 +156,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function validateForm() {
-            const code = document.getElementById('code').value.trim();
-            const discountValue = document.getElementById('discount_value').value;
-            const status = document.getElementById('status').value;
-            const startDate = document.getElementById('start_date').value;
-            const endDate = document.getElementById('end_date').value;
-            const type = document.getElementById('type').value;
-            const appliesToOrder = document.getElementById('applies_to_order').value;
-            const appliesToShipping = document.getElementById('applies_to_shipping').value;
-            const submitButton = document.getElementById('submitButton');
-
-            // Kiểm tra xem tất cả các trường bắt buộc có giá trị không
-            if (code && discountValue && status && startDate && type && appliesToOrder !== null && appliesToShipping !==
-                null) {
-                submitButton.disabled = false; // Kích hoạt nút nếu tất cả các trường có giá trị
-            } else {
-                submitButton.disabled = true; // Khóa nút nếu có trường trống
-            }
-        }
-
-        // Thêm sự kiện input cho các trường
-        document.getElementById('code').addEventListener('input', validateForm);
-        document.getElementById('discount_value').addEventListener('input', validateForm);
-        document.getElementById('status').addEventListener('change', validateForm);
-        document.getElementById('start_date').addEventListener('change', validateForm);
-        document.getElementById('end_date').addEventListener('change', validateForm);
-        document.getElementById('type').addEventListener('change', validateForm);
-        document.getElementById('applies_to_order').addEventListener('change', validateForm);
-        document.getElementById('applies_to_shipping').addEventListener('change', validateForm);
-    </script>
 @endsection

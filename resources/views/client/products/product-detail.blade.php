@@ -514,23 +514,7 @@
                                                 </span>
 
                                             </div>
-                                            <div class="group-button clearfix">
-                                                <div class="yith-wcwl-add-to-wishlist">
-                                                    <div class="yith-wcwl-add-button show">
-                                                        <a href="#" class="add_to_wishlist"
-                                                            data-product-id="{{ $product->id }}">
-                                                            {{ auth()->check() &&auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích' }}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="add-to-cart">
-                                                    <a href="#" class="button product_type_grouped">View
-                                                        products</a>
-                                                </div>
-                                                <div class="kobolg product compare-button">
-                                                    <a href="#" class="compare button">Compare</a>
-                                                </div>
-                                            </div>
+                                            {{-- 3 nút  --}}
                                         </div>
                                     </div>
                                 @endforeach

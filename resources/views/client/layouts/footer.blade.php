@@ -6,9 +6,9 @@
                     <div class="newsletter-wrap">
                         <h3 class="title">Bản tin</h3>
                         <h4 class="subtitle">Được giảm giá 30%</h4>
-                        <p class="desc">
+                        {{-- <p class="desc">
                             Suspendisse netus proin eleifend fusce sollicitudin potenti vel magnis nascetur
-                        </p>
+                        </p> --}}
                     </div>
                 </div>
                 <div class="newsletter-form-wrap">
