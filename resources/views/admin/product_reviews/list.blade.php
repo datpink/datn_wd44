@@ -41,7 +41,7 @@
                                 <table class="table v-middle m-0">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>Stt</th>
                                             <th>Người dùng</th>
                                             <th>Sản phẩm</th>
                                             <th>Xếp hạng</th>
@@ -51,9 +51,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($productReviews as $review)
+                                        @foreach ($productReviews as $index => $review)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $index + 1 }}</td>
                                                 <td>{{ $review->user->name ?? 'N/A' }}</td>
                                                 <td>{{ $review->product->name ?? 'N/A' }}</td>
                                                 <td>{{ $review->rating }}</td>

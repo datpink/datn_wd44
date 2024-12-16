@@ -86,9 +86,11 @@ class ProductController extends Controller
         $query->whereBetween('discount_price', [$minPrice, $maxPrice]);
 
         // Lọc các sản phẩm có giá trong bảng 'variants'
+
         // $query->whereHas('variants', function ($subQuery) use ($minPrice, $maxPrice) {
         //     $subQuery->whereBetween('price', [$minPrice, $maxPrice]);
         // });
+
 
         if ($attributeValueId && $attributeStorageId) {
             // Kiểm tra sản phẩm có cả 2 thuộc tính màu và dung lượng trong cùng một biến thể

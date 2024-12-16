@@ -359,18 +359,24 @@
                                 // Kiểm tra biến thể active
                                 // const hasVariants = product - > variants - > where('status','active') ->count() > 0; 
                                 const hasVariants = product.variants.filter(variant => variant
+
                                     .status === 'active');
+
 
                                 let variantPrices = []; // Danh sách giá các biến thể active
                                 // console.log(hasVariants);
                                 let minVariantPrice = 0
                                 let maxVariantPrice = 0
+
                                 if (hasVariants.length > 0) {
+
 
                                     // console.log(hasVariants);
 
                                     // Tính giá min max của biến thể
+
                                     hasVariants.forEach(variant => {
+
                                         variantPrices.push(variant.price);
 
                                     });
@@ -409,6 +415,7 @@
 
                                 if (hasVariants.length > 0) {
 
+
                                     if (checkPriceVariant) {
                                         // Sản phẩm có discount và nhiều variant
                                         discountContent = `
@@ -441,6 +448,7 @@
                                             </span>
                                         `;
 
+
                                     }
 
                                 } else {
@@ -456,6 +464,7 @@
                                                 
                                                 <span class="kobolg-Price-currencySymbol">₫</span>
                                                 ${Number(product.discount_price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+
                                         </span>
                                     `;
                                 }
