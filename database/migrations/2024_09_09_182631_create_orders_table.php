@@ -22,6 +22,7 @@ return new class extends Migration {
                 'pending_delivery',     // Chờ giao hàng
                 'returned',             // Trả hàng
                 'delivered',            // Đã giao
+                'confirm_delivered',
                 'canceled'              // Đã hủy
             ])->default('pending_confirmation');
             $table->enum('payment_status', [

@@ -517,8 +517,9 @@ class OrderController extends Controller
             $order = Order::findOrFail($id);
 
             // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
-            if ($order->status !== 'pending_delivery') {
-                Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+            if (!in_array($order->status, ['pending_delivery', 'confirm_delivered'])) {
+                \Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+
                 return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
             }
 

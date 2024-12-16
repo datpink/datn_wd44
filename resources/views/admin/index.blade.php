@@ -308,13 +308,16 @@
                                                     </td>
                                                     <td>
                                                         @if ($order->payment_status === 'unpaid')
-                                                            <span class="badge rounded-pill bg-warning">Chưa thanh toán</span>
+                                                            <span class="badge rounded-pill bg-warning">Chưa thanh
+                                                                toán</span>
                                                         @elseif ($order->payment_status === 'paid')
-                                                            <span class="badge rounded-pill bg-success">Đã thanh toán</span>
+                                                            <span class="badge rounded-pill bg-success">Đã thanh
+                                                                toán</span>
                                                         @elseif ($order->payment_status === 'refunded')
                                                             <span class="badge rounded-pill bg-danger">Hoàn trả</span>
                                                         @elseif ($order->payment_status === 'payment_failed')
-                                                            <span class="badge rounded-pill bg-danger">Thanh toán thất bại</span>
+                                                            <span class="badge rounded-pill bg-danger">Thanh toán thất
+                                                                bại</span>
                                                         @else
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
@@ -325,10 +328,13 @@
                                                         @elseif ($order->status === 'pending_pickup')
                                                             <span class="badge rounded-pill bg-warning">Chờ lấy hàng</span>
                                                         @elseif ($order->status === 'pending_delivery')
-                                                            <span class="badge rounded-pill bg-primary">Chờ giao hàng</span>
+                                                            <span class="badge rounded-pill bg-primary">Chờ giao
+                                                                hàng</span>
                                                         @elseif ($order->status === 'returned')
                                                             <span class="badge rounded-pill bg-danger">Trả hàng</span>
                                                         @elseif ($order->status === 'delivered')
+                                                            <span class="badge rounded-pill bg-secondary">Đã giao</span>
+                                                        @elseif ($order->status === 'confirm_delivered')
                                                             <span class="badge rounded-pill bg-secondary">Đã giao</span>
                                                         @elseif ($order->status === 'canceled')
                                                             <span class="badge rounded-pill bg-secondary">Đã hủy</span>
@@ -410,8 +416,8 @@
                         <div class="card-body">
                             <div>
                                 <a href="?selectedPeriod=1day"
-                                    class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">1
-                                    Ngày</a>
+                                    class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    Hôm nay</a>
                                 <a href="?selectedPeriod=2weeks"
                                     class="btn btn-sm {{ $selectedPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }}">2
                                     Tuần</a>
@@ -442,6 +448,62 @@
                         </div>
                     </div>
 
+                </div>
+
+            </div>
+
+            <div class="row">
+                <!-- Biểu đồ lượt xem sản phẩm -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Lượt xem Sản phẩm</h5>
+                            {{-- <div>
+                                <a href="?selectedPeriod=1day"
+                                    class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }} me-1">
+                                    Hôm nay
+                                </a>
+                                <a href="?selectedPeriod=2weeks"
+                                    class="btn btn-sm {{ $selectedPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }} me-1">
+                                    2 Tuần
+                                </a>
+                                <a href="?selectedPeriod=1month"
+                                    class="btn btn-sm {{ $selectedPeriod == '1month' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    1 Tháng
+                                </a>
+                            </div> --}}
+                        </div>
+                        <div class="card-body">
+                            <canvas id="productViewsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Biểu đồ lượt xem bài viết -->
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Lượt xem Bài viết</h5>
+                            {{-- <div>
+                                <a href="?selectedPeriod=1day"
+                                    class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }} me-1">
+                                    Hôm nay
+                                </a>
+                                <a href="?selectedPeriod=2weeks"
+                                    class="btn btn-sm {{ $selectedPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }} me-1">
+                                    2 Tuần
+                                </a>
+                                <a href="?selectedPeriod=1month"
+                                    class="btn btn-sm {{ $selectedPeriod == '1month' ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    1 Tháng
+                                </a>
+                            </div> --}}
+                        </div>
+                        <div class="card-body">
+                            <canvas id="postViewsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -732,63 +794,65 @@
             chart.render();
         });
     </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-{{-- <script>
-   // Dữ liệu thống kê sản phẩm
-   const productLabels = @json($topProducts->pluck('name'));
-    const productViews = @json($topProducts->pluck('views'));
 
-    const ctxProduct = document.getElementById('productViewsChart').getContext('2d');
-    new Chart(ctxProduct, {
-        type: 'bar', // Loại biểu đồ
-        data: {
-            labels: productLabels, // Tên sản phẩm
-            datasets: [{
-                label: 'Lượt xem',
-                data: productViews, // Lượt xem sản phẩm
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true // Bắt đầu từ 0
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Dữ liệu thống kê sản phẩm
+        const productLabels = @json($topProducts->pluck('name'));
+        const productViews = @json($topProducts->pluck('views'));
+
+        const ctxProduct = document.getElementById('productViewsChart').getContext('2d');
+        new Chart(ctxProduct, {
+            type: 'bar', // Loại biểu đồ
+            data: {
+                labels: productLabels, // Tên sản phẩm
+                datasets: [{
+                    label: 'Lượt xem',
+                    data: productViews, // Lượt xem sản phẩm
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true // Bắt đầu từ 0
+                    }
                 }
             }
-        }
-    });
- // Dữ liệu thống kê bài viết
- const postLabels = @json($topPosts->pluck('title'));
-    const postViews = @json($topPosts->pluck('views'));
+        });
 
-    const ctxPost = document.getElementById('postViewsChart').getContext('2d');
-    new Chart(ctxPost, {
-        type: 'bar', // Loại biểu đồ
-        data: {
-            labels: postLabels, // Tên bài viết
-            datasets: [{
-                label: 'Lượt xem',
-                data: postViews, // Lượt xem bài viết
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.5)',
-                    'rgba(54, 162, 235, 0.5)',
-                    'rgba(255, 206, 86, 0.5)',
-                    'rgba(75, 192, 192, 0.5)',
-                    'rgba(153, 102, 255, 0.5)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        }
-    });
-</script> --}}
+        // Dữ liệu thống kê bài viết
+        const postLabels = @json($topPosts->pluck('title'));
+        const postViews = @json($topPosts->pluck('views'));
+
+        const ctxPost = document.getElementById('postViewsChart').getContext('2d');
+        new Chart(ctxPost, {
+            type: 'bar', // Loại biểu đồ
+            data: {
+                labels: postLabels, // Tên bài viết
+                datasets: [{
+                    label: 'Lượt xem',
+                    data: postViews, // Lượt xem bài viết
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)',
+                        'rgba(54, 162, 235, 0.5)',
+                        'rgba(255, 206, 86, 0.5)',
+                        'rgba(75, 192, 192, 0.5)',
+                        'rgba(153, 102, 255, 0.5)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            }
+        });
+    </script>
 
 @endsection
