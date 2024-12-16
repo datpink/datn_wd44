@@ -49,7 +49,7 @@ class ProductController extends Controller
 
     public function orderByPriceApi(Request $request)
     {
-        $query = Product::with('favoritedBy')->where('is_active', 1);
+        $query = Product::with('favoritedBy', 'variants')->where('is_active', 1);
 
         $minDiscountPrice = Product::min('discount_price');
         $maxDiscountPrice = Product::max('discount_price');
@@ -84,6 +84,11 @@ class ProductController extends Controller
         }
 
         $query->whereBetween('discount_price', [$minPrice, $maxPrice]);
+
+        // Lọc các sản phẩm có giá trong bảng 'variants'
+        $query->whereHas('variants', function ($subQuery) use ($minPrice, $maxPrice) {
+            $subQuery->whereBetween('price', [$minPrice, $maxPrice]);
+        });
 
         if ($attributeValueId && $attributeStorageId) {
             // Kiểm tra sản phẩm có cả 2 thuộc tính màu và dung lượng trong cùng một biến thể
@@ -180,7 +185,7 @@ class ProductController extends Controller
                 }
             ])
             ->firstOrFail();
-            $product->increment('views');
+        $product->increment('views');
         // Lấy các biến thể cụ thể dựa trên thuộc tính
         $storageVariants = $product->variants->filter(function ($variant) {
             return $variant->attributeValues->contains(function ($attributeValue) {
@@ -207,7 +212,7 @@ class ProductController extends Controller
             ->limit(4) // Số lượng sản phẩm liên quan cần hiển thị
             ->get();
 
-            // dd($product);
+        // dd($product);
         // Truyền dữ liệu vào view
         return view('client.products.product-detail', compact(
             'product',

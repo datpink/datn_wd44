@@ -42,7 +42,7 @@
                                 <table class="table v-middle m-0">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
+                                            <th>Stt</th>
                                             <th>Người dùng</th>
                                             <th>Sản phẩm</th>
                                             <th>Nội dung</th>
@@ -51,9 +51,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($productComments as $comment)
+                                        @foreach ($productComments as $index => $comment)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $index + 1 }}</td>
                                                 <td>{{ $comment->user->name ?? 'N/A' }}</td>
                                                 <td>{{ $comment->product->name ?? 'N/A' }}</td>
                                                 <td>{{ $comment->comment }}</td>
