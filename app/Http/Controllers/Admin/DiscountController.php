@@ -14,7 +14,7 @@ class DiscountController extends Controller
     public function index()
     {
         $title = 'Danh sách Giảm Giá';
-        $discounts = Discount::paginate(10);// Lấy 10 bản ghi mỗi trang
+        $discounts = Discount::paginate(10); // Lấy 10 bản ghi mỗi trang
         return view('admin.discounts.index', compact('discounts', 'title'));
     }
 
@@ -160,4 +160,70 @@ class DiscountController extends Controller
 
         return redirect()->route('admin.catalogueList')->with('error', 'Không có giảm giá nào để hủy!');
     }
+
+
+    public function listProductsDiscount($discountId)
+    {
+        $discount = Discount::findOrFail($discountId);
+        $products = Product::all();
+        return view('admin.discounts.applyToProduct', compact('discount', 'products'));
+    }
+
+
+    public function applyToProducts(Request $request, $discountId)
+    {
+        $discount = Discount::findOrFail($discountId);
+        $productIds = $request->input('product_ids', []);
+
+        if (empty($productIds)) {
+            return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một sản phẩm để áp dụng giảm giá.');
+        }
+
+        foreach ($productIds as $productId) {
+            $product = Product::find($productId);
+            // $discount = Discount::findOrFail($discountId);
+            //dd($product);
+            if ($product) {
+                if ($discount->type === 'percentage') {
+                    // Tính giá giảm theo phần trăm
+                    $discountedPrice = $product->price - ($product->price * ($discount->discount_value / 100));
+                } elseif ($discount->type === 'fixed') {
+                    // Tính giá giảm theo số tiền cố định
+                    $discountedPrice = $product->price - $discount->discount_value;
+                }
+
+                // Đảm bảo giá không âm
+                $product->discount_price = round(max($discountedPrice, 0), 2); // Cập nhật giá giảm
+
+                // dd($product->discount_price,$discount->discount_value,$productId,$productIds );
+                // dd($product->discount_price);
+                $product->save();
+            }
+        }
+
+        return redirect()->back()->with('success', 'Giảm giá đã được áp dụng cho sản phẩm!');
+    }
+    public function cancelDiscount(Request $request, $discountId)
+{
+    $discount = Discount::findOrFail($discountId);
+    $productIds = $request->input('product_ids', []);
+
+    if (empty($productIds)) {
+        return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một sản phẩm để hủy giảm giá.');
+    }
+
+    foreach ($productIds as $productId) {
+        $product = Product::find($productId);
+
+        if ($product) {
+            // Đặt lại giá giảm về giá gốc
+            $product->discount_price = 0;
+            $product->save();
+        }
+    }
+
+    return redirect()->back()->with('success', 'Giảm giá đã được hủy cho sản phẩm!');
+}
+
+
 }
