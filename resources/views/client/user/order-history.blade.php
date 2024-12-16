@@ -13,12 +13,13 @@
         @else
             @php
                 $statusClasses = [
-                    'pending_confirmation' => 'bg-info', // Chờ xác nhận
-                    'pending_pickup' => 'bg-warning', // Chờ lấy hàng
-                    'pending_delivery' => 'bg-primary', // Chờ giao hàng
-                    'delivered' => 'bg-success', // Đã giao hàng
-                    'canceled' => 'bg-danger', // Đã hủy
-                    'returned' => 'bg-secondary', // Trả hàng
+                    'pending_confirmation' => 'bg-primary', // Chờ xác nhận
+                    'pending_pickup' => 'bg-secondary', // Chờ lấy hàng
+                    'pending_delivery' => 'bg-success', // Chờ giao hàng (sử dụng lớp Bootstrap có sẵn)
+                    'delivered' => 'bg-warning', // Đã giao hàng (sử dụng lớp Bootstrap có sẵn)
+                    'confirm_delivered' => 'bg-info', // Đã xác nhận giao hàng
+                    'canceled' => 'bg-dark', // Đã hủy
+                    'returned' => 'bg-light', // Trả hàng
                 ];
 
                 $statusLabels = [
@@ -26,6 +27,7 @@
                     'pending_pickup' => 'Chờ lấy hàng', // Chờ lấy hàng
                     'pending_delivery' => 'Chờ giao hàng', // Chờ giao hàng
                     'delivered' => 'Đã giao hàng', // Đã giao hàng
+                    'confirm_delivered' => 'Đã giao hàng', // Đã giao hàng
                     'canceled' => 'Đã hủy', // Đã hủy
                     'returned' => 'Trả hàng', // Trả hàng
                 ];
@@ -35,7 +37,7 @@
             <div class="orders">
                 @foreach ($orders as $order)
                     @php
-                        $statusClass = $statusClasses[$order->status] ?? 'bg-primary';
+                        $statusClass = $statusClasses[$order->status] ?? 'bg-white';
                         $statusLabel = $statusLabels[$order->status] ?? 'Không Xác Định';
                     @endphp
                     <div class="card mb-4 shadow-sm">
@@ -52,17 +54,27 @@
                                             <p><strong>Email:</strong> {{ $order->user->email }}</p>
                                             <p><strong>Địa Chỉ:</strong> {{ $order->shipping_address }}</p>
                                             <p><strong>Số Điện Thoại:</strong> {{ $order->phone_number }}</p>
-                                            <p><strong>Ngày Đặt Hàng:</strong>
-                                                {{ $order->created_at ? $order->created_at : 'N/A' }}</p>
-                                            <p><strong>Ngày Giao Hàng:</strong>
-                                                {{ $order->delivered_at ? \Carbon\Carbon::parse($order->delivered_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hủy:</strong>
-                                                {{ $order->canceled_at ? \Carbon\Carbon::parse($order->canceled_at) : 'N/A' }}
-                                            </p>
-                                            <p><strong>Ngày Hoàn Trả:</strong>
-                                                {{ $order->refund_at ? \Carbon\Carbon::parse($order->refund_at) : 'N/A' }}
-                                            </p>
+                                            @if ($order->created_at)
+                                                <p><strong>Ngày Đặt Hàng:</strong> {{ $order->created_at }}</p>
+                                            @endif
+
+                                            @if ($order->delivered_at)
+                                                <p><strong>Ngày Giao Hàng:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->delivered_at)->format('d/m/Y H:i') }}
+                                                </p>
+                                            @endif
+
+                                            @if ($order->canceled_at)
+                                                <p><strong>Ngày Hủy:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->canceled_at)->format('d/m/Y H:i') }}
+                                                </p>
+                                            @endif
+
+                                            @if ($order->refund_at)
+                                                <p><strong>Ngày Hoàn Trả:</strong>
+                                                    {{ \Carbon\Carbon::parse($order->refund_at)->format('d/m/Y H:i') }}</p>
+                                            @endif
+
 
                                         </div>
                                     </div>
@@ -75,7 +87,7 @@
                                             <h4>Chi Tiết Sản Phẩm</h4>
                                         </div>
                                         <div class="card-body" id="productDetails"
-                                            style="max-height: 300px; overflow-y: auto;">
+                                            style="max-height: 350px; overflow-y: auto;">
                                             @foreach ($order->items as $item)
                                                 <div class="row border p-2 mb-2 align-items-center">
                                                     <!-- Cột ảnh sản phẩm -->
@@ -179,34 +191,75 @@
                                                     <!-- Thêm trạng thái trả hàng -->
                                                     <span class="badge rounded-pill bg-secondary text-white">Trả hàng</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-secondary text-white">Không rõ</span>
+                                                    <span class="badge rounded-pill bg-infoinfo text-white">Không rõ</span>
                                                 @endif
                                             </p>
 
-                                            @if ($order->cancellation_reason)
-                                                <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
-                                            @endif
+                                            <div class="card-body" id="productDetails"
+                                                style="max-height: 200px; overflow-y: auto;">
+                                                <!-- Lý do hủy đơn -->
+                                                @if ($order->cancellation_reason)
+                                                    <div class="mb-3">
+                                                        <strong>Lý do hủy đơn:</strong>
+                                                        <p class="m-0">{{ $order->cancellation_reason }}</p>
+                                                    </div>
+                                                @endif
 
-                                            @if ($order->status === 'returned' && $order->refund_images)
-                                                <p><strong>Lý Do Trả Hàng:</strong> {{ $order->refund_reason }}</p>
-                                                <p><strong>Hình Ảnh Minh Họa:</strong></p>
-                                                <div>
-                                                    @foreach (json_decode($order->refund_images) as $image)
-                                                        <img src="{{ Storage::url($image) }}" alt="Refund Image"
-                                                            style="max-width: 50px; margin: 5px;">
-                                                    @endforeach
-                                                </div>
-                                            @endif
+                                                <!-- Lý Do Trả Hàng và Hình Ảnh Minh Họa -->
+                                                @if ($order->status === 'returned' && $order->refund_images)
+                                                    <div class="mb-3">
+                                                        <strong>Lý Do Trả Hàng:</strong>
+                                                        <p class="m-0">{{ $order->refund_reason }}</p>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <strong>Hình Ảnh Minh Họa:</strong>
+                                                        <div>
+                                                            @foreach (json_decode($order->refund_images) as $image)
+                                                                <img src="{{ Storage::url($image) }}" alt="Refund Image"
+                                                                    class="img-thumbnail"
+                                                                    style="max-width: 50px; margin: 5px;">
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Hình ảnh chứng minh -->
+                                                @if ($order->status === 'returned' && $order->proof_image)
+                                                    <div class="mb-3">
+                                                        <strong>Hình ảnh chứng minh:</strong>
+                                                        <div>
+                                                            <img src="{{ Storage::url($order->proof_image) }}"
+                                                                alt="Proof Image" class="img-fluid"
+                                                                style="max-width: 150px;">
+                                                        </div>
+                                                    </div>
+                                                @endif
+
+                                                <!-- Lời nhắn từ Admin -->
+                                                @if ($order->admin_message)
+                                                    <div class="mb-3">
+                                                        <strong>Lời nhắn từ Admin:</strong>
+                                                        <p>{{ $order->admin_message }}</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+
 
                                             @if ($order->admin_status === 'pending' && $order->refund_reason)
-                                                <p class="text-warning">Yêu cầu hoàn trả của bạn đang được xử lý. Vui lòng
-                                                    chờ phê duyệt từ quản trị viên.</p>
+                                                <p class="text-warning">
+                                                    Yêu cầu hoàn trả của bạn đang được xử lý. Vui lòng chờ phê duyệt từ quản
+                                                    trị viên.
+                                                </p>
                                             @elseif ($order->admin_status === 'approved')
-                                                <p class="text-success">Yêu cầu hoàn trả của bạn đã được chấp nhận. Vui lòng
-                                                    kiểm tra thông tin hoàn tiền.</p>
+                                                <p class="text-success">
+                                                    Yêu cầu hoàn trả của bạn đã được chấp nhận. Vui lòng kiểm tra thông tin
+                                                    hoàn tiền.
+                                                </p>
                                             @elseif ($order->admin_status === 'rejected')
-                                                <p class="text-danger">Yêu cầu hoàn trả của bạn đã bị từ chối. Vui lòng liên
-                                                    hệ hỗ trợ để biết thêm chi tiết.</p>
+                                                <p class="text-danger">
+                                                    Yêu cầu hoàn trả của bạn đã bị từ chối. Vui lòng liên hệ hỗ trợ để biết
+                                                    thêm chi tiết.
+                                                </p>
                                             @endif
 
 
@@ -216,7 +269,7 @@
                             </div>
 
 
-                            @if ($order->status === 'delivered' && !$order->refund_reason)
+                            @if ($order->status === 'delivered' && !$order->refund_reason && $order->admin_status !== 'rejected')
                                 <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
                                 <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
                                 <div class="refundOrderForm" style="display: none; margin-top: 20px;">
@@ -244,7 +297,7 @@
                                             <label for="refund_method">Phương thức hoàn tiền:</label>
                                             <select name="refund_method" id="refund_method" class="form-control" required>
                                                 <option value="cash">Tiền mặt</option>
-                                                <option value="store_credit">Store Credit</option>
+                                                <option value="store_credit">Thanh Toán Chuyển Khoản</option>
                                                 <option value="exchange">Đổi sản phẩm</option>
                                             </select>
                                         </div>
@@ -259,43 +312,12 @@
                                                         class="custom-file-input" accept="image/*">
                                                     <label class="custom-file-label" for="qr_code">Chọn file...</label>
                                                 </div>
-                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải lên.</small>
+                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải
+                                                    lên.</small>
                                             </div>
 
                                             <!-- Preview ảnh QR -->
                                             <div class="image-preview-container" id="qrPreview"></div>
-
-
-                                            <script>
-                                                document.getElementById('qr_code').addEventListener('change', function(event) {
-                                                    var file = event.target.files[0]; // Chỉ lấy file đầu tiên
-                                                    var previewContainer = document.getElementById('qrPreview');
-                                                    previewContainer.innerHTML = ''; // Xóa preview cũ trước khi hiển thị mới
-
-                                                    if (file) {
-                                                        var reader = new FileReader();
-
-                                                        reader.onload = function(e) {
-                                                            var imgElement = document.createElement('img');
-                                                            imgElement.src = e.target.result;
-                                                            previewContainer.appendChild(imgElement); // Thêm ảnh vào container
-                                                        };
-
-                                                        reader.readAsDataURL(file); // Đọc tệp hình ảnh
-                                                    }
-                                                });
-                                            </script>
-
-                                            <style>
-                                                .image-preview-container img {
-                                                    max-width: 150px;
-                                                    /* Giới hạn kích thước ảnh */
-                                                    margin: 5px;
-                                                    /* Khoảng cách giữa các ảnh */
-                                                    border: 1px solid #ddd;
-                                                    padding: 5px;
-                                                }
-                                            </style>
 
                                             <div class="form-group">
                                                 <label for="account_number">Nhập số tài khoản:</label>
@@ -312,7 +334,7 @@
 
 
 
-                            @if (!in_array($order->status, ['pending_delivery', 'returned', 'delivered', 'canceled']))
+                            @if (!in_array($order->status, ['pending_delivery', 'returned', 'delivered', 'confirm_delivered', 'canceled']))
                                 <button class="btn btn-danger cancelOrderButton">Hủy Đơn Hàng</button>
                                 <div class="cancelOrderForm" style="display: none; margin-top: 20px;">
                                     <form action="{{ route('orders.cancel', $order->id) }}" method="POST">
@@ -330,11 +352,21 @@
                             @endif
 
                             @if ($order->status === 'pending_delivery')
+                                <!-- Nút xác nhận đã nhận hàng -->
                                 <button class="btn btn-success" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>
                             @endif
+
+                            @if ($order->status === 'confirm_delivered')
+                                <!-- Nút xác nhận giao hàng -->
+                                <button class="btn btn-primary" id="confirmDeliveredButton"
+                                    data-order-id="{{ $order->id }}">
+                                    Xác nhận giao hàng
+                                </button>
+                            @endif
+
 
 
                         </div>
@@ -347,6 +379,15 @@
     </div>
 
     <style>
+        .image-preview-container img {
+            max-width: 150px;
+            /* Giới hạn kích thước ảnh */
+            margin: 5px;
+            /* Khoảng cách giữa các ảnh */
+            border: 1px solid #ddd;
+            padding: 5px;
+        }
+
         .custom-file-upload {
             display: inline-block;
             padding: 10px 20px;
@@ -386,6 +427,26 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        document.getElementById('qr_code').addEventListener('change', function(event) {
+            var file = event.target.files[0]; // Chỉ lấy file đầu tiên
+            var previewContainer = document.getElementById('qrPreview');
+            previewContainer.innerHTML = ''; // Xóa preview cũ trước khi hiển thị mới
+
+            if (file) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    previewContainer.appendChild(imgElement); // Thêm ảnh vào container
+                };
+
+                reader.readAsDataURL(file); // Đọc tệp hình ảnh
+            }
+        });
+    </script>
+
+    <script>
         // Lắng nghe sự kiện thay đổi của select phương thức hoàn tiền
         document.getElementById('refund_method').addEventListener('change', function() {
             var method = this.value;
@@ -397,6 +458,90 @@
             } else {
                 // Ẩn các trường nhập liệu cho Store Credit khi chọn các phương thức khác
                 storeCreditFields.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const confirmReceivedButton = document.getElementById('confirmDeliveredButton');
+
+            if (confirmDeliveredButton) {
+                confirmDeliveredButton.addEventListener('click', function() {
+                    const orderId = confirmDeliveredButton.getAttribute('data-order-id');
+
+                    // Hiển thị hộp thoại xác nhận với SweetAlert2
+                    Swal.fire({
+                        title: 'Xác nhận đã nhận hàng?',
+                        text: "Bạn có chắc chắn rằng bạn đã nhận hàng này không?",
+                        icon: 'question',
+                        position: "top",
+                        toast: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Xác nhận',
+                        cancelButtonText: 'Hủy',
+                        timerProgressBar: true,
+                        timer: 3500
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            console.log("Yêu cầu PATCH gửi đi với ID: " + orderId);
+
+                            // Gửi yêu cầu PATCH để cập nhật trạng thái đơn hàng
+                            fetch(`/shop/orders/${orderId}/confirm-delivered`, {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content'),
+                                    },
+                                    body: JSON.stringify({
+                                        // Bạn có thể truyền thêm dữ liệu cần thiết ở đây nếu có
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log("Phản hồi từ server:", data);
+
+                                    if (data.success) {
+                                        Swal.fire({
+                                            position: "top",
+                                            toast: true,
+                                            icon: 'success',
+                                            title: 'Đơn hàng đã được xác nhận!',
+                                            showConfirmButton: false,
+                                            timerProgressBar: true,
+                                            timer: 3500
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            position: "top",
+                                            toast: true,
+                                            icon: 'error',
+                                            title: 'Có lỗi xảy ra!',
+                                            showConfirmButton: false,
+                                            timerProgressBar: true,
+                                            timer: 3500
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Lỗi khi gửi yêu cầu:", error);
+                                    Swal.fire({
+                                        position: "top",
+                                        toast: true,
+                                        icon: 'error',
+                                        title: 'Đã xảy ra lỗi khi cập nhật!',
+                                        showConfirmButton: false,
+                                        timerProgressBar: true,
+                                        timer: 3500
+                                    });
+                                });
+                        }
+                    });
+                });
             }
         });
     </script>
@@ -484,6 +629,8 @@
             }
         });
     </script>
+
+
 
     <script>
         $(document).ready(function() {

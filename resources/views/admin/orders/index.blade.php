@@ -64,8 +64,11 @@
                                             <option value="returned"
                                                 {{ request()->status === 'returned' ? 'selected' : '' }}>Trả hàng
                                             </option>
+                                            <option value="confirm_delivered"
+                                                {{ request()->status === 'confirm_delivered' ? 'selected' : '' }}>Đã giao
+                                            </option>
                                             <option value="delivered"
-                                                {{ request()->status === 'delivered' ? 'selected' : '' }}>Đã giao
+                                                {{ request()->status === 'delivered' ? 'selected' : '' }}>Đã giao xác nhận
                                             </option>
                                             <option value="canceled"
                                                 {{ request()->status === 'canceled' ? 'selected' : '' }}>Đã hủy
@@ -124,40 +127,47 @@
                                                 <td>{{ number_format($order->discount_amount, 0, ',', '.') }} VND</td>
                                                 <td>
                                                     @if ($order->status === 'pending_confirmation')
-                                                        <span class="badge rounded-pill bg-info">Chờ xác nhận</span>
+                                                        <span class="badge rounded-pill shade-primary">Chờ xác nhận</span>
                                                     @elseif ($order->status === 'pending_pickup')
-                                                        <span class="badge rounded-pill bg-warning">Chờ lấy hàng</span>
+                                                        <span class="badge rounded-pill shade-secondary">Chờ lấy hàng</span>
                                                     @elseif ($order->status === 'pending_delivery')
-                                                        <span class="badge rounded-pill bg-primary">Chờ giao hàng</span>
+                                                        <span class="badge rounded-pill shade-green">Chờ giao hàng</span>
                                                     @elseif ($order->status === 'returned')
-                                                        <span class="badge rounded-pill bg-danger">Trả hàng</span>
+                                                        <span class="badge rounded-pill shade-red">Trả hàng</span>
                                                     @elseif ($order->status === 'delivered')
-                                                        <span class="badge rounded-pill bg-secondary">Đã giao</span>
+                                                        <span class="badge rounded-pill shade-yellow">Đã giao</span>
+                                                    @elseif ($order->status === 'confirm_delivered')
+                                                        <span class="badge rounded-pill shade-blue">Đã giao</span>
                                                     @elseif ($order->status === 'canceled')
-                                                        <span class="badge rounded-pill bg-secondary">Đã hủy</span>
+                                                        <span class="badge rounded-pill shade-light text-dark">Đã hủy</span>
                                                     @else
-                                                        <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                        <span class="badge rounded-pill shade-dark">Không rõ</span>
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($order->payment_status === 'unpaid')
-                                                        <span class="badge rounded-pill bg-warning">Chưa thanh toán</span>
+                                                        <span class="badge rounded-pill shade-bdr-primary">Chưa thanh
+                                                            toán</span>
                                                     @elseif ($order->payment_status === 'paid')
-                                                        <span class="badge rounded-pill bg-success">Đã thanh toán</span>
+                                                        <span class="badge rounded-pill shade-bdr-secondary">Đã thanh
+                                                            toán</span>
                                                     @elseif ($order->payment_status === 'refunded')
-                                                        <span class="badge rounded-pill bg-danger">Hoàn trả</span>
+                                                        <span class="badge rounded-pill shade-bdr-green">Hoàn trả</span>
                                                     @elseif ($order->payment_status === 'payment_failed')
-                                                        <span class="badge rounded-pill bg-danger">Thanh toán thất
+                                                        <span class="badge rounded-pill shade-bdr-red">Thanh toán thất
                                                             bại</span>
+                                                    @elseif ($order->payment_status === 'pending')
+                                                        <span class="badge rounded-pill shade-bdr-yellow">Chờ Thanh
+                                                            Toán</span>
                                                     @else
-                                                        <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                        <span class="badge rounded-pill shade-bdr-blue">Không rõ</span>
                                                     @endif
                                                 </td>
                                                 <td>{{ $order->phone_number }}</td>
                                                 <td>{{ $order->shipping_address }}</td>
                                                 <td>
                                                     <strong
-                                                        class="badge rounded-pill bg-warning">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
+                                                        class="badge rounded-pill shade-bdr-primary">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
                                                 </td>
                                                 <td>
                                                     <div class="actions">
@@ -166,15 +176,64 @@
                                                             <!-- Icon duyệt hoàn tiền -->
                                                             <form
                                                                 action="{{ route('orders.refund.approve', ['id' => $order->id]) }}"
-                                                                method="POST" style="display:inline;">
+                                                                method="POST" enctype="multipart/form-data">
                                                                 @csrf
                                                                 <button type="button" class="btn btn-icon"
                                                                     title="Duyệt hoàn tiền"
                                                                     style="border: none; background: none;"
-                                                                    onclick="confirmApproveRefund(event)">
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#approveRefundModal">
                                                                     <i class="bi bi-check-circle text-success"></i>
                                                                 </button>
+
+                                                                <!-- Modal -->
+                                                                <div class="modal fade" id="approveRefundModal"
+                                                                    tabindex="-1" aria-labelledby="approveRefundModalLabel"
+                                                                    aria-hidden="true">
+                                                                    <div class="modal-dialog">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="approveRefundModalLabel">Duyệt Hoàn
+                                                                                    Tiền</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <!-- Trường nhập hình ảnh -->
+                                                                                <div class="mb-3">
+                                                                                    <label for="proofImage"
+                                                                                        class="form-label">Chọn hình ảnh
+                                                                                        chứng minh</label>
+                                                                                    <input type="file"
+                                                                                        class="form-control"
+                                                                                        id="proofImage" name="proof_image"
+                                                                                        accept="image/*" required>
+                                                                                </div>
+                                                                                <!-- Trường nhập lời nhắn -->
+                                                                                <div class="mb-3">
+                                                                                    <label for="adminMessage"
+                                                                                        class="form-label">Lời nhắn của
+                                                                                        Admin</label>
+                                                                                    <textarea class="form-control" id="adminMessage" name="admin_message" rows="4" placeholder="Nhập lời nhắn..."
+                                                                                        required></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button"
+                                                                                    class="btn btn-secondary"
+                                                                                    data-bs-dismiss="modal">Hủy</button>
+                                                                                <button type="submit"
+                                                                                    class="btn btn-primary">Xác
+                                                                                    Nhận</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </form>
+
+
 
                                                             <!-- Icon từ chối hoàn tiền -->
                                                             <form
@@ -287,8 +346,8 @@
                                                                                         {{ $order->status === 'returned' ? 'selected' : '' }}>
                                                                                         Trả hàng
                                                                                     </option>
-                                                                                    <option value="delivered"
-                                                                                        {{ $order->status === 'delivered' ? 'selected' : '' }}>
+                                                                                    <option value="confirm_delivered"
+                                                                                        {{ $order->status === 'confirm_delivered' ? 'selected' : '' }}>
                                                                                         Đã giao
                                                                                     </option>
                                                                                     <option value="canceled"
@@ -316,7 +375,7 @@
                                                                         <button type="button"
                                                                             class="btn btn-secondary rounded-pill"
                                                                             data-bs-dismiss="modal">Đóng</button>
-                                                                        @if (!in_array($order->status, ['returned', 'delivered', 'canceled']))
+                                                                        @if (!in_array($order->status, ['returned', 'confirm_delivered', 'canceled']))
                                                                             <button type="submit"
                                                                                 class="btn btn-success rounded-pill"
                                                                                 form="orderStatusForm{{ $order->id }}">Lưu
@@ -327,7 +386,7 @@
                                                             </div>
                                                         </div>
                                                         <!-- Kiểm tra trạng thái đơn hàng -->
-                                                        @if ($order->status === 'delivered')
+                                                        @if ($order->status === 'confirm_delivered')
                                                             <!-- Thay 'completed' bằng giá trị trạng thái hoàn thành của bạn -->
                                                             <a href="{{ route('orders.invoice', $order->id) }}"
                                                                 target="_blank" class="exportInvoice">
@@ -345,7 +404,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination justify-content-center mt-3">
+                            <div class="mt-3">
                                 {{ $orders->links() }}
                             </div>
                         </div>

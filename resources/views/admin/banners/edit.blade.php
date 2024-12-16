@@ -20,16 +20,6 @@
 
                 <div class="card-body mt-4">
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                     <form action="{{ route('banners.update', $banner) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -50,39 +40,68 @@
 
                                     <img id="newImagePreview" src="" alt="Hình ảnh xem trước"
                                         style="max-width: 150px; height: auto; display: none;" class="mt-2">
-                                </div>
 
+                                    @error('image')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
+                                </div>
 
                                 <div class="form-group mb-3">
                                     <label for="title">Tiêu đề:</label>
-                                    <input type="text" class="form-control" id="title" name="title"
-                                        value="{{ old('title', $banner->title) }}" placeholder="Nhập tiêu đề">
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                        id="title" name="title" value="{{ old('title', $banner->title) }}"
+                                        placeholder="Nhập tiêu đề">
+                                    @error('title')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="button_text">Nút văn bản:</label>
-                                    <input type="text" class="form-control" id="button_text" name="button_text"
+                                    <input type="text" class="form-control @error('button_text') is-invalid @enderror"
+                                        id="button_text" name="button_text"
                                         value="{{ old('button_text', $banner->button_text) }}"
                                         placeholder="Nhập văn bản nút">
+                                    @error('button_text')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="button_link">Liên kết nút:</label>
-                                    <input type="text" class="form-control" id="button_link" name="button_link"
+                                    <input type="text" class="form-control @error('button_link') is-invalid @enderror"
+                                        id="button_link" name="button_link"
                                         value="{{ old('button_link', $banner->button_link) }}"
                                         placeholder="Nhập liên kết nút">
+                                    @error('button_link')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="status">Trạng thái:</label>
-                                    <select class="form-control" id="status" name="status">
+                                    <select class="form-control @error('status') is-invalid @enderror" id="status"
+                                        name="status">
                                         <option value="active"
-                                            {{ old('status', $banner->status) == 'active' ? 'selected' : '' }}>
-                                            Kích hoạt</option>
-                                        <option value="inactive"
-                                            {{ old('status', $banner->status) == 'inactive' ? 'selected' : '' }}>Vô hiệu hóa
+                                            {{ old('status', $banner->status) == 'active' ? 'selected' : '' }}>Kích hoạt
                                         </option>
+                                        <option value="inactive"
+                                            {{ old('status', $banner->status) == 'inactive' ? 'selected' : '' }}>Vô hiệu
+                                            hóa</option>
                                     </select>
+                                    @error('status')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
                                 </div>
 
                                 <button type="submit" class="btn btn-rounded btn-success">Cập nhật Banner</button>
@@ -90,10 +109,17 @@
                             <div class="col-md-6">
                                 <div class="form-group mb-3">
                                     <label for="description">Mô tả:</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Nhập mô tả">{{ old('description', $banner->description) }}</textarea>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                        rows="3" placeholder="Nhập mô tả">{{ old('description', $banner->description) }}</textarea>
+                                    @error('description')
+                                        <ul>
+                                            <li class="text-danger mb-1">{{ $message }}</li>
+                                        </ul>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>

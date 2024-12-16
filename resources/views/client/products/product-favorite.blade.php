@@ -18,7 +18,7 @@
                         data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                         <div class="product-inner tooltip-left">
                             <div class="product-thumb">
-                                <a class="thumb-link" href="#">
+                                <a class="thumb-link" href="{{ url('shop/products/chi-tiet', $product->slug) }}">
                                     <img class="img-responsive mt-3"
                                         src=" {{ \Storage::url($product->image_url)}}"
                                         alt="Gaming Mouse" width="300">
@@ -84,7 +84,7 @@
                             </div>
                             <div class="product-info equal-elem" style="height: 118px;">
                                 <h3 class="product-name product_title">
-                                    <a href="{{ url('shop/products/chi-tiet', $product->slug) }}">{{ $product->name }}</a>
+                                    <a href="{{ url('shop/products/chi-tiet', $product->slug) }}">{{ \Str::limit($product->name, 40) }}</a>
                                 </h3>
                                 <div class="rating-wapper nostar">
                                     <div class="star-rating">
@@ -97,7 +97,7 @@
                                     <span class="review">(0)</span>
                                 </div>
                                 <span class="price"><span class="kobolg-Price-amount amount"><span
-                                            class="kobolg-Price-currencySymbol">$</span>{{ $product->discount_price }}</span>
+                                            class="kobolg-Price-currencySymbol">₫</span>{{ number_format($product->discount_price, 0, ',', '.') }}</span>
                                     {{-- – <span
                                         class="kobolg-Price-amount amount"><span
                                             class="kobolg-Price-currencySymbol">$</span>{}</span></span> --}}

@@ -23,7 +23,7 @@ class ClientController extends Controller
         $advertisements = Advertisement::where('status', 'active')->get();
 
         // Lấy sản phẩm nổi bật
-        $featuredProducts = Product::where('is_featured', true)->where('is_active', true)->get();
+        $featuredProducts = Product::where('is_featured', true)->where('is_active', true)->paginate(14);
 
         // Lấy sản phẩm theo tình trạng
         $productsByCondition = [

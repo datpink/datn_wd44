@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -110,11 +111,26 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
+            // Kiểm tra trùng lặp sản phẩm dựa trên 'name' hoặc 'sku'
+            $duplicateProduct = Product::where('name', $request->name)
+                ->orWhere('sku', $request->sku)
+                ->first();
+
+            if ($duplicateProduct) {
+                return back()->withErrors([
+                    'error' => 'Sản phẩm với tên hoặc mã SKU đã tồn tại!'
+                ])->withInput();
+            }
+
             // Xử lý ảnh chính
             $imagePath = null;
             if ($request->hasFile('image_url')) {
                 $imagePath = Storage::put('images', $request->image_url);
             }
+
+            // Nếu SKU không được nhập, tạo SKU ngẫu nhiên
+            $sku = $request->input('sku') ?: 'SKU-' . strtoupper(Str::random(9));  // Tạo SKU nếu không có
+
 
             // Tạo mới sản phẩm
             $product = Product::create([
@@ -122,12 +138,10 @@ class ProductController extends Controller
                 'catalogue_id' => $request->catalogue_id,
                 'brand_id' => $request->brand_id,
                 'slug' => $request->slug,
-                'sku' => $request->sku,
+                'sku' => $sku,  // Sử dụng SKU đã tạo hoặc người dùng nhập
                 'price' => $request->price,
                 'discount_price' => $request->filled('discount_price') ? $request->discount_price : null,
                 'stock' => $request->stock,
-                // 'weight' => $request->weight,
-                // 'dimensions' => $request->dimensions,
                 'image_url' => $imagePath,
                 'description' => $request->description,
                 'specifications' => $request->specifications,
@@ -149,7 +163,7 @@ class ProductController extends Controller
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with('errors', 'Có lỗi xảy ra: ' . $th->getMessage());
+            return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
 

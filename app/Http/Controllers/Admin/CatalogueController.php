@@ -51,37 +51,64 @@ class CatalogueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:catalogues,name',
             'parent_id' => 'nullable|exists:catalogues,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
+        ], [
+            'name.required' => 'Tên danh mục là bắt buộc.',
+            'name.string' => 'Tên danh mục phải là chuỗi ký tự.',
+            'name.max' => 'Tên danh mục không được quá 255 ký tự.',
+            'name.unique' => 'Tên danh mục đã tồn tại.', // Thông báo lỗi khi trùng tên
+            'parent_id.exists' => 'Danh mục cha không tồn tại.',
+            'image.image' => 'Hình ảnh phải là một tập tin hình ảnh.',
+            'image.mimes' => 'Hình ảnh phải có định dạng jpeg, png, jpg, gif.',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'description.string' => 'Mô tả phải là chuỗi ký tự.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
         ]);
-
+    
         DB::beginTransaction();
-
+    
         try {
+            // Kiểm tra trùng lặp danh mục theo tên hoặc slug
+            $slug = \Str::slug($request->name);
+            $existingCatalogue = Catalogue::where('name', $request->name)
+                ->orWhere('slug', $slug)
+                ->first();
+    
+            if ($existingCatalogue) {
+                return redirect()->back()->withErrors([
+                    'error' => 'Tên danh mục hoặc slug đã tồn tại.'
+                ])->withInput();
+            }
+    
+            // Tạo mới danh mục
             $catalogue = new Catalogue();
             $catalogue->name = $request->name;
-            $catalogue->slug = \Str::slug($request->name);
+            $catalogue->slug = $slug;
             $catalogue->parent_id = $request->parent_id;
             $catalogue->description = $request->description;
             $catalogue->status = $request->status;
-
+    
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('catalogue_images', 'public');
                 $catalogue->image = $imagePath;
             }
-
+    
             $catalogue->save();
             DB::commit();
-
+    
             return redirect()->route('catalogues.index')->with('success', 'Danh mục đã được thêm mới.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('catalogues.index')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+    
+
 
     public function edit(Catalogue $catalogue)
     {
@@ -92,26 +119,43 @@ class CatalogueController extends Controller
     public function update(Request $request, Catalogue $catalogue)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:catalogues,name,' . $catalogue->id,
             'slug' => 'required|string|max:255|unique:catalogues,slug,' . $catalogue->id,
             'status' => 'required|in:active,inactive',
             'image' => 'nullable|image|max:2048',
+        ], [
+            'name.required' => 'Tên danh mục là bắt buộc.',
+            'name.unique' => 'Tên danh mục đã tồn tại.', // Thông báo lỗi khi trùng tên
+            'name.string' => 'Tên danh mục phải là chuỗi ký tự.',
+            'name.max' => 'Tên danh mục không được quá 255 ký tự.',
+            'slug.required' => 'Slug là bắt buộc.',
+            'slug.unique' => 'Slug đã tồn tại.',
+            'slug.max' => 'Slug không được quá 255 ký tự.',
+            'status.required' => 'Trạng thái là bắt buộc.',
+            'status.in' => 'Trạng thái phải là "active" hoặc "inactive".',
+            'image.image' => 'Hình ảnh phải là một tập tin hình ảnh.',
+            'image.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
         ]);
 
         DB::beginTransaction();
 
         try {
+            // Cập nhật thông tin danh mục
             $catalogue->name = $request->name;
             $catalogue->slug = $request->slug;
             $catalogue->status = $request->status;
 
+            // Kiểm tra và lưu ảnh nếu có
             if ($request->hasFile('image')) {
+                // Xóa ảnh cũ nếu có
                 if ($catalogue->image) {
                     Storage::disk('public')->delete($catalogue->image);
                 }
+                // Lưu ảnh mới
                 $catalogue->image = $request->file('image')->store('catalogue_images', 'public');
             }
 
+            // Lưu danh mục
             $catalogue->save();
             DB::commit();
 
@@ -121,6 +165,7 @@ class CatalogueController extends Controller
             return redirect()->route('catalogues.index')->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
         }
     }
+
 
     public function destroy($id)
     {

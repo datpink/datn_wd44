@@ -165,6 +165,12 @@
                                             @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
                                                 @if ($hasVariants && count($variantPrices) > 1)
                                                     <!-- Nhiều biến thể active -->
+                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold">
+                                                        <!-- Giá giảm: Áp dụng công thức giảm giá cho từng biến thể -->
+                                                        {{ number_format($minVariantPrice - $priceDifference, 0, ',', '.') }}₫
+                                                        -
+                                                        {{ number_format($maxVariantPrice - $priceDifference, 0, ',', '.') }}₫
+                                                    </span>
                                                     <del>
                                                         <!-- Gạch ngang: Giá biến thể thấp nhất - Giá biến thể cao nhất -->
                                                         <span class="kobolg-Price-amount amount">
@@ -172,43 +178,37 @@
                                                             {{ number_format($maxVariantPrice, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold">
-                                                        <!-- Giá giảm: Áp dụng công thức giảm giá cho từng biến thể -->
-                                                        {{ number_format($minVariantPrice - $priceDifference, 0, ',', '.') }}₫
-                                                        -
-                                                        {{ number_format($maxVariantPrice - $priceDifference, 0, ',', '.') }}₫
-                                                    </span>
                                                 @elseif ($hasVariants && count($variantPrices) === 1)
                                                     <!-- Chỉ có một biến thể active -->
+                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold" style="font-size: 1.3vw">
+                                                        {{ number_format($minVariantPrice - $priceDifference, 0, ',', '.') }}₫
+                                                    </span>
                                                     <del>
-                                                        <span class="kobolg-Price-amount amount">
+                                                        <span class="kobolg-Price-amount amount" >
                                                             {{ number_format($minVariantPrice, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold">
-                                                        {{ number_format($minVariantPrice - $priceDifference, 0, ',', '.') }}₫
-                                                    </span>
                                                 @else
                                                     <!-- Không có biến thể active -->
+                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold" style="font-size: 1.3vw">
+                                                        {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                                                    </span>
                                                     <del>
                                                         <span class="kobolg-Price-amount amount">
                                                             {{ number_format($product->price, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold">
-                                                        {{ number_format($product->discount_price, 0, ',', '.') }}₫
-                                                    </span>
                                                 @endif
                                             @else
                                                 @if ($hasVariants && count($variantPrices) > 1)
                                                     <!-- Không có giảm giá, hiển thị min-max -->
-                                                    <span class="kobolg-Price-amount amount">
+                                                    <span class="kobolg-Price-amount amount" style="font-size: 1.3vw">
                                                         {{ number_format($minVariantPrice, 0, ',', '.') }}₫ -
                                                         {{ number_format($maxVariantPrice, 0, ',', '.') }}₫
                                                     </span>
                                                 @else
                                                     <!-- Chỉ có một biến thể hoặc không có biến thể -->
-                                                    <span class="kobolg-Price-amount amount">
+                                                    <span class="kobolg-Price-amount amount" style="font-size: 1.3vw">
                                                         {{ number_format($minVariantPrice, 0, ',', '.') }}₫
                                                     </span>
                                                 @endif
@@ -216,27 +216,7 @@
                                         </span>
                                     </div>
 
-                                    <div class="group-button clearfix">
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <div class="yith-wcwl-add-button show">
-                                                <a href="#" class="add_to_wishlist"
-                                                    data-product-id="{{ $product->id }}">
-                                                    {{-- {{ auth()->user()->favorites->contains($product->id)? 'Bỏ yêu thích': 'Thêm vào yêu thích' }} --}}
-                                                    {{ auth()->check() &&
-                                                    auth()->user()->favorites->contains($product->id)
-                                                        ? 'Bỏ yêu thích'
-                                                        : 'Thêm vào yêu thích' }}
-                                                </a>
-                                            </div>
-
-                                        </div>
-                                        <div class="add-to-cart">
-                                            <a href="#" class="button product_type_grouped">View products</a>
-                                        </div>
-                                        <div class="kobolg product compare-button">
-                                            <a href="#" class="compare button">Compare</a>
-                                        </div>
-                                    </div>
+                                    {{-- 3 nútnút --}}
                                 </div>
                             </div>
                         @endforeach

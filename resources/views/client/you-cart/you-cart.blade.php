@@ -71,7 +71,7 @@
                                 <img src="{{ $item['options']['image'] }}" alt="{{ $item['name'] }}"
                                     class="mini-cart-product-image"
                                     style="width: 80px; height: auto; margin-right: 10px;">
-                                <span class="product-title">{{ $item['name'] }}</span>
+                                <span class="product-title">{{ \Str::limit($item['name'], 40) }}</span>
                             </a>
                             @if (
                                 !empty($item['options']['variant']) &&

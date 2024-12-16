@@ -110,6 +110,7 @@
                                         <th>Danh mục</th>
                                         <th>Giá</th>
                                         <th>Số Lượng</th>
+                                        <th>Lượt xem</th>
                                         <th>Trạng thái</th>
                                         <th>Nổi bật</th>
                                         <th>Tình trạng</th>
@@ -133,6 +134,7 @@
                                             <td>{{ $product->catalogue ? $product->catalogue->name : 'Không có' }}</td>
                                             <td>{{ number_format($product->price, 0, ',', '.') }}đ</td>
                                             <td>{{ $product->stock }}</td>
+                                            <td>{{ $product->views }}</td>
                                             <td>
                                                 @if ($product->is_active)
                                                     <span class="badge rounded-pill bg-success">Kích hoạt</span>
@@ -229,7 +231,9 @@
                                 </tbody>
                             </table>
                             <div class="mt-3">
-                                {{ $products->links() }} <!-- Hiển thị phân trang -->
+                                <div class="mt-3">
+                                    {{ $products->links() }}
+                                </div>
                             </div>
                         </div>
                     </div>

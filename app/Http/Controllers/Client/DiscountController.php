@@ -22,7 +22,7 @@ class DiscountController extends Controller
             ->where('user_id', auth()->id())
             ->get();
 
-        return view('client.discounts.index', compact('userPromotions'));
+        return view('client.checkout.index', compact('userPromotions'));
     }
     // Thêm mã giảm giá vào tài khoản người dùng
     public function addPromotion(Request $request)

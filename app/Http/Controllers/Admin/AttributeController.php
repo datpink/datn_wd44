@@ -24,15 +24,30 @@ class AttributeController extends Controller
 
     public function store(Request $request)
     {
+        // Thêm kiểm tra trùng tên thuộc tính và thông báo lỗi bằng tiếng Việt
         $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255|unique:attributes,name',
+        ], [
+            'name.required' => 'Tên thuộc tính là bắt buộc.',
+            'name.string' => 'Tên thuộc tính phải là chuỗi.',
+            'name.max' => 'Tên thuộc tính không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên thuộc tính đã tồn tại. Vui lòng chọn tên khác.',
         ]);
-
+    
+        // Kiểm tra trùng lặp tên Attribute
+        $existingAttribute = Attribute::where('name', $request->name)->first();
+        if ($existingAttribute) {
+            return redirect()->back()->withErrors([
+                'name' => 'Thuộc tính đã tồn tại.'
+            ])->withInput();
+        }
+    
+        // Tạo mới Attribute nếu không trùng lặp
         Attribute::create($request->all());
-
+    
         return redirect()->route('attributes.index')->with('success', 'Tạo mới thuộc tính thành công.');
     }
-
+    
     public function edit($id)
     {
         $title = 'Chỉnh Sửa Thuộc Tính';
@@ -43,7 +58,12 @@ class AttributeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255|unique:attributes,name',
+        ], [
+            'name.required' => 'Tên thuộc tính là bắt buộc.',
+            'name.string' => 'Tên thuộc tính phải là chuỗi.',
+            'name.max' => 'Tên thuộc tính không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên thuộc tính đã tồn tại. Vui lòng chọn tên khác.',
         ]);
 
         $attribute = Attribute::findOrFail($id);

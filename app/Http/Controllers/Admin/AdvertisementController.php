@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Advertisement;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AdvertisementController extends Controller
 {
@@ -17,6 +18,10 @@ class AdvertisementController extends Controller
         if ($request->filled('search')) {
             $query->where('title', 'like', '%' . $request->search . '%');
         }
+            // Lọc theo trạng thái
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
 
         $advertisements = $query->paginate(10); // Phân trang 10 quảng cáo mỗi trang
         return view('admin.advertisements.index', compact('advertisements', 'title'));
@@ -33,12 +38,30 @@ class AdvertisementController extends Controller
         // Validate dữ liệu
         $request->validate([
             'image' => 'required|image|max:2048',
-            'title' => 'nullable|string',
-            'description' => 'nullable|string',
-            'button_text' => 'nullable|string',
-            'button_link' => 'nullable|url',
-            'position' => 'nullable|integer', // Validate trường position
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'button_text' => 'nullable|string|max:50',
+            'button_link' => 'nullable|url|max:255',
+            'position' => 'required|integer|min:0|unique:advertisements,position', // Kiểm tra tính duy nhất
             'status' => 'required|in:active,inactive',
+        ], [
+            // Các thông báo lỗi bằng tiếng Việt
+            'image.required' => 'Hình ảnh là trường bắt buộc.',
+            'image.image' => 'Hình ảnh phải là tệp định dạng hợp lệ.',
+            'image.max' => 'Hình ảnh không được vượt quá 2MB.',
+            'title.string' => 'Tiêu đề phải là chuỗi.',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'description.string' => 'Mô tả phải là chuỗi.',
+            'description.max' => 'Mô tả không được vượt quá 1000 ký tự.',
+            'button_text.string' => 'Văn bản nút phải là chuỗi.',
+            'button_text.max' => 'Văn bản nút không được vượt quá 50 ký tự.',
+            'button_link.url' => 'Liên kết nút phải là URL hợp lệ.',
+            'position.required' => 'Vị trí là trường bắt buộc.',
+            'position.integer' => 'Vị trí phải là số nguyên.',
+            'position.min' => 'Vị trí phải là số nguyên không âm.',
+            'position.unique' => 'Vị trí này đã tồn tại. Vui lòng chọn vị trí khác.',
+            'status.required' => 'Trạng thái là trường bắt buộc.',
+            'status.in' => 'Trạng thái không hợp lệ.',
         ]);
 
         // Lưu hình ảnh
@@ -51,12 +74,13 @@ class AdvertisementController extends Controller
             'description' => $request->description,
             'button_text' => $request->button_text,
             'button_link' => $request->button_link,
-            'position' => $request->position, // Lưu trường position
+            'position' => $request->position,
             'status' => $request->status,
         ]);
 
-        return redirect()->route('advertisements.index')->with('success', 'Advertisement created successfully.');
+        return redirect()->route('advertisements.index')->with('success', 'Quảng cáo đã được thêm thành công.');
     }
+
 
     public function edit($id)
     {
@@ -72,12 +96,36 @@ class AdvertisementController extends Controller
         // Validate dữ liệu
         $request->validate([
             'image' => 'nullable|image|max:2048',
-            'title' => 'nullable|string',
-            'description' => 'nullable|string',
-            'button_text' => 'nullable|string',
-            'button_link' => 'nullable|url',
-            'position' => 'nullable|integer', // Validate trường position
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:1000',
+            'button_text' => 'nullable|string|max:50',
+            'button_link' => 'nullable|url|max:255',
+            'position' => [
+                'required',
+                'nullable',
+                'integer',
+                'min:0',
+                Rule::unique('advertisements', 'position')->ignore($id), // Kiểm tra tính duy nhất trừ ID hiện tại
+            ],
             'status' => 'required|in:active,inactive',
+        ], [
+            // Các thông báo lỗi bằng tiếng Việt
+            'image.required' => 'Hình ảnh là trường bắt buộc.',
+            'image.image' => 'Hình ảnh phải là tệp định dạng hợp lệ.',
+            'image.max' => 'Hình ảnh không được vượt quá 2MB.',
+            'title.string' => 'Tiêu đề phải là chuỗi.',
+            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+            'description.string' => 'Mô tả phải là chuỗi.',
+            'description.max' => 'Mô tả không được vượt quá 1000 ký tự.',
+            'button_text.string' => 'Văn bản nút phải là chuỗi.',
+            'button_text.max' => 'Văn bản nút không được vượt quá 50 ký tự.',
+            'button_link.url' => 'Liên kết nút phải là URL hợp lệ.',
+            'position.required' => 'Vị trí là trường bắt buộc.',
+            'position.integer' => 'Vị trí phải là số nguyên.',
+            'position.min' => 'Vị trí phải là số nguyên không âm.',
+            'position.unique' => 'Vị trí này đã tồn tại. Vui lòng chọn vị trí khác.',
+            'status.required' => 'Trạng thái là trường bắt buộc.',
+            'status.in' => 'Trạng thái không hợp lệ.',
         ]);
 
         // Cập nhật hình ảnh nếu có

@@ -31,6 +31,14 @@
                                             value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
+                                        <select name="status" class="form-select form-select-sm">
+                                            <option value="">Lọc theo trạng thái</option>
+                                            <option value="active" {{ request()->status === 'active' ? 'selected' : '' }}>Kích hoạt</option>
+                                            <option value="inactive" {{ request()->status === 'inactive' ? 'selected' : '' }}>Không kích hoạt</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
                                     </div>
                                     <div class="col-auto">
@@ -103,7 +111,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination justify-content-center mt-3">
+                            <div class="mt-3">
                                 {{ $advertisements->links() }}
                             </div>
                         </div>

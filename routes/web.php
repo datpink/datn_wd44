@@ -173,7 +173,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('client.about.inde
 // GIỏ hàng
 Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.temporary');
-Route::get('cart/view', [CartController::class, 'view'])->name(name: 'cart.view');
+Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('cart.check_stock');
 
@@ -184,6 +184,7 @@ Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('c
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
+Route::post('/apply-coupon2', [CheckoutController::class, 'applyCoupon2'])->name('applyCoupon2');
 
 // Route để xử lý AJAX lấy danh sách huyện
 Route::get('/get-districts/{provinceId}', [CheckoutController::class, 'getDistricts'])->name('getDistricts');
@@ -219,6 +220,14 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::get('/contacts', [App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contact.index');
     Route::delete('/contacts/{id}', [App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contact.destroy');
     Route::post('/contacts/{id}/reply', [App\Http\Controllers\Admin\ContactController::class, 'reply'])->name('admin.contact.reply');
+
+
+    // Giảm giá thep sản phẩm
+    Route::get('/discounts/{discountId}/apply', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
+    Route::post('/discounts/{discountId}/apply', [AdminDiscountController::class, 'applyToProducts'])->name('discount.applyToProducts');
+    Route::delete('admin/discounts/{discountId}/cancel', [DiscountController::class, 'cancelDiscount'])->name('discounts.cancel');
+
+
 
     // Route cho vai trò
     Route::resource('roles', RoleController::class);

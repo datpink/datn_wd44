@@ -7,6 +7,71 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            font-size: 14px;
+            background-color: #ffffff;
+        }
+
+        .card .discount-info {
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .card .discount-info img {
+            width: 50px;
+            /* Điều chỉnh kích thước ảnh */
+            height: auto;
+            margin-right: 12px;
+            /* Khoảng cách giữa ảnh và văn bản */
+            border-radius: 4px;
+            /* Bo góc ảnh nếu cần */
+            object-fit: contain;
+            /* Giữ tỷ lệ ảnh */
+        }
+
+        .card .discount-info p {
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .card .discount-info p.font-weight-bold {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d9534f;
+            /* Màu đỏ nhấn mạnh */
+        }
+
+        .card .discount-info p.text-muted {
+            color: #6c757d;
+            font-size: 12px;
+        }
+
+        .card .btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+
+        .card .btn.apply-discount {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .card .btn.apply-discount:hover {
+            background-color: #218838;
+        }
+
+        .card .btn-outline-secondary {
+            border-color: #6c757d;
+            color: #6c757d;
+        }
+
         .create-account-link {
             font-size: 16px;
             color: #333;
@@ -53,29 +118,113 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="kobolg-checkout-coupon">
+                                <div class="kobolg-checkout-coupon mb-4">
                                     <div class="kobolg-notices-wrapper"></div>
                                     <div class="kobolg-form-coupon-toggle">
-                                        <div class="kobolg-info">
-                                            Bạn có mã giảm giá? <a href="#" class="showcoupon">Nhấp vào đây để nhập mã
-                                                của bạn</a>
+                                        <div class="kobolg-info mb-3">
+                                            <span>Bạn có mã giảm giá? </span>
+                                            <a href="#" class="showcoupon">Nhấp vào đây để nhập mã của bạn</a>
                                         </div>
                                     </div>
-                                    <form class="checkout_coupon kobolg-form-coupon" method="post" style="display:none">
-                                        <p>Nếu bạn có mã giảm giá, vui lòng áp dụng nó bên dưới.</p>
-                                        <p class="form-row form-row-first">
-                                            <input type="text" name="coupon_code" class="input-text"
-                                                placeholder="Mã giảm giá" id="coupon_code" value="">
-                                        </p>
-                                        <p class="form-row form-row-last">
-                                            <button type="submit" class="button" name="apply_coupon"
-                                                value="Apply coupon">Áp dụng mã giảm giá</button>
-                                        </p>
-                                        <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
-                                        <div class="clear"></div>
-                                    </form>
+                                    <div class="checkout_coupon_wrapper" style="display: none;">
+                                        <form class="checkout_coupon kobolg-form-coupon p-3 border rounded" method="post">
+                                            <p class="text-muted">Nếu bạn có mã giảm giá, vui lòng áp dụng nó bên dưới.</p>
+                                            <div class="form-row d-flex">
+                                                <div class="form-group col-md-8">
+                                                    <input type="text" name="coupon_code" class="form-control"
+                                                        placeholder="Mã giảm giá" id="coupon_code" value="">
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <button type="submit" class="btn btn-dark w-100" name="apply_coupon"
+                                                        value="Apply coupon">Áp dụng mã giảm giá</button>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="totalAmount" value="{{ $totalAmount }}">
+                                        </form>
+                                        <!-- Khu vực hiển thị cart promotion -->
+                                        <div class="cart-promotion mt-3"
+                                            style="max-height: 250px; overflow-y: auto; border: 1px solid #ddd; border-radius: 8px; padding: 10px;">
+                                            @if (Auth::check())
+                                                @foreach ($userPromotions as $userPromotion)
+                                                    @php
+                                                        $isExpired = \Carbon\Carbon::parse(
+                                                            $userPromotion->promotion->end_date,
+                                                        )->isPast();
+                                                        $notEligible =
+                                                            $totalAmount < $userPromotion->promotion->min_order_value;
+                                                        $buttonClass =
+                                                            $userPromotion->promotion->type == 'free_shipping'
+                                                                ? 'btn-success'
+                                                                : 'btn-danger';
+                                                        if ($isExpired || $notEligible) {
+                                                            $buttonClass = 'btn-outline-secondary';
+                                                        }
+                                                    @endphp
+                                                    <div class="card mb-3 shadow-sm border-0 d-flex flex-row align-items-center"
+                                                        style="border-radius: 8px; padding: 12px; font-size: 14px;">
+                                                        <div class="discount-image">
+                                                            <img src="{{ asset('images/coupon.png') }}" style="width: 100px"
+                                                                height="80px">
+                                                        </div>
+                                                        <div class="discount-info"
+                                                            style="flex: 1; margin-left: 12px; line-height: 1.4;">
+                                                            <p class="font-weight-bold mb-1">
+                                                                @if ($userPromotion->promotion->type == 'percentage')
+                                                                    Giảm
+                                                                    {{ number_format($userPromotion->promotion->discount_value, 0) }}%
+                                                                @elseif($userPromotion->promotion->type == 'fixed_amount')
+                                                                    Giảm
+                                                                    {{ number_format($userPromotion->promotion->discount_value, 0) }}
+                                                                    VND
+                                                                @elseif($userPromotion->promotion->type == 'free_shipping')
+                                                                    Miễn phí vận chuyển
+                                                                @else
+                                                                    Loại giảm giá không xác định
+                                                                @endif
+                                                            </p>
+                                                            @if ($userPromotion->promotion->type != 'free_shipping')
+                                                                <p class="mb-0">Tối đa:
+                                                                    <strong>{{ number_format($userPromotion->promotion->max_value, 0) }}
+                                                                        VND</strong>
+                                                                </p>
+                                                            @endif
+                                                            <p class="mb-0">Đơn tối thiểu:
+                                                                <strong>{{ number_format($userPromotion->promotion->min_order_value, 0) }}
+                                                                    VND</strong>
+                                                            </p>
+                                                            <p class="text-muted mb-0">Hạn sử dụng:
+                                                                <strong>{{ \Carbon\Carbon::parse($userPromotion->promotion->end_date)->format('d/m/Y') }}</strong>
+                                                            </p>
+                                                        </div>
+                                                        <div class="discount-action">
+                                                            @if ($isExpired)
+                                                                <button class="btn btn-outline-secondary btn-sm" disabled>Đã
+                                                                    hết hạn</button>
+                                                            @elseif ($notEligible)
+                                                                <button class="btn btn-outline-secondary btn-sm"
+                                                                    disabled>Không đủ điều kiện</button>
+                                                            @else
+                                                                <button
+                                                                    class="btn {{ $buttonClass }} btn-sm apply-coupon-from-list"
+                                                                    data-promotion-id="{{ $userPromotion->promotion->id }}"
+                                                                    data-discount="{{ $userPromotion->promotion->discount_value }}"
+                                                                    data-max-discount="{{ $userPromotion->promotion->max_value }}"
+                                                                    data-type="{{ $userPromotion->promotion->type }}"
+                                                                    data-total-amount="{{ $totalAmount }}">Áp
+                                                                    dụng</button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @else
+                                                <p class="text-center text-muted">Bạn cần đăng nhập để áp dụng mã giảm giá.
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
+
+
                             </div>
                             <form method="post" class="checkout kobolg-checkout" action="{{ route('vnpay') }}"
                                 enctype="multipart/form-data">
@@ -122,8 +271,8 @@
                                                             <label>Huyện&nbsp;<abbr class="required"
                                                                     title="required">*</abbr></label>
                                                             <span class="kobolg-input-wrapper">
-                                                                <select name="district" id="district" class="form-control"
-                                                                    required>
+                                                                <select name="district" id="district"
+                                                                    class="form-control" required>
                                                                     <option value="">Chọn huyện</option>
                                                                     @if ($district)
                                                                         <option value="{{ $district->id }}" selected>
@@ -140,8 +289,8 @@
                                                             <label>Xã/Phường&nbsp;<abbr class="required"
                                                                     title="required">*</abbr></label>
                                                             <span class="kobolg-input-wrapper">
-                                                                <select name="ward" id="ward" class="form-control"
-                                                                    required>
+                                                                <select name="ward" id="ward"
+                                                                    class="form-control" required>
                                                                     <option value="">Chọn xã/phường</option>
                                                                     @if ($ward)
                                                                         <option value="{{ $ward->id }}" selected>
@@ -215,8 +364,8 @@
                                                         <!-- Mở rộng thêm chút nữa cột này -->
                                                         <div class="media align-items-center">
                                                             <div class="media-body">
-                                                                <a href="#"
-                                                                    class="d-block text-dark">{{ $product['name'] }}</a>
+                                                                <a href="#" class="d-block text-dark"
+                                                                    aalt="{{ $product['name'] }}">{{ \Str::limit($product['name'], 30) }}</a>
                                                                 @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
                                                                     <div class="product-attributes">
                                                                         @foreach ($product['options']['variant'] as $attrIndex => $attribute)
@@ -229,8 +378,12 @@
                                                                     </div>
                                                                 @endif
                                                                 @php
-                                                                    $product['price'] = preg_replace('/[^\d.]/', '', $product['price']); // Loại bỏ ký tự không phải số
-                                                                    $product['price'] = (float)$product['price']; // Chuyển về dạng float
+                                                                    $product['price'] = preg_replace(
+                                                                        '/[^\d.]/',
+                                                                        '',
+                                                                        $product['price'],
+                                                                    ); // Loại bỏ ký tự không phải số
+                                                                    $product['price'] = (float) $product['price']; // Chuyển về dạng float
                                                                 @endphp
                                                                 <span style="font-size: 0.8vw">{{ $product['quantity'] }}
                                                                     × {{ number_format($product['price'], 0) }}₫</span>
@@ -238,8 +391,12 @@
                                                         </div>
                                                     </td>
                                                     <td class="total-col" style="text-align: right;">
-                                                        <span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}₫</span>
+                                                        <strong><span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}</span>
+                                                            <span class="kobolg-Price-currencySymbol">₫</span></strong>
                                                     </td>
+                                                    <span class="kobolg-Price-amount amount" style="color: red;">
+
+                                                    </span>
                                                 </tr>
 
                                                 <!-- Hidden inputs to include product data in form submission -->
@@ -256,41 +413,68 @@
                                         </tbody>
 
                                         <tfoot>
+                                            <!-- Phí vận chuyển -->
                                             <tr class="cart-shipping">
                                                 <td colspan="2" class="text-left">Phí vận chuyển</td>
-                                                <td class="shipping-fee" style="text-align: right;">
+                                                <td class="text-right shipping-fee">
                                                     <strong>
                                                         <span class="kobolg-Price-amount amount" style="color: red;">
+                                                            -<span id="shipping-fee">0</span>
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            <span id="shipping-fee">0</span>
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
 
+                                            <!-- Giảm giá -->
                                             <tr class="cart-discount" style="display: none;">
                                                 <td colspan="2" class="text-left">Giảm giá</td>
-                                                <td style="text-align: right;">
-                                                    <span class="kobolg-Price-amount amount">
-                                                        <span class="kobolg-Price-currencySymbol"
-                                                            style="color: red"></span>
-                                                        0
-                                                    </span>
+                                                <td class="text-right">
+                                                    <span class="kobolg-Price-amount amount" style="color: red;">0</span>
                                                 </td>
                                             </tr>
 
+
+                                            <!-- Áp dụng Xu -->
+                                            <tr class="apply-points-row">
+                                                <td colspan="2" class="text-left">
+                                                    <div class="d-flex align-items-center" style="margin-left: 20px">
+                                                        <!-- Checkbox -->
+                                                        <input type="checkbox" class="form-check-input me-2"
+                                                            id="apply-points-checkbox" onchange="togglePoints()">
+                                                        <!-- Nội dung chữ -->
+                                                        <div>
+                                                            <div class="fw-bold">Áp dụng Xu</div>
+                                                            <div id="points-info" data-points="200">
+                                                                Dùng 200 Xu
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <!-- Số Xu trừ -->
+                                                <td class="text-right">
+                                                    <strong id="points-discount" style="color: red;">
+                                                        -<span id="points-amount">200</span>
+                                                        <span class="kobolg-Price-currencySymbol">₫</span>
+                                                    </strong>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Tổng cộng -->
                                             <tr class="order-total">
                                                 <td colspan="2" class="text-left">Tổng cộng</td>
-                                                <td style="text-align: right;">
+                                                <td class="text-right">
                                                     <strong>
-                                                        <span class="kobolg-Price-amount amount">
+                                                        <span class="kobolg-Price-amount amount" style="color: red;">
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                                            {{ number_format($totalAmount, 0, ',', '.') }}
+                                                            <span
+                                                                id="total-amount">{{ number_format($totalAmount, 0, ',', '.') }}</span>
                                                         </span>
                                                     </strong>
                                                 </td>
                                             </tr>
                                         </tfoot>
+
 
                                     </table>
 
@@ -356,14 +540,16 @@
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Hiển thị/Ẩn form mã giảm giá
+            // Hiển thị/Ẩn form mã giảm giá và cart promotion
             const showCouponButton = document.querySelector(".showcoupon");
-            const couponForm = document.querySelector(".checkout_coupon");
-            if (showCouponButton && couponForm) {
+            const couponWrapper = document.querySelector(".checkout_coupon_wrapper");
+
+            if (showCouponButton && couponWrapper) {
                 showCouponButton.addEventListener("click", function(e) {
                     e.preventDefault();
-                    couponForm.style.display =
-                        couponForm.style.display === "none" ? "block" : "none";
+                    // Toggle hiển thị
+                    couponWrapper.style.display =
+                        couponWrapper.style.display === "none" ? "block" : "none";
                 });
             }
 
@@ -414,7 +600,63 @@
                         console.error("Lỗi:", error);
                     }
                 });
+
+
+                //////////////////////////////////////////
             }
+            /////////////////////////////////////////////////
+            const discountCards = document.querySelectorAll(
+                ".apply-coupon-from-list"); // Lấy tất cả thẻ giảm giá
+
+            discountCards.forEach(function(discountCard) {
+                discountCard.addEventListener("click", async function() {
+                    // Lấy giá trị từ các thuộc tính data-* của button
+                    const promotionId = discountCard.getAttribute("data-promotion-id");
+                    const discount = parseFloat(discountCard.getAttribute("data-discount"));
+                    const maxDiscount = parseFloat(discountCard.getAttribute(
+                        "data-max-discount"));
+                    const type = discountCard.getAttribute("data-type");
+                    const totalAmount = parseFloat(discountCard.getAttribute(
+                        "data-total-amount"));
+                    const shippingFee = parseFloat(document.querySelector("#shipping-fee")
+                        .textContent.replace(/[^\d]/g, "") || 0);
+
+                    try {
+                        const response = await fetch("{{ route('applyCoupon2') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            },
+                            body: JSON.stringify({
+                                promotion_id: promotionId,
+                                discount: discount,
+                                max_discount: maxDiscount,
+                                type: type,
+                                total_amount: totalAmount,
+                                shipping_fee: shippingFee
+                            }),
+                        });
+
+                        const data = await response
+                            .json(); // Nếu là lỗi, sẽ không thực hiện được
+                        console.log(data);
+
+
+                        if (data.status === "success") {
+                            alert("Áp dụng giảm giá thành công!");
+                            updatePromotionInput(data.promotion_id);
+                            updateDiscountInput(data.discount);
+                            updateTotalAmount(totalAmount, data.discount, shippingFee);
+                            updateDiscountDisplay(data.discount);
+                        } else {
+                            alert("Không thể áp dụng giảm giá.");
+                        }
+                    } catch (error) {
+                        console.error("Lỗi:", error);
+                    }
+                });
+            });
 
             // Hàm cập nhật `promotion_id`
             function updatePromotionInput(promotionId) {
@@ -428,13 +670,9 @@
                 promotionInput.value = promotionId;
             }
 
+            // Hàm cập nhật giá trị giảm giá
             function updateDiscountInput(discount) {
-                // Kiểm tra giá trị của discount
-                console.log('Discount: ', discount); // Debug
-
-                // Tìm input ẩn 'discount_total'
                 let discountInput = document.querySelector('[name="discount_total"]');
-                // Nếu input không tồn tại, tạo mới
                 if (!discountInput) {
                     discountInput = document.createElement("input");
                     discountInput.type = "hidden";
@@ -442,23 +680,14 @@
                     document.querySelector("form").appendChild(discountInput);
                 }
 
-                // Cập nhật giá trị giảm giá vào input ẩn
                 discountInput.value = discount;
-
-                // Debug giá trị đã được gán vào input ẩn
-                console.log('Input Hidden Value: ', discountInput.value); // Kiểm tra giá trị
 
                 // Cập nhật ô input ẩn `discount_display` (nếu tồn tại)
                 const discountDisplayInput = document.querySelector("#discount_display");
                 if (discountDisplayInput) {
-                    discountDisplayInput.value = discount; // Gán giá trị số thẳng vào
+                    discountDisplayInput.value = discount;
                 }
             }
-
-
-
-
-
 
             // Hàm cập nhật tổng tiền sau khi áp dụng mã giảm giá
             function updateTotalAmount(totalAmount, discount, shippingFee) {
@@ -486,7 +715,6 @@
             }).format(discount)}`;
                 }
             }
-
 
             // Cập nhật danh sách huyện khi chọn tỉnh
             $("#province").change(function() {
@@ -618,8 +846,8 @@
                     },
                 });
             }
-
         });
+
 
         // Hàm đồng bộ giá trị tổng cộng vào input ẩn
         function syncTotalToInput(totalAmount) {
@@ -662,6 +890,78 @@
                 fullAddressInput.value = fullAddress;
             }
         });
+
+        // Khởi tạo trang khi load
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('apply-points-checkbox');
+            const pointsDiscount = document.getElementById('points-discount');
+            const ml = document.getElementById('points-info');
+
+            // Mặc định khi load trang, điểm xu làm mờ và màu đen
+            if (!checkbox.checked) {
+                pointsDiscount.style.color = 'black';
+                pointsDiscount.style.opacity = '0.3';
+                ml.style.color = 'black';
+                ml.style.opacity = '0.3';
+
+
+            }
+        });
+
+        function togglePoints() {
+            const checkbox = document.getElementById('apply-points-checkbox');
+            const pointsDiscount = document.getElementById('points-discount');
+            const ml = document.getElementById('points-info');
+            const pointsAmountElement = document.getElementById('points-amount');
+            const totalAmountElement = document.querySelector('.order-total .amount');
+            const inputTotal = document.getElementById('input-total'); // Lấy phần tử input totalAmount
+
+            // Lấy số xu từ data attribute (hoặc từ giá trị tính toán)
+            let pointsValue = parseInt(document.getElementById('points-info').dataset.points) || 0;
+            console.log(pointsValue);
+
+            if (!totalAmountElement) {
+                console.error("Phần tử tổng tiền không tồn tại.");
+                return;
+            }
+
+            // Lưu giá trị tổng tiền ban đầu nếu chưa lưu
+            if (typeof checkbox.initialTotal === 'undefined') {
+                checkbox.initialTotal = parseInt(totalAmountElement.textContent.replace(/[^\d]/g, ''));
+            }
+
+            let currentTotal = checkbox.initialTotal; // Gán lại tổng tiền ban đầu khi bỏ check
+
+            if (checkbox.checked) {
+                // Nếu số xu lớn hơn tổng tiền, chỉ trừ đúng bằng tổng tiền
+                if (pointsValue > currentTotal) {
+                    pointsValue = currentTotal; // Giới hạn số xu trừ
+                }
+
+                currentTotal -= pointsValue; // Giảm số xu
+                pointsDiscount.style.color = 'red';
+                pointsDiscount.style.opacity = '1';
+
+                ml.style.color = 'black';
+                ml.style.opacity = '1';
+            } else {
+                // Bỏ chọn, quay lại tổng tiền ban đầu
+                pointsDiscount.style.color = 'black';
+                pointsDiscount.style.opacity = '0.3';
+
+                ml.style.color = 'black';
+                ml.style.opacity = '0.3';
+            }
+
+            // Cập nhật lại tổng tiền hiển thị
+            totalAmountElement.textContent = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(currentTotal);
+
+            // Cập nhật giá trị của ô input hidden
+            inputTotal.value = currentTotal;
+        }
     </script>
 
 @endsection

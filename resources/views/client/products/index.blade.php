@@ -54,28 +54,6 @@
                     {{-- @include('client.layouts.fillter2') --}}
 
                     <div class="shop-control shop-before-control">
-                        <div class="grid-view-mode">
-                            <form>
-                                <a href="shop.html" data-toggle="tooltip" data-placement="top"
-                                    class="modes-mode mode-grid display-mode " value="grid">
-                                    <span class="button-inner">
-                                        Shop Grid
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </span>
-                                </a>
-                                <a href="shop-list.html" data-toggle="tooltip" data-placement="top"
-                                    class="modes-mode mode-list display-mode active" value="list">
-                                    <span class="button-inner">
-                                        Shop List
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </span>
-                                </a>
-                            </form>
-                        </div>
                         <form class="kobolg-ordering" method="get" id="orderingForm" action="">
                             <select title="product_cat" name="orderby" class="orderby">
                                 <option value="price-latest">Sản phẩm mới nhất</option>
@@ -421,13 +399,13 @@
                                                                 data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
                                                                 <div class="product-inner images">
                                                                     <div class="product-thumb">
-                                                                        <a class="thumb-link" href="#">
+                                                                        <a class="thumb-link" href="/shop/products/chi-tiet/${product.slug}">
                                                                             ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                                         </a>
                                                                         <div class="flash">
                                                                             ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
                                                                         </div>
-                                                                        <a href="#" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
+                                                                        <a href="/shop/products/chi-tiet/${product.slug}" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
                                                                     </div>
                                                                     <div class="product-info">
                                                                         <div class="rating-wapper nostar">
@@ -444,21 +422,22 @@
                                                                                 ${
                                                                                     product.discount_price && product.discount_price !== product.price
                                                                                         ? `
-                                                                                                                        <del>
-                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
-                                                                                                                            ${Number(product.price).toFixed(2)}
-                                                                                                                        </del>
-                                                                                                                        <span class="kobolg-Price-amount amount old-price">
-                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
-                                                                                                                            ${Number(product.discount_price).toFixed(2)}
-                                                                                                                        </span>
-                                                                                                                    `
+                                                                                            <del>
+                                                                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                                                                    ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                                                                            </del>
+                                                                                            <span class="kobolg-Price-amount amount old-price">
+                                                                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                                                                    ${Number(product.discount_price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                                                                            </span>
+
+                                                                                        `
                                                                                         : `
-                                                                                                                        <span>
-                                                                                                                            <span class="kobolg-Price-currencySymbol">$</span>
-                                                                                                                            ${Number(product.price).toFixed(2)}
-                                                                                                                        </span>
-                                                                                                                    `
+                                                                                            <span>
+                                                                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                                                                    ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                                                                            </span>
+                                                                                        `
                                                                                 }
                                                                             </span>
                                                                         </span>
@@ -477,9 +456,6 @@
                                                                                                 ${favoriteIcon} ${isFavorited ? 'Đã yêu thích' : 'Thêm vào yêu thích'}
                                                                                             </a>
                                                                                 </div>
-                                                                            </div>
-                                                                            <div class="kobolg product compare-button">
-                                                                                <a href="#" class="compare button">Compare</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
