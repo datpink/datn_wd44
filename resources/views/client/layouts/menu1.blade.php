@@ -15,30 +15,27 @@
     <div class="header-search-mid">
         <div class="header-search">
             <div class="block-search">
-                <form role="search" method="get" class="form-search block-search-form kobolg-live-search-form">
+                
+                <form role="search" method="get" class="form-search block-search-form kobolg-live-search-form"
+                    action="{{ route('client.searchAll') }} ">
+
                     <div class="form-content search-box results-search">
+
                         <div class="inner">
-                            <input autocomplete="off" class="searchfield txt-livesearch input" name=""
-                                value="" placeholder="Tìm kiếm..." type="text">
+                            <input autocomplete="off" class="searchfield txt-livesearch input" name="searchAll"
+                                value="{{ old('searchAll', $searchQuery ?? '') }}" placeholder="Tìm kiếm..." type="text">
                             <div id="suggestions-box"></div> <!-- Thêm div này để chứa gợi ý -->
                         </div>
+
                     </div>
 
-                    {{-- <input name="post_type" value="product" type="hidden">
-                    <input name="taxonomy" value="product_cat" type="hidden">
-                    <div class="category">
-                        <select title="catalogues" name="catalogue_slug" id="" class="category-search-option"
-                            tabindex="-1" style="display: none;">
-                            <option value="0">Tất cả danh mục</option>
-                            @foreach ($menuCatalogues as $catalogue)
-                                <option value="{{ $catalogue->slug }}">{{ $catalogue->name }}</option>
-                            @endforeach
-
-                        </select>
-                    </div> --}}
+                
                     <button type="submit" class="btn-submit">
+
                         <span class="flaticon-search"></span>
+
                     </button>
+
                 </form><!-- block search -->
             </div>
         </div>
@@ -47,10 +44,11 @@
         <div class="header-control-inner">
             <div class="meta-dreaming">
 
-
                 {{-- you-cart --}}
                 @include('client.you-cart.you-cart')
+
                 @include('client.layouts.notification')
+
                 {{-- login --}}
                 @include('auth.login-client')
 
