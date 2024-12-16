@@ -61,6 +61,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
+Route::get('/search', [ClientController::class, 'searchAll'])->name('client.searchAll');
 
 
 

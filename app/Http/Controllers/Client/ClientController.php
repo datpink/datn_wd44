@@ -10,6 +10,8 @@ use App\Models\OrderItem;
 use App\Models\Post;
 use App\Models\Product; // Import mô hình Product
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 class ClientController extends Controller
 {
@@ -36,16 +38,39 @@ class ClientController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('is_featured', true)->get();
 
-        $topSellingProducts = OrderItem::select('product_variant_id',DB::raw('SUM(quantity) as total_quantity'))
+        $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_variant_id')
             ->orderBy('total_quantity', 'desc')
-            ->take(10) // Lấy 5 sản phẩm bán chạy nhất
+            ->take(10) // Lấy sản phẩm bán chạy nhất
             ->get()
             ->map(function ($item) {
                 return Product::find($item->product_variant_id); // Thay đổi nếu cần
             });
-            // dd($topSellingProducts);
+        // dd($featuredProducts);
         return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts', 'topSellingProducts'));
     }
 
+    public function searchAll(Request $request)
+    {
+        // dd(123);
+        //  dd($listProducts);
+        $searchQuery = $request->input('searchAll');
+        $listProducts = Product::where('is_active', 1);
+        $listPosts = Post::query();
+        if ($searchQuery) {
+            $listProducts->where('name', 'like', '%' . $request->input('searchAll') . '%');
+            $listPosts->where(function ($query) use ($searchQuery) {
+                $query->where('title', 'like', '%' . $searchQuery . '%')
+                    ->orWhere('tomtat', 'like', '%' . $searchQuery . '%');
+            });
+        }
+        // dd($listProducts->get(), $listPosts->get());
+
+        $listProducts = $listProducts->paginate(8);
+
+        $listPosts = $listPosts->paginate(8);
+        // dd($listProducts, $listPosts);
+
+        return view('client.search', compact('listProducts', 'listPosts', 'searchQuery'));
+    }
 }
