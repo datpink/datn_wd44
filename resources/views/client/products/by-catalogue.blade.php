@@ -167,7 +167,7 @@
                                     <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
                                         <a rel="nofollow" href="" class="term-storage"
                                             data-attribute_storage_id="{{ $storage_value->id }}">{{ $storage_value->name }}</a>
-                                        <span class="count">(*)</span>
+                                        {{-- <span class="count">(*)</span> --}}
 
                                     </li>
                                 @endforeach
@@ -359,18 +359,18 @@
                                 // Kiểm tra biến thể active
                                 // const hasVariants = product - > variants - > where('status','active') ->count() > 0; 
                                 const hasVariants = product.variants.filter(variant => variant
-                                    .status === 'active').length > 0;
+                                    .status === 'active');
 
                                 let variantPrices = []; // Danh sách giá các biến thể active
                                 // console.log(hasVariants);
                                 let minVariantPrice = 0
                                 let maxVariantPrice = 0
-                                if (hasVariants) {
+                                if (hasVariants.length > 0) {
 
                                     // console.log(hasVariants);
 
                                     // Tính giá min max của biến thể
-                                    product.variants.forEach(variant => {
+                                    hasVariants.forEach(variant => {
                                         variantPrices.push(variant.price);
 
                                     });
@@ -407,7 +407,7 @@
                                 // console.log(minVariantPrice - priceDifference);
                                 let discountContent = '';
 
-                                if (hasVariants) {
+                                if (hasVariants.length > 0) {
 
                                     if (checkPriceVariant) {
                                         // Sản phẩm có discount và nhiều variant
@@ -440,17 +440,22 @@
                                                     ${Number(minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                                             </span>
                                         `;
+
                                     }
+
                                 } else {
+
                                     discountContent = `
+
                                         <del>
                                             <span class="kobolg-Price-currencySymbol">₫</span>
-                                            ${Number(priceDifference - minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                                        </del>
-
-                                        <span>
-                                            <span class="kobolg-Price-currencySymbol">₫</span>
                                             ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </del>
+                                            
+                                            <span>
+                                                
+                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                ${Number(product.discount_price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
                                         </span>
                                     `;
                                 }

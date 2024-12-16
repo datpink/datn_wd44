@@ -222,6 +222,14 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::delete('/contacts/{id}', [App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contact.destroy');
     Route::post('/contacts/{id}/reply', [App\Http\Controllers\Admin\ContactController::class, 'reply'])->name('admin.contact.reply');
 
+
+    // Giảm giá thep sản phẩm
+    Route::get('/discounts/{discountId}/apply', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
+    Route::post('/discounts/{discountId}/apply', [AdminDiscountController::class, 'applyToProducts'])->name('discount.applyToProducts');
+    Route::delete('admin/discounts/{discountId}/cancel', [DiscountController::class, 'cancelDiscount'])->name('discounts.cancel');
+
+
+
     // Route cho vai trò
     Route::resource('roles', RoleController::class);
     Route::get('roles-trash', [RoleController::class, 'trash'])->name('roles.trash');

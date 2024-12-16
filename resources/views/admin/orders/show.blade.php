@@ -37,38 +37,47 @@
                                             </p>
                                             <p><strong>Trạng thái:</strong>
                                                 @if ($order->status === 'pending_confirmation')
-                                                    <span class="badge rounded-pill bg-info">Chờ xác nhận</span>
+                                                    <span class="badge rounded-pill shade-primary">Chờ xác nhận</span>
                                                 @elseif ($order->status === 'pending_pickup')
-                                                    <span class="badge rounded-pill bg-warning">Chờ lấy hàng</span>
+                                                    <span class="badge rounded-pill shade-secondary">Chờ lấy hàng</span>
                                                 @elseif ($order->status === 'pending_delivery')
-                                                    <span class="badge rounded-pill bg-primary">Chờ giao hàng</span>
-                                                @elseif ($order->status === 'delivered')
-                                                    <span class="badge rounded-pill bg-success">Đã giao hàng</span>
+                                                    <span class="badge rounded-pill shade-green">Chờ giao hàng</span>
                                                 @elseif ($order->status === 'returned')
-                                                    <span class="badge rounded-pill bg-secondary">Trả hàng</span>
+                                                    <span class="badge rounded-pill shade-red">Trả hàng</span>
+                                                @elseif ($order->status === 'delivered')
+                                                    <span class="badge rounded-pill shade-yellow">Đã giao</span>
+                                                @elseif ($order->status === 'confirm_delivered')
+                                                    <span class="badge rounded-pill shade-blue">Đã giao</span>
                                                 @elseif ($order->status === 'canceled')
-                                                    <span class="badge rounded-pill bg-danger">Đã hủy</span>
+                                                    <span class="badge rounded-pill shade-light text-dark">Đã hủy</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                    <span class="badge rounded-pill shade-dark">Không rõ</span>
                                                 @endif
                                             </p>
                                             <p><strong>Trạng thái thanh toán:</strong>
-                                                @if ($order->payment_status === 'pending')
-                                                    <span class="badge rounded-pill bg-warning">Chưa thanh toán</span>
+                                                @if ($order->payment_status === 'unpaid')
+                                                    <span class="badge rounded-pill shade-bdr-primary">Chưa thanh
+                                                        toán</span>
                                                 @elseif ($order->payment_status === 'paid')
-                                                    <span class="badge rounded-pill bg-success">Đã thanh toán</span>
+                                                    <span class="badge rounded-pill shade-bdr-secondary">Đã thanh
+                                                        toán</span>
                                                 @elseif ($order->payment_status === 'refunded')
-                                                    <span class="badge rounded-pill bg-info">Hoàn trả</span>
-                                                @elseif ($order->payment_status === 'failed')
-                                                    <span class="badge rounded-pill bg-danger">Thanh toán thất bại</span>
+                                                    <span class="badge rounded-pill shade-bdr-green">Hoàn trả</span>
+                                                @elseif ($order->payment_status === 'payment_failed')
+                                                    <span class="badge rounded-pill shade-bdr-red">Thanh toán thất
+                                                        bại</span>
+                                                @elseif ($order->payment_status === 'pending')
+                                                    <span class="badge rounded-pill shade-bdr-yellow">Chờ Thanh
+                                                        Toán</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-secondary">Không rõ</span>
+                                                    <span class="badge rounded-pill shade-bdr-blue">Không rõ</span>
                                                 @endif
                                             </p>
 
                                             <p><strong>Địa chỉ giao hàng:</strong> {{ $order->shipping_address }}</p>
                                             <p><strong>Phương thức thanh toán:</strong>
-                                                {{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}
+                                                <strong
+                                                        class="badge rounded-pill shade-bdr-primary">{{ $order->paymentMethod ? $order->paymentMethod->name : 'N/A' }}</strong>
                                             </p>
 
                                             @if ($order->created_at)
@@ -91,48 +100,75 @@
                                                     {{ \Carbon\Carbon::parse($order->refund_at)->format('d/m/Y') }}</p>
                                             @endif
 
-                                            @if ($order->cancellation_reason)
-                                                <p><strong>Lý do hủy đơn:</strong> {{ $order->cancellation_reason }}</p>
-                                            @endif
+                                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                                data-bs-target="#modalDark">
+                                                Thông Tin Thêm
+                                            </button>
 
-                                            @if ($order->status === 'returned' && $order->refund_images)
-                                                <p><strong>Lý Do Trả Hàng:</strong> {{ $order->refund_reason }}</p>
-                                                <p><strong>Hình Ảnh Minh Họa:</strong></p>
-                                                <div>
-                                                    @foreach (json_decode($order->refund_images) as $image)
-                                                        <img src="{{ Storage::url($image) }}" alt="Refund Image"
-                                                            style="max-width: 100px; margin: 5px;">
-                                                    @endforeach
+                                            <!-- Modal Fade -->
+                                            <div class="modal fade" id="modalDark" tabindex="-1"
+                                                aria-labelledby="modalDarkLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalDarkLabel">Thông Tin</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @if ($order->cancellation_reason)
+                                                                <p><strong>Lý do hủy đơn:</strong>
+                                                                    {{ $order->cancellation_reason }}</p>
+                                                            @endif
+
+                                                            @if ($order->status === 'returned' && $order->refund_images)
+                                                                <p><strong>Lý Do Trả Hàng:</strong>
+                                                                    {{ $order->refund_reason }}</p>
+                                                                <p><strong>Hình Ảnh Minh Họa:</strong></p>
+                                                                <div>
+                                                                    @foreach (json_decode($order->refund_images) as $image)
+                                                                        <img src="{{ Storage::url($image) }}"
+                                                                            alt="Refund Image"
+                                                                            style="max-width: 100px; margin: 5px;">
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
+
+                                                            <!-- Hiển thị QR Code -->
+                                                            @if ($order->status === 'delivered' && $order->qr_code)
+                                                                <p><strong>QR Code:</strong></p>
+                                                                <img src="{{ Storage::url($order->qr_code) }}"
+                                                                    alt="QR Code" class="img-fluid"
+                                                                    style="max-width: 150px;">
+                                                            @endif
+
+                                                            <!-- Hiển thị Số tài khoản -->
+                                                            @if ($order->status === 'delivered' && $order->account_number)
+                                                                <p><strong>Số tài khoản:</strong></p>
+                                                                <span>{{ $order->account_number }}</span>
+                                                            @endif
+
+                                                            <!-- Hiển thị hình ảnh chứng minh -->
+                                                            @if ($order->status === 'returned' && $order->proof_image)
+                                                                <p><strong>Hình ảnh chứng minh:</strong></p>
+                                                                <img src="{{ Storage::url($order->proof_image) }}"
+                                                                    alt="Proof Image" class="img-fluid"
+                                                                    style="max-width: 150px;">
+                                                            @endif
+
+                                                            <!-- Hiển thị lời nhắn từ Admin -->
+                                                            @if ($order->admin_message)
+                                                                <p><strong>Lời nhắn từ Admin:</strong></p>
+                                                                <p>{{ $order->admin_message }}</p>
+                                                            @endif
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-dark"
+                                                                data-bs-dismiss="modal">Đóng</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            @endif
-
-                                            <!-- Hiển thị QR Code -->
-                                            @if ($order->status === 'delivered' && $order->qr_code)
-                                                <p><strong>QR Code:</strong></p>
-                                                <img src="{{ Storage::url($order->qr_code) }}" alt="QR Code"
-                                                    class="img-fluid" style="max-width: 150px;">
-                                            @endif
-
-                                            <!-- Hiển thị Số tài khoản -->
-                                            @if ($order->status === 'delivered' && $order->account_number)
-                                                <p><strong>Số tài khoản:</strong></p>
-                                                <span>{{ $order->account_number }}</span>
-                                            @endif
-
-                                            <!-- Hiển thị hình ảnh chứng minh -->
-                                            @if ($order->status === 'returned' && $order->proof_image)
-                                                <p><strong>Hình ảnh chứng minh:</strong></p>
-                                                <img src="{{ Storage::url($order->proof_image) }}" alt="Proof Image"
-                                                    class="img-fluid" style="max-width: 150px;">
-                                            @endif
-
-                                            <!-- Hiển thị lời nhắn từ Admin -->
-                                            @if ($order->admin_message)
-                                                <p><strong>Lời nhắn từ Admin:</strong></p>
-                                                <p>{{ $order->admin_message }}</p>
-                                            @endif
-
-
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

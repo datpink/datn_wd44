@@ -80,76 +80,74 @@
                                 </div>
                             </form>
 
-                            <div class="table-responsive">
-                                <table class="table v-middle m-0">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Code</th>
-                                            <th>Mức giảm giá</th>
-                                            <th>Min Order Value</th> <!-- Thêm cột min_order_value -->
-                                            <th>Trạng thái</th>
-                                            <th>Áp dụng cho đơn hàng</th>
-                                            <th>Áp dụng cho phí vận chuyển</th>
-                                            <th>Ngày bắt đầu</th>
-                                            <th>Ngày kết thúc</th>
-                                            <th>Ngày sửa mã</th>
-                                            <th colspan="2">Hành động</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($promotions as $promotion)
-                                            <tr>
-                                                <td>{{ $promotion->id }}</td>
-                                                <td>{{ $promotion->code }}</td>
-                                                <td>
-                                                    @if ($promotion->type == 'percentage')
-                                                        {{ number_format(round($promotion->discount_value, -1), 0) }}%
-                                                    @elseif ($promotion->type == 'fixed_amount')
-                                                        {{ number_format($promotion->discount_value, 0) }} VND
-                                                    @else
-                                                        Free Shipping
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($promotion->min_order_value !== null)
-                                                        {{ floor($promotion->min_order_value) == $promotion->min_order_value ? number_format($promotion->min_order_value, 0) : number_format($promotion->min_order_value, 2) }}
-                                                        VND
-                                                    @else
-                                                        Không áp dụng
-                                                    @endif
-
-                                                </td>
-                                                <td>
-                                                    @if ($promotion->status == 'active')
-                                                        <span class="badge bg-success rounded-pill">Kích hoạt</span>
-                                                    @elseif ($promotion->status == 'inactive')
-                                                        <span class="badge bg-danger rounded-pill">Không kích hoạt</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($promotion->applies_to_order)
-                                                        <span class="badge bg-info rounded-pill">Có</span>
-                                                    @else
-                                                        <span class="badge bg-secondary rounded-pill">Không</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($promotion->applies_to_shipping)
-                                                        <span class="badge bg-info rounded-pill">Có</span>
-                                                    @else
-                                                        <span class="badge bg-secondary rounded-pill">Không</span>
-                                                    @endif
-                                                </td>
-                                                <td>{{ $promotion->start_date }}</td>
-                                                <td>{{ $promotion->end_date }}</td>
-                                                <td>{{ $promotion->updated_at ?? 'Trống' }}</td>
-                                                <td>
-                                                    <a href="{{ route('promotions.edit', $promotion->id) }}"
-                                                        class="editRow" title="Sửa" style="margin-right: 15px;">
-                                                        <i class="bi bi-pencil-square text-warning"
-                                                            style="font-size: 1.8em;"></i>
-                                                    </a>
+                        <div class="table-responsive">
+                            <table class="table v-middle m-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Code</th>
+                                        <th>Mức giảm giá</th>
+                                        <th>Min Order Value</th>  <!-- Thêm cột min_order_value -->
+                                        <th>Trạng thái</th>
+                                        <th>Áp dụng cho đơn hàng</th>
+                                        <th>Áp dụng cho phí vận chuyển</th>
+                                        <th>Ngày bắt đầu</th>
+                                        <th>Ngày kết thúc</th>
+                                        <th>Đơn hàng tối đa</th>
+                                        <th colspan="2">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($promotions as $promotion)
+                                    <tr>
+                                        <td>{{ $promotion->id }}</td>
+                                        <td>{{ $promotion->code }}</td>
+                                        <td>
+                                            @if ($promotion->type == 'percentage')
+                                            {{ number_format(round($promotion->discount_value, -1), 0) }}%
+                                            @elseif ($promotion->type == 'fixed_amount')
+                                            {{ number_format($promotion->discount_value, 0) }} VND
+                                            @else
+                                            Free Shipping
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($promotion->min_order_value !== null)
+                                                {{ number_format($promotion->min_order_value, 2) }} VND
+                                            @else
+                                                Không áp dụng
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($promotion->status == 'active')
+                                            <span class="badge bg-success rounded-pill">Kích hoạt</span>
+                                            @elseif ($promotion->status == 'inactive')
+                                            <span class="badge bg-danger rounded-pill">Không kích hoạt</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($promotion->applies_to_order)
+                                            <span class="badge bg-info rounded-pill">Có</span>
+                                            @else
+                                            <span class="badge bg-secondary rounded-pill">Không</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($promotion->applies_to_shipping)
+                                            <span class="badge bg-info rounded-pill">Có</span>
+                                            @else
+                                            <span class="badge bg-secondary rounded-pill">Không</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $promotion->start_date }}</td>
+                                        <td>{{ $promotion->end_date }}</td>
+                                        <td>{{ $promotion->max_value ?? 'Trống' }}</td>
+                                        <td>
+                                            <a href="{{ route('promotions.edit', $promotion->id) }}" class="editRow"
+                                                title="Sửa" style="margin-right: 15px;">
+                                                <i class="bi bi-pencil-square text-warning"
+                                                    style="font-size: 1.8em;"></i>
+                                            </a>
 
                                                     <form action="{{ route('promotions.destroy', $promotion->id) }}"
                                                         method="POST" class="d-inline delete-form">
