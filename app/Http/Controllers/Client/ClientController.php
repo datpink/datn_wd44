@@ -38,15 +38,20 @@ class ClientController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('is_featured', true)->get();
 
-        $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
+            $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
             ->groupBy('product_variant_id')
             ->orderBy('total_quantity', 'desc')
-            ->take(10) // Lấy sản phẩm bán chạy nhất
+            ->take(10)
             ->get()
             ->map(function ($item) {
-                return Product::find($item->product_variant_id); // Thay đổi nếu cần
-            });
-        // dd($featuredProducts);
+                $product = Product::find($item->product_variant_id);
+                if (!$product) {
+                    \Log::warning("Product with ID {$item->product_variant_id} not found.");
+                }
+                return $product;
+            })
+            ->filter();
+                // dd($featuredProducts);
         return view('client.index', compact('menuCatalogues', 'menuCategories', 'banners', 'advertisements', 'featuredProducts', 'productsByCondition', 'featuredPosts', 'topSellingProducts'));
     }
 
