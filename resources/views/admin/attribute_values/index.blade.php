@@ -32,15 +32,15 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Stt</th>
                                         <th>Tên</th>
                                         <th>Hành động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($attribute->attributeValues as $value)
+                                    @foreach ($attribute->attributeValues as $index => $value)
                                         <tr>
-                                            <td>{{ $value->id }}</td>
+                                            <td>{{ $index +1 }}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>
                                                 <a href="{{ route('attributes.attribute_values.edit', [$attribute->id, $value->id]) }}"

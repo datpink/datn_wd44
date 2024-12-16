@@ -103,7 +103,7 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Stt</th>
                                         <th>Ảnh</th>
                                         <th>Tên sản phẩm</th>
                                         <th>Thương hiệu</th>
@@ -118,9 +118,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($products as $product)
+                                    @forelse ($products as $index => $product)
                                         <tr>
-                                            <td>{{ $product->id }}</td>
+                                            <td>{{ $index + 1 }}</td>
                                             <td>
                                                 @if ($product->image_url && \Storage::exists($product->image_url))
                                                     <img src="{{ \Storage::url($product->image_url) }}"
