@@ -183,6 +183,8 @@ Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('c
 // thanh toán
 Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
 Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
+// Route::get('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
+Route::post('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
 Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
 Route::post('/apply-coupon2', [CheckoutController::class, 'applyCoupon2'])->name('applyCoupon2');
 
@@ -225,7 +227,7 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Giảm giá thep sản phẩm
     Route::get('/discounts/{discountId}/apply', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
     Route::post('/discounts/{discountId}/apply', [AdminDiscountController::class, 'applyToProducts'])->name('discount.applyToProducts');
-    Route::delete('admin/discounts/{discountId}/cancel', [DiscountController::class, 'cancelDiscount'])->name('discounts.cancel');
+    Route::delete('admin/discounts/{discountId}/cancel', [AdminDiscountController::class, 'cancelDiscount'])->name('discounts.cancel');
 
 
 

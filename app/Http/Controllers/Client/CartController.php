@@ -140,6 +140,7 @@ class CartController extends Controller
 
         // Phản hồi tồn kho còn lại (không trừ tồn kho thực tế)
         return response()->json([
+            'quantityInCart' => $quantityInCart,
             'remainingStock' => $remainingStock - $quantityInCart,
         ]);
     }
