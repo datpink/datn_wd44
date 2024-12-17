@@ -326,7 +326,9 @@
                             {"breakpoint":1500,"settings":{"slidesToShow":4,"slidesMargin":"30"}}
                         ]'>
 
-                        {{-- @foreach ($topSellingProducts as $product)
+                        @foreach ($topSellingProducts as $product)
+                        @if ($product)
+
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
@@ -400,7 +402,8 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach --}}
+                            @endif
+                        @endforeach
 
                     </div>
                 </div>

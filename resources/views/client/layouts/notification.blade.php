@@ -11,7 +11,7 @@
                 Thông Báo
                 <span class="minicart-number-items">{{ count($notifications ?? []) }}</span>
             </h3>
-            <ul class="kobolg-mini-cart cart_list product_list_widget">
+            <ul class="kobolg-mini-cart cart_list product_list_widget" style=" border: 1px solid red;">
                 @if (isset($allNotifications))
                     @foreach ($allNotifications as $notification)
                         <li class="kobolg-mini-cart-item mini_cart_item">

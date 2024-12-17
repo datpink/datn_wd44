@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Client\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,4 +28,7 @@ Route::get('/shop/products/filter-by-color-catalogies',                  [Produc
 Route::post('/shop/products/filter-catalogies-api',                  [ProductController::class, 'productByCataloguesApi']);
 Route::get('/shop/products/filter-by-storage',                  [ProductController::class, 'filterByStorage']);
 // Route::post('/shop/add-product-favorite', [ProductController::class, 'addProductFavorite']);
+
+Route::get('san-pham-ban-chay',[AdminController::class,'topBanChay']);
+Route::get('thong-ke-theo-trang-thai',[AdminController::class,'topStatus']);
 

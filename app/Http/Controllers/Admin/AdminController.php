@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Catalogue;
+use App\Models\Comment;
+use App\Models\CommentReply;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
 use App\Models\Post;
 use App\Models\Product;
+use App\Models\ProductComment;
+use App\Models\ProductReview;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -248,7 +252,7 @@ class AdminController extends Controller
 
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
 
-
+// dd($ordersByStatusForChart);
         // Lấy tham số timePeriod từ query string
         $timePeriod = $request->input('timePeriod', 'today'); // Mặc định là 'today'
 
@@ -389,6 +393,14 @@ class AdminController extends Controller
             return $post;
         });
 
+        $countPost = Post::count();
+
+        $countComment = Comment::count();
+
+        $ProductComment = ProductComment::count();
+
+        $countProductReview = ProductReview::count();
+        // dd($countComment,$ProductComment);
 
         return view('admin.index', compact(
             'title',
@@ -420,7 +432,11 @@ class AdminController extends Controller
             'period',
             'topSellingProductQuantities',
             'timePeriod',
-            'filterPeriod'
+            'filterPeriod',
+            'countComment',
+            'ProductComment',
+            'countPost',
+            'countProductReview'
         ));
     }
 
@@ -440,5 +456,181 @@ class AdminController extends Controller
             'users',
             'title'
         ));
+    }
+
+    public function topBanChay(Request $request)
+    {
+
+        // Lấy tham số timePeriod từ query string
+        $timePeriod = $request->input('timePeriod', 'today'); // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+        $timeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        // Chuyển đổi sang múi giờ Việt Nam
+
+        $timeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số timePeriod
+        switch ($timePeriod) {
+
+            case 'yesterday':
+
+                $timeStart = Carbon::yesterday();
+                $timeEnd = Carbon::yesterday();
+
+                break;
+
+            case '7days':
+
+                $timeStart = Carbon::today()->subDays(6);
+                $timeEnd = Carbon::today();
+
+                break;
+
+            case '15days':
+
+                $timeStart = Carbon::today()->subDays(14);
+                $timeEnd = Carbon::today();
+
+                break;
+
+            case '30days':
+
+                $timeStart = Carbon::today()->subDays(29);
+                $timeEnd = Carbon::today();
+                break;
+
+            case '1years':
+
+                $timeStart = Carbon::today()->subDays(364);
+                $timeEnd = Carbon::today();
+
+                break;
+
+            default:
+
+                // Mặc định là hôm nay
+                $timeStart = Carbon::today();
+
+                break;
+        }
+
+        // Truy vấn Top 10 sản phẩm bán chạy trong khoảng thời gian đã xác định
+        $topSellingProducts = OrderItem::select('product_id', 'product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->whereBetween('created_at', [$timeStart->startOfDay(), $timeEnd->endOfDay()]) // Thêm điều kiện thời gian
+            ->groupBy('product_id', 'product_variant_id') // Group theo cả product_id và product_variant_id
+            ->orderByDesc('total_quantity') // Sắp xếp theo số lượng bán
+            ->limit(10) // Lấy 10 sản phẩm bán chạy nhất
+            ->with(['product', 'productVariant.product']) // Eager load quan hệ product và product từ product_variant
+            ->get();
+
+        // Lấy tên sản phẩm hoặc mã sản phẩm tương ứng và giới hạn tên
+        $topSellingProductNames = $topSellingProducts->map(function ($item) {
+            if ($item->productVariant && $item->productVariant->product) {
+                // Nếu tồn tại productVariant và product
+                return Str::limit($item->productVariant->product->name, 10, '...'); // Giới hạn tên 10 ký tự
+            } elseif ($item->product) {
+                // Nếu chỉ tồn tại product
+                return Str::limit($item->product->name, 10, '...'); // Giới hạn tên 10 ký tự
+            }
+            return 'Không xác định'; // Không xác định nếu cả hai đều không tồn tại
+        });
+
+
+        $topSellingProductQuantities = $topSellingProducts->pluck('total_quantity');
+
+        return response()->json(['topSellingProductNames' => $topSellingProductNames, 'topSellingProductQuantities' => $topSellingProductQuantities]);
+    }
+
+    public function topStatus(Request $request)
+    {
+        // Lấy tham số filterPeriod từ query string
+        $filterPeriod = $request->input('filterPeriod', 'today');
+
+        // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+
+        $filterStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        $filterEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        // Xử lý khoảng thời gian dựa trên tham số filterPeriod
+
+        switch ($filterPeriod) {
+
+            case 'yesterday':
+
+                $filterStart = Carbon::yesterday();
+                $filterEnd = Carbon::yesterday();
+                break;
+
+            case '7days':
+
+                $filterStart = Carbon::today()->subDays(6);
+                $filterEnd = Carbon::today();
+                break;
+
+            case '15days':
+
+                $filterStart = Carbon::today()->subDays(14);
+                $filterEnd = Carbon::today();
+                break;
+
+            case '30days':
+
+                $filterStart = Carbon::today()->subDays(29);
+                $filterEnd = Carbon::today();
+                break;
+
+            case '1years':
+
+                $filterStart = Carbon::today()->subDays(364);
+                $filterEnd = Carbon::today();
+                break;
+
+            default:
+
+                $filterStart = Carbon::today();
+                break;
+        }
+
+
+        // Lấy số lượng đơn hàng theo trạng thái, chỉ lấy "processing" và "shipped" cho danh sách
+        $ordersByStatusForList = Order::select('status', DB::raw('COUNT(*) as count'))
+            ->whereIn('status', ['pending_confirmation', 'delivered']) // Chỉ lấy hai trạng thái này cho danh sách
+            ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Đảm bảo đủ tất cả các trạng thái cần thiết
+        $statusesForList = ['pending_confirmation', 'delivered']; // Chỉ cần trạng thái này cho danh sách
+        $ordersByStatusForList = array_replace(array_fill_keys($statusesForList, 0), $ordersByStatusForList);
+
+        // Lấy số lượng đơn hàng cho tất cả các trạng thái để hiển thị trên biểu đồ
+        $ordersByStatusForChart = Order::select('status', DB::raw('COUNT(*) as count'))
+            ->whereBetween('created_at', [$filterStart->startOfDay(), $filterEnd->endOfDay()])
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Đảm bảo đủ tất cả các trạng thái cho biểu đồ
+        $statusesForChart = [
+            'pending_confirmation', // Chờ xác nhận
+            'pending_pickup',       // Chờ lấy hàng
+            'pending_delivery',     // Chờ giao hàng
+            'delivered',            // Đã giao hàng
+            'confirm_delivered',    // Chờ xác nhận giao
+            'returned',             // Trả hàng
+            'canceled'              // Đã hủy
+        ];
+
+        // dd($ordersByStatusForChart);
+
+        $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
+        // dd($ordersByStatusForChart);
+        return response()->json(['ordersByStatusForChart' => $ordersByStatusForChart]);
     }
 }
