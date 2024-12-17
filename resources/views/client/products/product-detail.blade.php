@@ -5,6 +5,11 @@
 @section('content')
 
     <style>
+        .new-price {
+    font-weight: bold; /* Làm đậm chữ */
+    font-size: 1.6vw; /* Tăng kích thước chữ khoảng 1.3vw */
+}
+
         /* Container chứa các lựa chọn biến thể */
         .variant-options-container {
             padding: 10px;
@@ -222,36 +227,39 @@
                                     }
                                 @endphp
 
-                                <p class="price">
-                                    <span id="product-price">
-                                        @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
-                                            @if ($product->variants->isNotEmpty())
-                                                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
-                                                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
-                                                </span>
-                                                <del>
-                                                    <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                        {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
-                                                </del>
-                                            @else
-                                                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
-                                                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
-                                                </span>
-                                                <del>
-                                                    <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
-                                                </del>
-                                            @endif
-                                        @else
-                                            @if ($product->variants->isNotEmpty())
-                                                <span style="font-size: 1.6vw">{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
-                                            @else
-                                                <span style="font-size: 1.6vw">{{ number_format($product->price, 0, ',', '.') }}₫</span>
-                                            @endif
-                                        @endif
-                                    </span>
-                                </p>
+<p class="price">
+    <span id="product-price">
+        @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
+            @if ($product->variants->isNotEmpty())
+                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
+                    {{ number_format($minDiscountPrice, 0, ',', '.') }}₫ -
+                    {{ number_format($maxDiscountPrice, 0, ',', '.') }}₫
+                </span>
+                <del>
+                    <span>{{ number_format($minPrice, 0, ',', '.') }}₫ -
+                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                </del>
+            @else
+                <span class="text-danger font-weight-bold" style="font-size: 1.6vw">
+                    {{ number_format($product->discount_price, 0, ',', '.') }}₫
+                </span>
+                <del>
+                    <span>{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                </del>
+            @endif
+        @else
+            @if ($product->variants->isNotEmpty())
+                <span style="font-size: 1.6vw">
+                    {{ number_format($minPrice, 0, ',', '.') }}₫ -
+                    {{ number_format($maxPrice, 0, ',', '.') }}₫
+                </span>
+            @else
+                <span style="font-size: 1.6vw">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+            @endif
+        @endif
+    </span>
+</p>
+
 
 
                                 <p class="stock in-stock">
@@ -336,7 +344,7 @@
                                     <p>{!! $product->tomtat !!}</p>
                                 </div>
 
-                                <form class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
+                                <div class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
                                     <input type="hidden" id="product-image"
                                         data-default-src="{{ \Storage::url($product->image_url) }}">
                                     <input type="hidden" name="variant_id" id="selected-variant-id">
@@ -362,20 +370,21 @@
                                             </div>
                                             <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
                                             <div class="action-buttons">
-                                                <button type="submit" id="add-to-cart"
+                                                <button type="button" id="add-to-cart"
                                                     class="single_add_to_cart_button button alt"
                                                     data-original-price="{{ $product->price }}₫"
                                                     data-discount-price="{{ $product->discount_price }}₫">
                                                     Thêm vào giỏ hàng
                                                 </button>
-                                                {{-- <button type="submit" id="buy-now"
+                                                <button type="button" id="buy-now"
                                                     class="single_add_to_cart_button button buy-now">
                                                     Mua ngay
-                                                </button> --}}
+                                                </button>
+
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
 
                                 {{-- <div class="yith-wcwl-add-to-wishlist">
                                     <div class="yith-wcwl-add-button show">

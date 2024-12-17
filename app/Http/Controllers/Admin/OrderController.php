@@ -277,7 +277,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         // Các trạng thái không cho phép hủy
-        $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'canceled'];
+        $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'confirm_delivered', 'canceled'];
 
         // Kiểm tra trạng thái đơn hàng có thể hủy
         if (in_array($order->status, $nonCancelableStatuses)) {
@@ -518,7 +518,7 @@ class OrderController extends Controller
 
             // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
             if (!in_array($order->status, ['pending_delivery', 'confirm_delivered'])) {
-                \Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+                Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
 
                 return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
             }

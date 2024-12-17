@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;
 use App\Http\Controllers\Controller;
 use App\Models\District;
 use App\Models\PaymentMethod; // Import model PaymentMethod
+use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Province;
 use App\Models\Region;
@@ -20,16 +21,27 @@ class CheckoutController extends Controller
     public function showCheckout(Request $request)
     {
         // Lấy danh sách sản phẩm đã chọn từ input
-        $selectedProducts = json_decode($request->input('selected_products'), true);
-        // Kiểm tra nếu không có sản phẩm nào được chọn
-        if (empty($selectedProducts)) {
-            return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
+
 
         // Lấy thông tin người dùng
         $user = Auth::user();
         $userId = auth()->id(); // Lấy ID người dùng hiện tại
+        $selectedProducts = json_decode($request->input('selected_products'), true);
+        // Kiểm tra nếu không có sản phẩm nào được chọn
+        if (empty($selectedProducts)) {
+            // Lấy giỏ hàng từ session, giỏ hàng có tên là "cart_{$userId}"
+            $cart = session()->get("cart_{$userId}", []); // Giả sử bạn đã có $userId từ authenticated user hoặc từ request
 
+            // Lọc các sản phẩm chỉ lấy cart_id (bắt đầu từ 0) và quantity
+            $selectedProducts = array_map(function ($item, $index) {
+                return [
+                    'cart_id' => $index, // Lấy index làm cart_id (bắt đầu từ 0)
+                    'quantity' => $item['quantity'], // Lấy quantity từ giỏ hàng
+                ];
+            }, $cart, array_keys($cart)); // array_keys($cart) để lấy chỉ số bắt đầu từ 0
+        }
+
+        // dd($selectedProducts);
         // Khởi tạo danh sách sản phẩm và tổng tiền
         $products = [];
         $totalAmount = 0;
@@ -84,12 +96,11 @@ class CheckoutController extends Controller
         }
 
         // Lấy mã giảm giá và sắp xếp
-        $userPromotions = UserPromotion::with('promotion')
-            ->where('user_id', $userId)
-            ->get()
-            ->sortBy(function ($userPromotion) use ($totalAmount) {
-                $promotion = $userPromotion->promotion;
 
+        // Truy vấn trực tiếp từ bảng promotions
+        $userPromotions = Promotion::where('status', 'active') // Lọc những chương trình khuyến mãi chưa hết hạn
+            ->get()
+            ->sortBy(function ($promotion) use ($totalAmount) {
                 // Kiểm tra điều kiện sử dụng
                 $isExpired = Carbon::parse($promotion->end_date)->isPast();
                 $notEligible = $totalAmount < $promotion->min_order_value;
@@ -117,6 +128,17 @@ class CheckoutController extends Controller
     }
 
 
+
+    public function buyNowCheckout(Request $request)
+    {
+        // Kiểm tra xem có truyền product_id không
+        $product_id = $request->input('product_id');
+        // Log để kiểm tra giá trị product_id
+        $prd = Product::where('id', $product_id);
+
+        // Trả về URL với product_id
+        return view('client.checkout.index2');
+    }
 
 
 
