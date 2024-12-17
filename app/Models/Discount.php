@@ -39,5 +39,8 @@ class Discount extends Model
 {
     return $this->belongsToMany(Catalogue::class, 'catelogue_discounts', 'discount_id', 'catalogue_id');
 }
-    
+public function products()
+{
+    return $this->belongsToMany(Product::class, 'discounted_products');
+}
 }

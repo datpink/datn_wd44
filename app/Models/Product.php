@@ -114,4 +114,9 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'favorites');
     }
+    public function discounts()
+{
+    return $this->belongsToMany(Discount::class, 'discounted_products');
+}
+
 }

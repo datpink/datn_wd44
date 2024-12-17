@@ -225,8 +225,8 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     // Giảm giá thep sản phẩm
     Route::get('/discounts/{discountId}/apply', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
     Route::post('/discounts/{discountId}/apply', [AdminDiscountController::class, 'applyToProducts'])->name('discount.applyToProducts');
-    Route::delete('admin/discounts/{discountId}/cancel', [DiscountController::class, 'cancelDiscount'])->name('discounts.cancel');
-
+    // Route hủy giảm giá
+    Route::post('/admin/admin/discounts/{discountId}/products/remove', [AdminDiscountController::class, 'removeFromProducts'])->name('discounts.remove');
 
 
     // Route cho vai trò
