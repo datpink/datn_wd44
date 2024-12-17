@@ -20,7 +20,7 @@ class PointController extends Controller
 
         // Lấy lịch sử giao dịch của người dùng từ bảng transactions
         $transactions = UserPointTransaction::where('user_point_id', $userPoint->id)
-                            ->orderBy('created_at', 'desc')
+                            ->orderBy('id', 'desc')
                             ->paginate(10); // Phân trang với 10 giao dịch mỗi trang
 
         // Trả về view và truyền các biến cần thiết

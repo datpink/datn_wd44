@@ -16,9 +16,7 @@
                             <h3 class="mb-1 text-uppercase text-secondary fw-bold">Tổng Điểm Thưởng</h3>
                             <h1 class="text-danger fw-bold">{{ $userPoint ? $userPoint->total_points : 0 }} điểm</h1>
                         </div>
-                        <div>
-                            <img src="{{ asset('images/reward-icon.png') }}" alt="Reward Icon" style="height: 80px;">
-                        </div>
+
                     </div>
                 </div>
             </div>
