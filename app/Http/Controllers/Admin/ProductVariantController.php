@@ -292,16 +292,7 @@ class ProductVariantController extends Controller
 
         // Lưu thay đổi
         $variant->save();
-
-        // Cập nhật stock của sản phẩm
-        if ($oldStock != $variant->stock) {
-            // Tính sự khác biệt giữa stock mới và cũ
-            $difference = $variant->stock - $oldStock;
-
-            // Cập nhật stock của sản phẩm
-            $product->stock += $difference; // Cộng dồn stock từ biến thể vào sản phẩm
-            $product->save();
-        }
+        $product->updateTotalStock();
 
         return redirect()->route('products.variants.index', [$product, $variant])->with('success', 'Cập nhật biến thể thành công.');
     }

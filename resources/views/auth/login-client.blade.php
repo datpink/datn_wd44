@@ -14,6 +14,9 @@
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--edit-account">
                 <a href="{{ route('profile.show') }}">Thông tin tài khoản</a>
             </li>
+            <li class="menu-item kobolg-MyAccount-navigation-link">
+                <a href="{{ route('point') }}">Điểm thưởng</a>
+            </li>
             <li class="menu-item kobolg-MyAccount-navigation-link kobolg-MyAccount-navigation-link--customer-logout">
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('user_points', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('order_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('total_points')->default(0);
             $table->timestamps();
         });

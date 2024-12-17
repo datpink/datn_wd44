@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Province;
 use App\Models\Region;
+use App\Models\UserPoint;
 use App\Models\UserPromotion;
 use App\Models\Ward;
 use Carbon\Carbon;
@@ -112,6 +113,8 @@ class CheckoutController extends Controller
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
+        $userPoint = UserPoint::where('user_id',$userId)->first();
+        $points = $userPoint->total_points;
 
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
@@ -123,7 +126,8 @@ class CheckoutController extends Controller
             'province',
             'district',
             'ward',
-            'userPromotions'
+            'userPromotions',
+            'points'
         ));
     }
 

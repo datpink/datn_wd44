@@ -8,12 +8,15 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Transaction;
+use App\Models\UserPoint;
+use App\Models\UserPointTransaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
@@ -67,8 +70,15 @@ class PaymentController extends Controller
                 'payment_method_id' => $paymentMethodId,
                 'phone_number' => $request->phone_number,
             ];
-
+            $points = $request->points;
             $order = Order::create($data);
+            $sessionData = [
+                'points'   => $points,
+            ];
+
+            // Lưu vào session với key là 'points'
+            Session::put('points', $sessionData);
+
             $vnp_TxnRef = time();
 
             // Xử lý danh sách sản phẩm
@@ -96,8 +106,26 @@ class PaymentController extends Controller
                     $productModel->save();
                 }
             }
-
             if ($paymentMethodName === 'cod') {
+                if($request->totalAmount >100000){
+                    return back()->with('errors','Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
+                }
+                $userPoint = UserPoint::where('user_id', auth()->id())->first();
+                $redeemPoint = $request->points;
+                if ($redeemPoint > 0) {
+                    UserPointTransaction::create([
+                        'type' => 'redeem',
+                        'user_point_id' => $userPoint->id,
+                        'points' => $redeemPoint,
+                        'description' => 'Thanh toán đơn hàng ' . $order->id,
+                        'created_at' => now(),
+                    ]);
+
+                    $userPoint->update([
+                        'total_points' => $userPoint->total_points - $redeemPoint,
+                    ]);
+                }
+
                 Mail::to($order->user->email)->send(new OrderConfirmation($order));
                 DB::commit();
                 return view('client.vnpay.cod-success', ['order' => $order]);
@@ -172,6 +200,7 @@ class PaymentController extends Controller
 
     public function vnpayReturn(Request $request)
     {
+        // dd(session('points'));
         try {
             DB::beginTransaction();
             $vnp_HashSecret = "65TDBHY5NLK43Y566EFLVM6ATI1X79YF";
@@ -197,15 +226,38 @@ class PaymentController extends Controller
                     $transaction->save();
                     $order->save();
 
+
+                    $ssData = Session::get('points');
+                    $redeemPoint = $ssData['points'];
+                    $userPoint = UserPoint::where('user_id', auth()->id())->first();
+                    if ($redeemPoint > 0) {
+                        UserPointTransaction::create([
+                            'type' => 'redeem',
+                            'user_point_id' => $userPoint->id,
+                            'points' => $redeemPoint,
+                            'description' => 'Thanh toán đơn hàng ' . $order->id,
+                            'created_at' => now(),
+                        ]);
+
+                        $userPoint->update([
+                            'total_points' => $userPoint->total_points - $redeemPoint
+                        ]);
+                    }
+                    Session::forget('points');
+
+
+
                     Mail::to($order->user->email)->send(new OrderConfirmation($order));
                     DB::commit();
-                    return view('client.vnpay.success', ['order' => $order]);
+                    return view('client.vnpay.success', ['order' => $transaction]);
                 } else {
                     foreach ($order->orderItems as $item) {
                         if ($item->product_variant_id) {
                             $productVariant = ProductVariant::findOrFail($item->product_variant_id);
                             $productVariant->stock += $item->quantity;
                             $productVariant->save();
+                            $product = Product::findOrFail($item->product_id);
+                            $product->updateTotalStock();
                         } else {
                             $product = Product::findOrFail($item->product_id);
                             $product->stock += $item->quantity;

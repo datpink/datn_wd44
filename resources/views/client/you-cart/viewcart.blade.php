@@ -247,17 +247,47 @@
 
             // Hàm cập nhật tổng giá sản phẩm
             function updateTotal(input) {
-                const row = input.closest('tr'); // Lấy dòng sản phẩm
-                const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
-                    .price); // Lấy giá sản phẩm
-                const roundedPrice = roundPrice(price); // Làm tròn giá
-                const quantity = parseInt(input.value); // Lấy số lượng mới
-                const totalCell = row.querySelector('.total'); // Lấy cột tổng giá
-                const newTotal = roundedPrice * quantity; // Tính lại tổng giá
+                const row = input.closest('tr');
+                const productId = row.getAttribute('data-cart-id'); // ID của sản phẩm/biến thể trong giỏ hàng
+                const quantity = parseInt(input.value);
 
-                totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫'; // Cập nhật lại cột tổng
-                updateCartTotal(); // Cập nhật lại tổng toàn bộ giỏ hàng
+                fetch(`/cart/check-stock2`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            product_id: productId,
+                            quantity: quantity
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Nếu đủ tồn kho, cập nhật tổng giá
+                            const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
+                            .price);
+                            const totalCell = row.querySelector('.total');
+                            const newTotal = price * quantity;
+                            totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫';
+                            updateCartTotal();
+                        } else {
+                            // Nếu không đủ tồn kho, hiển thị cảnh báo
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: data.message,
+                                toast: true,
+                                timer: 3000,
+                                position: 'top-right',
+                                showConfirmButton: false
+                            });
+                            input.value = data.available_stock; // Cập nhật lại số lượng tối đa có thể đặt
+                        }
+                    });
             }
+
 
             // Hàm cập nhật tổng giá của toàn bộ giỏ hàng
             function updateCartTotal() {
