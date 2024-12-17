@@ -252,7 +252,7 @@ class AdminController extends Controller
 
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
 
-// dd($ordersByStatusForChart);
+        // dd($ordersByStatusForChart);
         // Lấy tham số timePeriod từ query string
         $timePeriod = $request->input('timePeriod', 'today'); // Mặc định là 'today'
 
@@ -632,5 +632,123 @@ class AdminController extends Controller
         $ordersByStatusForChart = array_replace(array_fill_keys($statusesForChart, 0), $ordersByStatusForChart);
         // dd($ordersByStatusForChart);
         return response()->json(['ordersByStatusForChart' => $ordersByStatusForChart]);
+    }
+
+    public function getTransactionTime(Request $request)
+    {
+
+        // Lấy tham số timeRange từ query string
+        $timeRange = $request->input('timeRange', '4months'); // Mặc định là '4months'
+
+        // Khởi tạo mốc thời gian
+        $rangeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số timeRange
+        switch ($timeRange) {
+
+            case '4months':
+
+                $rangeStart = Carbon::today()->subMonths(4);
+                // Lùi lại 4 tháng
+
+                break;
+
+            case '8months':
+
+                $rangeStart = Carbon::today()->subMonths(8);
+                // Lùi lại 8 tháng
+
+                break;
+
+            case '1year':
+
+                $rangeStart = Carbon::today()->subYear();
+
+                // Lùi lại 1 năm
+                break;
+
+            default:
+
+                $rangeStart = Carbon::today()->subMonths(4);
+                // Mặc định là 4 tháng
+
+                break;
+        }
+
+        $paymentMethods = PaymentMethod::where('status', 'active')->get()->keyBy('id');
+
+        // Lấy ngày kết thúc là ngày hiện tại
+        $rangeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        $statistics = Order::where('status', 'delivered')
+            ->where('payment_status', 'paid')
+            ->whereBetween('created_at', [$rangeStart, $rangeEnd]) // Lọc theo khoảng thời gian
+            ->groupBy('payment_method_id') // Nhóm theo phương thức thanh toán
+            ->select('payment_method_id', DB::raw('SUM(total_amount) as total_amount'), DB::raw('COUNT(*) as total_orders'))
+            ->get();
+
+        $statisticsWithPaymentMethod = $statistics->map(function ($statistic) use ($paymentMethods) {
+
+            $paymentMethod = $paymentMethods->get($statistic->payment_method_id);
+            $statistic->payment_method_name = $paymentMethod->name ?? 'Unknown';
+            $statistic->payment_method_description = $paymentMethod->description ?? 'No description available';
+
+            return $statistic;
+        });
+        // dd($request->all());
+        return response()->json(['statisticsWithPaymentMethod' => $statisticsWithPaymentMethod]);
+    }
+
+    public function getOrderTime(Request $request)
+    {
+
+        // Lấy tham số selectedOrderPeriod từ query string
+        $selectedOrderPeriod = $request->input('selectedOrderPeriod', '1day'); // Mặc định là '1week'
+
+        // Khởi tạo mốc thời gian
+        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+
+        // Xử lý khoảng thời gian dựa trên tham số selectedOrderPeriod
+        switch ($selectedOrderPeriod) {
+
+            case '1day':
+                $startDate = Carbon::today();
+                break;
+
+            case '1week':
+
+                $startDate = Carbon::today()->subWeeks(1);
+                break;
+
+            case '2weeks':
+
+                $startDate = Carbon::today()->subWeeks(2);
+                break;
+
+            case '3weeks':
+
+                $startDate = Carbon::today()->subWeeks(3);
+                break;
+
+            case '4weeks':
+
+                $startDate = Carbon::today()->subWeeks(4);
+                break;
+
+            default:
+
+                $startDate = Carbon::today();
+                break;
+        }
+
+        // Truy vấn danh sách đơn hàng và các sản phẩm
+        $orders = Order::with(['user', 'items.productVariant.product', 'items.product']) // Đảm bảo lấy đúng thông tin sản phẩm
+            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+
+        return response()->json(['orders' => $orders]);
     }
 }
