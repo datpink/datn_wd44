@@ -65,7 +65,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countPost }}</h3>
-                            <a href="{{ route('orders.index') }}">Tin Tức</a>
+                            <a href="{{ route('posts.index') }}">Tin Tức</a>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $ProductComment }}</h3>
-                            <a href="{{ route('orders.index') }}">Bình Luận Sản Phẩm</a>
+                            <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countComment }}</h3>
-                            <a href="{{ route('orders.index') }}">Bình Luận Bài Viết</a>
+                            <a href="{{ route('comments.index') }}">Bình Luận Bài Viết</a>
                         </div>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countProductReview }}</h3>
-                            <a href="{{ route('orders.index') }}">Đánh Giá</a>
+                            <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
                         </div>
                     </div>
                 </div>
@@ -217,15 +217,15 @@
                                     <div id="time-period-options">
 
                                         <a href="?timePeriod=today" data-time-period="today"
-                                            class="btn btn-sm btn-primary">Today</a>
+                                            class="btn btn-sm btn-primary">Hôm nay</a>
                                         <a href="?timePeriod=yesterday" data-time-period="yesterday"
-                                            class="btn btn-sm btn-outline-primary">Yesterday</a>
+                                            class="btn btn-sm btn-outline-primary">Hôm qua</a>
                                         <a href="?timePeriod=7days" data-time-period="7days"
-                                            class="btn btn-sm btn-outline-primary">7 days</a>
+                                            class="btn btn-sm btn-outline-primary">7 ngày</a>
                                         <a href="?timePeriod=15days" data-time-period="15days"
-                                            class="btn btn-sm btn-outline-primary">15 days</a>
+                                            class="btn btn-sm btn-outline-primary">15 ngày</a>
                                         <a href="?timePeriod=30days" data-time-period="30days"
-                                            class="btn btn-sm btn-outline-primary">30 days</a>
+                                            class="btn btn-sm btn-outline-primary">30 ngày</a>
                                         <a href="?timePeriod=1years" data-time-period="1years"
                                             class="btn btn-sm btn-outline-primary">1 year</a>
                                     </div>
@@ -248,20 +248,20 @@
                             <div class="card-title">Giao Dịch</div>
                         </div>
                         <div class="card-body">
-                            <div>
-                                <a href="?timeRange=4months"
-                                    class="btn btn-sm {{ $timeRange == '4months' ? 'btn-primary' : 'btn-outline-primary' }}">4
+                            <div id="transaction-time">
+                                <a href="?timeRange=4months" data-time-range = "4months"
+                                    class="btn btn-sm btn-outline-primary">4
                                     tháng</a>
-                                <a href="?timeRange=8months"
-                                    class="btn btn-sm {{ $timeRange == '8months' ? 'btn-primary' : 'btn-outline-primary' }}">8
+                                <a href="?timeRange=8months" data-time-range = "8months"
+                                    class="btn btn-sm btn-outline-primary">8
                                     tháng</a>
-                                <a href="?timeRange=1year"
-                                    class="btn btn-sm {{ $timeRange == '1year' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                <a href="?timeRange=1year" data-time-range = "1year"
+                                    class="btn btn-sm btn-outline-primary">1
                                     năm</a>
                             </div>
                             <div class="scroll370">
-                                <div class="transactions-container">
-                                    @foreach ($statisticsWithPaymentMethod as $statistic)
+                                <div class="transactions-container" id="transactions-container">
+                                    {{-- @foreach ($statisticsWithPaymentMethod as $statistic)
                                         <div class="transaction-block">
                                             <div class="transaction-icon shade-blue">
                                                 <i class="bi bi-credit-card"></i>
@@ -278,7 +278,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @endforeach --}}
                                 </div>
                             </div>
                         </div>
@@ -294,17 +294,17 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Đơn Hàng Mới</div>
-                            <div class="mb-3">
-                                <a href="?selectedOrderPeriod=1day"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">1day</a>
-                                <a href="?selectedOrderPeriod=1week"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '1week' ? 'btn-primary' : 'btn-outline-primary' }}">1week</a>
-                                <a href="?selectedOrderPeriod=2weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }}">2weeks</a>
-                                <a href="?selectedOrderPeriod=3weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '3weeks' ? 'btn-primary' : 'btn-outline-primary' }}">3weeks</a>
-                                <a href="?selectedOrderPeriod=44weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '44weeks' ? 'btn-primary' : 'btn-outline-primary' }}">4weeks</a>
+                            <div class="mb-3" id="option-order-time">
+                                <a href="?selectedOrderPeriod=1day" data-selected-order-time = "1day"
+                                    class="btn btn-sm btn-outline-primary">Hôm nay</a>
+                                <a href="?selectedOrderPeriod=1week" data-selected-order-time = "1week"
+                                    class="btn btn-sm btn-outline-primary">1 tuần</a>
+                                <a href="?selectedOrderPeriod=2weeks" data-selected-order-time = "2weeks"
+                                    class="btn btn-sm btn-outline-primary">2 tuần</a>
+                                <a href="?selectedOrderPeriod=3weeks" data-selected-order-time = "3weeks"
+                                    class="btn btn-sm btn-outline-primary">3 tuần</a>
+                                <a href="?selectedOrderPeriod=44weeks" data-selected-order-time = "44weeks"
+                                    class="btn btn-sm btn-outline-primary">4 tuần</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -322,11 +322,11 @@
                                             <th>Trạng Thái Đơn Hàng</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($orders as $order)
+                                    <tbody id="order-time-content">
+                                        {{-- @foreach ($orders as $order)
                                             @foreach ($order->items as $item)
                                                 <!-- Lặp qua các sản phẩm trong đơn hàng -->
-                                                <tr>
+                                                 <tr>
                                                     <td>{{ $order->id }}</td>
                                                     <td>
                                                         <div class="media-box">
@@ -395,9 +395,9 @@
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
                                                     </td>
-                                                </tr>
+                                                </tr> 
                                             @endforeach
-                                        @endforeach
+                                        @endforeach --}}
                                     </tbody>
 
                                 </table>
@@ -419,17 +419,17 @@
                             <!-- Bộ lọc thời gian -->
                             <div class="mb-3 d-flex gap-2" id="time-period-options-status">
                                 <a href="?filterPeriod=today" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="today">Today</a>
+                                    data-filter-period="today">Hôm nay</a>
                                 <a href="?filterPeriod=yesterday" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="yesterday">Yesterday</a>
+                                    data-filter-period="yesterday">Hôm qua</a>
                                 <a href="?filterPeriod=7days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="7days">7 days</a>
+                                    data-filter-period="7days">7 ngày</a>
                                 <a href="?filterPeriod=15days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="15days">15 days</a>
+                                    data-filter-period="15days">15 ngày</a>
                                 <a href="?filterPeriod=30days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="30days">30 days</a>
+                                    data-filter-period="30days">30 ngày</a>
                                 <a href="?filterPeriod=1years" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="1years">1 year</a>
+                                    data-filter-period="1years">1 năm</a>
                             </div>
 
                             <!-- Container cho biểu đồ -->
@@ -482,11 +482,13 @@
                             <div class="scroll370">
                                 <div class="activity-container">
                                     @foreach ($recentBuyers as $buyer)
+
                                         <div class="activity-block">
                                             <div class="activity-user">
                                                 <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
                                                 <!-- Hình ảnh người dùng -->
                                             </div>
+
                                             <div class="activity-details">
                                                 <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
                                                 <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
@@ -495,7 +497,9 @@
                                                 <!-- Số lượng đơn hàng -->
                                                 <span class="badge shade-green rounded-pill">Mới</span>
                                             </div>
+
                                         </div>
+
                                     @endforeach
                                 </div>
                             </div>
@@ -566,6 +570,282 @@
         </div>
 
     </div>
+
+    {{-- 
+    Giao dịch
+    --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+
+            const transactionTime = document.querySelectorAll('#transaction-time a');
+
+            const transactionsContainer = document.getElementById('transactions-container');
+
+            function fetchDataTransaction(timeRange) {
+
+                axios.get(`api/get-transaction-time?timeRange=${timeRange}`)
+                    .then((res) => {
+
+                        const transactions = res.data.statisticsWithPaymentMethod;
+
+                        // Xóa nội dung cũ
+                        transactionsContainer.innerHTML = '';
+
+                        // Lặp qua dữ liệu và render từng phần tử
+                        transactions.forEach(function(statistic) {
+                            console.log(statistic);
+
+
+                            const transactionBlock = `
+
+                                    <div class="transaction-block">
+
+                                        <div class="transaction-icon shade-blue">
+                                            <i class="bi bi-credit-card"></i>
+
+                                        </div>
+
+                                        <div class="transaction-details">
+
+                                            <h4>${statistic.payment_method_name}</h4>
+                                            <p class="text-truncate">${statistic.payment_method_description}</p>
+
+                                        </div>
+
+                                        <div class="transaction-amount text-blue">
+
+                                            ${ Math.floor(statistic.total_amount).toLocaleString('vi-VN')} VND
+
+                                        </div>
+
+                                    </div>
+
+                                `;
+
+                            // Thêm phần tử vào container
+                            transactionsContainer.insertAdjacentHTML('beforeend',
+                                transactionBlock);
+                        });
+
+                    })
+                    .catch((err) => {
+
+                        console.error(err);
+
+                    })
+
+            }
+
+            // Hàm để set lại class active
+            function setActiveTransaction(activeTransaction) {
+
+                transactionTime.forEach(btn => {
+
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-primary');
+
+                });
+
+                // Thêm active cho nút được chọn
+                activeTransaction.classList.add('btn-primary');
+                activeTransaction.classList.remove('btn-outline-primary');
+
+            }
+
+            transactionTime.forEach(function(transaction) {
+
+                transaction.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+                    // check
+                    // console.log(123);
+
+                    const timeRange = this.dataset.timeRange;
+                    // console.log(timeRange);
+
+                    fetchDataTransaction(timeRange)
+
+                    // Set lại class active
+                    setActiveTransaction(this);
+
+                })
+
+            })
+
+            fetchDataTransaction('4months');
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButton = document.querySelector('#transaction-time a[data-time-range="4months"]');
+
+            if (defaultButton) {
+
+                setActiveTransaction(defaultButton);
+            }
+
+        })
+    </script>
+
+
+    {{-- thống kê đơn hàng mới nhất
+ --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+
+            const optionOrderTime = document.querySelectorAll('#option-order-time a');
+
+            const orderTimeContent = document.getElementById('order-time-content');
+
+            function fetchDataOrderTime(selectedOrderTime) {
+
+                axios.get(`api/get-data-order-time?selectedOrderPeriod=${selectedOrderTime}`)
+                    .then((response) => {
+
+                        // console.log(response);
+
+                        const dataOrderTime = response.data.orders;
+                        let stt = 1;
+
+                        dataOrderTime.forEach(orderItem => {
+
+                            orderItem.items.forEach(item => {
+
+                                const orderItemContent = `
+
+                                        <tr>
+                                            <td>
+                                                ${stt++}
+                                                
+                                            </td>
+
+                                            <td>
+
+                                                <div class="media-box">
+                                                    <div class="media-box-body">
+                                                        <div class="text-truncate">
+
+                                                            ${orderItem.user?.name ?? ''}
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td>
+                                                <div class="media-box">
+                                                    <div class="media-box-body">
+                                                        <div class="text-truncate">
+
+                                                            ${item.productVariant?.product?.name ?? item.product?.name ?? ''}
+                                                    
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td>
+                                                ${new Date(orderItem.created_at).toLocaleDateString()}
+                                            </td>
+
+                                            <td>
+                                                ${Number(orderItem.total_amount).toLocaleString('vi-VN')} VND
+                                            </td>
+
+                                            <td>
+
+                                                ${orderItem.payment_status === 'unpaid' ? '<span class="badge bg-warning">Chưa thanh toán</span>' : ''}
+                                                ${orderItem.payment_status === 'paid' ? '<span class="badge bg-success">Đã thanh toán</span>' : ''}
+                                                ${orderItem.payment_status === 'refunded' ? '<span class="badge bg-danger">Hoàn trả</span>' : ''}
+                                                ${orderItem.payment_status === 'payment_failed' ? '<span class="badge bg-danger">Thanh toán thất bại</span>' : ''}
+                                                
+                                                ${!['unpaid', 'paid', 'refunded', 'payment_failed'].includes(orderItem.payment_status) ? 
+                                                    '<span class="badge bg-secondary">Không rõ</span>' : ''}
+
+                                            </td>
+
+                                            <td>
+
+                                                ${orderItem.status === 'pending_confirmation' ? '<span class="badge bg-info">Chờ xác nhận</span>' : ''}
+                                                ${orderItem.status === 'pending_pickup' ? '<span class="badge bg-warning">Chờ lấy hàng</span>' : ''}
+                                                ${orderItem.status === 'pending_delivery' ? '<span class="badge bg-primary">Chờ giao hàng</span>' : ''}
+                                                ${orderItem.status === 'returned' ? '<span class="badge bg-danger">Trả hàng</span>' : ''}
+                                                ${orderItem.status === 'delivered' ? '<span class="badge bg-secondary">Đã giao</span>' : ''}
+                                        
+                                            </td>
+
+                                        </tr>
+
+                                    `;
+
+                                document.querySelector(
+                                        '#order-time-content')
+                                    .insertAdjacentHTML('beforeend',
+                                        orderItemContent);
+
+                            });
+
+                        });
+
+
+                    })
+                    .catch((error) => {
+
+                        console.log(error);
+
+                    })
+
+            }
+
+            function setActiveButton(activeButton) {
+
+                optionOrderTime.forEach(btn => {
+
+                    btn.classList.remove('btn-primary');
+
+                    btn.classList.add('btn-outline-primary');
+
+                });
+
+                // Thêm active cho nút được chọn
+                activeButton.classList.add('btn-primary');
+
+                activeButton.classList.remove('btn-outline-primary');
+
+            }
+
+            optionOrderTime.forEach(function(orderTime) {
+
+                orderTime.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+                    // console.log(123);
+
+                    const selectedOrderTime = orderTime.dataset.selectedOrderTime;
+
+                    orderTimeContent.innerHTML = '';
+
+                    fetchDataOrderTime(selectedOrderTime);
+
+                    setActiveButton(this)
+
+                })
+            })
+
+            fetchDataOrderTime('1day')
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButton = document.querySelector('#option-order-time a[data-selected-order-time="1day"]');
+
+            if (defaultButton) {
+
+                setActiveButton(defaultButton);
+            }
+
+        })
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -660,7 +940,7 @@
 
                 chart.render();
             } else {
-                console.log("Không có dữ liệu để hiển thị biểu đồ.");
+                console.log("Không có dữ liệu.");
             }
         });
     </script>
@@ -850,14 +1130,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+
             const timePeriodButtons = document.querySelectorAll('#time-period-options a');
+
             let chart = null;
 
             // Hàm để làm nổi bật nút đang chọn
             function setActiveButton(selectedButton) {
 
                 timePeriodButtons.forEach(button => {
+
                     button.classList.remove('btn-primary');
+
                     button.classList.add('btn-outline-primary');
 
                 });
@@ -981,9 +1265,13 @@
 
             // Hiển thị mặc định dữ liệu của today
             const defaultButton = document.querySelector('[data-time-period="today"]');
+
             setActiveButton(defaultButton);
+
             fetchAndRenderChart('today');
+
         });
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

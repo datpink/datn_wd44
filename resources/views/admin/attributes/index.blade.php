@@ -21,15 +21,15 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Stt</th>
                                         <th>Tên thuộc tính</th>
                                         <th>Hành Động</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($attributes as $attribute)
+                                    @foreach($attributes as $index => $attribute)
                                         <tr>
-                                            <td>{{ $attribute->id }}</td>
+                                            <td>{{ $index + 1 }}</td>
                                             <td>{{ $attribute->name }}</td>
                                             <td>
                                                 <a href="{{ route('attributes.attribute_values.index', $attribute->id) }}" class="editRow" style="margin-right: 20px;" title="Chi tiết">

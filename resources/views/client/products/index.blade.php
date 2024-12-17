@@ -305,8 +305,8 @@
                                 // });
 
 
-                                priceFrom.textContent = `$${minPrice}`;
-                                priceTo.textContent = `$${maxPrice}`;
+                                priceFrom.textContent = `₫${minPrice}`;
+                                priceTo.textContent = `₫${maxPrice}`;
 
                                 // // Xử lý sự kiện cho .term-color
                                 colorGroup.forEach(function(color) {

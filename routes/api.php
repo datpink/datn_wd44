@@ -31,4 +31,6 @@ Route::get('/shop/products/filter-by-storage',                  [ProductControll
 
 Route::get('san-pham-ban-chay',[AdminController::class,'topBanChay']);
 Route::get('thong-ke-theo-trang-thai',[AdminController::class,'topStatus']);
+Route::get('get-transaction-time',[AdminController::class,'getTransactionTime']);
+Route::get('get-data-order-time',[AdminController::class,'getOrderTime']);
 
