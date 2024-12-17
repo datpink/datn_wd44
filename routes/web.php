@@ -189,7 +189,7 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('order.failed');
 
     // GIỏ hàng
-    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('cart/add', [CartController::class, 'add'])->name('cart.add')->middleware();
     Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.temporary');
     Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
     Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');

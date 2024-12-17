@@ -80,7 +80,7 @@ class OrderController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        $orders = $query->paginate(10); // Lấy danh sách đơn hàng
+        $orders = $query->orderBy('id', 'desc')->paginate(10); 
 
         return view("admin.orders.index", compact("orders", "title"));
     }
