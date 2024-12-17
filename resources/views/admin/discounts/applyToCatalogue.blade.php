@@ -15,9 +15,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
+        
         <div class="container">
             <h3>Danh sách danh mục</h3>
+            <a href="{{ route('discounts.index') }}" class="btn rounded-pill btn-secondary">
+            <i class="bi bi-arrow-left me-2"></i> Trở về
+        </a>
             <table class="table table-bordered">
                 <thead>
                     <tr>
