@@ -368,9 +368,9 @@
                                                                 toán</span>
                                                         @elseif ($order->payment_status === 'refunded')
                                                             <span class="badge rounded-pill bg-danger">Hoàn trả</span>
-                                                        {{-- @elseif ($order->payment_status === 'payment_failed')
+                                                        @elseif ($order->payment_status === 'payment_failed')
                                                             <span class="badge rounded-pill bg-danger">Thanh toán thất
-                                                                bại</span> --}}
+                                                                bại</span>
                                                         @else
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
