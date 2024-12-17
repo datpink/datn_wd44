@@ -26,7 +26,7 @@
                     'pending_confirmation' => 'Chờ xác nhận', // Chờ xác nhận
                     'pending_pickup' => 'Chờ lấy hàng', // Chờ lấy hàng
                     'pending_delivery' => 'Chờ giao hàng', // Chờ giao hàng
-                    'delivered' => 'Đã giao hàng', // Đã giao hàng
+                    'delivered' => 'Đã nhận hàng', // Đã giao hàng
                     'confirm_delivered' => 'Đã giao hàng', // Đã giao hàng
                     'canceled' => 'Đã hủy', // Đã hủy
                     'returned' => 'Trả hàng', // Trả hàng

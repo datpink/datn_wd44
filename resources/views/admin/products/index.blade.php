@@ -32,20 +32,7 @@
                             </div>
                         @endif
                         <div class="card-body">
-                            <!-- Form upload file Excel -->
-                            <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data"
-                                class="mb-3">
-                                @csrf
-                                <div class="row g-2">
-                                    <div class="col-auto">
-                                        <input type="file" name="file" id="file" class="form-control" required>
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="submit" class="btn btn-sm btn-primary">Import Sản Phẩm</button>
-                                    </div>
-                                </div>
-                            </form>
-
+                        
                             <!-- Form tìm kiếm sản phẩm -->
                             <form method="GET" action="{{ route('products.index') }}" class="mb-3">
                                 <div class="row g-2">
