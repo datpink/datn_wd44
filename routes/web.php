@@ -180,6 +180,8 @@ Route::get('/cart/temporary', [CartController::class, 'temporary'])->name('cart.
 Route::get('cart/view', [CartController::class, 'view'])->name('cart.view');
 Route::post('cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/check-stock', [CartController::class, 'checkStock'])->name('cart.check_stock');
+Route::post('/cart/check-stock2', [CartController::class, 'checkStock2']);
+
 
 
 

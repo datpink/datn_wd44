@@ -107,6 +107,9 @@ class PaymentController extends Controller
                 }
             }
             if ($paymentMethodName === 'cod') {
+                if($request->totalAmount >100000){
+                    return back()->with('errors','Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
+                }
                 $userPoint = UserPoint::where('user_id', auth()->id())->first();
                 $redeemPoint = $request->points;
                 if ($redeemPoint > 0) {
@@ -253,6 +256,8 @@ class PaymentController extends Controller
                             $productVariant = ProductVariant::findOrFail($item->product_variant_id);
                             $productVariant->stock += $item->quantity;
                             $productVariant->save();
+                            $product = Product::findOrFail($item->product_id);
+                            $product->updateTotalStock();
                         } else {
                             $product = Product::findOrFail($item->product_id);
                             $product->stock += $item->quantity;
