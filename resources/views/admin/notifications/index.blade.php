@@ -57,9 +57,9 @@
                             </thead>
                             <tbody>
 
-                                @foreach ($notificationAll as $notification)
+                                @foreach ($notificationAll as $index => $notification)
                                     <tr>
-                                        <td>{{ $notification->id }}</td>
+                                        <td>{{ $index + 1 }}</td>
                                         <td>{{ $notification->title }}</td>
                                         <td>{{ \Str::limit($notification->description, 50) }}</td>
                                         <td>

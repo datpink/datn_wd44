@@ -107,6 +107,7 @@
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
                                         <div class="img" style="width: 200px; height: auto; margin-top: 10px">
+
                                             <a class="thumb-link"
                                                 href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">
@@ -115,15 +116,20 @@
                                                         alt="{{ $product->name }}">
                                                 @endif
                                             </a>
+
                                         </div>
                                         <div class="flash">
+
                                             @if ($product->condition === 'new')
                                                 <span class="onsale"><span class="number">-18%</span></span>
                                                 <span class="onnew"><span class="text">New</span></span>
                                             @endif
+
                                         </div>
+
                                         <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                             class="button yith-wcqv-button">Quick View</a>
+
                                     </div>
                                     <div class="product-info">
                                         <div class="rating-wapper nostar">
@@ -133,20 +139,22 @@
                                             </div>
                                             <span class="review">(0)</span>
                                         </div>
+
                                         <h3 class="product-name product_title">
                                             <a href="{{ route('client.products.product-detail', $product->slug) }}"
                                                 tabindex="0">{{ $product->name }}</a>
                                         </h3>
+
                                         @php
                                             $hasVariants = $product->variants->where('status', 'active')->count() > 0; // Kiểm tra biến thể active
                                             $variantPrices = []; // Danh sách giá các biến thể active
-
                                             if ($hasVariants) {
                                                 // Lấy giá của các biến thể có trạng thái active
                                                 foreach ($product->variants->where('status', 'active') as $variant) {
                                                     $variantPrices[] = $variant->price;
                                                 }
 
+                                                // dd($variantPrices);
                                                 // Tính giá min và max từ các biến thể active
                                                 $minVariantPrice = min($variantPrices);
                                                 $maxVariantPrice = max($variantPrices);
@@ -159,11 +167,15 @@
                                             // Tính chênh lệch giữa giá sản phẩm gốc và giá giảm giá
                                             $priceDifference =
                                                 $product->price - ($product->discount_price ?? $product->price);
+
+                                            // dd($priceDifference);
+
                                         @endphp
 
                                         <span class="price">
                                             @if ($product->discount_price && $product->discount_price > 0 && $product->discount_price < $product->price)
                                                 @if ($hasVariants && count($variantPrices) > 1)
+
                                                     <!-- Nhiều biến thể active -->
                                                     <span class="kobolg-Price-amount amount text-danger font-weight-bold">
                                                         <!-- Giá giảm: Áp dụng công thức giảm giá cho từng biến thể -->
@@ -171,6 +183,7 @@
                                                         -
                                                         {{ number_format($maxVariantPrice - $priceDifference, 0, ',', '.') }}₫
                                                     </span>
+
                                                     <del>
                                                         <!-- Gạch ngang: Giá biến thể thấp nhất - Giá biến thể cao nhất -->
                                                         <span class="kobolg-Price-amount amount">
@@ -178,41 +191,57 @@
                                                             {{ number_format($maxVariantPrice, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
+
                                                 @elseif ($hasVariants && count($variantPrices) === 1)
+
                                                     <!-- Chỉ có một biến thể active -->
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold" style="font-size: 1.3vw">
+                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold"
+                                                        style="font-size: 1.3vw">
                                                         {{ number_format($minVariantPrice - $priceDifference, 0, ',', '.') }}₫
                                                     </span>
+
                                                     <del>
-                                                        <span class="kobolg-Price-amount amount" >
+                                                        <span class="kobolg-Price-amount amount">
                                                             {{ number_format($minVariantPrice, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
+
                                                 @else
+
                                                     <!-- Không có biến thể active -->
-                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold" style="font-size: 1.3vw">
+                                                    <span class="kobolg-Price-amount amount text-danger font-weight-bold"
+                                                        style="font-size: 1.3vw">
                                                         {{ number_format($product->discount_price, 0, ',', '.') }}₫
                                                     </span>
+
                                                     <del>
                                                         <span class="kobolg-Price-amount amount">
                                                             {{ number_format($product->price, 0, ',', '.') }}₫
                                                         </span>
                                                     </del>
+
                                                 @endif
                                             @else
+
                                                 @if ($hasVariants && count($variantPrices) > 1)
+
                                                     <!-- Không có giảm giá, hiển thị min-max -->
                                                     <span class="kobolg-Price-amount amount" style="font-size: 1.3vw">
                                                         {{ number_format($minVariantPrice, 0, ',', '.') }}₫ -
                                                         {{ number_format($maxVariantPrice, 0, ',', '.') }}₫
                                                     </span>
+
                                                 @else
+
                                                     <!-- Chỉ có một biến thể hoặc không có biến thể -->
                                                     <span class="kobolg-Price-amount amount" style="font-size: 1.3vw">
                                                         {{ number_format($minVariantPrice, 0, ',', '.') }}₫
                                                     </span>
+
                                                 @endif
+
                                             @endif
+                                            
                                         </span>
                                     </div>
 
@@ -297,7 +326,9 @@
                             {"breakpoint":1500,"settings":{"slidesToShow":4,"slidesMargin":"30"}}
                         ]'>
 
-                        {{-- @foreach ($topSellingProducts as $product)
+                        @foreach ($topSellingProducts as $product)
+                        @if ($product)
+
                             <div class="product-item featured_products style-02 rows-space-30 post-{{ $product->id }}">
                                 <div class="product-inner tooltip-top">
                                     <div class="product-thumb">
@@ -371,7 +402,8 @@
                                     </div>
                                 </div>
                             </div>
-                        @endforeach --}}
+                            @endif
+                        @endforeach
 
                     </div>
                 </div>

@@ -61,6 +61,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route cho trang home không yêu cầu xác thực
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
+Route::get('/search', [ClientController::class, 'searchAll'])->name('client.searchAll');
 
 
 
@@ -85,6 +86,8 @@ Route::prefix('shop')->group(function () {
     // Route hiển thị danh sách thông báo
     Route::get('/notifications', [ClientNotificationController::class, 'index'])->name('notifications.index');
     Route::get('/notifications/{id}/read', [ClientNotificationController::class, 'markAsReadAndRedirect'])->name('notifications.read');
+    Route::delete('/notifications/{id}', [ClientNotificationController::class, 'destroy'])->name('notifications.destroy');
+
     // Các route không yêu cầu đăng nhập
     Route::get('products', [ProductController::class, 'index'])->name('client.products.index');
     Route::get('products/chi-tiet/{slug}', [ProductController::class, 'show'])->name('client.products.product-detail');

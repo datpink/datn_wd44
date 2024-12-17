@@ -167,7 +167,7 @@
                                     <li class="kobolg-widget-layered-nav-list__item kobolg-layered-nav-term ">
                                         <a rel="nofollow" href="" class="term-storage"
                                             data-attribute_storage_id="{{ $storage_value->id }}">{{ $storage_value->name }}</a>
-                                        <span class="count">(*)</span>
+                                        {{-- <span class="count">(*)</span> --}}
 
                                     </li>
                                 @endforeach
@@ -356,75 +356,172 @@
                                     .replace(
                                         ':slug', product.slug);
 
-                                productsHTML += `
-                        <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
-                            data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
-                            <div class="product-inner images">
-                                <div class="product-thumb">
-                                    <a class="thumb-link" href="${routeDetail}">
-                                        ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
-                                    </a>
-                                    <div class="flash">
-                                        ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
-                                    </div>
-                                    <a href="${routeDetail}" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
-                                </div>
-                                <div class="product-info">
-                                    <div class="rating-wapper nostar">
-                                        <div class="star-rating">
-                                            <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
-                                        </div>
-                                        <span class="review">(${product.ratings_count})</span>
-                                    </div>
-                                    <h3 class="product-name product_title">
-                                        <a href="${routeDetail}">${product.name}</a>
-                                    </h3>
-                                    <span class="price">
-                                        <span class="kobolg-Price-amount amount text-danger">
-                                            ${
-                                                product.discount_price && product.discount_price !== product.price
-                                                    ? `
-                                                        <del>
-                                                            <span class="kobolg-Price-currencySymbol">₫</span>
-                                                                ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                                                        </del>
-                                                        <span class="kobolg-Price-amount amount old-price">
-                                                            <span class="kobolg-Price-currencySymbol">₫</span>
-                                                                ${Number(product.discount_price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                                                        </span>
+                                // Kiểm tra biến thể active
+                                // const hasVariants = product - > variants - > where('status','active') ->count() > 0; 
+                                const hasVariants = product.variants.filter(variant => variant
 
-                                                    `
-                                                    : `
-                                                        <span>
-                                                            <span class="kobolg-Price-currencySymbol">₫</span>
-                                                                ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
-                                                        </span>
-                                                    `
-                                            }
+                                    .status === 'active');
+
+
+                                let variantPrices = []; // Danh sách giá các biến thể active
+                                // console.log(hasVariants);
+                                let minVariantPrice = 0
+                                let maxVariantPrice = 0
+
+                                if (hasVariants.length > 0) {
+
+
+                                    // console.log(hasVariants);
+
+                                    // Tính giá min max của biến thể
+
+                                    hasVariants.forEach(variant => {
+
+                                        variantPrices.push(variant.price);
+
+                                    });
+
+                                    minVariantPrice = Math.min(...variantPrices);
+                                    maxVariantPrice = Math.max(...variantPrices);
+
+
+                                } else {
+                                    // Nếu không có biến thể active, giá min và max là giá gốc sản phẩm
+                                    minVariantPrice = product.price;
+                                    maxVariantPrice = product.price;
+                                }
+                                console.log(minVariantPrice, maxVariantPrice);
+
+                                // Tính chênh lệch giữa giá sản phẩm gốc và giá giảm giá
+                                const priceDifference = product.price - (product.discount_price ??
+                                    product.price);
+
+                                console.log(priceDifference);
+
+                                // Tính giá min và max của các variant
+                                const hasDiscount = product.discount_price && product
+                                    .discount_price !== product.price;
+                                const checkPriceVariant = hasVariants && variantPrices.length > 1;
+
+                                // console.log(variantPrices);
+
+                                // console.log(minVariantPrice);
+
+                                // console.log(maxVariantPrice);
+
+                                // console.log(priceDifference);
+                                // console.log(minVariantPrice - priceDifference);
+                                let discountContent = '';
+
+                                if (hasVariants.length > 0) {
+
+
+                                    if (checkPriceVariant) {
+                                        // Sản phẩm có discount và nhiều variant
+                                        discountContent = `
+                                            <del>
+                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                ${Number(minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                                -
+                                                ${Number(maxVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </del>
+
+                                            <span class="kobolg-Price-amount amount old-price">
+                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                ${Number(priceDifference - maxVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                                -
+                                                ${Number(priceDifference - minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </span>
+
+                                        `;
+                                    } else if (hasVariants && variantPrices.length == 1) {
+
+                                        discountContent = `
+                                            <del>
+                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                ${Number(priceDifference - minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </del>
+
+                                                <span class="kobolg-Price-amount amount old-price">
+                                                    <span class="kobolg-Price-currencySymbol">₫</span>
+                                                    ${Number(minVariantPrice).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </span>
+                                        `;
+
+
+                                    }
+
+                                } else {
+
+                                    discountContent = `
+
+                                        <del>
+                                            <span class="kobolg-Price-currencySymbol">₫</span>
+                                            ${Number(product.price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+                                            </del>
+                                            
+                                            <span>
+                                                
+                                                <span class="kobolg-Price-currencySymbol">₫</span>
+                                                ${Number(product.discount_price).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}
+
                                         </span>
-                                    </span>
+                                    `;
+                                }
 
 
-                                    <div class="kobolg-product-details__short-description">
-                                        <p>${product.tomtat}</p>
-                                    </div>
-                                </div>
-                                <div class="group-button">
-                                    <div class="group-button-inner">
-                                        <div class="add-to-cart">
-                                            <a href="#" class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng </a>
-                                        </div>
-                                        <div class="yith-wcwl-add-to-wishlist">
-                                            <div class="yith-wcwl-add-button show">
-                                                <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist_customer" style="color:${isFavorited ? 'red' : 'inherit'}">
-                                                    ${favoriteIcon} ${isFavorited ? 'Đã yêu thích' : 'Thêm vào yêu thích'}
+                                productsHTML += `
+                                    <li class="product-item wow fadeInUp product-item list col-md-12 post-${product.id} product type-product status-publish has-post-thumbnail"
+                                        data-wow-duration="1s" data-wow-delay="0ms" data-wow="fadeInUp">
+                                        <div class="product-inner images">
+                                            <div class="product-thumb">
+                                                <a class="thumb-link" href="${routeDetail}">
+                                                    ${product.image_url ? `<img class="img-responsive" src="${product.image_url}" alt="${product.name}" width="600" height="778">` : 'Không có ảnh'}
                                                 </a>
+                                                <div class="flash">
+                                                    ${product.condition === 'new' ? '<span class="onsale"><span class="number">-18%</span></span>' : '<span class="onnew"><span class="text">New</span></span>'}
+                                                </div>
+                                                <a href="${routeDetail}" class="button yith-wcqv-button" data-product_id="${product.id}">Quick View</a>
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="rating-wapper nostar">
+                                                    <div class="star-rating">
+                                                        <span style="width:${(product.ratings_avg * 20)}%">Rated <strong class="rating">${product.ratings_avg}</strong> out of 5</span>
+                                                    </div>
+                                                    <span class="review">(${product.ratings_count})</span>
+                                                </div>
+                                                <h3 class="product-name product_title">
+                                                    <a href="${routeDetail}">${product.name}</a>
+                                                </h3>
+                                                <span class="price">
+                                                    <span class="kobolg-Price-amount amount text-danger">
+                                                        ${
+                                                            discountContent
+                                                        }
+                                                    </span>
+                                                </span>
+
+
+                                                <div class="kobolg-product-details__short-description">
+                                                    <p>${product.tomtat}</p>
+                                                </div>
+                                            </div>
+                                            <div class="group-button">
+                                                <div class="group-button-inner">
+                                                    <div class="add-to-cart">
+                                                        <a href="#" class="button product_type_variable add_to_cart_button">Thêm vào giỏ hàng </a>
+                                                    </div>
+                                                    <div class="yith-wcwl-add-to-wishlist">
+                                                        <div class="yith-wcwl-add-button show">
+                                                            <a href="javascript:void(0)" data-product-id=${product.id} class="add_to_wishlist_customer" style="color:${isFavorited ? 'red' : 'inherit'}">
+                                                                ${favoriteIcon} ${isFavorited ? 'Đã yêu thích' : 'Thêm vào yêu thích'}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                                    </li>
                     `;
                             });
                             productList.innerHTML = productsHTML;

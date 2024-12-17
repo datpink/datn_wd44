@@ -1,5 +1,27 @@
 <style>
+    .kobolg-mini-cart {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
 
+.kobolg-mini-cart-item {
+    border: 1px solid red; /* Viền bao quanh */
+    border-radius: 5px; /* Bo góc nhẹ */
+    padding-top: 20px; /* Tạo khoảng cách giữa nội dung và viền */
+    margin-bottom: 10px; /* Tạo khoảng cách giữa các thẻ */
+    background-color: #fff; /* Màu nền */
+    transition: background-color 0.3s; /* Hiệu ứng hover */
+}
+
+.kobolg-mini-cart-item.unread {
+    font-weight: bold; /* In đậm nếu chưa đọc */
+    background-color: #f9f9f9; /* Màu nền khác để dễ nhận biết */
+}
+
+.kobolg-mini-cart-item:hover {
+    background-color: #f1f1f1; /* Màu nền khi hover */
+}
 
 .notification-item {
     display: flex;
@@ -61,6 +83,8 @@
 }
 
 </style>
+
+</style>
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown" id="cart-content">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="">
@@ -74,18 +98,17 @@
                 Thông Báo
                 <span class="minicart-number-items">{{ count($notifications ?? []) }}</span>
             </h3>
-            <ul class="kobolg-mini-cart cart_list product_list_widget" style=" border: 1px solid red;">
+            <ul class="kobolg-mini-cart cart_list product_list_widget">
                 @if (isset($allNotifications))
                     @foreach ($allNotifications as $notification)
-                        <li class="kobolg-mini-cart-item mini_cart_item" style=" border: 1px solid red ; margin:10px; border-radius: 5px; padding:10px">
+                        <li class="kobolg-mini-cart-item mini_cart_item">
                             <div class="notification-item">
                                 <!-- Nội dung thông báo -->
-                                <div class="notification-content {{ is_null($notification->read_at) ? 'unread' : '' }}">
-                                     <strong class="notification-title">
-                                        {{ \Str::limit($notification->title, 40) }}
+                                <div class="notification-content {{ is_null($notification->read_at) ? 'unread' : '' }}">/-strong/-heart:>:o:-((:-h <strong class="notification-title">
+                                        {{ $notification->title }}
                                     </strong>
                                     <p class="notification-description">
-                                        {{ \Str::limit($notification->description, 60) }}
+                                        {{ $notification->description }}
                                     </p>
                                     <small class="text-muted">
                                         {{ $notification->created_at->format('H:i d/m/Y') }}
@@ -102,15 +125,7 @@
                                     <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary view-details">
                                         Xem chi tiết
                                     </a>
-                                    <form action="{{ route('notifications.destroy', $notification->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa thông báo này?');">
-                                            Xóa
-                                        </button>
-                                    </form>
                                 @endif
-                                
                             </div>
                         </li>
                     @endforeach
