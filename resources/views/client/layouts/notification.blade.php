@@ -11,12 +11,16 @@
                 Thông Báo
                 <span class="minicart-number-items">{{ count($notifications ?? []) }}</span>
             </h3>
-            <ul class="kobolg-mini-cart cart_list product_list_widget">
+            <ul class="kobolg-mini-cart cart_list product_list_widget" style=" border: 1px solid red;">
                 @if (isset($allNotifications))
                     @foreach ($allNotifications as $notification)
                         <li class="kobolg-mini-cart-item mini_cart_item">
-                            <strong>{{ \Str::limit($notification->title, 40) }}</strong>
-                            <p class="mb-1">{{ \Str::limit($notification->description, 40) }}</p>
+                            <strong class="notification-title">
+                                {{ $notification->title }}
+                            </strong>
+                            <p class="notification-description">
+                                {{ $notification->description }}
+                            </p>
                             @if ($notification->url)
                                 <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary">
                                     Xem chi tiết
@@ -38,3 +42,21 @@
         </div>
     </div>
 </div>
+
+<style>
+    .notification-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .notification-description {
+        font-size: 0.9rem;
+        color: #555;
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.4;
+        margin-bottom: 5px;
+    }
+</style>

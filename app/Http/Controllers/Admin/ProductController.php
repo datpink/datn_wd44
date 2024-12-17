@@ -110,18 +110,18 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
-    
+
             // Kiểm tra trùng lặp sản phẩm dựa trên 'name' hoặc 'sku'
             $duplicateProduct = Product::where('name', $request->name)
                 ->orWhere('sku', $request->sku)
                 ->first();
-    
+
             if ($duplicateProduct) {
                 return back()->withErrors([
                     'error' => 'Sản phẩm với tên hoặc mã SKU đã tồn tại!'
                 ])->withInput();
             }
-    
+
             // Xử lý ảnh chính
             $imagePath = null;
             if ($request->hasFile('image_url')) {
@@ -150,7 +150,7 @@ class ProductController extends Controller
                 'condition' => $request->condition,
                 'tomtat' => $request->tomtat,
             ]);
-    
+
             // Lưu ảnh vào galleries
             if ($request->hasFile('images')) {
                 $galleryImages = collect($request->file('images'))->map(function ($image) {
@@ -158,7 +158,7 @@ class ProductController extends Controller
                 });
                 $product->galleries()->createMany($galleryImages->toArray());
             }
-    
+
             DB::commit();
             return redirect()->route('products.index')->with('success', 'Sản phẩm đã được thêm mới!');
         } catch (\Throwable $th) {
@@ -166,7 +166,7 @@ class ProductController extends Controller
             return back()->withErrors(['error' => 'Có lỗi xảy ra: ' . $th->getMessage()]);
         }
     }
-    
+
 
 
     /**
