@@ -361,7 +361,7 @@
 
                             @if ($order->status === 'confirm_delivered')
                                 <!-- Nút xác nhận giao hàng -->
-                                <button class="btn btn-success" id="confirmDeliveredButton"
+                                <button class="btn btn-success" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>
