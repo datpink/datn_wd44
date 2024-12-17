@@ -44,6 +44,7 @@ use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\CheckoutController;
 use App\Http\Controllers\Client\PaymentController;
 use App\Http\Controllers\Client\NotificationController as ClientNotificationController;
+use App\Http\Controllers\Client\PointController;
 use App\Http\Controllers\FavoriteController;
 // use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
@@ -205,6 +206,8 @@ Route::get('/order-failed', [PaymentController::class, 'orderFailed'])->name('or
 // Đăng xuất ở admin
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
+    // point
+Route::get('point', [PointController::class,'index'])->name('point');
 //
 Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');

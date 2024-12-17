@@ -508,7 +508,7 @@
                                             position: "top",
                                             toast: true,
                                             icon: 'success',
-                                            title: 'Đơn hàng đã được xác nhận!',
+                                            title: 'Đơn hàng đã được xác nhận! (+ '.$data.points'.)',
                                             showConfirmButton: false,
                                             timerProgressBar: true,
                                             timer: 3500

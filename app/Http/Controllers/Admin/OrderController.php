@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Mail;
 use PDF;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
+use App\Models\UserPoint;
+use App\Models\UserPointTransaction;
 use App\Traits\ManagesOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -522,7 +524,15 @@ class OrderController extends Controller
 
                 return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
             }
+            $userPoint = UserPoint::where('user_id', auth()->id())->first();
+            $pointtransaction = UserPointTransaction::create([
+                'user_point_id' => $userPoint->id,
+                'points' => 200,
+                'description' => 'Phần thưởng hoàn thành đơn hàng',
+                'created_at' => now(),
+            ]);
 
+            $userPoint->total_points += $pointtransaction->points;
             // Cập nhật trạng thái và lưu
             $order->status = 'delivered';
             $order->payment_status = 'paid';
@@ -531,12 +541,15 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Đơn hàng đã được xác nhận là đã nhận!']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Đơn hàng đã được xác nhận là đã nhận! (+ '.$$pointtransaction->points.')',
+                'points' => $pointtransaction->points
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Có lỗi khi cập nhật trạng thái đơn hàng.'], 500);
         }
     }
-
 }
