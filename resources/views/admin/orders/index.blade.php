@@ -87,10 +87,10 @@
                                             <option value="refunded"
                                                 {{ request()->payment_status === 'refunded' ? 'selected' : '' }}>Hoàn trả
                                             </option>
-                                            <option value="payment_failed"
+                                            {{-- <option value="payment_failed"
                                                 {{ request()->payment_status === 'payment_failed' ? 'selected' : '' }}>
                                                 Thanh toán thất bại
-                                            </option>
+                                            </option> --}}
                                         </select>
                                     </div>
                                     <div class="col-auto">
@@ -153,12 +153,12 @@
                                                             toán</span>
                                                     @elseif ($order->payment_status === 'refunded')
                                                         <span class="badge rounded-pill shade-bdr-green">Hoàn trả</span>
-                                                    @elseif ($order->payment_status === 'payment_failed')
+                                                    {{-- @elseif ($order->payment_status === 'payment_failed')
                                                         <span class="badge rounded-pill shade-bdr-red">Thanh toán thất
-                                                            bại</span>
-                                                    @elseif ($order->payment_status === 'pending')
+                                                            bại</span> --}}
+                                                    {{-- @elseif ($order->payment_status === 'pending')
                                                         <span class="badge rounded-pill shade-bdr-yellow">Chờ Thanh
-                                                            Toán</span>
+                                                            Toán</span> --}}
                                                     @else
                                                         <span class="badge rounded-pill shade-bdr-blue">Không rõ</span>
                                                     @endif

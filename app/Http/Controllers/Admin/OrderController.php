@@ -277,7 +277,7 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         // Các trạng thái không cho phép hủy
-        $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'canceled'];
+        $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'confirm_delivered', 'canceled'];
 
         // Kiểm tra trạng thái đơn hàng có thể hủy
         if (in_array($order->status, $nonCancelableStatuses)) {

@@ -184,9 +184,9 @@
                                                 @elseif ($order->payment_status === 'paid')
                                                     <span class="badge rounded-pill bg-success text-white">Đã thanh
                                                         toán</span>
-                                                @elseif ($order->payment_status === 'payment_failed')
+                                                {{-- @elseif ($order->payment_status === 'payment_failed')
                                                     <span class="badge rounded-pill bg-danger text-white">Thanh toán thất
-                                                        bại</span>
+                                                        bại</span> --}}
                                                 @elseif ($order->payment_status === 'refunded')
                                                     <!-- Thêm trạng thái trả hàng -->
                                                     <span class="badge rounded-pill bg-secondary text-white">Trả hàng</span>
