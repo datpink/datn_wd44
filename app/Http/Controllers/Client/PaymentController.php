@@ -31,9 +31,14 @@ class PaymentController extends Controller
             $paymentMethod = json_decode($paymentMethodRaw, true);
             $paymentMethodId = $paymentMethod['id'];
             $paymentMethodName = $paymentMethod['name'];
-
             // Kiểm tra tồn kho trước khi tạo đơn hàng
             foreach ($request->products as $product) {
+                $prd = Product::where('id', $product['id'])->first();
+                // dd($prd);
+                if ($prd->is_active == 0) {
+                    return redirect()->route('cart.view')
+                        ->with('error', "Sản phẩm {$prd->name} đã ngừng kinh doanh!");
+                }
                 if ($product['variant_id']) {
                     $productVariant = ProductVariant::where('id', $product['variant_id'])
                         ->lockForUpdate()
@@ -107,8 +112,8 @@ class PaymentController extends Controller
                 }
             }
             if ($paymentMethodName === 'cod') {
-                if($request->totalAmount >100000){
-                    return back()->with('errors','Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
+                if ($request->totalAmount > 100000) {
+                    return back()->with('errors', 'Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
                 }
                 $userPoint = UserPoint::where('user_id', auth()->id())->first();
                 $redeemPoint = $request->points;
