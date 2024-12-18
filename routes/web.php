@@ -64,7 +64,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 Route::get('/search', [ClientController::class, 'searchAll'])->name('client.searchAll');
 
-
+Route::get('/advertisement/click/{id}', [AdvertisementController::class, 'advertisementClick'])->name('advertisement.click');
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);

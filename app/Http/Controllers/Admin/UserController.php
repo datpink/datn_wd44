@@ -22,10 +22,10 @@ class UserController extends Controller
         // Lấy từ khóa tìm kiếm và trạng thái từ request
         $search = $request->input('search');
         $status = $request->input('status');
-    
+
         // Lọc người dùng dựa trên từ khóa và trạng thái
         $query = User::query();
-    
+
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
@@ -33,7 +33,7 @@ class UserController extends Controller
                   ->orWhere('phone', 'like', "%$search%");
             });
         }
-    
+
         if ($status) {
             $query->where('status', $status);
         }
@@ -41,7 +41,7 @@ class UserController extends Controller
             $query->whereDate('created_at', $request->date);
         }
         $users = $query->paginate(10); // Phân trang và giữ lại các tham số query
-    
+
         return view('admin.users.index', compact('users', 'title'));
     }
 
@@ -91,20 +91,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'phone' => 'required|string|max:15',
-            'address' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
             'status' => 'required|in:locked,unlocked', // Kiểm tra trạng thái
             'role' => 'required|string', // Thêm kiểm tra cho role
         ]);
 
         $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->address = $request->address;
         $user->status = $request->status; // Cập nhật trạng thái
 
         // Cập nhật hình ảnh

@@ -60,10 +60,10 @@
                                                     </h6>
                                                 </div>
                                                 <div class="button-wrap">
-                                                    <a class="button" target="_self"
-                                                        href="{{ $advertisement->button_link }}">
+                                                    <a class="button" target="_self" href="{{ route('advertisement.click', $advertisement->id) }}">
                                                         <span>{{ $advertisement->button_text }}</span>
                                                     </a>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -241,7 +241,7 @@
                                                 @endif
 
                                             @endif
-                                            
+
                                         </span>
                                     </div>
 

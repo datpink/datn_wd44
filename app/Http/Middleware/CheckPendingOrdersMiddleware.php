@@ -20,6 +20,7 @@ class CheckPendingOrdersMiddleware
     {
         // Gọi lệnh Artisan orders:check-pending khi middleware được chạy
         Artisan::call('orders:check-pending');
+        Artisan::call('order:auto-confirm-delivered');
 
         // Tiếp tục xử lý yêu cầu
         return $next($request);

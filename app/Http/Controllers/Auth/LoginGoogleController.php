@@ -26,6 +26,9 @@ class LoginGoogleController extends Controller
             $user = User::where('email', $googleUser->email)->first();
 
             if ($user) {
+                if ($user->status === 'locked') {
+                    return redirect()->route('login')->withErrors(['username' => 'Tài khoản của bạn đã bị khóa.']);
+                }
                 Auth::login($user);
                 $user->update([
                     'google_id' => $googleUser->id, // Cập nhật Google ID nếu cần

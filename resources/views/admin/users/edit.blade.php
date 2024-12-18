@@ -40,18 +40,18 @@
                                 <div class="form-group mb-3">
                                     <label for="name">Tên:</label>
                                     <input type="text" name="name" id="name" class="form-control"
-                                        value="{{ $user->name }}" required>
+                                        value="{{ $user->name }}" disabled>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="email">Email:</label>
                                     <input type="email" name="email" id="email" class="form-control"
-                                        value="{{ $user->email }}" required>
+                                        value="{{ $user->email }}" disabled>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="address">Địa chỉ:</label>
-                                    <textarea name="address" id="address" class="form-control" required>{{ $user->address }}</textarea>
+                                    <textarea name="address" id="address" class="form-control" disabled>{{ $user->address }}</textarea>
                                 </div>
 
                                 <div class="row mb-3">
@@ -71,7 +71,7 @@
                                 <div class="form-group mb-3">
                                     <label for="phone">Số điện thoại:</label>
                                     <input type="text" name="phone" id="phone" class="form-control"
-                                        value="{{ $user->phone }}" required>
+                                        value="{{ $user->phone }}" disabled>
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -87,13 +87,10 @@
 
                                 <div class="form-group mb-3">
                                     <label for="image">Hình ảnh:</label>
-                                    <input type="file" name="image" id="image" class="form-control"
-                                        onchange="previewImageUrl(event)">
 
                                     @if ($user->image)
                                         <img id="imageUrlPreview" src="{{ asset('storage/' . $user->image) }}"
                                             alt="{{ $user->name }}" class="img-thumbnail mt-2" style="max-width: 150px;">
-                                        <p class="form-text">Hình ảnh hiện tại</p>
                                     @else
                                         <img id="imageUrlPreview" src="" alt="Hình ảnh xem trước"
                                             class="img-thumbnail mt-2" style="display: none; max-width: 150px;">
