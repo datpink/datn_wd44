@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Mail;
 use PDF;
 use Illuminate\Support\Facades\Auth;
 use App\Models\OrderItem;
+use App\Models\UserPoint;
+use App\Models\UserPointTransaction;
 use App\Traits\ManagesOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -78,7 +80,7 @@ class OrderController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        $orders = $query->paginate(10); // Lấy danh sách đơn hàng
+        $orders = $query->orderBy('id', 'desc')->paginate(10); 
 
         return view("admin.orders.index", compact("orders", "title"));
     }
@@ -274,8 +276,8 @@ class OrderController extends Controller
 
     public function cancel(Request $request, $id)
     {
-        $order = Order::findOrFail($id);
 
+        $order = Order::findOrFail($id);
         // Các trạng thái không cho phép hủy
         $nonCancelableStatuses = ['pending_delivery', 'returned', 'delivered', 'confirm_delivered', 'canceled'];
 
@@ -319,6 +321,22 @@ class OrderController extends Controller
         // Gửi email thông báo hủy đơn hàng
         Mail::to($order->user->email)->send(new OrderCanceledMail($order));
 
+        $transactionpoint = UserPointTransaction::where('description', 'like', '%Thanh toán đơn hàng ' . $id )->first();
+        // dd($transactionpoint);
+        $pointrefunde = $transactionpoint->points;
+        // dd($pointrefunde);
+        $userpoint = UserPoint::where('user_id', auth()->id())->first();
+        UserPointTransaction::create([
+            'type' => 'earn',
+            'user_point_id' => $userpoint->id,
+            'points' => $pointrefunde,
+            'description' => 'Hủy đơn hàng ' .$id,
+            'created_at' => now(),
+        ]);
+        $userpoint->update([
+            'total_points' => $userpoint->total_points + $pointrefunde,
+        ]);
+        $userpoint->save();
 
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công và số lượng sản phẩm đã được hoàn lại vào kho.');
@@ -522,6 +540,20 @@ class OrderController extends Controller
 
                 return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
             }
+            $userPoint = UserPoint::where('user_id', auth()->id())->first();
+            $earnPoint = 2000;
+            $pointtransaction = UserPointTransaction::create([
+                'type' => 'earn',
+                'user_point_id' => $userPoint->id,
+                'points' => $earnPoint,
+                'description' => 'Phần thưởng hoàn thành đơn hàng',
+                'created_at' => now(),
+            ]);
+
+            $userPoint->update([
+                'total_points' => $userPoint->total_points + $earnPoint
+            ]);
+            $userPoint->save();
 
             // Cập nhật trạng thái và lưu
             $order->status = 'delivered';
@@ -531,12 +563,14 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Đơn hàng đã được xác nhận là đã nhận!']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Đơn hàng đã được xác nhận là đã nhận!',
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Lỗi khi cập nhật trạng thái', ['order_id' => $id, 'error' => $e->getMessage()]);
             return response()->json(['success' => false, 'message' => 'Có lỗi khi cập nhật trạng thái đơn hàng.'], 500);
         }
     }
-
 }

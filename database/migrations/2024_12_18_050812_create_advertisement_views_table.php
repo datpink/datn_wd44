@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_points', function (Blueprint $table) {
+        Schema::create('advertisement_views', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('total_points')->default(0);
-            $table->timestamps();
+            $table->foreignId('advertisement_id')->constrained('advertisements')->onDelete('cascade');
+            $table->string('user_ip'); // Lưu địa chỉ IP của người dùng
+            $table->timestamps(); // Thời gian tạo và cập nhật
         });
     }
 
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_points');
+        Schema::dropIfExists('advertisement_views');
     }
 };

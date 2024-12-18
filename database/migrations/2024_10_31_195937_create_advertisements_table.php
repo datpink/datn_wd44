@@ -16,6 +16,7 @@ class CreateAdvertisementsTable extends Migration
             $table->string('button_text')->nullable();  // Trường cho văn bản nút
             $table->string('button_link')->nullable();  // Trường cho liên kết nút
             $table->integer('position')->nullable();  // Thêm trường position
+            $table->integer('view')->default(0);  // Thêm trường position
             $table->enum('status', ['active', 'inactive'])->default('active');  // Trường trạng thái
             $table->softDeletes();  // Trường để hỗ trợ xóa mềm
             $table->timestamps();  // Thời gian tạo và cập nhật

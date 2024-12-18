@@ -13,7 +13,6 @@ class UserPoint extends Model
     // Các cột được phép ghi dữ liệu
     protected $fillable = [
         'user_id',
-        'order_id',
         'total_points',
     ];
 

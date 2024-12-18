@@ -157,8 +157,7 @@
                                                         $isExpired = \Carbon\Carbon::parse(
                                                             $userPromotion->end_date,
                                                         )->isPast();
-                                                        $notEligible =
-                                                            $totalAmount < $userPromotion->min_order_value;
+                                                        $notEligible = $totalAmount < $userPromotion->min_order_value;
                                                         $buttonClass =
                                                             $userPromotion->type == 'free_shipping'
                                                                 ? 'btn-success'
@@ -189,7 +188,7 @@
                                                                     Loại giảm giá không xác định
                                                                 @endif
                                                             </p>
-                                                            @if ($userPromotion->type != 'free_shipping')
+                                                            @if ($userPromotion->type == 'percentage')
                                                                 <p class="mb-0">Tối đa:
                                                                     <strong>{{ number_format($userPromotion->max_value, 0) }}
                                                                         VND</strong>
@@ -365,7 +364,7 @@
                                                     <td class="text-center">
                                                         <img src="{{ $product['options']['image'] }}"
                                                             alt="{{ $product['name'] }}" class="mini-cart-product-image"
-                                                            style="max-width: 120px; max-height: 150px; width: auto; height: auto; margin-right: 5px; padding: 5px;">
+                                                            style="max-width: 120px; ">
                                                     </td>
                                                     <td class="" style="padding: 10px; width: 350px;">
                                                         <!-- Mở rộng thêm chút nữa cột này -->
@@ -442,7 +441,7 @@
                                             </tr>
 
 
-                                            <!-- Áp dụng Xu -->
+                                            <!-- Dùng cho việc áp dụng Xu -->
                                             <tr class="apply-points-row">
                                                 <td colspan="2" class="text-left">
                                                     <div class="d-flex align-items-center" style="margin-left: 20px">
@@ -452,8 +451,8 @@
                                                         <!-- Nội dung chữ -->
                                                         <div>
                                                             <div class="fw-bold">Áp dụng Xu</div>
-                                                            <div id="points-info" data-points="200">
-                                                                Dùng 200 Xu
+                                                            <div id="points-info" data-points="{{ $points }}">
+                                                                Dùng tối đa {{ $points }} Xu
                                                             </div>
                                                         </div>
                                                     </div>
@@ -461,7 +460,7 @@
                                                 <!-- Số Xu trừ -->
                                                 <td class="text-right">
                                                     <strong id="points-discount" style="color: red;">
-                                                        -<span id="points-amount">200</span>
+                                                        -<span id="points-amount">0</span> <!-- Số xu thực tế trừ -->
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
                                                     </strong>
                                                 </td>
@@ -519,6 +518,7 @@
                                 </div>
 
                                 <p class="form-row place-order">
+                                    <input type="hidden" id="ponit-apply" name="points" value="">
                                     {{-- input --}}
                                     <input type="hidden" name="redirect" value="1">
                                     <input type="hidden" name="totalAmount" id="input-total"
@@ -917,14 +917,14 @@
         function togglePoints() {
             const checkbox = document.getElementById('apply-points-checkbox');
             const pointsDiscount = document.getElementById('points-discount');
-            const ml = document.getElementById('points-info');
+            const pointsInfo = document.getElementById('points-info');
             const pointsAmountElement = document.getElementById('points-amount');
             const totalAmountElement = document.querySelector('.order-total .amount');
-            const inputTotal = document.getElementById('input-total'); // Lấy phần tử input totalAmount
+            const inputTotal = document.getElementById('input-total'); // Input ẩn tổng tiền
+            const inputPoints = document.getElementById('ponit-apply'); // Input ẩn số xu áp dụng
 
-            // Lấy số xu từ data attribute (hoặc từ giá trị tính toán)
-            let pointsValue = parseInt(document.getElementById('points-info').dataset.points) || 0;
-            console.log(pointsValue);
+            // Lấy số xu từ data attribute
+            let pointsValue = parseInt(pointsInfo.dataset.points) || 0;
 
             if (!totalAmountElement) {
                 console.error("Phần tử tổng tiền không tồn tại.");
@@ -937,27 +937,35 @@
             }
 
             let currentTotal = checkbox.initialTotal; // Gán lại tổng tiền ban đầu khi bỏ check
+            let appliedPoints = 0; // Số xu thực tế được áp dụng
 
             if (checkbox.checked) {
-                // Nếu số xu lớn hơn tổng tiền, chỉ trừ đúng bằng tổng tiền
+                // Giới hạn số xu không vượt quá tổng tiền
                 if (pointsValue > currentTotal) {
-                    pointsValue = currentTotal; // Giới hạn số xu trừ
+                    appliedPoints = currentTotal; // Giới hạn số xu bằng tổng tiền
+                } else {
+                    appliedPoints = pointsValue;
                 }
 
-                currentTotal -= pointsValue; // Giảm số xu
+                currentTotal -= appliedPoints; // Giảm tổng tiền
                 pointsDiscount.style.color = 'red';
                 pointsDiscount.style.opacity = '1';
 
-                ml.style.color = 'black';
-                ml.style.opacity = '1';
+                pointsInfo.style.color = 'black';
+                pointsInfo.style.opacity = '1';
             } else {
                 // Bỏ chọn, quay lại tổng tiền ban đầu
                 pointsDiscount.style.color = 'black';
                 pointsDiscount.style.opacity = '0.3';
 
-                ml.style.color = 'black';
-                ml.style.opacity = '0.3';
+                pointsInfo.style.color = 'black';
+                pointsInfo.style.opacity = '0.3';
+
+                appliedPoints = 0; // Không áp dụng xu
             }
+
+            // Cập nhật số xu hiển thị (đã kiểm tra giới hạn)
+            pointsAmountElement.textContent = appliedPoints;
 
             // Cập nhật lại tổng tiền hiển thị
             totalAmountElement.textContent = new Intl.NumberFormat('vi-VN', {
@@ -967,6 +975,7 @@
 
             // Cập nhật giá trị của ô input hidden
             inputTotal.value = currentTotal;
+            inputPoints.value = appliedPoints; // Cập nhật số xu đã áp dụng
         }
     </script>
 

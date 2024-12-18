@@ -153,4 +153,34 @@ class AdvertisementController extends Controller
         $advertisement->delete();
         return redirect()->route('advertisements.index')->with('success', 'Advertisement deleted successfully.');
     }
+
+    public function advertisementClick($id)
+{
+    // Lấy địa chỉ IP của người dùng
+    $userIp = \Request::ip();
+
+    // Tìm quảng cáo theo ID
+    $advertisement = Advertisement::findOrFail($id);
+
+    // Kiểm tra nếu người dùng đã nhấp vào liên kết này chưa
+    $existingView = \DB::table('advertisement_views')
+        ->where('advertisement_id', $id)
+        ->where('user_ip', $userIp)
+        ->exists();
+
+    if (!$existingView) {
+        // Tăng lượt xem
+        $advertisement->increment('view');
+
+        // Lưu thông tin vào bảng advertisement_views
+        \DB::table('advertisement_views')->insert([
+            'advertisement_id' => $id,
+            'user_ip' => $userIp,
+            'created_at' => now(),
+        ]);
+    }
+
+    // Điều hướng người dùng đến link gốc
+    return redirect($advertisement->button_link);
+}
 }

@@ -38,8 +38,6 @@ class PromotionsTableSeeder extends Seeder
                 'start_date'        => '2025-1-25',
                 'end_date'          => '2025-11-30',
                 'type'              => 'percentage', // Giảm theo %
-                'applies_to_order'  => false, // Không áp dụng cho đơn hàng
-                'applies_to_shipping' => true, // Áp dụng cho phí vận chuyển
                 'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này
             ],
             [

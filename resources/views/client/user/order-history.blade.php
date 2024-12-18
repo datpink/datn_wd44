@@ -26,7 +26,7 @@
                     'pending_confirmation' => 'Chờ xác nhận', // Chờ xác nhận
                     'pending_pickup' => 'Chờ lấy hàng', // Chờ lấy hàng
                     'pending_delivery' => 'Chờ giao hàng', // Chờ giao hàng
-                    'delivered' => 'Đã giao hàng', // Đã giao hàng
+                    'delivered' => 'Đã nhận hàng', // Đã giao hàng
                     'confirm_delivered' => 'Đã giao hàng', // Đã giao hàng
                     'canceled' => 'Đã hủy', // Đã hủy
                     'returned' => 'Trả hàng', // Trả hàng
@@ -170,8 +170,8 @@
                                         <div class="card-body">
                                             <p><strong>Tổng Tiền Đơn Hàng:</strong>
                                                 <span
-                                                    class="text-success fw-bold">{{ number_format($order->items_sum_total, 0, ',', '.') }}
-                                                    VND</span>
+                                                    class="text-success fw-bold">{{ number_format($order->total_amount, 0, ',', '.') }}
+                                                    VND (Bao gồm phí ship)</span>
                                             </p>
                                             <p><strong>Trạng Thái:</strong>
                                                 <span
@@ -191,7 +191,7 @@
                                                     <!-- Thêm trạng thái trả hàng -->
                                                     <span class="badge rounded-pill bg-secondary text-white">Trả hàng</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-infoinfo text-white">Không rõ</span>
+                                                    <span class="badge rounded-pill bg-warning text-white">Không rõ</span>
                                                 @endif
                                             </p>
 
@@ -361,7 +361,7 @@
 
                             @if ($order->status === 'confirm_delivered')
                                 <!-- Nút xác nhận giao hàng -->
-                                <button class="btn btn-success" id="confirmDeliveredButton"
+                                <button class="btn btn-success" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>
