@@ -125,20 +125,6 @@
                                             <span class="badge bg-danger rounded-pill">Không kích hoạt</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            @if ($promotion->applies_to_order)
-                                            <span class="badge bg-info rounded-pill">Có</span>
-                                            @else
-                                            <span class="badge bg-secondary rounded-pill">Không</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($promotion->applies_to_shipping)
-                                            <span class="badge bg-info rounded-pill">Có</span>
-                                            @else
-                                            <span class="badge bg-secondary rounded-pill">Không</span>
-                                            @endif
-                                        </td>
                                         <td>{{ $promotion->start_date }}</td>
                                         <td>{{ $promotion->end_date }}</td>
                                         <td>{{ $promotion->max_value ?? 'Trống' }}</td>

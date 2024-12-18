@@ -5,6 +5,13 @@
 @section('content')
 
     <style>
+        .new-price {
+            font-weight: bold;
+            /* Làm đậm chữ */
+            font-size: 1.6vw;
+            /* Tăng kích thước chữ khoảng 1.3vw */
+        }
+
         /* Container chứa các lựa chọn biến thể */
         .variant-options-container {
             padding: 10px;
@@ -244,138 +251,151 @@
                                             @endif
                                         @else
                                             @if ($product->variants->isNotEmpty())
-                                                <span style="font-size: 1.6vw">{{ number_format($minPrice, 0, ',', '.') }}₫ -
-                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫</span>
+                                                <span style="font-size: 1.6vw">
+                                                    {{ number_format($minPrice, 0, ',', '.') }}₫ -
+                                                    {{ number_format($maxPrice, 0, ',', '.') }}₫
+                                                </span>
                                             @else
-                                                <span style="font-size: 1.6vw">{{ number_format($product->price, 0, ',', '.') }}₫</span>
+                                                <span
+                                                    style="font-size: 1.6vw">{{ number_format($product->price, 0, ',', '.') }}₫</span>
                                             @endif
                                         @endif
                                     </span>
                                 </p>
 
 
-                                <p class="stock in-stock">
-                                    Sản phẩm còn lại:
-                                    <span class="sku">
-                                        @if ($product->variants()->exists())
-                                            {{ $product->updateTotalStock2() }}
-                                        @else
-                                            {{ $product->stock }}
-                                            <input type="hidden" id="product-stock" value="{{ $product->stock }}">
-                                        @endif
-                                        <input type="hidden" id="total-stock" value="{{ $product->stock }}">
-                                    </span>
-                                </p>
 
-                                <div class="product-variants">
-                                    <div class="product-attributes">
-                                        @php
-                                            $variantGroups = [];
-                                            foreach ($product->variants as $variant) {
-                                                $attributes = [];
-                                                foreach ($variant->attributeValues as $attributeValue) {
-                                                    $attributes[$attributeValue->attribute->name] =
-                                                        $attributeValue->name;
+                                @if ($product->is_active == 0)
+                                    <br>
+                                    <span style="color: red">Sản phẩm ngừng kinh doanh</span>
+                                    <br>
+                                @else
+                                    <p class="stock in-stock">
+                                        Sản phẩm còn lại:
+                                        <span class="sku">
+                                            @if ($product->variants()->exists())
+                                                {{ $product->updateTotalStock2() }}
+                                            @else
+                                                {{ $product->stock }}
+                                                <input type="hidden" id="product-stock" value="{{ $product->stock }}">
+                                            @endif
+                                            <input type="hidden" id="total-stock" value="{{ $product->stock }}">
+                                        </span>
+                                    </p>
+
+                                    <div class="product-variants">
+                                        <div class="product-attributes">
+                                            @php
+                                                $variantGroups = [];
+                                                foreach ($product->variants as $variant) {
+                                                    $attributes = [];
+                                                    foreach ($variant->attributeValues as $attributeValue) {
+                                                        $attributes[$attributeValue->attribute->name] =
+                                                            $attributeValue->name;
+                                                    }
+
+                                                    $variantGroups[$attributes['Storage'] ?? ''][
+                                                        $attributes['Color'] ?? ''
+                                                    ][] = $variant;
                                                 }
+                                            @endphp
+                                            <div id="error-message" style="color: red;"></div>
 
-                                                $variantGroups[$attributes['Storage'] ?? ''][
-                                                    $attributes['Color'] ?? ''
-                                                ][] = $variant;
-                                            }
-                                        @endphp
-                                        <div id="error-message" style="color: red;"></div>
+                                            @if (count($variantGroups) > 0)
+                                                <div class="attribute-group">
+                                                    <h4>Chọn biến thể:</h4>
+                                                    <div class="variant-options-container">
+                                                        <div class="variant-options d-flex flex-wrap">
+                                                            @foreach ($variantGroups as $storage => $colors)
+                                                                @foreach ($colors as $color => $variants)
+                                                                    @php
+                                                                        $hasStorage =
+                                                                            $storage !== null && $storage !== '';
+                                                                        $hasColor = $color !== null && $color !== '';
+                                                                    @endphp
+                                                                    <button class="variant-btn mx-2 mb-2"
+                                                                        data-variant="{{ json_encode($variants[0]) }}"
+                                                                        data-price="{{ $variants[0]->price }}₫"
+                                                                        data-discount-price="{{ $variants[0]->price - $discountAmount }}₫"
+                                                                        data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
+                                                                        @if ($hasStorage) data-dung-luong="{{ $storage }}" @endif
+                                                                        @if ($hasColor) data-mau-sac="{{ $color }}" @endif>
 
-                                        @if (count($variantGroups) > 0)
-                                            <div class="attribute-group">
-                                                <h4>Chọn biến thể:</h4>
-                                                <div class="variant-options-container">
-                                                    <div class="variant-options d-flex flex-wrap">
-                                                        @foreach ($variantGroups as $storage => $colors)
-                                                            @foreach ($colors as $color => $variants)
-                                                                @php
-                                                                    $hasStorage = $storage !== null && $storage !== '';
-                                                                    $hasColor = $color !== null && $color !== '';
-                                                                @endphp
-                                                                <button class="variant-btn mx-2 mb-2"
-                                                                    data-variant="{{ json_encode($variants[0]) }}"
-                                                                    data-price="{{ $variants[0]->price }}₫"
-                                                                    data-discount-price="{{ $variants[0]->price - $discountAmount }}₫"
-                                                                    data-img-url="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
-                                                                    @if ($hasStorage) data-dung-luong="{{ $storage }}" @endif
-                                                                    @if ($hasColor) data-mau-sac="{{ $color }}" @endif>
+                                                                        <img src="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
+                                                                            alt="Product Image" width="40px"
+                                                                            height="40px" class="img-fluid">
 
-                                                                    <img src="{{ \Storage::url($variants[0]->image_url ?? $product->image_url) }}"
-                                                                        alt="Product Image" width="40px" height="40px"
-                                                                        class="img-fluid">
-
-                                                                    {{-- Hiển thị các thuộc tính theo điều kiện --}}
-                                                                    @if ($hasStorage && $hasColor)
-                                                                        <span>{{ $storage }}</span> -
-                                                                        <span>{{ $color }}</span>
-                                                                    @elseif ($hasStorage)
-                                                                        <span>{{ $storage }}</span>
-                                                                    @elseif ($hasColor)
-                                                                        <span>{{ $color }}</span>
-                                                                    @endif
-                                                                </button>
+                                                                        {{-- Hiển thị các thuộc tính theo điều kiện --}}
+                                                                        @if ($hasStorage && $hasColor)
+                                                                            <span>{{ $storage }}</span> -
+                                                                            <span>{{ $color }}</span>
+                                                                        @elseif ($hasStorage)
+                                                                            <span>{{ $storage }}</span>
+                                                                        @elseif ($hasColor)
+                                                                            <span>{{ $color }}</span>
+                                                                        @endif
+                                                                    </button>
+                                                                @endforeach
                                                             @endforeach
-                                                        @endforeach
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <p class="stock in-stock">
+                                        Thương hiệu:
+                                        <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
+                                    </p>
+
+                                    <div class="kobolg-product-details__short-description">
+                                        <p>{!! $product->tomtat !!}</p>
+                                    </div>
+
+                                    <div class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
+                                        <input type="hidden" id="product-image"
+                                            data-default-src="{{ \Storage::url($product->image_url) }}">
+                                        <input type="hidden" name="variant_id" id="selected-variant-id">
+                                        <div class="single_variation_wrap">
+                                            <div class="kobolg-variation single_variation"></div>
+                                            <div class="kobolg-variation-add-to-cart variations_button">
+                                                <!-- Số lượng -->
+                                                <div class="quantity">
+                                                    <label class="qty-label" for="quantity">Số lượng:</label>
+                                                    <div class="control">
+                                                        <a class="btn-number qtyminus quantity-minus" href="#">-</a>
+                                                        <input type="text" data-step="1" min="1"
+                                                            max="" name="quantity" value="1" title="Qty"
+                                                            class="input-qty input-text qty text" size="4"
+                                                            pattern="[0-9]*" inputmode="numeric" id="quantity">
+                                                        <a class="btn-number qtyplus quantity-plus" href="#">+</a>
                                                     </div>
                                                 </div>
-
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <p class="stock in-stock">
-                                    Thương hiệu: <span>{{ $product->brand ? $product->brand->name : 'Không có' }}</span>
-                                </p>
-
-                                <div class="kobolg-product-details__short-description">
-                                    <p>{!! $product->tomtat !!}</p>
-                                </div>
-
-                                <form class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
-                                    <input type="hidden" id="product-image"
-                                        data-default-src="{{ \Storage::url($product->image_url) }}">
-                                    <input type="hidden" name="variant_id" id="selected-variant-id">
-                                    <div class="single_variation_wrap">
-                                        <div class="kobolg-variation single_variation"></div>
-                                        <div class="kobolg-variation-add-to-cart variations_button">
-                                            <!-- Số lượng -->
-                                            <div class="quantity">
-                                                <label class="qty-label" for="quantity">Số lượng:</label>
-                                                <div class="control">
-                                                    <a class="btn-number qtyminus quantity-minus" href="#">-</a>
-                                                    <input type="text" data-step="1" min="1" max=""
-                                                        name="quantity" value="1" title="Qty"
-                                                        class="input-qty input-text qty text" size="4"
-                                                        pattern="[0-9]*" inputmode="numeric" id="quantity">
-                                                    <a class="btn-number qtyplus quantity-plus" href="#">+</a>
+                                                <input type="hidden" id="product-id" value="{{ $product->id }}">
+                                                <div id="out-of-stock-message"
+                                                    style="display: none; color: red; font-weight: bold;">
+                                                    Sản phẩm này hiện đã hết hàng và ngừng kinh doanh.
                                                 </div>
-                                            </div>
-                                            <input type="hidden" id="product-id" value="{{ $product->id }}">
-                                            <div id="out-of-stock-message"
-                                                style="display: none; color: red; font-weight: bold;">
-                                                Sản phẩm này hiện đã hết hàng và ngừng kinh doanh.
-                                            </div>
-                                            <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
-                                            <div class="action-buttons">
-                                                <button type="submit" id="add-to-cart"
-                                                    class="single_add_to_cart_button button alt"
-                                                    data-original-price="{{ $product->price }}₫"
-                                                    data-discount-price="{{ $product->discount_price }}₫">
-                                                    Thêm vào giỏ hàng
-                                                </button>
-                                                {{-- <button type="submit" id="buy-now"
-                                                    class="single_add_to_cart_button button buy-now">
-                                                    Mua ngay
-                                                </button> --}}
+                                                <!-- Nút Thêm vào giỏ hàng và Mua ngay -->
+                                                <div class="action-buttons">
+                                                    <button type="button" id="add-to-cart"
+                                                        class="single_add_to_cart_button button alt"
+                                                        data-original-price="{{ $product->price }}₫"
+                                                        data-discount-price="{{ $product->discount_price }}₫">
+                                                        Thêm vào giỏ hàng
+                                                    </button>
+                                                    <button type="button" id="buy-now"
+                                                        class="single_add_to_cart_button button buy-now">
+                                                        Mua ngay
+                                                    </button>
+
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </form>
+                                @endif
 
                                 {{-- <div class="yith-wcwl-add-to-wishlist">
                                     <div class="yith-wcwl-add-button show">

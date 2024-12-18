@@ -140,10 +140,61 @@ class CartController extends Controller
 
         // Phản hồi tồn kho còn lại (không trừ tồn kho thực tế)
         return response()->json([
+            'quantityInCart' => $quantityInCart,
             'remainingStock' => $remainingStock - $quantityInCart,
         ]);
     }
 
+    public function checkStock2(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $quantity = $request->input('quantity');
+
+        // Kiểm tra tồn kho cho sản phẩm hoặc biến thể
+        $cartItem = session("cart_".auth()->id())[$productId] ?? null;
+
+        if ($cartItem) {
+            if (isset($cartItem['options']['variant'])) {
+                // Sản phẩm có biến thể
+                $variant = ProductVariant::find($cartItem['options']['variant']['id']);
+                if ($variant) {
+                    if ($quantity > $variant->stock) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Số lượng vượt quá tồn kho của biến thể!',
+                            'available_stock' => $variant->stock
+                        ]);
+                    }
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Biến thể không tồn tại!',
+                    ]);
+                }
+            } else {
+                // Sản phẩm không có biến thể
+                $product = Product::find($cartItem['id']);
+                if ($product) {
+                    if ($quantity > $product->stock) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Số lượng vượt quá tồn kho của sản phẩm!',
+                            'available_stock' => $product->stock
+                        ]);
+                    }
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Sản phẩm không tồn tại!',
+                    ]);
+                }
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
 
 
 

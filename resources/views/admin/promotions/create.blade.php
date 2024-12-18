@@ -106,34 +106,6 @@
                                         <div class="text-danger">{{ $errors->first('type') }}</div>
                                     @endif
                                 </div>
-
-                                <div class="form-group mt-4">
-                                    <label for="applies_to_order">Áp Dụng Cho Đơn Hàng:</label>
-                                    <select id="applies_to_order" name="applies_to_order" class="form-control">
-                                        <option value="1" {{ old('applies_to_order') == '1' ? 'selected' : '' }}>Có
-                                        </option>
-                                        <option value="0" {{ old('applies_to_order') == '0' ? 'selected' : '' }}>Không
-                                        </option>
-                                    </select>
-                                    @if ($errors->has('applies_to_order'))
-                                        <div class="text-danger">{{ $errors->first('applies_to_order') }}</div>
-                                    @endif
-                                </div>
-
-                                <div class="form-group mt-4">
-                                    <label for="applies_to_shipping">Áp Dụng Cho Phí Vận Chuyển:</label>
-                                    <select id="applies_to_shipping" name="applies_to_shipping" class="form-control">
-                                        <option value="1" {{ old('applies_to_shipping') == '1' ? 'selected' : '' }}>
-                                            Có
-                                        </option>
-                                        <option value="0" {{ old('applies_to_shipping') == '0' ? 'selected' : '' }}>
-                                            Không</option>
-                                    </select>
-                                    @if ($errors->has('applies_to_shipping'))
-                                        <div class="text-danger">{{ $errors->first('applies_to_shipping') }}</div>
-                                    @endif
-                                </div>
-
                                 <button type="submit" id="submitButton" class="btn rounded-pill btn-primary mt-3">Thêm
                                     Khuyến Mãi</button>
                             </div>

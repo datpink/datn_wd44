@@ -13,7 +13,7 @@
         // Hàm định dạng giá để loại bỏ phần thập phân nếu có
         function formatPrice(price) {
             var priceFormatted = parseInt(price)
-        .toLocaleString(); // Loại bỏ phần thập phân nếu giá là số nguyên
+                .toLocaleString(); // Loại bỏ phần thập phân nếu giá là số nguyên
             return priceFormatted + '₫'; // Trả về giá đã được định dạng
         }
 
@@ -58,19 +58,78 @@
             }
 
             console.log("Giá sau giảm: " + formatPrice(discountedPrice));
-
             if (discount && discountedPrice < variantData.price) {
-                $('#product-price').html('<strike>' + formatPrice(variantData.price) + '</strike> ' +
-                    formatPrice(discountedPrice));
-                $('#discount-message').text('Giảm giá ' + variantData.discount_percentage + '%');
-            } else {
-                $('#product-price').text(formatPrice(variantData.price));
-                $('#discount-message').text('');
-            }
+    $('#product-price').html('<span class="new-price">' + formatPrice(discountedPrice) + '</span> <strike>' + formatPrice(variantData.price) + '</strike>');
+    $('#discount-message').text('Giảm giá ' + variantData.discount_percentage + '%');
+} else {
+    $('#product-price').text(formatPrice(variantData.price));
+    $('#discount-message').text('');
+}
+
+
 
             selectedVariantPrice = discountedPrice; // Gán giá của biến thể sau khi tính toán
             console.log(selectedVariantPrice);
         });
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $(document).on('click', '#buy-now', function(e) {
+            e.preventDefault(); // Ngăn chặn reload trang khi submit form
+
+            var productId = $('#product-id').val();
+            var quantity = $('#quantity').val() || 1;
+            var variantId = $('#selected-variant-id').val();
+            var stock = $('#product-stock').val(); // Lấy thông tin tồn kho
+
+            if (quantity > stock) {
+                $('#out-of-stock-message').show();
+                return;
+            }
+
+            var price;
+            if (selectedVariantPrice) {
+                price = selectedVariantPrice;
+            } else {
+                if (discountPrice) {
+                    price = parseInt(discountPrice.replace('₫', '').replace(/,/g, ''));
+                } else {
+                    price = parseInt(originalPrice.replace('₫', '').replace(/,/g, ''));
+                }
+            }
+
+            // Gửi yêu cầu mua ngay
+            $.ajax({
+                url: '{{ route('buyNowCheckout') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    product_id: productId,
+                    variant_id: variantId,
+                    quantity: quantity,
+                    price: price
+                },
+                success: function(response) {
+                    // Nếu có redirectUrl, chuyển hướng đến trang thanh toán
+                    if (response.success) {
+                        window.location.href = response
+                            .redirectUrl; // Chuyển hướng nếu thành công
+                    } else {
+                        // Nếu có lỗi hoặc thông báo, hiển thị mà không reload trang
+                        alert(response.message); // Hiển thị thông báo lỗi hoặc thành công
+                    }
+                },
+                error: function(xhr) {
+                    // Hiển thị thông báo lỗi nếu có sự cố trong quá trình gửi AJAX
+                    console.error('Lỗi khi gửi yêu cầu:', xhr.responseText);
+                }
+            });
+        });
+
+
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Khi người dùng nhấn nút "Thêm vào giỏ hàng"
         $(document).on('click', '#add-to-cart', function(e) {
@@ -94,6 +153,10 @@
                 $('#error-message').text('Số lượng bạn chọn vượt quá tồn kho! Vui lòng giảm số lượng.');
                 return;
             }
+            // if (quantity > 5) {
+            //     $('#error-message').text('Bạn chỉ được mua tối đa 5 sản phẩm.');
+            //     return;
+            // }
             if (quantity <= 0) {
                 $('#error-message').text('Số lượng bạn chọn không hợp lệ.');
                 return;

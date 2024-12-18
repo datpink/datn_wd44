@@ -114,34 +114,6 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-
-                                        <div class="mb-3">
-                                            <label for="applies_to_order" class="form-label">Áp Dụng Cho Đơn Hàng</label>
-                                            <select id="applies_to_order" name="applies_to_order" class="form-control">
-                                                <option value="1"
-                                                    {{ old('applies_to_order', $promotion->applies_to_order) == 1 ? 'selected' : '' }}>
-                                                    Có</option>
-                                                <option value="0"
-                                                    {{ old('applies_to_order', $promotion->applies_to_order) == 0 ? 'selected' : '' }}>
-                                                    Không</option>
-                                            </select>
-                                            @error('applies_to_order')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label for="applies_to_shipping" class="form-label">Áp Dụng Cho Vận
-                                                Chuyển</label>
-                                            <select id="applies_to_shipping" name="applies_to_shipping"
-                                                class="form-control">
-                                                <option value="1"
-                                                    {{ old('applies_to_shipping', $promotion->applies_to_shipping) == 1 ? 'selected' : '' }}>
-                                                    Có</option>
-                                                <option value="0"
-                                                    {{ old('applies_to_shipping', $promotion->applies_to_shipping) == 0 ? 'selected' : '' }}>
-                                                    Không</option>
-                                            </select>
                                             @error('applies_to_shipping')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

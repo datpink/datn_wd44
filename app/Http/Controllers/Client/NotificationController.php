@@ -59,8 +59,25 @@ class NotificationController extends Controller
         }
 
         // Chuyển hướng đến URL của thông báo nếu có
-        return $notification->url 
-            ? redirect($notification->url) 
+        return $notification->url
+            ? redirect($notification->url)
             : redirect()->route('notifications.index');
     }
+    public function destroy($id)
+    {
+        // Lấy thông báo của người dùng hiện tại
+        $notification = Notification::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$notification) {
+            return redirect()->route('notifications.index')->with('error', 'Thông báo không tồn tại.');
+        }
+
+        // Xóa thông báo
+        $notification->delete();
+
+        return redirect()->route('client.index')->with('success', 'Đã xóa thông báo thành công.');
+    }
+
 }

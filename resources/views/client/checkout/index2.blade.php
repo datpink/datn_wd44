@@ -97,13 +97,6 @@
         .create-account-link:hover i {
             transform: translateX(3px);
         }
-
-        .kobolg-checkout-payment .payment-methods h3 {
-            margin-top: 30px;
-            /* Thêm khoảng cách từ trên xuống cho tiêu đề */
-            padding-top: 10px;
-            /* Nếu cần thêm khoảng cách giữa tiêu đề và các phần tử khác */
-        }
     </style>
 
     @include('components.breadcrumb-client2')
@@ -155,11 +148,12 @@
                                                 @foreach ($userPromotions as $userPromotion)
                                                     @php
                                                         $isExpired = \Carbon\Carbon::parse(
-                                                            $userPromotion->end_date,
+                                                            $userPromotion->promotion->end_date,
                                                         )->isPast();
-                                                        $notEligible = $totalAmount < $userPromotion->min_order_value;
+                                                        $notEligible =
+                                                            $totalAmount < $userPromotion->promotion->min_order_value;
                                                         $buttonClass =
-                                                            $userPromotion->type == 'free_shipping'
+                                                            $userPromotion->promotion->type == 'free_shipping'
                                                                 ? 'btn-success'
                                                                 : 'btn-danger';
                                                         if ($isExpired || $notEligible) {
@@ -175,31 +169,31 @@
                                                         <div class="discount-info"
                                                             style="flex: 1; margin-left: 12px; line-height: 1.4;">
                                                             <p class="font-weight-bold mb-1">
-                                                                @if ($userPromotion->type == 'percentage')
+                                                                @if ($userPromotion->promotion->type == 'percentage')
                                                                     Giảm
-                                                                    {{ number_format($userPromotion->discount_value, 0) }}%
-                                                                @elseif($userPromotion->type == 'fixed_amount')
+                                                                    {{ number_format($userPromotion->promotion->discount_value, 0) }}%
+                                                                @elseif($userPromotion->promotion->type == 'fixed_amount')
                                                                     Giảm
-                                                                    {{ number_format($userPromotion->discount_value, 0) }}
+                                                                    {{ number_format($userPromotion->promotion->discount_value, 0) }}
                                                                     VND
-                                                                @elseif($userPromotion->type == 'free_shipping')
+                                                                @elseif($userPromotion->promotion->type == 'free_shipping')
                                                                     Miễn phí vận chuyển
                                                                 @else
                                                                     Loại giảm giá không xác định
                                                                 @endif
                                                             </p>
-                                                            @if ($userPromotion->type == 'percentage')
+                                                            @if ($userPromotion->promotion->type != 'free_shipping')
                                                                 <p class="mb-0">Tối đa:
-                                                                    <strong>{{ number_format($userPromotion->max_value, 0) }}
+                                                                    <strong>{{ number_format($userPromotion->promotion->max_value, 0) }}
                                                                         VND</strong>
                                                                 </p>
                                                             @endif
                                                             <p class="mb-0">Đơn tối thiểu:
-                                                                <strong>{{ number_format($userPromotion->min_order_value, 0) }}
+                                                                <strong>{{ number_format($userPromotion->promotion->min_order_value, 0) }}
                                                                     VND</strong>
                                                             </p>
                                                             <p class="text-muted mb-0">Hạn sử dụng:
-                                                                <strong>{{ \Carbon\Carbon::parse($userPromotion->end_date)->format('d/m/Y') }}</strong>
+                                                                <strong>{{ \Carbon\Carbon::parse($userPromotion->promotion->end_date)->format('d/m/Y') }}</strong>
                                                             </p>
                                                         </div>
                                                         <div class="discount-action">
@@ -212,10 +206,10 @@
                                                             @else
                                                                 <button
                                                                     class="btn {{ $buttonClass }} btn-sm apply-coupon-from-list"
-                                                                    data-promotion-id="{{ $userPromotion->id }}"
-                                                                    data-discount="{{ $userPromotion->discount_value }}"
-                                                                    data-max-discount="{{ $userPromotion->max_value }}"
-                                                                    data-type="{{ $userPromotion->type }}"
+                                                                    data-promotion-id="{{ $userPromotion->promotion->id }}"
+                                                                    data-discount="{{ $userPromotion->promotion->discount_value }}"
+                                                                    data-max-discount="{{ $userPromotion->promotion->max_value }}"
+                                                                    data-type="{{ $userPromotion->promotion->type }}"
                                                                     data-total-amount="{{ $totalAmount }}">Áp
                                                                     dụng</button>
                                                             @endif
@@ -359,62 +353,42 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($products as $index => $product)
-                                                <tr>
-                                                    <td class="text-center">
-                                                        <img src="{{ $product['options']['image'] }}"
-                                                            alt="{{ $product['name'] }}" class="mini-cart-product-image"
-                                                            style="max-width: 120px; ">
-                                                    </td>
-                                                    <td class="" style="padding: 10px; width: 350px;">
-                                                        <!-- Mở rộng thêm chút nữa cột này -->
-                                                        <div class="media align-items-center">
-                                                            <div class="media-body">
-                                                                <a href="#" class="d-block text-dark"
-                                                                    aalt="{{ $product['name'] }}">{{ \Str::limit($product['name'], 30) }}</a>
-                                                                @if (!empty($product['options']['variant']) && count($product['options']['variant']) > 0)
-                                                                    <div class="product-attributes">
-                                                                        @foreach ($product['options']['variant'] as $attrIndex => $attribute)
-                                                                            <span
-                                                                                class="attribute-item">{{ $attribute['name'] }}</span>
-                                                                            @if ($attrIndex < count($product['options']['variant']) - 1)
-                                                                                <span>-</span>
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </div>
-                                                                @endif
-                                                                @php
-                                                                    $product['price'] = preg_replace(
-                                                                        '/[^\d.]/',
-                                                                        '',
-                                                                        $product['price'],
-                                                                    ); // Loại bỏ ký tự không phải số
-                                                                    $product['price'] = (float) $product['price']; // Chuyển về dạng float
-                                                                @endphp
-                                                                <span style="font-size: 0.8vw">{{ $product['quantity'] }}
-                                                                    × {{ number_format($product['price'], 0) }}₫</span>
-                                                            </div>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <img src="{{ $productData['options']['image'] }}"
+                                                         alt="{{ $productData['name'] }}" class="mini-cart-product-image"
+                                                         style="max-width: 120px; max-height: 150px; width: auto; height: auto; margin-right: 5px; padding: 5px;">
+                                                </td>
+                                                <td class="" style="padding: 10px; width: 350px;">
+                                                    <div class="media align-items-center">
+                                                        <div class="media-body">
+                                                            <a href="#" class="d-block text-dark">{{ \Str::limit($productData['name'], 30) }}</a>
+                                                            @if (!empty($productData['options']['variant']) && count($productData['options']['variant']) > 0)
+                                                                <div class="product-attributes">
+                                                                    @foreach ($productData['options']['variant'] as $attrIndex => $attribute)
+                                                                        <span class="attribute-item">{{ $attribute['name'] }}: {{ $attribute['value'] }}</span>
+                                                                        @if ($attrIndex < count($productData['options']['variant']) - 1)
+                                                                            <span>-</span>
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
+                                                            <span style="font-size: 0.8vw">{{ $productData['quantity'] }} × {{ number_format($productData['price'], 0) }}₫</span>
                                                         </div>
-                                                    </td>
-                                                    <td class="total-col" style="text-align: right;">
-                                                        <strong><span>{{ number_format($product['quantity'] * $product['price'], 0, ',', '.') }}</span>
-                                                            <span class="kobolg-Price-currencySymbol">₫</span></strong>
-                                                    </td>
-                                                    <span class="kobolg-Price-amount amount" style="color: red;">
+                                                    </div>
+                                                </td>
+                                                <td class="total-col" style="text-align: right;">
+                                                    <strong><span>{{ number_format($productData['quantity'] * $productData['price'], 0, ',', '.') }}</span>
+                                                        <span class="kobolg-Price-currencySymbol">₫</span></strong>
+                                                </td>
+                                            </tr>
 
-                                                    </span>
-                                                </tr>
+                                            <!-- Hidden inputs to include product data in form submission -->
+                                            <input type="hidden" name="product[id]" value="{{ $productData['id'] }}">
+                                            <input type="hidden" name="product[variant_id]" value="{{ $productData['options']['variant_id'] }}">
+                                            <input type="hidden" name="product[quantity]" value="{{ $productData['quantity'] }}">
+                                            <input type="hidden" name="product[price]" value="{{ $productData['price'] }}">
 
-                                                <!-- Hidden inputs to include product data in form submission -->
-                                                <input type="hidden" name="products[{{ $index }}][id]"
-                                                    value="{{ $product['id'] }}">
-                                                <input type="hidden" name="products[{{ $index }}][variant_id]"
-                                                    value="{{ $product['options']['variant_id'] }}">
-                                                <input type="hidden" name="products[{{ $index }}][quantity]"
-                                                    value="{{ $product['quantity'] }}">
-                                                <input type="hidden" name="products[{{ $index }}][price]"
-                                                    value="{{ $product['price'] }}">
-                                            @endforeach
 
                                         </tbody>
 
@@ -424,8 +398,8 @@
                                                 <td colspan="2" class="text-left">Phí vận chuyển</td>
                                                 <td class="text-right shipping-fee">
                                                     <strong>
-                                                        <span class="kobolg-Price-amount amount" style="color:black;">
-                                                            <span id="shipping-fee">0</span>
+                                                        <span class="kobolg-Price-amount amount" style="color: red;">
+                                                            -<span id="shipping-fee">0</span>
                                                             <span class="kobolg-Price-currencySymbol">₫</span>
                                                         </span>
                                                     </strong>
@@ -441,7 +415,7 @@
                                             </tr>
 
 
-                                            <!-- Dùng cho việc áp dụng Xu -->
+                                            <!-- Áp dụng Xu -->
                                             <tr class="apply-points-row">
                                                 <td colspan="2" class="text-left">
                                                     <div class="d-flex align-items-center" style="margin-left: 20px">
@@ -451,8 +425,8 @@
                                                         <!-- Nội dung chữ -->
                                                         <div>
                                                             <div class="fw-bold">Áp dụng Xu</div>
-                                                            <div id="points-info" data-points="{{ $points }}">
-                                                                Dùng tối đa {{ $points }} Xu
+                                                            <div id="points-info" data-points="200">
+                                                                Dùng 200 Xu
                                                             </div>
                                                         </div>
                                                     </div>
@@ -460,7 +434,7 @@
                                                 <!-- Số Xu trừ -->
                                                 <td class="text-right">
                                                     <strong id="points-discount" style="color: red;">
-                                                        -<span id="points-amount">0</span> <!-- Số xu thực tế trừ -->
+                                                        -<span id="points-amount">200</span>
                                                         <span class="kobolg-Price-currencySymbol">₫</span>
                                                     </strong>
                                                 </td>
@@ -489,12 +463,12 @@
                                     <input type="hidden" name="lang" value="en">
                                     <div id="payment" class="kobolg-checkout-payment">
                                         <div class="payment-methods">
-                                            <h3 class="ml-4" style="margin-top: 30px; padding-top: 10px;">Phương thức
-                                                thanh toán</h3>
+                                            <h3>Phương thức thanh toán</h3>
                                             <ul class="wc_payment_methods payment_methods methods">
                                                 @if ($paymentMethods->isNotEmpty())
                                                     @foreach ($paymentMethods as $method)
                                                         @if ($method->status === 'active')
+                                                            <!-- Kiểm tra trạng thái -->
                                                             <li
                                                                 class="wc_payment_method payment_method_{{ $method->id }}">
                                                                 <input id="payment_method_{{ $method->id }}"
@@ -502,6 +476,8 @@
                                                                     name="payment_method"
                                                                     value="{{ json_encode(['id' => $method->id, 'name' => $method->name]) }}"
                                                                     @if ($loop->first) checked="checked" @endif>
+
+
                                                                 <label
                                                                     for="payment_method_{{ $method->id }}">{{ $method->description }}</label>
                                                             </li>
@@ -514,11 +490,9 @@
                                             </ul>
                                         </div>
                                     </div>
-
                                 </div>
 
                                 <p class="form-row place-order">
-                                    <input type="hidden" id="ponit-apply" name="points" value="">
                                     {{-- input --}}
                                     <input type="hidden" name="redirect" value="1">
                                     <input type="hidden" name="totalAmount" id="input-total"
@@ -917,14 +891,14 @@
         function togglePoints() {
             const checkbox = document.getElementById('apply-points-checkbox');
             const pointsDiscount = document.getElementById('points-discount');
-            const pointsInfo = document.getElementById('points-info');
+            const ml = document.getElementById('points-info');
             const pointsAmountElement = document.getElementById('points-amount');
             const totalAmountElement = document.querySelector('.order-total .amount');
-            const inputTotal = document.getElementById('input-total'); // Input ẩn tổng tiền
-            const inputPoints = document.getElementById('ponit-apply'); // Input ẩn số xu áp dụng
+            const inputTotal = document.getElementById('input-total'); // Lấy phần tử input totalAmount
 
-            // Lấy số xu từ data attribute
-            let pointsValue = parseInt(pointsInfo.dataset.points) || 0;
+            // Lấy số xu từ data attribute (hoặc từ giá trị tính toán)
+            let pointsValue = parseInt(document.getElementById('points-info').dataset.points) || 0;
+            console.log(pointsValue);
 
             if (!totalAmountElement) {
                 console.error("Phần tử tổng tiền không tồn tại.");
@@ -937,35 +911,27 @@
             }
 
             let currentTotal = checkbox.initialTotal; // Gán lại tổng tiền ban đầu khi bỏ check
-            let appliedPoints = 0; // Số xu thực tế được áp dụng
 
             if (checkbox.checked) {
-                // Giới hạn số xu không vượt quá tổng tiền
+                // Nếu số xu lớn hơn tổng tiền, chỉ trừ đúng bằng tổng tiền
                 if (pointsValue > currentTotal) {
-                    appliedPoints = currentTotal; // Giới hạn số xu bằng tổng tiền
-                } else {
-                    appliedPoints = pointsValue;
+                    pointsValue = currentTotal; // Giới hạn số xu trừ
                 }
 
-                currentTotal -= appliedPoints; // Giảm tổng tiền
+                currentTotal -= pointsValue; // Giảm số xu
                 pointsDiscount.style.color = 'red';
                 pointsDiscount.style.opacity = '1';
 
-                pointsInfo.style.color = 'black';
-                pointsInfo.style.opacity = '1';
+                ml.style.color = 'black';
+                ml.style.opacity = '1';
             } else {
                 // Bỏ chọn, quay lại tổng tiền ban đầu
                 pointsDiscount.style.color = 'black';
                 pointsDiscount.style.opacity = '0.3';
 
-                pointsInfo.style.color = 'black';
-                pointsInfo.style.opacity = '0.3';
-
-                appliedPoints = 0; // Không áp dụng xu
+                ml.style.color = 'black';
+                ml.style.opacity = '0.3';
             }
-
-            // Cập nhật số xu hiển thị (đã kiểm tra giới hạn)
-            pointsAmountElement.textContent = appliedPoints;
 
             // Cập nhật lại tổng tiền hiển thị
             totalAmountElement.textContent = new Intl.NumberFormat('vi-VN', {
@@ -975,7 +941,6 @@
 
             // Cập nhật giá trị của ô input hidden
             inputTotal.value = currentTotal;
-            inputPoints.value = appliedPoints; // Cập nhật số xu đã áp dụng
         }
     </script>
 

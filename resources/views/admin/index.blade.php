@@ -3,6 +3,8 @@
 @section('title', 'Thống kê Dashboard')
 
 @section('content')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <div class="content-wrapper-scroll">
 
         <!-- Content wrapper start -->
@@ -55,6 +57,55 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-xxl-3 col-sm-6 col-12">
+                    <div class="stats-tile">
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <div class="sale-details">
+                            <h3 class="text-green">{{ $countPost }}</h3>
+                            <a href="{{ route('posts.index') }}">Tin Tức</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-sm-6 col-12">
+                    <div class="stats-tile">
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <div class="sale-details">
+                            <h3 class="text-green">{{ $ProductComment }}</h3>
+                            <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-sm-6 col-12">
+                    <div class="stats-tile">
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <div class="sale-details">
+                            <h3 class="text-green">{{ $countComment }}</h3>
+                            <a href="{{ route('comments.index') }}">Bình Luận Bài Viết</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-sm-6 col-12">
+                    <div class="stats-tile">
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
+                        </div>
+                        <div class="sale-details">
+                            <h3 class="text-green">{{ $countProductReview }}</h3>
+                            <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <!-- Row end -->
 
@@ -161,7 +212,9 @@
                         <div class="card-body">
                             <!-- Bộ lọc thời gian -->
                             <div class="d-flex justify-content-end mb-3">
+
                                 <div class="btn-group" role="group" aria-label="Filter Time Period">
+<<<<<<< HEAD
                                     <a href="?timePeriod=today"
                                         class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
                                     <a href="?timePeriod=yesterday"
@@ -178,8 +231,27 @@
                                     <a href="?timePeriod=1years"
                                         class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
                                         năm</a>
+=======
+                                    <div id="time-period-options">
+
+                                        <a href="?timePeriod=today" data-time-period="today"
+                                            class="btn btn-sm btn-primary">Hôm nay</a>
+                                        <a href="?timePeriod=yesterday" data-time-period="yesterday"
+                                            class="btn btn-sm btn-outline-primary">Hôm qua</a>
+                                        <a href="?timePeriod=7days" data-time-period="7days"
+                                            class="btn btn-sm btn-outline-primary">7 ngày</a>
+                                        <a href="?timePeriod=15days" data-time-period="15days"
+                                            class="btn btn-sm btn-outline-primary">15 ngày</a>
+                                        <a href="?timePeriod=30days" data-time-period="30days"
+                                            class="btn btn-sm btn-outline-primary">30 ngày</a>
+                                        <a href="?timePeriod=1years" data-time-period="1years"
+                                            class="btn btn-sm btn-outline-primary">1 year</a>
+                                    </div>
+>>>>>>> b888a38236a1b00e66f077a3dfb33f3f85e33579
                                 </div>
+
                             </div>
+
 
                             <!-- Biểu đồ -->
                             <div id="basic-column-graph-datalables" style="height: 300px;">
@@ -195,19 +267,19 @@
                             <div class="card-title">Giao Dịch</div>
                         </div>
                         <div class="card-body">
-                            <div>
-                                <a href="?timeRange=4months"
-                                    class="btn btn-sm {{ $timeRange == '4months' ? 'btn-primary' : 'btn-outline-primary' }}">4
+                            <div id="transaction-time">
+                                <a href="?timeRange=4months" data-time-range = "4months"
+                                    class="btn btn-sm btn-outline-primary">4
                                     tháng</a>
-                                <a href="?timeRange=8months"
-                                    class="btn btn-sm {{ $timeRange == '8months' ? 'btn-primary' : 'btn-outline-primary' }}">8
+                                <a href="?timeRange=8months" data-time-range = "8months"
+                                    class="btn btn-sm btn-outline-primary">8
                                     tháng</a>
-                                <a href="?timeRange=1year"
-                                    class="btn btn-sm {{ $timeRange == '1year' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                <a href="?timeRange=1year" data-time-range = "1year"
+                                    class="btn btn-sm btn-outline-primary">1
                                     năm</a>
                             </div>
                             <div class="scroll370">
-                                <div class="transactions-container">
+                                <div class="transactions-container" id="transactions-container">
                                     @foreach ($statisticsWithPaymentMethod as $statistic)
                                         <div class="transaction-block">
                                             <div class="transaction-icon shade-blue">
@@ -241,17 +313,17 @@
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Đơn Hàng Mới</div>
-                            <div class="mb-3">
-                                <a href="?selectedOrderPeriod=1day"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">1day</a>
-                                <a href="?selectedOrderPeriod=1week"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '1week' ? 'btn-primary' : 'btn-outline-primary' }}">1week</a>
-                                <a href="?selectedOrderPeriod=2weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '2weeks' ? 'btn-primary' : 'btn-outline-primary' }}">2weeks</a>
-                                <a href="?selectedOrderPeriod=3weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '3weeks' ? 'btn-primary' : 'btn-outline-primary' }}">3weeks</a>
-                                <a href="?selectedOrderPeriod=44weeks"
-                                    class="btn btn-sm {{ $selectedOrderPeriod == '44weeks' ? 'btn-primary' : 'btn-outline-primary' }}">4weeks</a>
+                            <div class="mb-3" id="option-order-time">
+                                <a href="?selectedOrderPeriod=1day" data-selected-order-time = "1day"
+                                    class="btn btn-sm btn-outline-primary">Hôm nay</a>
+                                <a href="?selectedOrderPeriod=1week" data-selected-order-time = "1week"
+                                    class="btn btn-sm btn-outline-primary">1 tuần</a>
+                                <a href="?selectedOrderPeriod=2weeks" data-selected-order-time = "2weeks"
+                                    class="btn btn-sm btn-outline-primary">2 tuần</a>
+                                <a href="?selectedOrderPeriod=3weeks" data-selected-order-time = "3weeks"
+                                    class="btn btn-sm btn-outline-primary">3 tuần</a>
+                                <a href="?selectedOrderPeriod=44weeks" data-selected-order-time = "44weeks"
+                                    class="btn btn-sm btn-outline-primary">4 tuần</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -269,11 +341,11 @@
                                             <th>Trạng Thái Đơn Hàng</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($orders as $order)
+                                    <tbody id="order-time-content">
+                                        {{-- @foreach ($orders as $order)
                                             @foreach ($order->items as $item)
                                                 <!-- Lặp qua các sản phẩm trong đơn hàng -->
-                                                <tr>
+                                                 <tr>
                                                     <td>{{ $order->id }}</td>
                                                     <td>
                                                         <div class="media-box">
@@ -342,9 +414,9 @@
                                                             <span class="badge rounded-pill bg-secondary">Không rõ</span>
                                                         @endif
                                                     </td>
-                                                </tr>
+                                                </tr> 
                                             @endforeach
-                                        @endforeach
+                                        @endforeach --}}
                                     </tbody>
 
                                 </table>
@@ -364,6 +436,7 @@
                         </div>
                         <div class="card-body">
                             <!-- Bộ lọc thời gian -->
+<<<<<<< HEAD
                             <div class="mb-3 d-flex gap-2">
                                 <a href="?filterPeriod=today"
                                     class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
@@ -381,7 +454,27 @@
                                 <a href="?filterPeriod=1years"
                                     class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
                                     năm</a>
+=======
+                            <div class="mb-3 d-flex gap-2" id="time-period-options-status">
+                                <a href="?filterPeriod=today" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="today">Hôm nay</a>
+                                <a href="?filterPeriod=yesterday" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="yesterday">Hôm qua</a>
+                                <a href="?filterPeriod=7days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="7days">7 ngày</a>
+                                <a href="?filterPeriod=15days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="15days">15 ngày</a>
+                                <a href="?filterPeriod=30days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="30days">30 ngày</a>
+                                <a href="?filterPeriod=1years" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="1years">1 năm</a>
+>>>>>>> b888a38236a1b00e66f077a3dfb33f3f85e33579
                             </div>
+
+                            <!-- Container cho biểu đồ -->
+                            <div id="taskGraph"></div>
+
+
 
                             <!-- Biểu đồ thống kê -->
                             <div id="taskGraph" class="mb-4">
@@ -428,11 +521,13 @@
                             <div class="scroll370">
                                 <div class="activity-container">
                                     @foreach ($recentBuyers as $buyer)
+
                                         <div class="activity-block">
                                             <div class="activity-user">
                                                 <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
                                                 <!-- Hình ảnh người dùng -->
                                             </div>
+
                                             <div class="activity-details">
                                                 <h4>{{ $buyer->user->name }}</h4> <!-- Tên người dùng -->
                                                 <h5>{{ $buyer->last_order_time->diffForHumans() }}</h5>
@@ -441,7 +536,9 @@
                                                 <!-- Số lượng đơn hàng -->
                                                 <span class="badge shade-green rounded-pill">Mới</span>
                                             </div>
+
                                         </div>
+
                                     @endforeach
                                 </div>
                             </div>
@@ -512,6 +609,282 @@
         </div>
 
     </div>
+
+    {{-- 
+    Giao dịch
+    --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+
+            const transactionTime = document.querySelectorAll('#transaction-time a');
+
+            const transactionsContainer = document.getElementById('transactions-container');
+
+            function fetchDataTransaction(timeRange) {
+
+                axios.get(`api/get-transaction-time?timeRange=${timeRange}`)
+                    .then((res) => {
+
+                        const transactions = res.data.statisticsWithPaymentMethod;
+
+                        // Xóa nội dung cũ
+                        transactionsContainer.innerHTML = '';
+
+                        // Lặp qua dữ liệu và render từng phần tử
+                        transactions.forEach(function(statistic) {
+                            console.log(statistic);
+
+
+                            const transactionBlock = `
+
+                                    <div class="transaction-block">
+
+                                        <div class="transaction-icon shade-blue">
+                                            <i class="bi bi-credit-card"></i>
+
+                                        </div>
+
+                                        <div class="transaction-details">
+
+                                            <h4>${statistic.payment_method_name}</h4>
+                                            <p class="text-truncate">${statistic.payment_method_description}</p>
+
+                                        </div>
+
+                                        <div class="transaction-amount text-blue">
+
+                                            ${ Math.floor(statistic.total_amount).toLocaleString('vi-VN')} VND
+
+                                        </div>
+
+                                    </div>
+
+                                `;
+
+                            // Thêm phần tử vào container
+                            transactionsContainer.insertAdjacentHTML('beforeend',
+                                transactionBlock);
+                        });
+
+                    })
+                    .catch((err) => {
+
+                        console.error(err);
+
+                    })
+
+            }
+
+            // Hàm để set lại class active
+            function setActiveTransaction(activeTransaction) {
+
+                transactionTime.forEach(btn => {
+
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-primary');
+
+                });
+
+                // Thêm active cho nút được chọn
+                activeTransaction.classList.add('btn-primary');
+                activeTransaction.classList.remove('btn-outline-primary');
+
+            }
+
+            transactionTime.forEach(function(transaction) {
+
+                transaction.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+                    // check
+                    // console.log(123);
+
+                    const timeRange = this.dataset.timeRange;
+                    // console.log(timeRange);
+
+                    fetchDataTransaction(timeRange)
+
+                    // Set lại class active
+                    setActiveTransaction(this);
+
+                })
+
+            })
+
+            fetchDataTransaction('4months');
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButton = document.querySelector('#transaction-time a[data-time-range="4months"]');
+
+            if (defaultButton) {
+
+                setActiveTransaction(defaultButton);
+            }
+
+        })
+    </script>
+
+
+    {{-- thống kê đơn hàng mới nhất
+ --}}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function(e) {
+
+            const optionOrderTime = document.querySelectorAll('#option-order-time a');
+
+            const orderTimeContent = document.getElementById('order-time-content');
+
+            function fetchDataOrderTime(selectedOrderTime) {
+
+                axios.get(`api/get-data-order-time?selectedOrderPeriod=${selectedOrderTime}`)
+                    .then((response) => {
+
+                        // console.log(response);
+
+                        const dataOrderTime = response.data.orders;
+                        let stt = 1;
+
+                        dataOrderTime.forEach(orderItem => {
+
+                            orderItem.items.forEach(item => {
+
+                                const orderItemContent = `
+
+                                        <tr>
+                                            <td>
+                                                ${stt++}
+                                                
+                                            </td>
+
+                                            <td>
+
+                                                <div class="media-box">
+                                                    <div class="media-box-body">
+                                                        <div class="text-truncate">
+
+                                                            ${orderItem.user?.name ?? ''}
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td>
+                                                <div class="media-box">
+                                                    <div class="media-box-body">
+                                                        <div class="text-truncate">
+
+                                                            ${item.productVariant?.product?.name ?? item.product?.name ?? ''}
+                                                    
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                            <td>
+                                                ${new Date(orderItem.created_at).toLocaleDateString()}
+                                            </td>
+
+                                            <td>
+                                                ${Number(orderItem.total_amount).toLocaleString('vi-VN')} VND
+                                            </td>
+
+                                            <td>
+
+                                                ${orderItem.payment_status === 'unpaid' ? '<span class="badge bg-warning">Chưa thanh toán</span>' : ''}
+                                                ${orderItem.payment_status === 'paid' ? '<span class="badge bg-success">Đã thanh toán</span>' : ''}
+                                                ${orderItem.payment_status === 'refunded' ? '<span class="badge bg-danger">Hoàn trả</span>' : ''}
+                                                ${orderItem.payment_status === 'payment_failed' ? '<span class="badge bg-danger">Thanh toán thất bại</span>' : ''}
+                                                
+                                                ${!['unpaid', 'paid', 'refunded', 'payment_failed'].includes(orderItem.payment_status) ? 
+                                                    '<span class="badge bg-secondary">Không rõ</span>' : ''}
+
+                                            </td>
+
+                                            <td>
+
+                                                ${orderItem.status === 'pending_confirmation' ? '<span class="badge bg-info">Chờ xác nhận</span>' : ''}
+                                                ${orderItem.status === 'pending_pickup' ? '<span class="badge bg-warning">Chờ lấy hàng</span>' : ''}
+                                                ${orderItem.status === 'pending_delivery' ? '<span class="badge bg-primary">Chờ giao hàng</span>' : ''}
+                                                ${orderItem.status === 'returned' ? '<span class="badge bg-danger">Trả hàng</span>' : ''}
+                                                ${orderItem.status === 'delivered' ? '<span class="badge bg-secondary">Đã giao</span>' : ''}
+                                        
+                                            </td>
+
+                                        </tr>
+
+                                    `;
+
+                                document.querySelector(
+                                        '#order-time-content')
+                                    .insertAdjacentHTML('beforeend',
+                                        orderItemContent);
+
+                            });
+
+                        });
+
+
+                    })
+                    .catch((error) => {
+
+                        console.log(error);
+
+                    })
+
+            }
+
+            function setActiveButton(activeButton) {
+
+                optionOrderTime.forEach(btn => {
+
+                    btn.classList.remove('btn-primary');
+
+                    btn.classList.add('btn-outline-primary');
+
+                });
+
+                // Thêm active cho nút được chọn
+                activeButton.classList.add('btn-primary');
+
+                activeButton.classList.remove('btn-outline-primary');
+
+            }
+
+            optionOrderTime.forEach(function(orderTime) {
+
+                orderTime.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+                    // console.log(123);
+
+                    const selectedOrderTime = orderTime.dataset.selectedOrderTime;
+
+                    orderTimeContent.innerHTML = '';
+
+                    fetchDataOrderTime(selectedOrderTime);
+
+                    setActiveButton(this)
+
+                })
+            })
+
+            fetchDataOrderTime('1day')
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButton = document.querySelector('#option-order-time a[data-selected-order-time="1day"]');
+
+            if (defaultButton) {
+
+                setActiveButton(defaultButton);
+            }
+
+        })
+    </script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -606,198 +979,344 @@
 
                 chart.render();
             } else {
-                console.log("Không có dữ liệu để hiển thị biểu đồ.");
+                console.log("Không có dữ liệu.");
             }
         });
     </script>
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Lấy dữ liệu ordersByStatus từ Laravel và chuyển thành mảng JSON
-            const ordersByStatusForChart = @json($ordersByStatusForChart);
+        let chart; // Scope global để giữ reference biểu đồ
 
-            // Tạo dữ liệu cho series và labels từ ordersByStatusForChart
-            const seriesData = [
-                ordersByStatusForChart['pending_confirmation'], // Chờ xác nhận
-                ordersByStatusForChart['pending_delivery'], // Chờ giao hàng
-                ordersByStatusForChart['delivered'], // Đã giao hàng
-                ordersByStatusForChart['canceled'], // Đã hủy
-                ordersByStatusForChart['returned'] // Trả hàng
-            ];
+        // Hàm call API và render biểu đồ
+        function fetchAndRenderChart(filterPeriod) {
 
-            const labelsData = ['Chờ xác nhận', 'Chờ giao hàng', 'Đã giao hàng', 'Đã hủy', 'Trả hàng'];
+            axios.get(`/api/thong-ke-theo-trang-thai?filterPeriod=${filterPeriod}`)
 
-            var options = {
-                chart: {
-                    height: 300, // Thay đổi chiều cao của biểu đồ
-                    width: '100%',
-                    type: 'radialBar',
-                    toolbar: {
-                        show: false,
-                    },
-                },
-                plotOptions: {
-                    radialBar: {
-                        dataLabels: {
-                            name: {
-                                fontSize: '12px',
-                                fontFamily: 'Roboto', // Sử dụng font Roboto
-                                fontWeight: 'bold',
-                                fontColor: 'black',
-                            },
-                            value: {
-                                fontSize: '21px',
-                                fontFamily: 'Roboto', // Sử dụng font Roboto
-                                fontWeight: 'bold',
-                                fontColor: 'black',
-                            },
-                            total: {
-                                show: true,
-                                label: 'Đơn Hàng',
-                                fontFamily: 'Roboto', // Sử dụng font Roboto
-                                fontWeight: 'bold',
-                                formatter: function(w) {
-                                    return w.globals.series.reduce((a, b) => a + b, 0);
+                .then(response => {
+
+                    console.log(response.data);
+
+                    const ordersByStatusForChart = response.data.ordersByStatusForChart;
+
+                    const seriesData = [
+                        ordersByStatusForChart['pending_confirmation'] || 0,
+                        ordersByStatusForChart['pending_delivery'] || 0,
+                        ordersByStatusForChart['delivered'] || 0,
+                        ordersByStatusForChart['canceled'] || 0,
+                        ordersByStatusForChart['returned'] || 0
+                    ];
+
+                    const labelsData = ['Chờ xác nhận', 'Chờ giao hàng', 'Đã giao hàng', 'Đã hủy', 'Trả hàng'];
+
+                    if (chart) {
+
+                        chart.destroy();
+                    }
+
+                    const options = {
+
+                        chart: {
+                            height: 300,
+                            type: 'radialBar',
+                            toolbar: {
+                                show: false
+                            }
+                        },
+                        plotOptions: {
+                            radialBar: {
+                                dataLabels: {
+                                    name: {
+                                        fontSize: '12px',
+                                        fontWeight: 'bold',
+                                        fontColor: 'black'
+                                    },
+                                    value: {
+                                        fontSize: '21px',
+                                        fontWeight: 'bold',
+                                        fontColor: 'black'
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Đơn Hàng',
+                                        fontWeight: 'bold',
+                                        formatter: w => w.globals.series.reduce((a, b) => a + b, 0)
+                                    }
                                 }
                             }
-                        }
-                    }
-                },
-                series: seriesData,
-                labels: labelsData,
-                colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00'],
-            };
+                        },
 
-            var chart = new ApexCharts(
-                document.querySelector("#taskGraph"),
-                options
-            );
-            chart.render();
+                        series: seriesData,
+
+                        labels: labelsData,
+
+                        colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00']
+
+                    };
+
+                    chart = new ApexCharts(document.querySelector("#taskGraph"), options);
+                    chart.render();
+
+                })
+
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Hàm cập nhật active class cho nút filter được chọn
+        function setActiveButtonStatus(button) {
+            const timePeriodButtons = document.querySelectorAll('#time-period-options-status a');
+
+            timePeriodButtons.forEach(btn => btn.classList.remove('btn-primary', 'btn-outline-primary'));
+            if (button) {
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-primary');
+            }
+        }
+
+        // Gán event listener cho các nút filter
+        const timePeriodButtons = document.querySelectorAll('#time-period-options-status a');
+
+        timePeriodButtons.forEach(button => {
+
+            button.addEventListener('click', function(e) {
+
+                e.preventDefault();
+
+                const filterPeriod = this.dataset.filterPeriod;
+
+                // Cập nhật active class cho nút được chọn
+
+                setActiveButtonStatus(this);
+
+
+                console.log('Filter Period:', filterPeriod); // Debug giá trị filterPeriod
+
+                fetchAndRenderChart(filterPeriod);
+            });
         });
+
+        // Gọi hàm mặc định khi load trang với filter 'today'
+        const defaultButtonStatus = document.querySelector('[data-filter-period="today"]');
+        setActiveButtonStatus(defaultButtonStatus);
+
+        fetchAndRenderChart('today');
+
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     // Lấy dữ liệu ordersByStatus từ Laravel và chuyển thành mảng JSON
+        //     const ordersByStatusForChart = @json($ordersByStatusForChart);
+
+        //     // Tạo dữ liệu cho series và labels từ ordersByStatusForChart
+        //     const seriesData = [
+        //         ordersByStatusForChart['pending_confirmation'], // Chờ xác nhận
+        //         ordersByStatusForChart['pending_delivery'], // Chờ giao hàng
+        //         ordersByStatusForChart['delivered'], // Đã giao hàng
+        //         ordersByStatusForChart['canceled'], // Đã hủy
+        //         ordersByStatusForChart['returned'] // Trả hàng
+        //     ];
+
+        //     const labelsData = ['Chờ xác nhận', 'Chờ giao hàng', 'Đã giao hàng', 'Đã hủy', 'Trả hàng'];
+
+        //     var options = {
+        //         chart: {
+        //             height: 300, // Thay đổi chiều cao của biểu đồ
+        //             width: '100%',
+        //             type: 'radialBar',
+        //             toolbar: {
+        //                 show: false,
+        //             },
+        //         },
+        //         plotOptions: {
+        //             radialBar: {
+        //                 dataLabels: {
+        //                     name: {
+        //                         fontSize: '12px',
+        //                         fontFamily: 'Roboto', // Sử dụng font Roboto
+        //                         fontWeight: 'bold',
+        //                         fontColor: 'black',
+        //                     },
+        //                     value: {
+        //                         fontSize: '21px',
+        //                         fontFamily: 'Roboto', // Sử dụng font Roboto
+        //                         fontWeight: 'bold',
+        //                         fontColor: 'black',
+        //                     },
+        //                     total: {
+        //                         show: true,
+        //                         label: 'Đơn Hàng',
+        //                         fontFamily: 'Roboto', // Sử dụng font Roboto
+        //                         fontWeight: 'bold',
+        //                         formatter: function(w) {
+        //                             return w.globals.series.reduce((a, b) => a + b, 0);
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //         },
+        //         series: seriesData,
+        //         labels: labelsData,
+        //         colors: ['#4267cd', '#32b2fa', '#f87957', '#FF00FF', '#00FF00'],
+        //     };
+
+        //     var chart = new ApexCharts(
+        //         document.querySelector("#taskGraph"),
+        //         options
+        //     );
+        //     chart.render();
+        // });
     </script>
 
 
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var options = {
-                chart: {
-                    height: 300,
-                    type: 'bar',
-                    dropShadow: {
-                        enabled: true,
-                        opacity: 0.1,
-                        blur: 5,
-                        left: -10,
-                        top: 10
-                    },
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            position: 'top', // top, center, bottom
-                        },
-                    }
-                },
-                series: [{
-                    name: 'Sản phẩm đã bán',
-                    data: @json($topSellingProductQuantities), // Dữ liệu số lượng bán
-                }],
-                xaxis: {
-                    categories: @json($topSellingProductNames), // Dữ liệu tên sản phẩm
-                    position: 'top',
-                    labels: {
-                        // offsetY: -18,
-                    },
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    crosshairs: {
-                        fill: {
-                            type: 'gradient',
-                            gradient: {
-                                colorFrom: '#435EEF',
-                                colorTo: '#95c5ff',
-                                stops: [0, 100],
-                                opacityFrom: 0.4,
-                                opacityTo: 0.5,
-                            }
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        offsetY: -35,
-                    }
-                },
-                fill: {
-                    gradient: {
-                        shade: 'light',
-                        type: "horizontal",
-                        shadeIntensity: 0.25,
-                        gradientToColors: undefined,
-                        inverseColors: true,
-                        opacityFrom: 1,
-                        opacityTo: 1,
-                        stops: [50, 0, 100, 100]
-                    },
-                },
-                yaxis: {
-                    axisBorder: {
-                        show: false
-                    },
-                    axisTicks: {
-                        show: false,
-                    },
-                    labels: {
-                        show: false,
-                        formatter: function(val) {
-                            return val + " Sản Phẩm";
-                        }
-                    }
-                },
-                title: {
-                    floating: true,
-                    offsetY: 320,
-                    align: 'center',
-                    style: {
-                        color: '#2e323c'
-                    }
-                },
-                grid: {
-                    borderColor: '#e0e6ed',
-                    strokeDashArray: 5,
-                    xaxis: {
-                        lines: {
-                            show: true
-                        }
-                    },
-                    yaxis: {
-                        lines: {
-                            show: false,
-                        }
-                    },
-                    padding: {
-                        top: 0,
-                        right: 0,
-                        bottom: 0,
-                        left: 0
-                    },
-                },
-                colors: ['#435EEF', '#2b86f5', '#63a9ff', '#95c5ff', '#c6e0ff'],
+
+            const timePeriodButtons = document.querySelectorAll('#time-period-options a');
+
+            let chart = null;
+
+            // Hàm để làm nổi bật nút đang chọn
+            function setActiveButton(selectedButton) {
+
+                timePeriodButtons.forEach(button => {
+
+                    button.classList.remove('btn-primary');
+
+                    button.classList.add('btn-outline-primary');
+
+                });
+
+                selectedButton.classList.add('btn-primary');
+                selectedButton.classList.remove('btn-outline-primary');
+
             }
 
-            var chart = new ApexCharts(document.querySelector("#basic-column-graph-datalables"), options);
-            chart.render();
+            // Hàm để tải dữ liệu từ API và vẽ biểu đồ
+            function fetchAndRenderChart(timePeriod) {
+
+                axios.get(`api/san-pham-ban-chay?timePeriod=${timePeriod}`)
+
+                    .then((res) => {
+
+                        // Dữ liệu từ API
+                        const topSellingProductQuantities = res.data.topSellingProductQuantities;
+                        const topSellingProductNames = res.data.topSellingProductNames;
+
+                        // Xóa biểu đồ cũ nếu tồn tại
+                        if (chart) {
+                            chart.destroy();
+                        }
+
+                        // Cấu hình và vẽ biểu đồ mới
+                        const options = {
+                            chart: {
+                                height: 300,
+                                type: 'bar',
+                                dropShadow: {
+                                    enabled: true,
+                                    opacity: 0.1,
+                                    blur: 5,
+                                    left: -10,
+                                    top: 10
+                                },
+                            },
+                            plotOptions: {
+                                bar: {
+                                    dataLabels: {
+                                        position: 'top',
+                                    },
+                                }
+                            },
+                            series: [{
+                                name: 'Sản phẩm đã bán',
+                                data: topSellingProductQuantities,
+                            }],
+                            xaxis: {
+                                categories: topSellingProductNames,
+                                position: 'top',
+                                labels: {
+                                    offsetY: -18,
+                                },
+                                axisBorder: {
+                                    show: false
+                                },
+                                axisTicks: {
+                                    show: false
+                                },
+                                crosshairs: {
+                                    fill: {
+                                        type: 'gradient',
+                                        gradient: {
+                                            colorFrom: '#435EEF',
+                                            colorTo: '#95c5ff',
+                                            stops: [0, 100],
+                                            opacityFrom: 0.4,
+                                            opacityTo: 0.5,
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    offsetY: -35,
+                                }
+                            },
+                            yaxis: {
+                                labels: {
+                                    formatter: function(val) {
+                                        return Math.round(val) + " Sản Phẩm"; // Hiển thị số nguyên
+                                    }
+                                }
+                            },
+                            grid: {
+                                borderColor: '#e0e6ed',
+                                strokeDashArray: 5,
+                            },
+
+                            colors: ['#435EEF', '#2b86f5', '#63a9ff', '#95c5ff', '#c6e0ff'],
+
+                        };
+
+                        chart = new ApexCharts(document.querySelector("#basic-column-graph-datalables"),
+                            options);
+
+                        chart.render();
+
+                    })
+                    .catch((error) => {
+
+                        console.error('Error:', error);
+
+                    });
+            }
+
+            // Sự kiện click cho các nút
+            timePeriodButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const timePeriod = this.dataset.timePeriod;
+
+                    // Làm nổi bật nút được chọn
+                    setActiveButton(this);
+
+                    // Lấy dữ liệu và hiển thị biểu đồ
+                    fetchAndRenderChart(timePeriod);
+                });
+            });
+
+            // Hiển thị mặc định dữ liệu của today
+            const defaultButton = document.querySelector('[data-time-period="today"]');
+
+            setActiveButton(defaultButton);
+
+            fetchAndRenderChart('today');
+
         });
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Dữ liệu thống kê sản phẩm
+
         const productLabels = @json($topProducts->pluck('name'));
         const productViews = @json($topProducts->pluck('views'));
 

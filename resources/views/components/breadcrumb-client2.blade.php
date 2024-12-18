@@ -79,6 +79,9 @@
         case 'order.history':
             $breadcrumbs[] = ['name' => 'Lịch Sử Đơn Hàng', 'url' => ''];
             break;
+        case 'point':
+            $breadcrumbs[] = ['name' => 'Điểm thưởng', 'url' => ''];
+            break;
     }
 @endphp
 

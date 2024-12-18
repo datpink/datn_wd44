@@ -84,7 +84,6 @@
 
 </style>
 
-</style>
 <div class="block-minicart block-dreaming kobolg-mini-cart kobolg-dropdown" id="cart-content">
     <div class="shopcart-dropdown block-cart-link" data-kobolg="kobolg-dropdown">
         <a class="block-link link-dropdown" href="">
@@ -104,7 +103,8 @@
                         <li class="kobolg-mini-cart-item mini_cart_item">
                             <div class="notification-item">
                                 <!-- Nội dung thông báo -->
-                                <div class="notification-content {{ is_null($notification->read_at) ? 'unread' : '' }}">/-strong/-heart:>:o:-((:-h <strong class="notification-title">
+                                <div class="notification-content {{ is_null($notification->read_at) ? 'unread' : '' }}">
+                                    <strong class="notification-title">
                                         {{ $notification->title }}
                                     </strong>
                                     <p class="notification-description">
@@ -122,7 +122,8 @@
                                 </div>
                                 <!-- Nút xem chi tiết -->
                                 @if ($notification->url)
-                                    <a href="{{ route('notifications.read', $notification->id) }}" class="text-primary view-details">
+                                    <a href="{{ route('notifications.read', $notification->id) }}"
+                                        class="text-primary view-details">
                                         Xem chi tiết
                                     </a>
                                 @endif
@@ -131,7 +132,7 @@
                     @endforeach
                 @endif
             </ul>
-                                    
+
         </div>
     </div>
 </div>

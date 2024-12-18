@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\District;
+use App\Models\Order;
 use App\Models\PaymentMethod; // Import model PaymentMethod
+use App\Models\Product;
 use App\Models\Promotion;
 use App\Models\Province;
 use App\Models\Region;
+use App\Models\UserPoint;
 use App\Models\UserPromotion;
 use App\Models\Ward;
 use Carbon\Carbon;
@@ -20,16 +23,27 @@ class CheckoutController extends Controller
     public function showCheckout(Request $request)
     {
         // Lấy danh sách sản phẩm đã chọn từ input
-        $selectedProducts = json_decode($request->input('selected_products'), true);
-        // Kiểm tra nếu không có sản phẩm nào được chọn
-        if (empty($selectedProducts)) {
-            return redirect()->route('cart.view')->with('error', 'Bạn chưa chọn sản phẩm nào để thanh toán.');
-        }
+
 
         // Lấy thông tin người dùng
         $user = Auth::user();
         $userId = auth()->id(); // Lấy ID người dùng hiện tại
+        $selectedProducts = json_decode($request->input('selected_products'), true);
+        // Kiểm tra nếu không có sản phẩm nào được chọn
+        if (empty($selectedProducts)) {
+            // Lấy giỏ hàng từ session, giỏ hàng có tên là "cart_{$userId}"
+            $cart = session()->get("cart_{$userId}", []); // Giả sử bạn đã có $userId từ authenticated user hoặc từ request
 
+            // Lọc các sản phẩm chỉ lấy cart_id (bắt đầu từ 0) và quantity
+            $selectedProducts = array_map(function ($item, $index) {
+                return [
+                    'cart_id' => $index, // Lấy index làm cart_id (bắt đầu từ 0)
+                    'quantity' => $item['quantity'], // Lấy quantity từ giỏ hàng
+                ];
+            }, $cart, array_keys($cart)); // array_keys($cart) để lấy chỉ số bắt đầu từ 0
+        }
+
+        // dd($selectedProducts);
         // Khởi tạo danh sách sản phẩm và tổng tiền
         $products = [];
         $totalAmount = 0;
@@ -84,23 +98,33 @@ class CheckoutController extends Controller
         }
 
         // Lấy mã giảm giá và sắp xếp
-        $userPromotions = UserPromotion::with('promotion')
-            ->where('user_id', $userId)
+
+        // Truy vấn trực tiếp từ bảng promotions
+        $usedPromotionIds = Order::where('user_id', $userId)
+        ->where('status', '!=', 'canceled') // Loại trừ đơn hàng đã hủy
+        ->where('payment_status','!=', 'payment_failed')
+        ->whereNotNull('promotion_id') // Chỉ lấy đơn hàng có promotion_id
+        ->pluck('promotion_id')
+        ->toArray();
+
+
+            // dd($usedPromotionIds);
+        // Lấy danh sách mã khuyến mãi hợp lệ
+        $userPromotions = Promotion::where('status', 'active') // Mã khuyến mãi còn hoạt động
+            ->whereNotIn('id', $usedPromotionIds) // Loại mã đã sử dụng trong các đơn hàng chưa bị hủy
             ->get()
-            ->sortBy(function ($userPromotion) use ($totalAmount) {
-                $promotion = $userPromotion->promotion;
-
-                // Kiểm tra điều kiện sử dụng
-                $isExpired = Carbon::parse($promotion->end_date)->isPast();
-                $notEligible = $totalAmount < $promotion->min_order_value;
-
-                // Mã đủ điều kiện và chưa hết hạn được ưu tiên (giá trị ưu tiên = 0)
+            ->sortBy(function ($promotion) use ($totalAmount) {
+                // Kiểm tra hạn và điều kiện sử dụng
+                $isExpired = Carbon::parse($promotion->end_date)->isPast(); // Đã hết hạn
+                $notEligible = $totalAmount < $promotion->min_order_value; // Không đạt điều kiện
                 return ($isExpired || $notEligible) ? 1 : 0;
             });
 
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
+        $userPoint = UserPoint::where('user_id', $userId)->first();
+        $points = $userPoint->total_points;
 
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
@@ -112,11 +136,23 @@ class CheckoutController extends Controller
             'province',
             'district',
             'ward',
-            'userPromotions'
+            'userPromotions',
+            'points'
         ));
     }
 
 
+
+    public function buyNowCheckout(Request $request)
+    {
+        // Kiểm tra xem có truyền product_id không
+        $product_id = $request->input('product_id');
+        // Log để kiểm tra giá trị product_id
+        $prd = Product::where('id', $product_id);
+
+        // Trả về URL với product_id
+        return view('client.checkout.index2');
+    }
 
 
 

@@ -25,7 +25,9 @@ class OrderConfirmation extends Mailable
     // Xây dựng nội dung email
     public function build()
     {
-        return $this->view('emails.order_confirmation')
+        return $this->from('no-reply@zaiaenterprise.com', 'ZAIA Enterprise') // Đổi tên người gửi và email
+                    ->subject('Xác nhận đơn hàng') // Đổi tiêu đề email
+                    ->view('emails.order_confirmation')
                     ->with([
                         'order' => $this->order,
                     ]);

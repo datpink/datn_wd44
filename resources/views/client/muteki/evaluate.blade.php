@@ -49,7 +49,7 @@
                 $hasOrder = Auth::user()
                     ->orders()
                     ->whereHas('orderItems', function ($query) use ($product) {
-                        $query->where('product_variant_id', $product->id);
+                        $query->where('product_id', $product->id);
                     })
                     ->exists();
             @endphp
