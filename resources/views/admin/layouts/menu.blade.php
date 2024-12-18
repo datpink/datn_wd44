@@ -169,7 +169,7 @@
                                 <a href="{{ route('promotions.index') }}">Mã Giảm Giá</a>
                             </li>
                             <li>
-                                <a href="{{ route('discounts.index') }}">Giảm Giá Danh Mục</a>
+                                <a href="{{ route('discounts.index') }}">Danh Mục & Sản Phẩm</a>
                             </li>
 
                         </ul>

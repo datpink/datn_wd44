@@ -1,6 +1,6 @@
 @extends('admin.master')
 
-@section('title', 'Danh Sách Mã Giảm Giá')
+@section('title', 'Giảm Giá Cho Sản Phẩm')
 
 @section('css')
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.min.css" rel="stylesheet">
@@ -67,18 +67,7 @@
         /* Độ rộng box */
     }
 </style>
-@if(session('success'))
-<script type="text/javascript">
-    alert("{{ session('success') }}");
-</script>
-@elseif(session('error'))
-<script>
-    alert("{{ session('error') }}");
-</script>
-@endif
-<form action="{{ route('discount.applyToProducts', ['discountId' => $discount->id]) }}" method="POST">
-    @csrf
-
+<div class="">
     <h4>Áp Dụng Giảm Giá
         @if ($discount->type === "percentage")
         {{ number_format($discount->discount_value,  0, ',', '.') }} %
@@ -87,11 +76,49 @@
         @endif
         cho các sản phẩm
     </h4>
-    <div>
-        <a href="{{ route('discounts.index') }}" class="btn rounded-pill btn-secondary">
-            <i class="bi bi-arrow-left me-2"></i> Trở về
-        </a>
-    </div>
+    <form method="GET" action="{{ route('products.apply', ['discountId' => $discount->id]) }}" class="mb-3">
+        <div class="row g-2">
+            <!-- Lọc theo tên sản phẩm -->
+            <div class="col-auto">
+                <input type="text" name="name" class="form-control form-control-sm" placeholder="Tên sản phẩm" value="{{ request('name') }}">
+            </div>
+
+            <!-- Lọc theo danh mục -->
+            <div class="col-auto">
+                <select name="catalogue_id" class="form-select form-select-sm">
+                    <option value="">Tất cả danh mục</option>
+                    @foreach ($catalogues as $catalogue)
+                    <option value="{{ $catalogue->id }}" {{ request('catalogue_id') == $catalogue->id ? 'selected' : '' }}>
+                        {{ $catalogue->name }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Nút tìm kiếm -->
+            <div class="col-auto">
+                <button type="submit" class="btn btn-sm btn-primary">Lọc</button>
+            </div>
+
+            <!-- Nút xóa lọc -->
+            <div class="col-auto">
+                <a href="{{ route('products.apply', ['discountId' => $discount->id]) }}" class="btn btn-sm btn-warning">Xóa lọc</a>
+            </div>
+        </div class="col-auto">
+        <div>
+            <a href="{{ route('discounts.index') }}" class="btn rounded-pill btn-secondary">
+                <i class="bi bi-arrow-left me-2"></i> Trở về
+            </a>
+        </div>
+    </form>
+
+</div>
+<form action="{{ route('discount.applyToProducts', ['discountId' => $discount->id]) }}" method="POST">
+    @csrf
+
+
+
+
     <table class="table">
         <thead>
             <tr>
@@ -136,7 +163,7 @@
                     @if (isset($product->remaining_time))
                     <span class="badge bg-info">{{ $product->remaining_time }}</span>
                     @else
-                    <span class=" ">Chưa áp dụng giảm giá</span>
+                    <span class="badge bg-warning">Chưa áp dụng giảm giá</span>
                     @endif
                 </td>
                 <td class="status-cell">
@@ -158,11 +185,13 @@
             @endforeach
         </tbody>
     </table>
-    <div style="height:60px">
-        <button type="submit" class="btn btn-success">Áp dụng giảm giá</button>
-        <!-- Nút hủy giảm giá -->
-        <button type="button" id="cancel-discount-button" class="btn btn-danger">Hủy giảm giá</button>
+    <div class="fixed-bottom bg-light py-2 shadow" style="height: 60px;">
+        <div class="container text-end">
+            <button type="submit" class="btn btn-success me-2">Áp dụng giảm giá</button>
+            <button type="button" id="cancel-discount-button" class="btn btn-danger">Hủy giảm giá</button>
+        </div>
     </div>
+
 </form>
 
 <!-- Form hủy giảm giá -->
@@ -252,4 +281,31 @@
         });
     });
 </script>
+
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.0/dist/sweetalert2.all.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Xóa bộ lọc
+        $('#filterRemove').click(function() {
+            $('input[name="name"]').val(''); // Reset ô input "Tên sản phẩm"
+            $('select[name="catalogue_id"]').val(''); // Reset dropdown "Danh mục"
+            $(this).closest('form').submit(); // Submit form
+        });
+    });
+    @if(session('success') || session('error'))
+    Swal.fire({
+        position: "top",
+        icon: "{{ session('success') ? 'success' : 'error' }}",
+        title: "{{ session('success') ?? session('error') }}",
+        showConfirmButton: false,
+        timerProgressBar: true,
+        timer: "{{ session('success') ? 5000 : 5000 }}"
+    });
+    @endif
+</script>
+@endsection
+
+
 @endsection

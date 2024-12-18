@@ -225,10 +225,11 @@ Route::prefix('admin')->middleware(['admin', 'permission:full|editor'])->group(f
     Route::get('/contacts', [App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contact.index');
     Route::delete('/contacts/{id}', [App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contact.destroy');
     Route::post('/contacts/{id}/reply', [App\Http\Controllers\Admin\ContactController::class, 'reply'])->name('admin.contact.reply');
+    
 
 
     // Giảm giá thep sản phẩm
-    Route::get('/discounts/{discountId}/apply', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
+    Route::get('discounts/{discountId}/products', [AdminDiscountController::class, 'listProductsDiscount'])->name('products.apply');
     Route::post('/discounts/{discountId}/apply', [AdminDiscountController::class, 'applyToProducts'])->name('discount.applyToProducts');
     // Route hủy giảm giá
     Route::post('/admin/admin/discounts/{discountId}/products/remove', [AdminDiscountController::class, 'removeFromProducts'])->name('discounts.remove');
