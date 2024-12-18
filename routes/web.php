@@ -204,7 +204,7 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
     Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
     // Route::get('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
-    Route::post('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
+    Route::post('/checkout', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
     Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
     Route::post('/apply-coupon2', [CheckoutController::class, 'applyCoupon2'])->name('applyCoupon2');
 });

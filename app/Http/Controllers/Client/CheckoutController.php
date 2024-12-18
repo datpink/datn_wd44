@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttributeValue;
 use App\Models\District;
 use App\Models\Order;
 use App\Models\PaymentMethod; // Import model PaymentMethod
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Promotion;
 use App\Models\Province;
 use App\Models\Region;
@@ -17,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CheckoutController extends Controller
 {
@@ -101,14 +104,14 @@ class CheckoutController extends Controller
 
         // Truy vấn trực tiếp từ bảng promotions
         $usedPromotionIds = Order::where('user_id', $userId)
-        ->where('status', '!=', 'canceled') // Loại trừ đơn hàng đã hủy
-        ->where('payment_status','!=', 'payment_failed')
-        ->whereNotNull('promotion_id') // Chỉ lấy đơn hàng có promotion_id
-        ->pluck('promotion_id')
-        ->toArray();
+            ->where('status', '!=', 'canceled') // Loại trừ đơn hàng đã hủy
+            ->where('payment_status', '!=', 'payment_failed')
+            ->whereNotNull('promotion_id') // Chỉ lấy đơn hàng có promotion_id
+            ->pluck('promotion_id')
+            ->toArray();
 
 
-            // dd($usedPromotionIds);
+        // dd($usedPromotionIds);
         // Lấy danh sách mã khuyến mãi hợp lệ
         $userPromotions = Promotion::where('status', 'active') // Mã khuyến mãi còn hoạt động
             ->whereNotIn('id', $usedPromotionIds) // Loại mã đã sử dụng trong các đơn hàng chưa bị hủy
@@ -126,6 +129,7 @@ class CheckoutController extends Controller
         $userPoint = UserPoint::where('user_id', $userId)->first();
         $points = $userPoint->total_points;
 
+        dd($products);
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',
@@ -145,14 +149,102 @@ class CheckoutController extends Controller
 
     public function buyNowCheckout(Request $request)
     {
-        // Kiểm tra xem có truyền product_id không
-        $product_id = $request->input('product_id');
-        // Log để kiểm tra giá trị product_id
-        $prd = Product::where('id', $product_id);
+        $user = Auth::user();
+        $userId = auth()->id();
+        // dd($request->all());
+        $inputData = $request->all();
+        $products = [];
 
-        // Trả về URL với product_id
-        return view('client.checkout.index2');
+        if (isset($inputData['product_id'])) {
+            // Lấy thông tin sản phẩm từ database
+            $productModel = Product::find($inputData['product_id']);
+
+            if (!$productModel) {
+                return back()->with('error', 'Sản phẩm không tồn tại.');
+            }
+
+
+            $price = $request->price;
+            // Tạo dữ liệu cơ bản cho sản phẩm
+            $productVariant = ProductVariant::find($inputData['varriant_id']);
+
+            $attributeValues = $productVariant ? $productVariant->attributeValues : null;
+            $productData = [
+                'id' => $productModel->id,
+                'name' => $productModel->name,
+                'price' => $price,
+                'quantity' => (int) ($inputData['quantity'] ?? 1), // Mặc định là 1 nếu không có quantity
+                'options' => [
+                    'variant_id' => $inputData['varriant_id'] ?? null,
+                    'variant' => $attributeValues,
+                    'image' => Storage::url($productModel->image_url), // Giả sử trường này chứa URL ảnh sản phẩm
+                ],
+                'total_price' => $productModel->price * (int) ($inputData['quantity'] ?? 1),
+            ];
+
+            $totalAmount = $productModel->price * (int) ($inputData['quantity'] ?? 1);
+
+            // Thêm vào mảng products
+            $products[] = $productData;
+        }
+
+        $province = $district = $ward = null;
+        if ($user->address) {
+            $addressParts = explode(' - ', $user->address);
+            if (count($addressParts) >= 3) {
+                $provinceName = trim($addressParts[0]);
+                $districtName = trim($addressParts[1]);
+                $wardName = trim($addressParts[2]);
+
+                $province = Province::where('name', 'like', "%$provinceName%")->first();
+                $district = District::where('name', 'like', "%$districtName%")->first();
+                $ward = Ward::where('name', 'like', "%$wardName%")->first();
+            }
+        }
+        // Truy vấn trực tiếp từ bảng promotions
+        $usedPromotionIds = Order::where('user_id', $userId)
+            ->where('status', '!=', 'canceled') // Loại trừ đơn hàng đã hủy
+            ->where('payment_status', '!=', 'payment_failed')
+            ->whereNotNull('promotion_id') // Chỉ lấy đơn hàng có promotion_id
+            ->pluck('promotion_id')
+            ->toArray();
+
+
+        // dd($usedPromotionIds);
+        // Lấy danh sách mã khuyến mãi hợp lệ
+        $userPromotions = Promotion::where('status', 'active') // Mã khuyến mãi còn hoạt động
+            ->whereNotIn('id', $usedPromotionIds) // Loại mã đã sử dụng trong các đơn hàng chưa bị hủy
+            ->get()
+            ->sortBy(function ($promotion) use ($totalAmount) {
+                // Kiểm tra hạn và điều kiện sử dụng
+                $isExpired = Carbon::parse($promotion->end_date)->isPast(); // Đã hết hạn
+                $notEligible = $totalAmount < $promotion->min_order_value; // Không đạt điều kiện
+                return ($isExpired || $notEligible) ? 1 : 0;
+            });
+
+        // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
+        $paymentMethods = PaymentMethod::all();
+        $provinces = Province::all(['id', 'name']);
+        $userPoint = UserPoint::where('user_id', $userId)->first();
+        $points = $userPoint->total_points;
+
+
+                // dd($products);
+        // Trả về view kèm dữ liệu
+        return view('client.checkout.index', compact(
+            'products',
+            'paymentMethods',
+            'totalAmount',
+            'user',
+            'provinces',
+            'province',
+            'district',
+            'ward',
+            'userPromotions',
+            'points'
+        ));
     }
+
 
 
 

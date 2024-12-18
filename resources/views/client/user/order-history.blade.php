@@ -170,8 +170,8 @@
                                         <div class="card-body">
                                             <p><strong>Tổng Tiền Đơn Hàng:</strong>
                                                 <span
-                                                    class="text-success fw-bold">{{ number_format($order->items_sum_total, 0, ',', '.') }}
-                                                    VND</span>
+                                                    class="text-success fw-bold">{{ number_format($order->total_amount, 0, ',', '.') }}
+                                                    VND (Bao gồm phí ship)</span>
                                             </p>
                                             <p><strong>Trạng Thái:</strong>
                                                 <span
@@ -191,7 +191,7 @@
                                                     <!-- Thêm trạng thái trả hàng -->
                                                     <span class="badge rounded-pill bg-secondary text-white">Trả hàng</span>
                                                 @else
-                                                    <span class="badge rounded-pill bg-infoinfo text-white">Không rõ</span>
+                                                    <span class="badge rounded-pill bg-warning text-white">Không rõ</span>
                                                 @endif
                                             </p>
 

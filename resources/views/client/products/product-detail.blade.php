@@ -354,7 +354,7 @@
                                         <p>{!! $product->tomtat !!}</p>
                                     </div>
 
-                                    <div class="variations_form cart" id="add-to-cart-form" onsubmit="return false;">
+                                    <div class="variations_form cart" id="add-to-cart-form">
                                         <input type="hidden" id="product-image"
                                             data-default-src="{{ \Storage::url($product->image_url) }}">
                                         <input type="hidden" name="variant_id" id="selected-variant-id">
@@ -386,11 +386,16 @@
                                                         data-discount-price="{{ $product->discount_price }}₫">
                                                         Thêm vào giỏ hàng
                                                     </button>
-                                                    <button type="button" id="buy-now"
-                                                        class="single_add_to_cart_button button buy-now">
-                                                        Mua ngay
-                                                    </button>
-
+                                                    <form action="{{ route('buyNowCheckout')}}" method="POST" id="buy-now-form">
+                                                        @csrf
+                                                        <input type="hidden" name="quantity" id="buy-now-quantity">
+                                                        <input type="hidden" name="price" id="buy-now-price">
+                                                        <input type="hidden" name="varriant_id" id="buy-now-varriant-id">
+                                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                                        <button type="submit" id="buy-now" class="single_add_to_cart_button button buy-now">
+                                                            Mua ngay
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
