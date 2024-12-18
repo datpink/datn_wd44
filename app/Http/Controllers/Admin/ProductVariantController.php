@@ -19,11 +19,14 @@ class ProductVariantController extends Controller
     public function index(Product $product)
     {
         $title = 'Danh Sách Biến Thể';
-        $variants = $product->variants; // Lấy tất cả biến thể của sản phẩm
-        $hasVariants = $variants->isNotEmpty(); // Kiểm tra xem có biến thể hay không
+        // Lấy danh sách biến thể và các giá trị thuộc tính kèm theo
+        $variants = $product->variants()
+        ->with(['attributeValues.attribute'])
+        ->get();
 
-        return view('admin.variants.index', compact('product', 'variants', 'hasVariants', 'title'));
+    return view('admin.variants.index', compact('product', 'variants', 'title'));
     }
+    
 
     // Hiển thị form thêm biến thể
     public function create(Product $product)
