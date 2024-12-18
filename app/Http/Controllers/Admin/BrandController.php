@@ -99,7 +99,7 @@ class BrandController extends Controller
         try {
             $brand->delete();
             DB::commit();
-            return back()->with('success', 'Xóa thương hiệu thành công.');
+            return back()->with('success ', 'Xóa thương hiệu thành công.');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());

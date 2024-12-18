@@ -39,11 +39,20 @@ class PaymentController extends Controller
             // dd($request->products);
             // Kiểm tra tồn kho trước khi tạo đơn hàng
             foreach ($request->products as $product) {
+                $productst = Product::where('id', $product['id'])->first();
+                if($productst->is_active == 0){
+                    return redirect()->route('cart.view')
+                    ->with('error', "Sản phẩm {$productst->name} đã ngừng kinh doanh.");
+                }
                 if ($product['variant_id']) {
                     $productVariant = ProductVariant::where('id', $product['variant_id'])
                         ->lockForUpdate()
                         ->firstOrFail();
-
+                    // dd($productVariant);
+                    if($productVariant->status == "inactive"){
+                        return redirect()->route('cart.view')
+                        ->with('error', "Sản phẩm {$productVariant->variant_name} đã hết hàng hoặc không đủ số lượng. Vui lòng thử lại.");
+                    }
                     if ($productVariant->stock < $product['quantity']) {
                         DB::rollBack();
                         return redirect()->route('cart.view')

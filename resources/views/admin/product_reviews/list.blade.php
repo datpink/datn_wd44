@@ -93,15 +93,6 @@
                                                 </td>
 
                                                 <td>
-                                                    <form action="{{ route('product-reviews.destroy', $review->id) }}"
-                                                        method="POST" style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn rounded-pill btn-danger delete-btn">
-                                                            <i class="bi bi-trash"></i> Xóa
-                                                        </button>
-                                                    </form>
                                                     <button type="button"
                                                         class="btn rounded-pill btn-primary btnModalResponse"
                                                         data-toggle="modal" data-target="#responseModal" id="btnModalResponse"
