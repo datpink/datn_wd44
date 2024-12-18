@@ -44,30 +44,6 @@
                                             </option>
                                         </select>
                                     </div>
-
-                                    <!-- Lọc áp dụng cho đơn hàng -->
-                                    <div class="col-auto">
-                                        <select name="applies_to_order" class="form-select form-select-sm">
-                                            <option value="">Áp dụng cho đơn hàng</option>
-                                            <option value="1"
-                                                {{ request()->applies_to_order == '1' ? 'selected' : '' }}>Có</option>
-                                            <option value="0"
-                                                {{ request()->applies_to_order == '0' ? 'selected' : '' }}>Không</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Lọc áp dụng cho phí vận chuyển -->
-                                    <div class="col-auto">
-                                        <select name="applies_to_shipping" class="form-select form-select-sm">
-                                            <option value="">Áp dụng cho phí vận chuyển</option>
-                                            <option value="1"
-                                                {{ request()->applies_to_shipping == '1' ? 'selected' : '' }}>Có</option>
-                                            <option value="0"
-                                                {{ request()->applies_to_shipping == '0' ? 'selected' : '' }}>Không</option>
-                                        </select>
-                                    </div>
-
-
                                     <!-- Nút tìm kiếm -->
                                     <div class="col-auto">
                                         <button type="submit" class="btn btn-sm btn-primary">Tìm kiếm</button>
@@ -89,8 +65,6 @@
                                         <th>Mức giảm giá</th>
                                         <th>Min Order Value</th>  <!-- Thêm cột min_order_value -->
                                         <th>Trạng thái</th>
-                                        <th>Áp dụng cho đơn hàng</th>
-                                        <th>Áp dụng cho phí vận chuyển</th>
                                         <th>Ngày bắt đầu</th>
                                         <th>Ngày kết thúc</th>
                                         <th>Đơn hàng tối đa</th>
