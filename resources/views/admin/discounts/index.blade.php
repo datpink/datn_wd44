@@ -183,7 +183,7 @@
             Swal.fire({
                 position: "top",
                 icon: "error",
-                title: "Có sản phẩm Đang được giảm giá!",
+                title: "Có lỗi xảy ra",
                 showConfirmButton: false,
                 timerProgressBar: true,
                 timer: 1500

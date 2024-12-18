@@ -28,12 +28,40 @@ class DiscountController extends Controller
     public function store(Request $request)
     {
         // Validate dữ liệu
-        $request->validate([
-            'discount_value' => 'required|numeric|min:0',
+        $validated = $request->validate([
+            'discount_value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input('type') === 'percentage' && $value > 100) {
+                        $fail('Giá trị giảm giá phần trăm không thể lớn hơn 100.');
+                    }
+                },
+            ],
             'type' => 'required|in:percentage,fixed',
-            'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after:start_date',
+            'start_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (strtotime($request->input('end_date')) < strtotime($value)) {
+                        $fail('Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.');
+                    }
+                },
+            ],
+            'end_date' => [
+                'required',
+                'date',
+                'after:start_date',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (strtotime($value) < strtotime($request->input('start_date'))) {
+                        $fail('Ngày kết thúc phải lớn hơn ngày bắt đầu.');
+                    }
+                },
+            ],
         ]);
+
 
         // Tạo mới đợt giảm giá
         $discount = new Discount();
@@ -55,11 +83,38 @@ class DiscountController extends Controller
     public function update(Request $request, $id)
     {
         // Xác thực dữ liệu
-        $request->validate([
-            'discount_value' => 'required|numeric',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+        $validated = $request->validate([
+            'discount_value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->input('type') === 'percentage' && $value > 100) {
+                        $fail('Giá trị giảm giá phần trăm không thể lớn hơn 100.');
+                    }
+                },
+            ],
             'type' => 'required|in:percentage,fixed',
+            'start_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (strtotime($request->input('end_date')) < strtotime($value)) {
+                        $fail('Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc.');
+                    }
+                },
+            ],
+            'end_date' => [
+                'required',
+                'date',
+                'after:start_date',
+                function ($attribute, $value, $fail) use ($request) {
+                    if (strtotime($value) < strtotime($request->input('start_date'))) {
+                        $fail('Ngày kết thúc phải lớn hơn ngày bắt đầu.');
+                    }
+                },
+            ],
         ]);
 
         // Tìm và cập nhật giảm giá
@@ -71,32 +126,32 @@ class DiscountController extends Controller
     }
 
     public function destroy($id)
-{
-    // Kiểm tra xem discount còn áp dụng cho sản phẩm nào không
-    $discountInProducts = DB::table('discounted_products')
-        ->where('discount_id', $id)
-        ->exists();
+    {
+        // Kiểm tra xem discount còn áp dụng cho sản phẩm nào không
+        $discountInProducts = DB::table('discounted_products')
+            ->where('discount_id', $id)
+            ->exists();
 
-    $discountInCatalogues = DB::table('catelogue_discounts')
-        ->where('discount_id', $id)
-        ->exists();
+        $discountInCatalogues = DB::table('catelogue_discounts')
+            ->where('discount_id', $id)
+            ->exists();
 
-    // Nếu có sản phẩm áp dụng giảm giá thì không thực hiện xóa
-    if ($discountInProducts || $discountInCatalogues) {
-        
-        return redirect()->back()->with('errors', 'bạn không thể xóa do còn sản phẩm đang giảm giá');
+        // Nếu có sản phẩm áp dụng giảm giá thì không thực hiện xóa
+        if ($discountInProducts || $discountInCatalogues) {
+            
+            return redirect()->back()->with('errors', 'bạn không thể xóa do còn sản phẩm đang giảm giá');
+        }
+
+        // Nếu không còn sản phẩm nào áp dụng giảm giá, tiến hành xóa discount
+        $discount = Discount::find($id);
+
+        if ($discount) {
+            $discount->delete();
+            return redirect()->back()->with('success', 'Giảm giá đã được xóa thành công!');
+        }
+
+        return redirect()->back()->with('errors', 'Không tìm thấy giảm giá cần xóa.');
     }
-
-    // Nếu không còn sản phẩm nào áp dụng giảm giá, tiến hành xóa discount
-    $discount = Discount::find($id);
-
-    if ($discount) {
-        $discount->delete();
-        return redirect()->back()->with('success', 'Giảm giá đã được xóaxóa thành công!');
-    }
-
-    return redirect()->back()->with('errors', 'Không tìm thấy giảm giá cần xóa.');
-}
 
 
 
@@ -184,12 +239,28 @@ class DiscountController extends Controller
     }
 
 
-    public function listProductsDiscount($discountId)
+    public function listProductsDiscount(Request $request, $discountId)
     {
         $discount = Discount::findOrFail($discountId);
+        $catalogues = Catalogue::all();
+        // Khởi tạo query builder để lọc sản phẩm
+        $query = Product::query();
 
-        // Lấy tất cả sản phẩm
-        $products = Product::all()->map(function ($product) {
+        // Lọc theo bảng catalogue
+        if ($request->has('catalogue_id') && $request->catalogue_id) {
+            $query->where('catalogue_id', $request->catalogue_id);
+        }
+
+        // Lọc theo tên sản phẩm
+        if ($request->has('name') && $request->name) {
+            $query->where('name', 'like', '%' . $request->name . '%');
+        }
+
+        // Load quan hệ catalogue và lấy danh sách sản phẩm
+        $products = $query->with(['catalogue'])->get();
+
+        // Xử lý thông tin giảm giá
+        $products = $products->map(function ($product) {
             // Kiểm tra xem sản phẩm có trong bảng discounted_products không
             $discountEntry = DB::table('discounted_products')
                 ->where('product_id', $product->id)
@@ -211,15 +282,34 @@ class DiscountController extends Controller
                             ? $discount->discount_value . '%'
                             : number_format($discount->discount_value, 0, ',', '.') . ' VND',
                     ];
+
+                    // Tính thời gian còn lại
+                    if ($discount->end_date) {
+                        $currentTime = now();
+                        $expiryTime = \Carbon\Carbon::parse($discount->end_date);
+
+                        if ($currentTime->lt($expiryTime)) {
+                            $remainingTime = $expiryTime->diff($currentTime);
+
+                            $days = $remainingTime->d;
+                            $hours = $remainingTime->h;
+                            $minutes = $remainingTime->i;
+
+                            if ($days > 0) {
+                                $product->remaining_time = "{$days} ngày {$hours} giờ";
+                            } elseif ($hours > 0) {
+                                $product->remaining_time = "{$hours} giờ {$minutes} phút";
+                            } else {
+                                $product->remaining_time = "{$minutes} phút";
+                            }
+                        } else {
+                            $product->remaining_time = 'Giảm giá đã kết thúc';
+                        }
+                    } else {
+                        $product->remaining_time = 'Không có thời gian hết hạn';
+                    }
                 } else {
                     $product->status = null;
-                }
-                if ($discount && $discount->expires_at) {
-                    $currentTime = now();
-                    $expiryTime = \Carbon\Carbon::parse($discount->expires_at);
-                    $product->remaining_time = $expiryTime->diffForHumans($currentTime);  // Tính thời gian còn lại
-                } else {
-                    $product->remaining_time = 'Không có thời gian hết hạn';
                 }
             } else {
                 $product->status = null; // Không có giảm giá
@@ -228,11 +318,8 @@ class DiscountController extends Controller
             return $product;
         });
 
-        return view('admin.discounts.applyToProduct', compact('discount', 'products'));
+        return view('admin.discounts.applyToProduct', compact('discount', 'products', 'catalogues'));
     }
-
-
-
     public function applyToProducts(Request $request, $discountId)
     {
         $productIds = $request->input('product_ids', []);
@@ -342,7 +429,7 @@ class DiscountController extends Controller
 
             // Nếu không tồn tại cặp (product_id, discount_id) trong bảng discounted_products
             if (!$existingDiscountEntry) {
-                $errorMessages[] = 'Sản phẩm "' . $product->name . '" không có giảm giá với mã giảm giá này để hủy.';
+                $errorMessages[] = 'Sản phẩm "' . $product->id . '" không có giảm giá với trương chình giảm giá này để hủy.';
                 continue; // Bỏ qua sản phẩm này và chuyển sang sản phẩm khác
             }
 
