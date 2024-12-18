@@ -51,7 +51,7 @@ trait ManagesOrders
 
             // Kiểm tra trạng thái cập nhật chỉ được phép là 'confirm_delivered'
             if ($newStatus === 'confirm_delivered') {
-                $order->payment_status = 'paid'; // Đánh dấu trạng thái đã xác nhận giao hàng
+                // $order->payment_status = 'paid'; // Đánh dấu trạng thái đã xác nhận giao hàng
                 $order->delivered_at = now(); // Cập nhật thời gian giao hàng
                 $order->status = $newStatus;
 

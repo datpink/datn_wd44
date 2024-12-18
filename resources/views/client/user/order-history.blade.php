@@ -184,7 +184,7 @@
                                                 @elseif ($order->payment_status === 'paid')
                                                     <span class="badge rounded-pill bg-success text-white">Đã thanh
                                                         toán</span>
-                                                {{-- @elseif ($order->payment_status === 'payment_failed')
+                                                    {{-- @elseif ($order->payment_status === 'payment_failed')
                                                     <span class="badge rounded-pill bg-danger text-white">Thanh toán thất
                                                         bại</span> --}}
                                                 @elseif ($order->payment_status === 'refunded')
@@ -271,66 +271,66 @@
 
                             @if ($order->status === 'delivered' && !$order->refund_reason && $order->admin_status !== 'rejected')
                                 <!-- Nếu đơn hàng đã được giao và chưa có lý do trả hàng -->
-                                <button class="btn btn-warning refundOrderButton">Trả Hàng/Hoàn Tiền</button>
-                                <div class="refundOrderForm" style="display: none; margin-top: 20px;">
+                                <button class="btn btn-warning refundOrderButton" data-order-id="{{ $order->id }}">Trả
+                                    Hàng/Hoàn Tiền</button>
+                                <div class="refundOrderForm" id="refundForm-{{ $order->id }}"
+                                    style="display: none; margin-top: 20px;">
                                     <form action="{{ route('orders.refund', $order->id) }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
                                         @method('PATCH')
 
                                         <div class="form-group">
-                                            <label for="refund_reason">Lý do trả hàng/hoàn tiền:</label>
-                                            <textarea name="refund_reason" id="refund_reason" rows="4" class="form-control" required></textarea>
+                                            <label for="refund_reason_{{ $order->id }}">Lý do trả hàng/hoàn
+                                                tiền:</label>
+                                            <textarea name="refund_reason" id="refund_reason_{{ $order->id }}" rows="4" class="form-control" required></textarea>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="refund_image">Hình ảnh minh họa (chọn nhiều hình):</label>
-                                            <label for="refund_image" class="custom-file-upload">Chọn Hình Ảnh</label>
-                                            <input type="file" name="refund_image[]" id="refund_image"
-                                                class="custom-file-input" accept="image/*" multiple required>
+                                            <label for="refund_image_{{ $order->id }}">Hình ảnh minh họa (chọn nhiều
+                                                hình):</label>
+                                            <input type="file" name="refund_image[]"
+                                                id="refund_image_{{ $order->id }}" class="custom-file-input"
+                                                accept="image/*" multiple required>
                                         </div>
 
                                         <!-- Preview các hình ảnh đã chọn -->
-                                        <div class="image-preview-container" id="imagePreview"></div>
+                                        <div class="image-preview-container" id="imagePreview-{{ $order->id }}"></div>
 
                                         <div class="form-group">
-                                            <label for="refund_method">Phương thức hoàn tiền:</label>
-                                            <select name="refund_method" id="refund_method" class="form-control" required>
-                                                <option value="cash">Tiền mặt</option>
+                                            <label for="refund_method_{{ $order->id }}">Phương thức hoàn tiền:</label>
+                                            <select name="refund_method" id="refund_method_{{ $order->id }}"
+                                                class="form-control" required>
+                                                <option value=""></option>
+                                                {{-- <option value="cash">Tiền mặt</option> --}}
                                                 <option value="store_credit">Thanh Toán Chuyển Khoản</option>
-                                                <option value="exchange">Đổi sản phẩm</option>
+                                                {{-- <option value="exchange">Đổi sản phẩm</option> --}}
                                             </select>
                                         </div>
 
                                         <!-- Các trường hiển thị khi chọn phương thức Store Credit -->
-                                        <div id="storeCreditFields" style="display: none;">
+                                        <div id="storeCreditFields-{{ $order->id }}" style="display: none;">
                                             <div class="form-group">
-                                                <label for="qr_code" class="font-weight-bold">Tải QR (Chỉ chọn hình
+                                                <label for="qr_code_{{ $order->id }}">Tải QR (Chỉ chọn hình
                                                     ảnh):</label>
-                                                <div class="custom-file">
-                                                    <input type="file" name="qr_code" id="qr_code"
-                                                        class="custom-file-input" accept="image/*">
-                                                    <label class="custom-file-label" for="qr_code">Chọn file...</label>
-                                                </div>
-                                                <small class="form-text text-muted">Chọn một hình ảnh QR để tải
-                                                    lên.</small>
+                                                <input type="file" name="qr_code" id="qr_code_{{ $order->id }}"
+                                                    class="custom-file-input" accept="image/*">
                                             </div>
-
-                                            <!-- Preview ảnh QR -->
-                                            <div class="image-preview-container" id="qrPreview"></div>
-
+                                            <div class="image-preview-container" id="qrPreview-{{ $order->id }}">
+                                            </div>
                                             <div class="form-group">
-                                                <label for="account_number">Nhập số tài khoản:</label>
-                                                <input type="text" name="account_number" id="account_number"
-                                                    class="form-control" placeholder="Số tài khoản">
+                                                <label for="account_number_{{ $order->id }}">Nhập số tài khoản:</label>
+                                                <input type="text" name="account_number"
+                                                    id="account_number_{{ $order->id }}" class="form-control"
+                                                    placeholder="Số tài khoản">
                                             </div>
                                         </div>
 
                                         <button type="submit" class="btn btn-warning">Xác Nhận</button>
                                     </form>
-
                                 </div>
                             @endif
+
 
 
 
@@ -353,7 +353,7 @@
 
                             @if ($order->status === 'pending_delivery')
                                 <!-- Nút xác nhận đã nhận hàng -->
-                                <button class="btn btn-success" id="confirmReceivedButton"
+                                <button class="btn btn-success confirmReceivedButton" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>
@@ -361,7 +361,7 @@
 
                             @if ($order->status === 'confirm_delivered')
                                 <!-- Nút xác nhận giao hàng -->
-                                <button class="btn btn-success" id="confirmReceivedButton"
+                                <button class="btn btn-success confirmReceivedButton" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>
@@ -427,48 +427,86 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
-        document.getElementById('qr_code').addEventListener('change', function(event) {
-            var file = event.target.files[0]; // Chỉ lấy file đầu tiên
-            var previewContainer = document.getElementById('qrPreview');
-            previewContainer.innerHTML = ''; // Xóa preview cũ trước khi hiển thị mới
+        $(document).ready(function() {
+            // Khi nhấn nút "Trả Hàng/Hoàn Tiền"
+            $('.refundOrderButton').on('click', function() {
+                var orderId = $(this).data('order-id'); // Lấy ID đơn hàng
+                var $form = $('#refundForm-' + orderId); // Lấy form liên quan đến đơn hàng
+                var isVisible = $form.is(':visible'); // Kiểm tra form có đang hiển thị không
 
-            if (file) {
-                var reader = new FileReader();
+                // Đóng tất cả các form khác
+                $('.refundOrderForm').not($form).slideUp();
 
-                reader.onload = function(e) {
-                    var imgElement = document.createElement('img');
-                    imgElement.src = e.target.result;
-                    previewContainer.appendChild(imgElement); // Thêm ảnh vào container
-                };
+                // Hiển thị hoặc ẩn form hiện tại
+                if (isVisible) {
+                    $form.slideUp();
+                } else {
+                    $form.slideDown();
+                }
+            });
 
-                reader.readAsDataURL(file); // Đọc tệp hình ảnh
-            }
+            $(document).ready(function() {
+                // Xử lý preview hình ảnh minh họa
+                $(document).on('change', 'input[type="file"]', function() {
+                    var inputId = $(this).attr('id'); // Lấy ID input
+                    var previewContainer;
+
+                    if (inputId.startsWith('qr_code')) {
+                        // Nếu là trường QR Code
+                        previewContainer = $('#qrPreview-' + inputId.split('_')[2]);
+                    } else {
+                        // Nếu là trường hình ảnh minh họa
+                        previewContainer = $('#imagePreview-' + inputId.split('_')[2]);
+                    }
+
+                    previewContainer.html(''); // Xóa preview cũ
+
+                    Array.from(this.files).forEach(file => {
+                        var reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            var imgElement = $('<img>').attr('src', e.target.result)
+                                .css({
+                                    maxWidth: '100px',
+                                    margin: '5px'
+                                });
+                            previewContainer.append(
+                            imgElement); // Thêm ảnh vào container
+                        };
+
+                        reader.readAsDataURL(file); // Đọc file
+                    });
+                });
+            });
+
+
+            // Xử lý hiển thị các trường khi chọn Store Credit
+            $(document).on('change', 'select[name="refund_method"]', function() {
+                var selectId = $(this).attr('id');
+                var orderId = selectId.split('_')[2]; // Lấy ID đơn hàng
+                var storeCreditFields = $('#storeCreditFields-' + orderId);
+
+                if ($(this).val() === 'store_credit') {
+                    storeCreditFields.show();
+                } else {
+                    storeCreditFields.hide();
+                }
+            });
         });
     </script>
 
-    <script>
-        // Lắng nghe sự kiện thay đổi của select phương thức hoàn tiền
-        document.getElementById('refund_method').addEventListener('change', function() {
-            var method = this.value;
-            var storeCreditFields = document.getElementById('storeCreditFields');
 
-            if (method === 'store_credit') {
-                // Hiển thị các trường nhập liệu cho Store Credit
-                storeCreditFields.style.display = 'block';
-            } else {
-                // Ẩn các trường nhập liệu cho Store Credit khi chọn các phương thức khác
-                storeCreditFields.style.display = 'none';
-            }
-        });
-    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const confirmReceivedButton = document.getElementById('confirmDeliveredButton');
+            // Lấy tất cả các nút có class confirmReceivedButton
+            const confirmReceivedButtons = document.querySelectorAll('.confirmReceivedButton');
 
-            if (confirmDeliveredButton) {
-                confirmDeliveredButton.addEventListener('click', function() {
-                    const orderId = confirmDeliveredButton.getAttribute('data-order-id');
+            // Duyệt qua tất cả các nút và gán sự kiện click
+            confirmReceivedButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Lấy ID đơn hàng từ thuộc tính data-order-id của nút được nhấn
+                    const orderId = this.getAttribute('data-order-id');
 
                     // Hiển thị hộp thoại xác nhận với SweetAlert2
                     Swal.fire({
@@ -496,7 +534,7 @@
                                             'content'),
                                     },
                                     body: JSON.stringify({
-                                        // Bạn có thể truyền thêm dữ liệu cần thiết ở đây nếu có
+                                        // Truyền thêm dữ liệu nếu cần thiết
                                     }),
                                 })
                                 .then(response => response.json())
@@ -542,91 +580,7 @@
                         }
                     });
                 });
-            }
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const confirmReceivedButton = document.getElementById('confirmReceivedButton');
-
-            if (confirmReceivedButton) {
-                confirmReceivedButton.addEventListener('click', function() {
-                    const orderId = confirmReceivedButton.getAttribute('data-order-id');
-
-                    // Hiển thị hộp thoại xác nhận với SweetAlert2
-                    Swal.fire({
-                        title: 'Xác nhận đã nhận hàng?',
-                        text: "Bạn có chắc chắn rằng bạn đã nhận hàng này không?",
-                        icon: 'question',
-                        position: "top",
-                        toast: true,
-                        showCancelButton: true,
-                        confirmButtonText: 'Xác nhận',
-                        cancelButtonText: 'Hủy',
-                        timerProgressBar: true,
-                        timer: 3500
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            console.log("Yêu cầu PATCH gửi đi với ID: " + orderId);
-
-                            // Gửi yêu cầu PATCH để cập nhật trạng thái đơn hàng
-                            fetch(`/shop/orders/${orderId}/confirm-delivered`, {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector(
-                                            'meta[name="csrf-token"]').getAttribute(
-                                            'content'),
-                                    },
-                                    body: JSON.stringify({
-                                        // Bạn có thể truyền thêm dữ liệu cần thiết ở đây nếu có
-                                    }),
-                                })
-                                .then(response => response.json())
-                                .then(data => {
-                                    console.log("Phản hồi từ server:", data);
-
-                                    if (data.success) {
-                                        Swal.fire({
-                                            position: "top",
-                                            toast: true,
-                                            icon: 'success',
-                                            title: 'Đơn hàng đã được xác nhận!',
-                                            showConfirmButton: false,
-                                            timerProgressBar: true,
-                                            timer: 3500
-                                        }).then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        Swal.fire({
-                                            position: "top",
-                                            toast: true,
-                                            icon: 'error',
-                                            title: 'Có lỗi xảy ra!',
-                                            showConfirmButton: false,
-                                            timerProgressBar: true,
-                                            timer: 3500
-                                        });
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error("Lỗi khi gửi yêu cầu:", error);
-                                    Swal.fire({
-                                        position: "top",
-                                        toast: true,
-                                        icon: 'error',
-                                        title: 'Đã xảy ra lỗi khi cập nhật!',
-                                        showConfirmButton: false,
-                                        timerProgressBar: true,
-                                        timer: 3500
-                                    });
-                                });
-                        }
-                    });
-                });
-            }
+            });
         });
     </script>
 
@@ -645,47 +599,5 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function() {
-            // Khi nhấn nút "Trả Hàng/Hoàn Tiền"
-            $('.refundOrderButton').on('click', function() {
-                var $form = $(this).siblings('.refundOrderForm'); // Lấy form liên quan đến nút nhấn
-                var isVisible = $form.is(':visible'); // Kiểm tra form hiện tại có đang hiển thị không
-
-                // Đóng tất cả các form trả hàng/hoàn tiền khác
-                $('.refundOrderForm').not($form).slideUp();
-
-                // Ẩn hoặc hiển thị form hiện tại
-                if (isVisible) {
-                    $form.slideUp(); // Ẩn form nếu nó đang hiển thị
-                } else {
-                    $form.slideDown(); // Hiển thị form nếu nó đang ẩn
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.getElementById('refund_image').addEventListener('change', function(event) {
-            var files = event.target.files;
-            var previewContainer = document.getElementById('imagePreview');
-            previewContainer.innerHTML = ''; // Xóa preview cũ trước khi hiển thị mới
-
-            // Kiểm tra từng file và tạo preview
-            for (var i = 0; i < files.length; i++) {
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    var imgElement = document.createElement('img');
-                    imgElement.src = e.target.result;
-                    previewContainer.appendChild(imgElement); // Thêm ảnh vào container
-                };
-
-                reader.readAsDataURL(files[i]); // Đọc tệp hình ảnh
-            }
-        });
-    </script>
-
-
 
 @endsection

@@ -534,12 +534,19 @@ class OrderController extends Controller
         try {
             $order = Order::findOrFail($id);
 
-            // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
-            if (!in_array($order->status, ['pending_delivery', 'confirm_delivered'])) {
-                Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
-
-                return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
+            if ($order->payment_status == 'unpaid') {
+                $order->update([
+                    'payment_status' => 'paid',
+                ]);
+                $order->save();
             }
+
+            // // Kiểm tra nếu trạng thái đơn hàng không phải 'pending_delivery'
+            // if (!in_array($order->status, ['pending_delivery', 'confirm_delivered'])) {
+            //     Log::error('Trạng thái không hợp lệ', ['order_id' => $id, 'status' => $order->status]);
+
+            //     return response()->json(['success' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'], 400);
+            // }
             $userPoint = UserPoint::where('user_id', auth()->id())->first();
             $earnPoint = 2000;
             $pointtransaction = UserPointTransaction::create([
