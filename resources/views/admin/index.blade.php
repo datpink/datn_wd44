@@ -163,21 +163,21 @@
                             <div class="d-flex justify-content-end mb-3">
                                 <div class="btn-group" role="group" aria-label="Filter Time Period">
                                     <a href="?timePeriod=today"
-                                        class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Today</a>
+                                        class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
                                     <a href="?timePeriod=yesterday"
-                                        class="btn btn-sm {{ $timePeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Yesterday</a>
+                                        class="btn btn-sm {{ $timePeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
                                     <a href="?timePeriod=7days"
                                         class="btn btn-sm {{ $timePeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
-                                        days</a>
+                                        ngày </a>
                                     <a href="?timePeriod=15days"
                                         class="btn btn-sm {{ $timePeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
-                                        days</a>
+                                        ngày </a>
                                     <a href="?timePeriod=30days"
                                         class="btn btn-sm {{ $timePeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
-                                        days</a>
+                                        ngày </a>
                                     <a href="?timePeriod=1years"
                                         class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
-                                        year</a>
+                                        năm</a>
                                 </div>
                             </div>
 
@@ -366,21 +366,21 @@
                             <!-- Bộ lọc thời gian -->
                             <div class="mb-3 d-flex gap-2">
                                 <a href="?filterPeriod=today"
-                                    class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Today</a>
+                                    class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
                                 <a href="?filterPeriod=yesterday"
-                                    class="btn btn-sm {{ $filterPeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Yesterday</a>
+                                    class="btn btn-sm {{ $filterPeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
                                 <a href="?filterPeriod=7days"
                                     class="btn btn-sm {{ $filterPeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
-                                    days</a>
+                                    ngày</a>
                                 <a href="?filterPeriod=15days"
                                     class="btn btn-sm {{ $filterPeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
-                                    days</a>
+                                    ngày</a>
                                 <a href="?filterPeriod=30days"
                                     class="btn btn-sm {{ $filterPeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
-                                    days</a>
+                                    ngày</a>
                                 <a href="?filterPeriod=1years"
                                     class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
-                                    year</a>
+                                    năm</a>
                             </div>
 
                             <!-- Biểu đồ thống kê -->
