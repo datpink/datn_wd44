@@ -89,8 +89,9 @@ class BrandController extends Controller
     {
         $brand = Brand::findOrFail($id);
 
-        if ($brand->products()->exists()) {
-            return back()->with('destroy', 'Xóa không thành công');
+        // Kiểm tra nếu có sản phẩm liên kết với thương hiệu
+        if ($brand->products()->count() > 0 ) {
+            return back()->with('error', 'Không thể xóa thương hiệu vì có sản phẩm liên kết.');
         }
 
         DB::beginTransaction();
@@ -98,12 +99,13 @@ class BrandController extends Controller
         try {
             $brand->delete();
             DB::commit();
-            return back()->with('destroy', 'Xóa thành công');
+            return back()->with('success ', 'Xóa thương hiệu thành công.');
         } catch (\Throwable $th) {
             DB::rollBack();
             return back()->with('error', 'Có lỗi xảy ra: ' . $th->getMessage());
         }
     }
+
 
     public function trash()
     {

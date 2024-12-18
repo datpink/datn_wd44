@@ -26,7 +26,7 @@
                             <form method="GET" action="" class="mb-3">
                                 <div class="row g-2 align-items-end">
                                     <div class="col-auto">
-                                        <input type="text" id="search" name="search" class="form-control form-control-sm" 
+                                        <input type="text" id="search" name="search" class="form-control form-control-sm"
                                             placeholder="Tìm kiếm tiêu đề hoặc tóm tắt" value="{{ request()->search }}">
                                     </div>
                                     <div class="col-auto">
@@ -44,7 +44,7 @@
                                     </div>
                                 </div>
                             </form>
-                            
+
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -95,19 +95,6 @@
                                                     <i class="bi bi-pencil-square text-warning"
                                                         style="font-size: 1.8em;"></i>
                                                 </a>
-
-                                                <!-- Form để xóa bài viết -->
-                                                <form action="{{ route('posts.destroy', $post->id) }}" method="POST"
-                                                    class="d-inline-block delete-form"
-                                                    onsubmit="return confirm('Bạn có chắc muốn xóa bài viết này không?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="delete-btn"
-                                                        style="background: none; border: none; padding: 0;"
-                                                        title="Xóa bài viết">
-                                                        <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
-                                                    </button>
-                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

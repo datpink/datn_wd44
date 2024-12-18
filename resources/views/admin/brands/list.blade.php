@@ -154,22 +154,34 @@
                 toast: true,
                 title: "Có lỗi xảy ra",
                 showConfirmButton: false,
-                timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 3500
+                timerProgressBar: true,
+                timer: 3000
             });
         </script>
     @endif
-
-    @if (session('destroy'))
+    @if (session('updateError'))
         <script>
             Swal.fire({
                 position: "top",
-                icon: "success",
+                icon: "error",
                 toast: true,
                 title: "Xóa thành công",
                 showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 3000
+            });
+        </script>
+    @endif
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                toast: true,
+                title: "Không thể xóa thương hiệu vì có sản phẩm liên kết",
+                showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 3500
+                timer: 3000
             });
         </script>
     @endif

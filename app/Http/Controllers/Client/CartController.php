@@ -150,19 +150,18 @@ class CartController extends Controller
         $productId = $request->input('product_id');
         $quantity = $request->input('quantity');
 
-        // Kiểm tra tồn kho cho sản phẩm hoặc biến thể
-        $cartItem = session("cart_".auth()->id())[$productId] ?? null;
+        $cartItem = session("cart_" . auth()->id())[$productId] ?? null;
 
         if ($cartItem) {
-            if (isset($cartItem['options']['variant'])) {
+            if (isset($cartItem['options']['variant_id'])) {
                 // Sản phẩm có biến thể
-                $variant = ProductVariant::find($cartItem['options']['variant']['id']);
+                $variant = ProductVariant::find($cartItem['options']['variant_id']);
                 if ($variant) {
                     if ($quantity > $variant->stock) {
                         return response()->json([
                             'success' => false,
                             'message' => 'Số lượng vượt quá tồn kho của biến thể!',
-                            'available_stock' => $variant->stock
+                            'available_stock' => $variant->stock,
                         ]);
                     }
                 } else {
@@ -179,7 +178,7 @@ class CartController extends Controller
                         return response()->json([
                             'success' => false,
                             'message' => 'Số lượng vượt quá tồn kho của sản phẩm!',
-                            'available_stock' => $product->stock
+                            'available_stock' => $product->stock,
                         ]);
                     }
                 } else {
@@ -195,6 +194,7 @@ class CartController extends Controller
             'success' => true,
         ]);
     }
+
 
 
 
