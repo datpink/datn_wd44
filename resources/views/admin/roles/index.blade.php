@@ -43,16 +43,6 @@
                                             style="margin-right: 15px;">
                                             <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                         </a>
-                                        <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="delete-btn"
-                                                style="background: none; border: none; padding: 0;" title="Xóa"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa vai trò này không?')">
-                                                <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

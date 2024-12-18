@@ -25,13 +25,18 @@ class PaymentController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            $user = Auth::user();
+            // dd($user);
+            if($user->status === "locked"){
+                Auth::logout();
+                return redirect()->route('login')->withErrors(['username' => 'Tài khoản của bạn đã bị khóa.']);
+            }
             // Lấy giá trị từ input
             $paymentMethodRaw = $request->payment_method;
             $paymentMethod = json_decode($paymentMethodRaw, true);
             $paymentMethodId = $paymentMethod['id'];
             $paymentMethodName = $paymentMethod['name'];
-
+            // dd($request->products);
             // Kiểm tra tồn kho trước khi tạo đơn hàng
             foreach ($request->products as $product) {
                 if ($product['variant_id']) {

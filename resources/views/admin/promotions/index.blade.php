@@ -182,11 +182,21 @@
             });
         @endif
 
-        @if (session('errors'))
+        @if (session('errors1'))
             Swal.fire({
                 position: "top",
                 icon: "error",
-                title: "Có lỗi xảy ra",
+                title: "Không thể xóa khuyến mãi vì nó đã được áp dụng trong đơn hàng.",
+                showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 1500
+            });
+        @endif
+        @if (session('errors2'))
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                title: "Không thể xóa khuyến mãi vì nó đang trong thời gian áp dụng.",
                 showConfirmButton: false,
                 timerProgressBar: true,
                 timer: 1500

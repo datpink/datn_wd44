@@ -50,16 +50,6 @@
                                                 title="Sửa" style="margin-right: 15px;">
                                                 <i class="bi bi-pencil-square text-warning" style="font-size: 1.8em;"></i>
                                             </a>
-                                            <form action="{{ route('permissions.destroy', $permission->id) }}"
-                                                method="POST" class="d-inline-block"
-                                                onsubmit="return confirm('Bạn có chắc muốn xóa quyền này không?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="delete-btn"
-                                                    style="background: none; border: none; padding: 0;" title="Xóa">
-                                                    <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
-                                                </button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

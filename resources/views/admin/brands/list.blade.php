@@ -154,22 +154,47 @@
                 toast: true,
                 title: "Có lỗi xảy ra",
                 showConfirmButton: false,
-                timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 3500
+                timerProgressBar: true,
+                timer: 3000
             });
         </script>
     @endif
-
-    @if (session('destroy'))
+    @if (session('updateError'))
         <script>
             Swal.fire({
                 position: "top",
-                icon: "success",
+                icon: "error",
                 toast: true,
                 title: "Xóa thành công",
                 showConfirmButton: false,
+                timerProgressBar: true,
+                timer: 3000
+            });
+        </script>
+    @endif
+    @if (session('error11'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                toast: true,
+                title: "Không thể xóa mã giảm giá vì đang có đơn hàng",
+                showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 3500
+                timer: 3000
+            });
+        </script>
+    @endif
+    @if (session('error22'))
+        <script>
+            Swal.fire({
+                position: "top",
+                icon: "error",
+                toast: true,
+                title: "Không thể xóa mã giảm giá vì đang trong thời gian giảm giá",
+                showConfirmButton: false,
+                timerProgressBar: true, // Hiển thị thanh thời gian
+                timer: 3000
             });
         </script>
     @endif

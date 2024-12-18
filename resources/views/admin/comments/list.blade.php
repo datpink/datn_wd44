@@ -70,8 +70,8 @@
                                         @foreach ($comments as $comment)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $comment->user->name ?? 'N/A' }}</td>
-                                                <td>{{ $comment->post->title ?? 'N/A' }}</td>
+                                                <td>{{ $comment->user->name ?? '' }}</td>
+                                                <td>{{ $comment->post->title ?? '' }}</td>
                                                 <td>{{ $comment->content }}</td>
                                                 <td>
                                                     @if ($comment->commentReplys->count() > 0)
