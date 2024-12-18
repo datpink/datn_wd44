@@ -28,8 +28,9 @@
                                 <thead>
                                     <tr>
                                         <th>Tên Biến Thể</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Dung Lượng</th>
                                         <th>Giá</th>
-                                        <th>SKU</th>
                                         <th>Kho</th>
                                         <th>Trạng Thái</th>
                                         <th>Hành Động</th>
@@ -38,14 +39,19 @@
                                 <tbody>
                                     @if ($variants->isEmpty())
                                         <tr>
-                                            <td colspan="6" class="text-center">Chưa có biến thể nào.</td>
+                                            <td colspan="7" class="text-center">Chưa có biến thể nào.</td>
                                         </tr>
                                     @else
                                         @foreach ($variants as $variant)
                                             <tr>
                                                 <td>{{ $variant->variant_name }}</td>
+                                                <td>
+                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Color')->name ?? 'N/A' }}
+                                                </td>
+                                                <td>
+                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Storage')->name ?? 'N/A' }}
+                                                </td>
                                                 <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
-                                                <td>{{ $variant->sku }}</td>
                                                 <td>{{ $variant->stock }}</td>
                                                 <td>
                                                     <span
@@ -56,16 +62,13 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <!-- Chỉnh sửa biến thể -->
+                                                    <!-- Hành động -->
                                                     <a href="{{ route('variants.edit', ['product' => $variant->product_id, 'variant' => $variant->id]) }}"
                                                         class="editRow" title="Sửa" style="margin-right: 10px;">
                                                         <i class="bi bi-pencil-square text-warning"
                                                             style="font-size: 1.8em;"></i>
                                                     </a>
-
-                                                    <!-- Cập nhật trạng thái -->
-                                                    <form action="{{ route('variants.updateStatus', $variant->id) }}"
-                                                        method="POST">
+                                                    <form action="{{ route('variants.updateStatus', $variant->id) }}" method="POST">
                                                         @csrf
                                                         @method('PATCH')
                                                         <button type="submit" class="btn rounded-pill btn-sm"
@@ -75,11 +78,11 @@
                                                         </button>
                                                     </form>
                                                 </td>
-
                                             </tr>
                                         @endforeach
                                     @endif
                                 </tbody>
+                                                                
                             </table>
                         </div>
                     </div>
