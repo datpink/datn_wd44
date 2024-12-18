@@ -16,7 +16,7 @@ class PromotionsTableSeeder extends Seeder
                 'discount_value'    => 20.00,
                 'status'            => 'active',
                 'start_date'        => '2024-06-01',
-                'end_date'          => '2024-08-31',
+                'end_date'          => '2025-08-31',
                 'type'              => 'percentage', // Giảm theo %
                 'min_order_value'   => 100.00,  // Mức tối thiểu để áp dụng mã giảm giá cho đơn hàng
             ],
@@ -25,8 +25,8 @@ class PromotionsTableSeeder extends Seeder
                 'code'              => 'WINTER21',
                 'discount_value'    => 15.00,
                 'status'            => 'inactive',
-                'start_date'        => '2024-12-01',
-                'end_date'          => '2024-12-31',
+                'start_date'        => '2024-2-01',
+                'end_date'          => '2024-11-31',
                 'type'              => 'fixed_amount', // Giảm giá tiền cố định
                 'min_order_value'   => 50.00,  // Mức tối thiểu để áp dụng mã giảm giá cho đơn hàng
             ],
@@ -35,8 +35,8 @@ class PromotionsTableSeeder extends Seeder
                 'code'              => 'BLACKFRIDAY',
                 'discount_value'    => 30.00,
                 'status'            => 'active',
-                'start_date'        => '2024-11-25',
-                'end_date'          => '2024-11-30',
+                'start_date'        => '2025-1-25',
+                'end_date'          => '2025-11-30',
                 'type'              => 'percentage', // Giảm theo %
                 'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này
             ],
@@ -45,7 +45,7 @@ class PromotionsTableSeeder extends Seeder
                 'code'              => 'NEWYEAR2025',
                 'discount_value'    => 10.00,
                 'status'            => 'active',
-                'start_date'        => '2024-12-31',
+                'start_date'        => '2025-12-31',
                 'end_date'          => '2025-01-31',
                 'type'              => 'free_shipping', // Free shipping
                 'min_order_value'   => null, // Không áp dụng mức tối thiểu cho mã này

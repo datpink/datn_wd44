@@ -60,11 +60,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-yellow">
+                            <i class="bi bi-newspaper"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countPost }}</h3>
+                            <h3 class="text-yellow">{{ $countPost }}</h3>
                             <a href="{{ route('posts.index') }}">Tin Tức</a>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-red">
+                            <i class="bi bi-chat-dots"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $ProductComment }}</h3>
+                            <h3 class="text-red">{{ $ProductComment }}</h3>
                             <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
                         <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                            <i class="bi bi-chat"></i>
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countComment }}</h3>
@@ -96,11 +96,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-blue">
+                            <i class="bi bi-star"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countProductReview }}</h3>
+                            <h3 class="text-blue">{{ $countProductReview }}</h3>
                             <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
                         </div>
                     </div>
@@ -214,21 +214,22 @@
                             <div class="d-flex justify-content-end mb-3">
 
                                 <div class="btn-group" role="group" aria-label="Filter Time Period">
-                                    <div id="time-period-options">
-
-                                        <a href="?timePeriod=today" data-time-period="today"
-                                            class="btn btn-sm btn-primary">Hôm nay</a>
-                                        <a href="?timePeriod=yesterday" data-time-period="yesterday"
-                                            class="btn btn-sm btn-outline-primary">Hôm qua</a>
-                                        <a href="?timePeriod=7days" data-time-period="7days"
-                                            class="btn btn-sm btn-outline-primary">7 ngày</a>
-                                        <a href="?timePeriod=15days" data-time-period="15days"
-                                            class="btn btn-sm btn-outline-primary">15 ngày</a>
-                                        <a href="?timePeriod=30days" data-time-period="30days"
-                                            class="btn btn-sm btn-outline-primary">30 ngày</a>
-                                        <a href="?timePeriod=1years" data-time-period="1years"
-                                            class="btn btn-sm btn-outline-primary">1 year</a>
-                                    </div>
+                                    <a href="?timePeriod=today"
+                                        class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
+                                    <a href="?timePeriod=yesterday"
+                                        class="btn btn-sm {{ $timePeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
+                                    <a href="?timePeriod=7days"
+                                        class="btn btn-sm {{ $timePeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
+                                        ngày </a>
+                                    <a href="?timePeriod=15days"
+                                        class="btn btn-sm {{ $timePeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
+                                        ngày </a>
+                                    <a href="?timePeriod=30days"
+                                        class="btn btn-sm {{ $timePeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
+                                        ngày </a>
+                                    <a href="?timePeriod=1years"
+                                        class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                        năm</a>
                                 </div>
 
                             </div>
@@ -417,19 +418,23 @@
                         </div>
                         <div class="card-body">
                             <!-- Bộ lọc thời gian -->
-                            <div class="mb-3 d-flex gap-2" id="time-period-options-status">
-                                <a href="?filterPeriod=today" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="today">Hôm nay</a>
-                                <a href="?filterPeriod=yesterday" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="yesterday">Hôm qua</a>
-                                <a href="?filterPeriod=7days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="7days">7 ngày</a>
-                                <a href="?filterPeriod=15days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="15days">15 ngày</a>
-                                <a href="?filterPeriod=30days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="30days">30 ngày</a>
-                                <a href="?filterPeriod=1years" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="1years">1 năm</a>
+                            <div class="mb-3 d-flex gap-2">
+                                <a href="?filterPeriod=today"
+                                    class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
+                                <a href="?filterPeriod=yesterday"
+                                    class="btn btn-sm {{ $filterPeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
+                                <a href="?filterPeriod=7days"
+                                    class="btn btn-sm {{ $filterPeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
+                                    ngày</a>
+                                <a href="?filterPeriod=15days"
+                                    class="btn btn-sm {{ $filterPeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
+                                    ngày</a>
+                                <a href="?filterPeriod=30days"
+                                    class="btn btn-sm {{ $filterPeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
+                                    ngày</a>
+                                <a href="?filterPeriod=1years"
+                                    class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
+                                    năm</a>
                             </div>
 
                             <!-- Container cho biểu đồ -->
