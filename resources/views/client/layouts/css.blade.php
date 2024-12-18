@@ -1,6 +1,11 @@
 <link rel="shortcut icon" type="image/x-icon" href="{{ asset('theme/client/assets/images/logo.png') }}" />
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i&amp;display=swap"
     rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/bootstrap.min.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/animate.css') }}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('theme/client/assets/css/bootstrap.min.css') }}" />
@@ -18,3 +23,12 @@
 
 
 
+<style>
+    html,
+    body {
+        font-family: "Inter", serif;
+        font-optical-sizing: auto;
+        font-weight: 400;
+        font-style: normal;
+    }
+</style>

@@ -364,7 +364,7 @@
                                                     <td class="text-center">
                                                         <img src="{{ $product['options']['image'] }}"
                                                             alt="{{ $product['name'] }}" class="mini-cart-product-image"
-                                                            style="max-width: 120px; max-height: 150px; width: auto; height: auto; margin-right: 5px; padding: 5px;">
+                                                            style="max-width: 120px; ">
                                                     </td>
                                                     <td class="" style="padding: 10px; width: 350px;">
                                                         <!-- Mở rộng thêm chút nữa cột này -->
