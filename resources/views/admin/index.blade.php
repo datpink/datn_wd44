@@ -853,6 +853,149 @@
 
             console.log(periodChart);
             let chart; // Khai báo chart bên ngoài
+
+            function setActiveChart(buttonChart) {
+
+                timePeriodButtons.forEach(button => {
+
+                    button.classList.remove('btn-primary');
+
+                    button.classList.add('btn-outline-primary');
+
+                });
+
+                buttonChart.classList.add('btn-primary');
+                buttonChart.classList.remove('btn-outline-primary');
+
+            }
+
+            function fetchDataChart(period) {
+
+                axios.get(`api/get-data-period-chart?period=${period}`)
+                    .then((response) => {
+
+                        // console.log(response.data);
+
+                        const totals = response.data.totals;
+                        const dates = response.data.dates;
+
+                        if (totals.length > 0 &&
+                            dates.length > 0) {
+                            var options = {
+                                chart: {
+                                    height: 317,
+                                    type: 'area',
+                                    toolbar: {
+                                        show: false,
+                                    },
+                                },
+                                dataLabels: {
+                                    enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+                                },
+                                stroke: {
+                                    curve: 'smooth', // Đường cong mượt
+                                    width: 3
+                                },
+                                series: [{
+                                    name: 'Doanh thu',
+                                    data: totals // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                                }],
+                                grid: {
+                                    borderColor: '#e0e6ed',
+                                    strokeDashArray: 5,
+                                    xaxis: {
+                                        lines: {
+                                            show: true // Hiển thị đường lưới trên trục X
+                                        }
+                                    },
+                                    yaxis: {
+                                        lines: {
+                                            show: false, // Tắt đường lưới trên trục Y
+                                        }
+                                    },
+                                    padding: {
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 10,
+                                        left: 0
+                                    },
+                                },
+                                xaxis: {
+                                    categories: dates, // Dữ liệu ngày tháng
+                                    labels: {
+                                        style: {
+                                            fontSize: '12px',
+                                            colors: ['#6c757d']
+                                        }
+                                    }
+                                },
+                                yaxis: {
+                                    labels: {
+                                        show: true, // Hiển thị nhãn trên trục Y
+                                        style: {
+                                            fontSize: '12px',
+                                            colors: ['#6c757d']
+                                        }
+                                    },
+                                },
+                                colors: ['#4267cd'], // Màu sắc cho biểu đồ
+                                markers: {
+                                    size: 4,
+                                    colors: ['#4267cd'],
+                                    strokeColor: "#ffffff",
+                                    strokeWidth: 2,
+                                    hover: {
+                                        size: 7, // Kích thước khi di chuột qua
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    x: {
+                                        format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+                                    },
+                                    y: {
+                                        formatter: function(value) {
+                                            return value.toLocaleString('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Nếu biểu đồ đã tồn tại, hủy nó
+                            if (chart) {
+
+                                chart.destroy();
+                            }
+
+                            // Tạo mới biểu đồ
+                            chart = new ApexCharts(document.querySelector("#revenueGraph"),
+                                options);
+
+                            chart.render();
+
+                            // var chart = new ApexCharts(
+                            //     document.querySelector("#revenueGraph"),
+                            //     options
+                            // );
+
+                            // chart.render();
+                        } else {
+
+                            console.log("Không có dữ liệu.");
+                        }
+
+                    })
+                    .catch((error) => {
+
+                        console.log(error);
+
+                    })
+
+
+            }
             // console.log(123);
             periodChart.forEach((period) => {
 
@@ -862,132 +1005,23 @@
 
                     console.log(e.target.getAttribute('period'));
 
-                    axios.get(`api/get-data-period-chart?period=${e.target.getAttribute('period')}`)
-                        .then((response) => {
+                    fetchDataChart(e.target.getAttribute('period'))
 
-                            // console.log(response.data);
-
-                            const totals = response.data.totals;
-                            const dates = response.data.dates;
-
-                            if (totals.length > 0 &&
-                                dates.length > 0) {
-                                var options = {
-                                    chart: {
-                                        height: 317,
-                                        type: 'area',
-                                        toolbar: {
-                                            show: false,
-                                        },
-                                    },
-                                    dataLabels: {
-                                        enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
-                                    },
-                                    stroke: {
-                                        curve: 'smooth', // Đường cong mượt
-                                        width: 3
-                                    },
-                                    series: [{
-                                        name: 'Doanh thu',
-                                        data: totals // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
-                                    }],
-                                    grid: {
-                                        borderColor: '#e0e6ed',
-                                        strokeDashArray: 5,
-                                        xaxis: {
-                                            lines: {
-                                                show: true // Hiển thị đường lưới trên trục X
-                                            }
-                                        },
-                                        yaxis: {
-                                            lines: {
-                                                show: false, // Tắt đường lưới trên trục Y
-                                            }
-                                        },
-                                        padding: {
-                                            top: 0,
-                                            right: 0,
-                                            bottom: 10,
-                                            left: 0
-                                        },
-                                    },
-                                    xaxis: {
-                                        categories: dates, // Dữ liệu ngày tháng
-                                        labels: {
-                                            style: {
-                                                fontSize: '12px',
-                                                colors: ['#6c757d']
-                                            }
-                                        }
-                                    },
-                                    yaxis: {
-                                        labels: {
-                                            show: true, // Hiển thị nhãn trên trục Y
-                                            style: {
-                                                fontSize: '12px',
-                                                colors: ['#6c757d']
-                                            }
-                                        },
-                                    },
-                                    colors: ['#4267cd'], // Màu sắc cho biểu đồ
-                                    markers: {
-                                        size: 4,
-                                        colors: ['#4267cd'],
-                                        strokeColor: "#ffffff",
-                                        strokeWidth: 2,
-                                        hover: {
-                                            size: 7, // Kích thước khi di chuột qua
-                                        }
-                                    },
-                                    tooltip: {
-                                        enabled: true,
-                                        x: {
-                                            format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
-                                        },
-                                        y: {
-                                            formatter: function(value) {
-                                                return value.toLocaleString('vi-VN', {
-                                                    style: 'currency',
-                                                    currency: 'VND'
-                                                });
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // Nếu biểu đồ đã tồn tại, hủy nó
-                                if (chart) {
-
-                                    chart.destroy();
-                                }
-
-                                // Tạo mới biểu đồ
-                                chart = new ApexCharts(document.querySelector("#revenueGraph"),
-                                    options);
-
-                                chart.render();
-
-                                // var chart = new ApexCharts(
-                                //     document.querySelector("#revenueGraph"),
-                                //     options
-                                // );
-
-                                // chart.render();
-                            } else {
-
-                                console.log("Không có dữ liệu.");
-                            }
-
-                        })
-                        .catch((error) => {
-
-                            console.log(error);
-
-                        })
-
+                    setActiveChart(this)
 
                 })
             })
+
+            fetchDataChart('today');
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButtonChart = document.querySelector('#period-chart a[ period="today"]');
+
+            if (defaultButtonChart) {
+
+                setActiveButton(defaultButtonChart);
+            }
+
 
         })
 
