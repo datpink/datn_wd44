@@ -17,7 +17,13 @@ class PointController extends Controller
 
         // Lấy tổng điểm của người dùng từ bảng user_points
         $userPoint = UserPoint::where('user_id', $userId)->first();
-
+        // dd($userId);
+        if($userPoint == ""){
+            $userPoint = UserPoint::create( [
+                'user_id' => $userId,
+                'total_points' => 0,
+            ]);
+        }
         // Lấy lịch sử giao dịch của người dùng từ bảng transactions
         $transactions = UserPointTransaction::where('user_point_id', $userPoint->id)
                             ->orderBy('id', 'desc')

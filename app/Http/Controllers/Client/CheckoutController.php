@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Http\Controllers\Controller;
 use App\Models\District;
+use App\Models\Order;
 use App\Models\PaymentMethod; // Import model PaymentMethod
 use App\Models\Product;
 use App\Models\Promotion;
@@ -99,21 +100,30 @@ class CheckoutController extends Controller
         // Lấy mã giảm giá và sắp xếp
 
         // Truy vấn trực tiếp từ bảng promotions
-        $userPromotions = Promotion::where('status', 'active') // Lọc những chương trình khuyến mãi chưa hết hạn
+        $usedPromotionIds = Order::where('user_id', $userId)
+        ->where('status', '!=', 'canceled') // Loại trừ đơn hàng đã hủy
+        ->where('payment_status','!=', 'payment_failed')
+        ->whereNotNull('promotion_id') // Chỉ lấy đơn hàng có promotion_id
+        ->pluck('promotion_id')
+        ->toArray();
+
+
+            // dd($usedPromotionIds);
+        // Lấy danh sách mã khuyến mãi hợp lệ
+        $userPromotions = Promotion::where('status', 'active') // Mã khuyến mãi còn hoạt động
+            ->whereNotIn('id', $usedPromotionIds) // Loại mã đã sử dụng trong các đơn hàng chưa bị hủy
             ->get()
             ->sortBy(function ($promotion) use ($totalAmount) {
-                // Kiểm tra điều kiện sử dụng
-                $isExpired = Carbon::parse($promotion->end_date)->isPast();
-                $notEligible = $totalAmount < $promotion->min_order_value;
-
-                // Mã đủ điều kiện và chưa hết hạn được ưu tiên (giá trị ưu tiên = 0)
+                // Kiểm tra hạn và điều kiện sử dụng
+                $isExpired = Carbon::parse($promotion->end_date)->isPast(); // Đã hết hạn
+                $notEligible = $totalAmount < $promotion->min_order_value; // Không đạt điều kiện
                 return ($isExpired || $notEligible) ? 1 : 0;
             });
 
         // Lấy danh sách phương thức thanh toán và tỉnh/thành phố
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
-        $userPoint = UserPoint::where('user_id',$userId)->first();
+        $userPoint = UserPoint::where('user_id', $userId)->first();
         $points = $userPoint->total_points;
 
         // Truyền dữ liệu vào view

@@ -26,7 +26,7 @@
                     'pending_confirmation' => 'Chờ xác nhận', // Chờ xác nhận
                     'pending_pickup' => 'Chờ lấy hàng', // Chờ lấy hàng
                     'pending_delivery' => 'Chờ giao hàng', // Chờ giao hàng
-                    'delivered' => 'Đã giao hàng', // Đã giao hàng
+                    'delivered' => 'Đã nhận hàng', // Đã giao hàng
                     'confirm_delivered' => 'Đã giao hàng', // Đã giao hàng
                     'canceled' => 'Đã hủy', // Đã hủy
                     'returned' => 'Trả hàng', // Trả hàng
@@ -361,7 +361,7 @@
 
                             @if ($order->status === 'confirm_delivered')
                                 <!-- Nút xác nhận giao hàng -->
-                                <button class="btn btn-success" id="confirmDeliveredButton"
+                                <button class="btn btn-success" id="confirmReceivedButton"
                                     data-order-id="{{ $order->id }}">
                                     Xác nhận đã nhận hàng
                                 </button>

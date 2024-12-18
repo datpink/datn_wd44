@@ -261,7 +261,7 @@
                             </div>
                             <div class="scroll370">
                                 <div class="transactions-container" id="transactions-container">
-                                    {{-- @foreach ($statisticsWithPaymentMethod as $statistic)
+                                    @foreach ($statisticsWithPaymentMethod as $statistic)
                                         <div class="transaction-block">
                                             <div class="transaction-icon shade-blue">
                                                 <i class="bi bi-credit-card"></i>
@@ -278,7 +278,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach --}}
+                                    @endforeach
                                 </div>
                             </div>
                         </div>

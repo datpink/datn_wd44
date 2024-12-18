@@ -107,9 +107,9 @@ class PaymentController extends Controller
                 }
             }
             if ($paymentMethodName === 'cod') {
-                if($request->totalAmount >100000){
-                    return back()->with('errors','Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
-                }
+                // if($request->totalAmount >100000){
+                //     return back()->with('errors','Bạn cần thanh toán bằng ví điện tử cho đơn hàng trên 100 triệu');
+                // }
                 $userPoint = UserPoint::where('user_id', auth()->id())->first();
                 $redeemPoint = $request->points;
                 if ($redeemPoint > 0) {
