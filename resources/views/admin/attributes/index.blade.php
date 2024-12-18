@@ -38,13 +38,7 @@
                                                 <a href="{{ route('attributes.edit', $attribute->id) }}" class="editRow" style="margin-right: 20px;" title="Sửa">
                                                     <i class="bi bi-pencil-square text-success" style="font-size: 1.8em;"></i>
                                                 </a>
-                                                <form action="{{ route('attributes.destroy', $attribute->id) }}" method="POST" style="display:inline-block;" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="delete-btn" style="background: none; border: none; padding: 0;" title="Xóa">
-                                                        <i class="bi bi-trash text-danger" style="font-size: 1.8em;"></i>
-                                                    </button>
-                                                </form>
+                                               
                                             </td>
                                         </tr>
                                     @endforeach
