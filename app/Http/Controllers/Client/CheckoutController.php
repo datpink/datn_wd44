@@ -226,6 +226,12 @@ class CheckoutController extends Controller
         $paymentMethods = PaymentMethod::all();
         $provinces = Province::all(['id', 'name']);
         $userPoint = UserPoint::where('user_id', $userId)->first();
+        if($userPoint == ""){
+            $userPoint = UserPoint::create( [
+                'user_id' => $userId,
+                'total_points' => 0,
+            ]);
+        }
         $points = $userPoint->total_points;
 
 
