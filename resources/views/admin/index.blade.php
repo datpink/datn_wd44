@@ -214,7 +214,6 @@
                             <div class="d-flex justify-content-end mb-3">
 
                                 <div class="btn-group" role="group" aria-label="Filter Time Period">
-<<<<<<< HEAD
                                     <a href="?timePeriod=today"
                                         class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
                                     <a href="?timePeriod=yesterday"
@@ -231,23 +230,6 @@
                                     <a href="?timePeriod=1years"
                                         class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
                                         năm</a>
-=======
-                                    <div id="time-period-options">
-
-                                        <a href="?timePeriod=today" data-time-period="today"
-                                            class="btn btn-sm btn-primary">Hôm nay</a>
-                                        <a href="?timePeriod=yesterday" data-time-period="yesterday"
-                                            class="btn btn-sm btn-outline-primary">Hôm qua</a>
-                                        <a href="?timePeriod=7days" data-time-period="7days"
-                                            class="btn btn-sm btn-outline-primary">7 ngày</a>
-                                        <a href="?timePeriod=15days" data-time-period="15days"
-                                            class="btn btn-sm btn-outline-primary">15 ngày</a>
-                                        <a href="?timePeriod=30days" data-time-period="30days"
-                                            class="btn btn-sm btn-outline-primary">30 ngày</a>
-                                        <a href="?timePeriod=1years" data-time-period="1years"
-                                            class="btn btn-sm btn-outline-primary">1 year</a>
-                                    </div>
->>>>>>> b888a38236a1b00e66f077a3dfb33f3f85e33579
                                 </div>
 
                             </div>
@@ -436,7 +418,6 @@
                         </div>
                         <div class="card-body">
                             <!-- Bộ lọc thời gian -->
-<<<<<<< HEAD
                             <div class="mb-3 d-flex gap-2">
                                 <a href="?filterPeriod=today"
                                     class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
@@ -454,21 +435,6 @@
                                 <a href="?filterPeriod=1years"
                                     class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
                                     năm</a>
-=======
-                            <div class="mb-3 d-flex gap-2" id="time-period-options-status">
-                                <a href="?filterPeriod=today" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="today">Hôm nay</a>
-                                <a href="?filterPeriod=yesterday" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="yesterday">Hôm qua</a>
-                                <a href="?filterPeriod=7days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="7days">7 ngày</a>
-                                <a href="?filterPeriod=15days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="15days">15 ngày</a>
-                                <a href="?filterPeriod=30days" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="30days">30 ngày</a>
-                                <a href="?filterPeriod=1years" class="btn btn-sm btn-outline-primary"
-                                    data-filter-period="1years">1 năm</a>
->>>>>>> b888a38236a1b00e66f077a3dfb33f3f85e33579
                             </div>
 
                             <!-- Container cho biểu đồ -->
