@@ -4,6 +4,110 @@
 
 @section('content')
     @include('components.breadcrumb-client2')
+    {{-- <div class="container px-3 my-5 clearfix mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>Giỏ hàng của bạn</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0" id="cart-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center align-middle py-3 px-0" style="width: 40px;">
+                                    <input type="checkbox" id="select-all">
+                                </th>
+                                <th class="text-center py-3 px-4" style="min-width: 150px;">Hình ảnh</th>
+                                <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm</th>
+                                <th class="text-right py-3 px-4" style="width: 100px;">Giá</th>
+                                <th class="text-center py-3 px-4" style="width: 120px;">Số lượng</th>
+                                <th class="text-right py-3 px-4" style="width: 100px;">Tổng</th>
+                                <th class="text-center align-middle py-3 px-0" style="width: 80px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $subtotal = 0; @endphp
+                            @if (session("cart_{$id}") && count(session("cart_{$id}")) > 0)
+                                @foreach (session("cart_{$id}") as $key => $item)
+                                    <tr data-cart-id="{{ $key }}">
+                                        <td class="text-center align-middle px-0">
+                                            <input type="checkbox" class="product-checkbox" value="{{ $key }}">
+                                        </td>
+                                        <td class="text-center">
+                                            <img src="{{ $item['options']['image'] }}" class="d-block ui-w-40 ui-bordered"
+                                                alt="{{ $item['name'] }}" style="max-width: 150px; margin: 0 auto;">
+                                        </td>
+                                        <td class="p-4">
+                                            <div class="media align-items-center">
+                                                <div class="media-body">
+                                                    <a href="#" class="d-block text-dark">{{ $item['name'] }}</a>
+                                                    @if (!empty($item['options']['variant']) && is_array($item['options']['variant']))
+                                                        <ul class="list-unstyled mb-0">
+                                                            @foreach ($item['options']['variant'] as $variant)
+                                                                <li>
+                                                                    <small>{{ $variant->name }}</small>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-right font-weight-semibold align-middle p-4"
+                                            data-price="{{ $item['price'] }}">
+                                            {{ number_format(floatval($item['price']), 0, ',', '.') }}₫
+
+                                        </td>
+                                        <td class="align-middle p-4">
+                                            <input type="number" class="form-control text-center quantity"
+                                                value="{{ $item['quantity'] }}" min="1" onchange="updateTotal(this)">
+                                        </td>
+                                        <td class="text-right font-weight-semibold align-middle p-4 total">
+                                            {{ number_format(floatval($item['quantity']) * floatval($item['price']), 0, ',', '.') }}₫
+                                        </td>
+                                        <td class="text-center align-middle px-0">
+                                            <button type="button" class="btn btn-warning remove-from-cart"
+                                                data-id="{{ $key }}">Xóa</button>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $quantity = is_numeric($item['quantity']) ? floatval($item['quantity']) : 0;
+                                        $price = is_numeric($item['price']) ? floatval($item['price']) : 0;
+                                        $subtotal += $quantity * $price;
+                                    @endphp
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="7" class="text-center">Giỏ hàng của bạn đang trống.</td>
+                                </tr>
+                            @endif
+                        </tbody>
+
+                    </table>
+                </div>
+                <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+                    <div class="mt-4"></div>
+                    <div class="d-flex">
+                        <div class="text-right mt-4 mr-4"></div>
+                        <div class="text-right mt-4">
+                            <div class="text-right mt-4 mr-4"></div>
+                            <label class="text-muted font-weight-normal m-0">Tổng giá</label>
+                            <div class="text-large"><strong
+                                    id="total-price">₫{{ number_format($subtotal, 0, ',', '.') }}</strong></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <form id="checkoutForm" action="{{ route('showCheckout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <input type="hidden" id="selected_products" name="selected_products">
+                        <button type="button" class="btn btn-lg btn-primary mt-2" onclick="submitCheckout()">Tiến hành
+                            thanh toán</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
     <main class="site-main main-container no-sidebar">
         <div class="container">
@@ -55,21 +159,6 @@
                                                                             </li>
                                                                         @endforeach
                                                                     </ul>
-                                                                @endif
-
-                                                                @if (
-                                                                    !empty($item['options']['variant']) &&
-                                                                        is_countable($item['options']['variant']) &&
-                                                                        $item['options']['variant']->count() > 0)
-                                                                    <div class="product-attributes">
-                                                                        @foreach ($item['options']['variant'] as $index => $attribute)
-                                                                            <span
-                                                                                class="attribute-item">{{ $attribute->name }}</span>
-                                                                            @if ($index < count($item['options']['variant']) - 1)
-                                                                                <span>-</span>
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </div>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -126,7 +215,7 @@
                                         </div>
                                     </div>
                                     <div class="kobolg-proceed-to-checkout float-right">
-                                        <form id="checkoutForm" action="{{ route('showCheckout') }}" method="POST"
+                                        <form id="checkoutForm" action="{{ route('showCheckout') }}" method="GET"
                                             style="display: inline;">
                                             @csrf
                                             <input type="hidden" id="selected_products" name="selected_products">
@@ -178,7 +267,7 @@
                         if (data.success) {
                             // Nếu đủ tồn kho, cập nhật tổng giá
                             const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
-                                .price);
+                            .price);
                             const totalCell = row.querySelector('.total');
                             const newTotal = price * quantity;
                             totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫';

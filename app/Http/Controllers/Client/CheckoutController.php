@@ -129,7 +129,7 @@ class CheckoutController extends Controller
         $userPoint = UserPoint::where('user_id', $userId)->first();
         $points = $userPoint->total_points;
 
-        dd($products);
+        // dd($products);
         // Truyền dữ liệu vào view
         return view('client.checkout.index', compact(
             'products',
@@ -154,7 +154,7 @@ class CheckoutController extends Controller
         // dd($request->all());
         $inputData = $request->all();
         $products = [];
-
+        $totalAmount = 0;
         if (isset($inputData['product_id'])) {
             // Lấy thông tin sản phẩm từ database
             $productModel = Product::find($inputData['product_id']);
