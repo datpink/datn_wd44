@@ -75,18 +75,6 @@
                                                         <i class="bi bi-pencil-square text-warning"
                                                             style="font-size: 1.8em;"></i>
                                                     </a>
-
-                                                    <form action="{{ route('payment-methods.destroy', $paymentMethod) }}"
-                                                        method="POST" style="display:inline-block;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="delete-btn"
-                                                            style="background: none; border: none; padding: 0;"
-                                                            title="Xóa">
-                                                            <i class="bi bi-trash text-danger"
-                                                                style="font-size: 1.8em;"></i>
-                                                        </button>
-                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
