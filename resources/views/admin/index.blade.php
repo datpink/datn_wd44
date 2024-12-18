@@ -60,11 +60,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-yellow">
+                            <i class="bi bi-newspaper"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countPost }}</h3>
+                            <h3 class="text-yellow">{{ $countPost }}</h3>
                             <a href="{{ route('posts.index') }}">Tin Tức</a>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-red">
+                            <i class="bi bi-chat-dots"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $ProductComment }}</h3>
+                            <h3 class="text-red">{{ $ProductComment }}</h3>
                             <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
                         <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                            <i class="bi bi-chat"></i>
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countComment }}</h3>
@@ -96,11 +96,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-blue">
+                            <i class="bi bi-star"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countProductReview }}</h3>
+                            <h3 class="text-blue">{{ $countProductReview }}</h3>
                             <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
                         </div>
                     </div>
