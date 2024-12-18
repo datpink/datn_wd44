@@ -83,7 +83,7 @@
                                     @endif
                                 </div>
                                 <div class="form-group mt-4">
-                                    <label for="max_value">Đơn Hàng Tối Đa:</label>
+                                    <label for="max_value">Giảm giá tối đa:</label>
                                     <input type="number" name="max_value" id="max_value" class="form-control"
                                         value="{{ old('max_value') }}" step="0.01" min="0">
                                     @if ($errors->has('max_value'))
