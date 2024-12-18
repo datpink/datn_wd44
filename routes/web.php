@@ -64,7 +64,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ClientController::class, 'index'])->name('client.index');
 Route::get('/search', [ClientController::class, 'searchAll'])->name('client.searchAll');
 
-
+Route::get('/advertisement/click/{id}', [AdvertisementController::class, 'advertisementClick'])->name('advertisement.click');
 Route::prefix('shop')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
@@ -204,7 +204,7 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
     Route::post('/checkout', [CheckoutController::class, 'showCheckout'])->name('showCheckout');
     // Route::get('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
-    Route::post('/checkout2', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
+    Route::post('/checkout', [CheckoutController::class, 'buyNowCheckout'])->name('buyNowCheckout');
     Route::post('/apply-coupon', [CheckoutController::class, 'applyCoupon'])->name('applyCoupon');
     Route::post('/apply-coupon2', [CheckoutController::class, 'applyCoupon2'])->name('applyCoupon2');
 });

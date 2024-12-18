@@ -125,6 +125,19 @@ class PaymentController extends Controller
                         'total_points' => $userPoint->total_points - $redeemPoint,
                     ]);
                 }
+                // Xóa sản phẩm đã mua khỏi giỏ hàng
+                $cartItems = session()->get('cart_'.auth()->id(), []);
+                foreach ($request->products as $product) {
+                    foreach ($cartItems as $key => $item) {
+                        // Kiểm tra và xóa sản phẩm trong giỏ hàng dựa trên ID
+                        if ($item['id'] == $product['id'] && $item['options']['variant_id'] == $product['variant_id']) {
+                            unset($cartItems[$key]);
+                        }
+                    }
+                }
+
+                // Cập nhật lại giỏ hàng sau khi xóa các sản phẩm đã thanh toán
+                session()->put('cart_'.auth()->id(), $cartItems);
 
                 Mail::to($order->user->email)->send(new OrderConfirmation($order));
                 DB::commit();
@@ -227,6 +240,19 @@ class PaymentController extends Controller
                     $order->save();
 
 
+                // Xóa sản phẩm đã mua khỏi giỏ hàng
+                $cartItems = session()->get('cart_'.auth()->id(), []);
+                foreach ($order->orderItems as $item) {
+                    foreach ($cartItems as $key => $cartItem) {
+                        if ($cartItem['id'] == $item->product_id && $cartItem['options']['variant_id'] == $item->product_variant_id) {
+                            unset($cartItems[$key]); // Xóa sản phẩm khỏi giỏ hàng
+                        }
+                    }
+                }
+                // Cập nhật lại giỏ hàng trong session
+                session()->put('cart_'.auth()->id(), $cartItems);
+
+
                     $ssData = Session::get('points');
                     $redeemPoint = $ssData['points'];
                     $userPoint = UserPoint::where('user_id', auth()->id())->first();
@@ -244,9 +270,6 @@ class PaymentController extends Controller
                         ]);
                     }
                     Session::forget('points');
-
-
-
                     Mail::to($order->user->email)->send(new OrderConfirmation($order));
                     DB::commit();
                     return view('client.vnpay.success', ['order' => $transaction]);
