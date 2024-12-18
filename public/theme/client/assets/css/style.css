@@ -210,7 +210,7 @@ figure {
     background-color: #ebebeb;
     margin: 3px;
     border-radius: 4px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .page-links > span:not(.page-links-title),
 .page-links > a:hover {
@@ -1348,7 +1348,7 @@ article.sticky .post-title a::before {
 }
 .product_list_widget li .product-title {
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     line-height: 22px;
     color: #000;
 }
@@ -2766,7 +2766,7 @@ td {
 }
 .kobolg-live-search-form .product-title {
     font-size: 16px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-live-search-form .product-price {
     font-size: 16px;
@@ -4318,7 +4318,7 @@ a.backtotop:hover::before {
     color: #000;
     font-size: 20px;
     line-height: 30px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     background-color: #f6f6f6;
 }
 .post-standard .post-thumb .quote a:not(:hover) {
@@ -4336,7 +4336,7 @@ a.backtotop:hover::before {
 .post-standard .post-thumb .quote strong {
     display: block;
     font-size: 12px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.2em;
     color: #888;
     margin-top: 20px;
@@ -4410,7 +4410,7 @@ a.backtotop:hover::before {
 }
 .blog-grid .title {
     font-size: 22px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     text-transform: uppercase;
     border-bottom: 1px solid #e5e5e5;
@@ -4546,7 +4546,7 @@ a.backtotop:hover::before {
     color: #000;
 }
 .blog-grid .post-comment a {
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .blog-grid .post-comment a::before {
     content: "\f113";
@@ -4677,7 +4677,7 @@ a.backtotop:hover::before {
     font-size: 12px;
     line-height: 18px;
     letter-spacing: 0.2em;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     color: #000;
     text-transform: uppercase;
     margin-top: -2px;
@@ -4802,7 +4802,7 @@ a.backtotop:hover::before {
     min-width: 170px;
     font-size: 12px;
     letter-spacing: 0.1em;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     color: #ffffff;
     background-color: #1b1b1b;
     text-transform: uppercase;
@@ -5130,7 +5130,7 @@ body.single-product .kobolg-breadcrumb {
     margin-bottom: 10px;
     font-size: 13px;
     color: #000;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .widget-kobolg-mailchimp .newsletter-form-wrap .form-newsletter {
     text-align: right;
@@ -5156,7 +5156,7 @@ body.single-product .kobolg-breadcrumb {
     margin-top: 21px;
     display: inline-block;
     color: #fff;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     padding: 0 15px;
     position: relative;
     overflow: hidden;
@@ -5715,7 +5715,7 @@ ul.products li.product-category:nth-child(3n + 1) {
 }
 ul.products li.product-category a .kobolg-loop-category__title {
     font-size: 18px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     margin-top: 15px;
     margin-bottom: 0;
 }
@@ -6253,7 +6253,7 @@ body.admin-bar #yith-quick-view-modal {
 }
 .cat-list {
     font-size: 12px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     line-height: 24px;
     letter-spacing: 0.1em;
     margin: -5px 0 5px 0;
@@ -7206,7 +7206,7 @@ body.admin-bar #yith-quick-view-modal {
     color: #fff;
     width: 100%;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .product-item.list .yith-wcqv-button::before {
     margin-right: 10px;
@@ -7254,7 +7254,7 @@ body.admin-bar #yith-quick-view-modal {
     padding: 0 12px;
     display: table;
     margin-bottom: 15px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     border-radius: 4px;
     width: auto;
 }
@@ -7901,7 +7901,7 @@ body.admin-bar #yith-quick-view-modal {
     right: 0;
     border-radius: 4px;
     padding: 0 6px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     font-size: 13px;
     height: 24px;
     line-height: 26px;
@@ -8380,7 +8380,7 @@ div.quantity .btn-number.quantity-minus::before {
     border: 2px solid #000;
     color: #000;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     margin-top: 20px;
     padding: 0 15px;
     height: 47px;
@@ -8743,7 +8743,7 @@ p.stars.selected:not(:hover) a.active ~ a:before {
     font-size: 11px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     text-align: center;
     color: #a8a8a8;
 }
@@ -8900,7 +8900,7 @@ body.kobolg-cart .return-to-shop a {
     padding: 0 15px;
     text-align: center;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     background-color: #1b1b1b;
     height: 52px;
     line-height: 52px;
@@ -8921,7 +8921,7 @@ body.kobolg-cart .return-to-shop a:hover {
 }
 .cross-sells > h2 {
     font-size: 24px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     color: #000;
     margin-top: 0;
     margin-bottom: 35px;
@@ -9008,7 +9008,7 @@ body.kobolg-cart .shop_table tr th.product-subtotal {
     text-align: center;
 }
 .kobolg-cart-form .shop_table td.product-subtotal {
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-cart-form .shop_table .actions {
     padding: 40px 20px 30px 20px;
@@ -9058,7 +9058,7 @@ body.kobolg-cart .shop_table tr th.product-subtotal {
 }
 .cart_totals > h2 {
     font-size: 18px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     color: #fff;
     background-color: #e52e06;
     padding: 25px;
@@ -9095,7 +9095,7 @@ body.kobolg-cart .shop_table tr th.product-subtotal {
 }
 .cart_totals .shop_table tr.order-total th {
     font-size: 16px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .cart_totals .shop_table tr.order-total strong {
     font-size: 18px;
@@ -9517,7 +9517,7 @@ body
     padding: 0 15px;
     text-align: center;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .checkout_coupon .button:hover {
     background-color: #e52e06;
@@ -9561,7 +9561,7 @@ form.kobolg-checkout::after {
     font-size: 18px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     padding: 25px;
     border-bottom: 1px solid #ebebeb;
     margin: 0;
@@ -9646,7 +9646,7 @@ form.kobolg-checkout::after {
 /*#order_review*/
 #order_review_heading {
     font-size: 18px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #fff;
@@ -9670,12 +9670,12 @@ form.kobolg-checkout::after {
 #order_review .shop_table tr th {
     vertical-align: top;
     font-size: 16px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     padding: 22px 25px;
     width: 30%;
 }
 #order_review .shop_table tr td strong {
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 #order_review .shop_table tfoot tr th,
 #order_review .shop_table tfoot tr td {
@@ -9738,7 +9738,7 @@ form.kobolg-checkout::after {
     height: 60px;
     line-height: 60px;
     font-size: 16px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     text-transform: uppercase;
     border-radius: 4px;
@@ -9785,7 +9785,7 @@ form.kobolg-checkout::after {
 }
 .kobolg-order .kobolg-notice {
     font-size: 16px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     background: #000;
     padding: 30px 25px;
     margin-bottom: 30px;
@@ -9832,7 +9832,7 @@ form.kobolg-checkout::after {
     padding: 17px 25px;
     font-size: 15px;
     color: #000;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-order .kobolg-order-details {
     background: #f6f6f6;
@@ -9843,7 +9843,7 @@ form.kobolg-checkout::after {
     font-size: 18px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     padding: 25px;
     margin: 0;
     color: #fff;
@@ -10010,7 +10010,7 @@ body.kobolg-account .kobolg-notices-wrapper ~ h2 {
     font-size: 18px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     margin: 0;
     background-color: #f6f6f6;
     padding: 30px 25px 7px 25px;
@@ -10062,7 +10062,7 @@ body.kobolg-account .kobolg-notices-wrapper ~ .kobolg-form-login {
     font-size: 15px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     margin-top: 0;
     margin-bottom: 25px;
 }
@@ -10158,7 +10158,7 @@ form.kobolg-form-login .lost_password a::before {
 .kobolg-MyAccount-navigation > ul li {
     line-height: 50px;
     list-style: none;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-MyAccount-navigation > ul li:not(:first-child) {
     border-top: 1px solid #ebebeb;
@@ -10185,7 +10185,7 @@ form.kobolg-form-login .lost_password a::before {
     height: 52px;
     line-height: 52px;
     border-radius: 4px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     background-color: #1b1b1b;
 }
 .kobolg-MyAccount-content fieldset ~ p .kobolg-Button:hover {
@@ -10313,7 +10313,7 @@ form.kobolg-form-login .lost_password a::before {
 .wishlist-title h2 {
     font-size: 18px;
     letter-spacing: 0.1em;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     text-transform: uppercase;
     margin: 0;
     padding: 25px;
@@ -10359,7 +10359,7 @@ form.kobolg-form-login .lost_password a::before {
     font-size: 16px;
 }
 .kobolg table.wishlist_table tr td.product-stock-status span {
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     font-size: 14px;
 }
 .kobolg table.wishlist_table tr td.product-stock-status span.wishlist-in-stock {
@@ -10606,7 +10606,7 @@ body.error404 .header {
 }
 #popup-newsletter .title {
     font-size: 30px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     text-transform: uppercase;
     margin: 0 0 20px;
 }
@@ -10629,7 +10629,7 @@ body.error404 .header {
     height: 52px;
     line-height: 52px;
     color: #fff;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 #popup-newsletter .newsletter-form-wrap .submit-newsletter:hover {
     background-color: #e52e06;
@@ -12289,7 +12289,7 @@ footer .kobolg-listitem.style-04 li {
     position: relative;
     font-size: 13px;
     text-transform: uppercase;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-newsletter.style-02 .title {
     color: #fff;
@@ -12673,7 +12673,7 @@ footer .kobolg-listitem.style-04 li {
     height: 50px;
     line-height: 50px;
     background-color: #000;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-size: 14px;
@@ -13022,7 +13022,7 @@ ul.products {
 .kobolg-socials.style-02 .social-title {
     margin-top: 0;
     margin-bottom: 20px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     position: relative;
     padding-bottom: 7px;
     font-size: 18px;
@@ -13391,7 +13391,7 @@ ul.products {
     font-size: 16px;
     line-height: 24px;
     color: #fff;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     margin: 0;
     padding: 15px 15px 15px 28px;
@@ -13445,7 +13445,7 @@ body.wpb-js-composer
 }
 body.wpb-js-composer .az_tta.az_general .az_tta-panel-title > a {
     font-size: 22px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     padding: 20px 40px 20px 20px !important;
 }
 body.wpb-js-composer
@@ -13544,7 +13544,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 @media (max-width: 767px) {
     body.wpb-js-composer .az_tta.az_general .az_tta-panel-title > a {
         font-size: 20px;
-        font-family: "sofia_prosemibold";
+        font-family: "Inter";
     }
     body .az_toggle_default .az_toggle_title > h4 {
         font-size: 18px;
@@ -13572,7 +13572,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 }
 .kobolg-pricing .title {
     font-size: 18px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding-bottom: 26px;
@@ -13603,7 +13603,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 .kobolg-pricing .button {
     display: inline-block;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #fff;
@@ -13862,7 +13862,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 }
 .slide-home-03 .slide-wrap .slide-info h1 {
     font-size: 72px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     color: #e52e06;
     margin: 0;
 }
@@ -14480,7 +14480,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 }
 .section-042 .az_custom_heading {
     font-size: 13px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #000000;
@@ -15337,7 +15337,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
 }
 .kobolg-mapper .kobolg-pin .kobolg-kobolg-price .amount {
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
 }
 .kobolg-mapper .kobolg-pin .kobolg-kobolg-price del .amount {
     color: #999;
@@ -15460,7 +15460,7 @@ body .az_toggle_default .az_toggle_content p:last-child {
     border-top: 1px solid #e5e5e5;
     position: absolute;
     font-size: 14px;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     text-align: center;
     height: 56px;
     bottom: 0;
@@ -15646,7 +15646,7 @@ body .kobolg-mapper .text__area {
     line-height: 20px;
     border-radius: 50%;
     color: #ffffff;
-    font-family: "sofia_prosemibold";
+    font-family: "Inter";
     display: inline-block;
     position: absolute;
     top: 0;

@@ -7,7 +7,7 @@
             text: '{{ session('success') }}',
             showConfirmButton: false,
             timerProgressBar: true,
-            timer: 1500
+            timer: 4000
         });
     </script>
 @endif
@@ -21,7 +21,7 @@
             text: '{{ session('error') }}',
             showConfirmButton: false,
             timerProgressBar: true,
-            timer: 1500
+            timer: 4000
         });
     </script>
 @endif
