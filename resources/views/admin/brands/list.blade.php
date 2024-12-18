@@ -172,26 +172,13 @@
             });
         </script>
     @endif
-    @if (session('error11'))
+    @if (session('error'))
         <script>
             Swal.fire({
                 position: "top",
                 icon: "error",
                 toast: true,
-                title: "Không thể xóa mã giảm giá vì đang có đơn hàng",
-                showConfirmButton: false,
-                timerProgressBar: true, // Hiển thị thanh thời gian
-                timer: 3000
-            });
-        </script>
-    @endif
-    @if (session('error22'))
-        <script>
-            Swal.fire({
-                position: "top",
-                icon: "error",
-                toast: true,
-                title: "Không thể xóa mã giảm giá vì đang trong thời gian giảm giá",
+                title: "Không thể xóa thương hiệu vì có sản phẩm liên kết",
                 showConfirmButton: false,
                 timerProgressBar: true, // Hiển thị thanh thời gian
                 timer: 3000

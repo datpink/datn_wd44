@@ -160,6 +160,21 @@
                                                                         @endforeach
                                                                     </ul>
                                                                 @endif
+
+                                                                @if (
+                                                                    !empty($item['options']['variant']) &&
+                                                                        is_countable($item['options']['variant']) &&
+                                                                        $item['options']['variant']->count() > 0)
+                                                                    <div class="product-attributes">
+                                                                        @foreach ($item['options']['variant'] as $index => $attribute)
+                                                                            <span
+                                                                                class="attribute-item">{{ $attribute->name }}</span>
+                                                                            @if ($index < count($item['options']['variant']) - 1)
+                                                                                <span>-</span>
+                                                                            @endif
+                                                                        @endforeach
+                                                                    </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </td>
@@ -239,41 +254,40 @@
             const productCheckboxes = document.querySelectorAll('.product-checkbox');
             const totalPriceElement = document.getElementById('total-price');
             const quantityInputs = document.querySelectorAll('.quantity'); // Lấy tất cả các input số lượng
-
             // Hàm làm tròn giá thành số nguyên
             function roundPrice(price) {
                 return Math.round(price);
             }
-
             // Hàm cập nhật tổng giá sản phẩm
             function updateTotal(input) {
                 const row = input.closest('tr');
-                const productId = row.getAttribute('data-cart-id'); // ID của sản phẩm/biến thể trong giỏ hàng
+                const productId = row.getAttribute('data-cart-id'); // ID sản phẩm hoặc biến thể trong giỏ hàng
                 const quantity = parseInt(input.value);
 
                 fetch(`/cart/check-stock2`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             product_id: productId,
-                            quantity: quantity
-                        })
+                            quantity: quantity,
+                        }),
                     })
-                    .then(response => response.json())
-                    .then(data => {
+                    .then((response) => response.json())
+                    .then((data) => {
                         if (data.success) {
                             // Nếu đủ tồn kho, cập nhật tổng giá
-                            const price = parseFloat(row.querySelector('.text-right[data-price]').dataset
-                            .price);
+                            const priceElement = row.querySelector('.text-right[data-price]');
+                            const price = parseFloat(priceElement.dataset.price);
                             const totalCell = row.querySelector('.total');
                             const newTotal = price * quantity;
+
                             totalCell.textContent = newTotal.toLocaleString('vi-VN') + '₫';
-                            updateCartTotal();
+                            updateCartTotal(); // Cập nhật tổng giá toàn bộ giỏ hàng
                         } else {
-                            // Nếu không đủ tồn kho, hiển thị cảnh báo
+                            // Nếu không đủ tồn kho
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Lỗi',
@@ -281,13 +295,12 @@
                                 toast: true,
                                 timer: 3000,
                                 position: 'top-right',
-                                showConfirmButton: false
+                                showConfirmButton: false,
                             });
-                            input.value = data.available_stock; // Cập nhật lại số lượng tối đa có thể đặt
+                            input.value = data.available_stock; // Cập nhật lại số lượng tối đa
                         }
                     });
             }
-
 
             // Hàm cập nhật tổng giá của toàn bộ giỏ hàng
             function updateCartTotal() {
@@ -302,7 +315,6 @@
                 });
                 totalPriceElement.textContent = `₫${total.toLocaleString('vi-VN')}`;
             }
-
             // Gắn sự kiện change cho checkbox "select-all"
             selectAllCheckbox.addEventListener('change', function() {
                 const isChecked = this.checked;
@@ -326,8 +338,6 @@
                     updateTotal(input); // Cập nhật lại tổng của sản phẩm này
                 });
             });
-
-            // Gọi hàm cập nhật tổng giá ban đầu
             updateCartTotal();
         });
 
@@ -351,7 +361,6 @@
                     event.preventDefault();
                     const productId = this.getAttribute('data-id');
                     const row = this.closest('tr'); // Lấy dòng chứa sản phẩm
-
                     Swal.fire({
                         title: 'Xác nhận',
                         text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
@@ -382,7 +391,7 @@
                                             title: 'Đã xóa!',
                                             text: data.message,
                                             toast: true,
-                                            timer: 2000,
+                                            timer: 5000,
                                             position: 'top-right',
                                             showConfirmButton: false
                                         });
@@ -394,7 +403,7 @@
                                             title: 'Lỗi!',
                                             text: data.message,
                                             toast: true,
-                                            timer: 2000,
+                                            timer: 5000,
                                             position: 'top-right',
                                             showConfirmButton: false
                                         });

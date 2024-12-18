@@ -182,7 +182,7 @@
             });
         @endif
 
-        @if (session('errors1'))
+        @if (session('error11'))
             Swal.fire({
                 position: "top",
                 icon: "error",
@@ -192,10 +192,11 @@
                 timer: 1500
             });
         @endif
-        @if (session('errors2'))
+        @if (session('error22'))
             Swal.fire({
                 position: "top",
                 icon: "error",
+                toast: true,
                 title: "Không thể xóa khuyến mãi vì nó đang trong thời gian áp dụng.",
                 showConfirmButton: false,
                 timerProgressBar: true,

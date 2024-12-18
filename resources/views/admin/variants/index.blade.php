@@ -46,10 +46,10 @@
                                             <tr>
                                                 <td>{{ $variant->variant_name }}</td>
                                                 <td>
-                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Color')->name ?? 'N/A' }}
+                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Color')->name ?? '' }}
                                                 </td>
                                                 <td>
-                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Storage')->name ?? 'N/A' }}
+                                                    {{ $variant->attributeValues->firstWhere('attribute.name', 'Storage')->name ?? '' }}
                                                 </td>
                                                 <td>{{ number_format($variant->price, 0, ',', '.') }} VNĐ</td>
                                                 <td>{{ $variant->stock }}</td>
@@ -82,7 +82,7 @@
                                         @endforeach
                                     @endif
                                 </tbody>
-                                                                
+
                             </table>
                         </div>
                     </div>
