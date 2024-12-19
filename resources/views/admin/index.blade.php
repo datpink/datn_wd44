@@ -60,11 +60,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-yellow">
-                            <i class="bi bi-newspaper"></i>
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-yellow">{{ $countPost }}</h3>
+                            <h3 class="text-green">{{ $countPost }}</h3>
                             <a href="{{ route('posts.index') }}">Tin Tức</a>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-red">
-                            <i class="bi bi-chat-dots"></i>
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-red">{{ $ProductComment }}</h3>
+                            <h3 class="text-green">{{ $ProductComment }}</h3>
                             <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
                         <div class="sale-icon shade-green">
-                            <i class="bi bi-chat"></i>
+                            <i class="bi bi-handbag"></i>
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countComment }}</h3>
@@ -96,11 +96,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-blue">
-                            <i class="bi bi-star"></i>
+                        <div class="sale-icon shade-green">
+                            <i class="bi bi-handbag"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-blue">{{ $countProductReview }}</h3>
+                            <h3 class="text-green">{{ $countProductReview }}</h3>
                             <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
                         </div>
                     </div>
@@ -165,26 +165,26 @@
                                         <div class="col-xxl-9 col-sm-8 col-md-12">
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <div class="graph-day-selection mt-2" role="group">
-                                                        <a href="?period=today"
+                                                    <div class="graph-day-selection mt-2" role="group" id="period-chart">
+                                                        <a href="?period=today" period="today"
                                                             class="btn {{ $period == 'today' ? 'btn active' : 'btn-primary' }}">Today</a>
-                                                        <a href="?period=yesterday"
+                                                        <a href="?period=yesterday" period="yesterday"
                                                             class="btn {{ $period == 'yesterday' ? 'btn active' : 'btn-primary' }}">Yesterday</a>
-                                                        <a href="?period=7days"
+                                                        <a href="?period=7days" period="7days"
                                                             class="btn {{ $period == '7days' ? 'btn active' : 'btn-primary' }}">7
                                                             days</a>
-                                                        <a href="?period=15days"
+                                                        <a href="?period=15days" period="15days"
                                                             class="btn {{ $period == '15days' ? 'btn active' : 'btn-primary' }}">15
                                                             days</a>
-                                                        <a href="?period=30days"
+                                                        <a href="?period=30days" period="30days"
                                                             class="btn {{ $period == '30days' ? 'btn active' : 'btn-primary' }}">30
                                                             days</a>
-                                                        <a href="?period=1years"
+                                                        <a href="?period=1years" period="1years"
                                                             class="btn {{ $period == '1years' ? 'btn active' : 'btn-primary' }}">1years</a>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mt-3">
-                                                    <div id="revenueGraph" style="height: 400px;"></div>
+                                                    <div id="revenueGraph" style="min-height: 500px;"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -214,22 +214,21 @@
                             <div class="d-flex justify-content-end mb-3">
 
                                 <div class="btn-group" role="group" aria-label="Filter Time Period">
-                                    <a href="?timePeriod=today"
-                                        class="btn btn-sm {{ $timePeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
-                                    <a href="?timePeriod=yesterday"
-                                        class="btn btn-sm {{ $timePeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
-                                    <a href="?timePeriod=7days"
-                                        class="btn btn-sm {{ $timePeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
-                                        ngày </a>
-                                    <a href="?timePeriod=15days"
-                                        class="btn btn-sm {{ $timePeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
-                                        ngày </a>
-                                    <a href="?timePeriod=30days"
-                                        class="btn btn-sm {{ $timePeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
-                                        ngày </a>
-                                    <a href="?timePeriod=1years"
-                                        class="btn btn-sm {{ $timePeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
-                                        năm</a>
+                                    <div id="time-period-options">
+
+                                        <a href="?timePeriod=today" data-time-period="today"
+                                            class="btn btn-sm btn-primary">Hôm nay</a>
+                                        <a href="?timePeriod=yesterday" data-time-period="yesterday"
+                                            class="btn btn-sm btn-outline-primary">Hôm qua</a>
+                                        <a href="?timePeriod=7days" data-time-period="7days"
+                                            class="btn btn-sm btn-outline-primary">7 ngày</a>
+                                        <a href="?timePeriod=15days" data-time-period="15days"
+                                            class="btn btn-sm btn-outline-primary">15 ngày</a>
+                                        <a href="?timePeriod=30days" data-time-period="30days"
+                                            class="btn btn-sm btn-outline-primary">30 ngày</a>
+                                        <a href="?timePeriod=1years" data-time-period="1years"
+                                            class="btn btn-sm btn-outline-primary">1 year</a>
+                                    </div>
                                 </div>
 
                             </div>
@@ -262,7 +261,7 @@
                             </div>
                             <div class="scroll370">
                                 <div class="transactions-container" id="transactions-container">
-                                    @foreach ($statisticsWithPaymentMethod as $statistic)
+                                    {{-- @foreach ($statisticsWithPaymentMethod as $statistic)
                                         <div class="transaction-block">
                                             <div class="transaction-icon shade-blue">
                                                 <i class="bi bi-credit-card"></i>
@@ -279,7 +278,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @endforeach --}}
                                 </div>
                             </div>
                         </div>
@@ -304,7 +303,7 @@
                                     class="btn btn-sm btn-outline-primary">2 tuần</a>
                                 <a href="?selectedOrderPeriod=3weeks" data-selected-order-time = "3weeks"
                                     class="btn btn-sm btn-outline-primary">3 tuần</a>
-                                <a href="?selectedOrderPeriod=44weeks" data-selected-order-time = "44weeks"
+                                <a href="?selectedOrderPeriod=4weeks" data-selected-order-time = "4weeks"
                                     class="btn btn-sm btn-outline-primary">4 tuần</a>
                             </div>
                         </div>
@@ -418,23 +417,19 @@
                         </div>
                         <div class="card-body">
                             <!-- Bộ lọc thời gian -->
-                            <div class="mb-3 d-flex gap-2">
-                                <a href="?filterPeriod=today"
-                                    class="btn btn-sm {{ $filterPeriod == 'today' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm nay</a>
-                                <a href="?filterPeriod=yesterday"
-                                    class="btn btn-sm {{ $filterPeriod == 'yesterday' ? 'btn-primary' : 'btn-outline-primary' }}">Hôm qua</a>
-                                <a href="?filterPeriod=7days"
-                                    class="btn btn-sm {{ $filterPeriod == '7days' ? 'btn-primary' : 'btn-outline-primary' }}">7
-                                    ngày</a>
-                                <a href="?filterPeriod=15days"
-                                    class="btn btn-sm {{ $filterPeriod == '15days' ? 'btn-primary' : 'btn-outline-primary' }}">15
-                                    ngày</a>
-                                <a href="?filterPeriod=30days"
-                                    class="btn btn-sm {{ $filterPeriod == '30days' ? 'btn-primary' : 'btn-outline-primary' }}">30
-                                    ngày</a>
-                                <a href="?filterPeriod=1years"
-                                    class="btn btn-sm {{ $filterPeriod == '1years' ? 'btn-primary' : 'btn-outline-primary' }}">1
-                                    năm</a>
+                            <div class="mb-3 d-flex gap-2" id="time-period-options-status">
+                                <a href="?filterPeriod=today" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="today">Hôm nay</a>
+                                <a href="?filterPeriod=yesterday" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="yesterday">Hôm qua</a>
+                                <a href="?filterPeriod=7days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="7days">7 ngày</a>
+                                <a href="?filterPeriod=15days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="15days">15 ngày</a>
+                                <a href="?filterPeriod=30days" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="30days">30 ngày</a>
+                                <a href="?filterPeriod=1years" class="btn btn-sm btn-outline-primary"
+                                    data-filter-period="1years">1 năm</a>
                             </div>
 
                             <!-- Container cho biểu đồ -->
@@ -487,7 +482,6 @@
                             <div class="scroll370">
                                 <div class="activity-container">
                                     @foreach ($recentBuyers as $buyer)
-
                                         <div class="activity-block">
                                             <div class="activity-user">
                                                 <img src="{{ Storage::url($buyer->user->image) }}" alt="Activity User">
@@ -504,7 +498,6 @@
                                             </div>
 
                                         </div>
-
                                     @endforeach
                                 </div>
                             </div>
@@ -717,72 +710,72 @@
 
                                 const orderItemContent = `
 
-                                        <tr>
-                                            <td>
-                                                ${stt++}
-                                                
-                                            </td>
+                                    <tr>
+                                        <td>
+                                            ${stt++}
+                                            
+                                        </td>
 
-                                            <td>
+                                        <td>
 
-                                                <div class="media-box">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">
+                                            <div class="media-box">
+                                                <div class="media-box-body">
+                                                    <div class="text-truncate">
 
-                                                            ${orderItem.user?.name ?? ''}
+                                                        ${orderItem.user?.name ?? ''}
 
-                                                        </div>
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                            </td>
+                                        </td>
 
-                                            <td>
-                                                <div class="media-box">
-                                                    <div class="media-box-body">
-                                                        <div class="text-truncate">
+                                        <td>
+                                            <div class="media-box">
+                                                <div class="media-box-body">
+                                                    <div class="text-truncate">
 
-                                                            ${item.productVariant?.product?.name ?? item.product?.name ?? ''}
-                                                    
-                                                        </div>
+                                                        ${item.productVariant?.product?.name ?? item.product?.name ?? ''}
+                                                
                                                     </div>
                                                 </div>
+                                            </div>
 
-                                            </td>
+                                        </td>
 
-                                            <td>
-                                                ${new Date(orderItem.created_at).toLocaleDateString()}
-                                            </td>
+                                        <td>
+                                            ${new Date(orderItem.created_at).toLocaleDateString()}
+                                        </td>
 
-                                            <td>
-                                                ${Number(orderItem.total_amount).toLocaleString('vi-VN')} VND
-                                            </td>
+                                        <td>
+                                            ${Number(orderItem.total_amount).toLocaleString('vi-VN')} VND
+                                        </td>
 
-                                            <td>
+                                        <td>
 
-                                                ${orderItem.payment_status === 'unpaid' ? '<span class="badge bg-warning">Chưa thanh toán</span>' : ''}
-                                                ${orderItem.payment_status === 'paid' ? '<span class="badge bg-success">Đã thanh toán</span>' : ''}
-                                                ${orderItem.payment_status === 'refunded' ? '<span class="badge bg-danger">Hoàn trả</span>' : ''}
-                                                ${orderItem.payment_status === 'payment_failed' ? '<span class="badge bg-danger">Thanh toán thất bại</span>' : ''}
-                                                
-                                                ${!['unpaid', 'paid', 'refunded', 'payment_failed'].includes(orderItem.payment_status) ? 
-                                                    '<span class="badge bg-secondary">Không rõ</span>' : ''}
+                                            ${orderItem.payment_status === 'unpaid' ? '<span class="badge bg-warning">Chưa thanh toán</span>' : ''}
+                                            ${orderItem.payment_status === 'paid' ? '<span class="badge bg-success">Đã thanh toán</span>' : ''}
+                                            ${orderItem.payment_status === 'refunded' ? '<span class="badge bg-danger">Hoàn trả</span>' : ''}
+                                            ${orderItem.payment_status === 'payment_failed' ? '<span class="badge bg-danger">Thanh toán thất bại</span>' : ''}
+                                            
+                                            ${!['unpaid', 'paid', 'refunded', 'payment_failed'].includes(orderItem.payment_status) ? 
+                                                '<span class="badge bg-secondary">Không rõ</span>' : ''}
 
-                                            </td>
+                                        </td>
 
-                                            <td>
+                                        <td>
 
-                                                ${orderItem.status === 'pending_confirmation' ? '<span class="badge bg-info">Chờ xác nhận</span>' : ''}
-                                                ${orderItem.status === 'pending_pickup' ? '<span class="badge bg-warning">Chờ lấy hàng</span>' : ''}
-                                                ${orderItem.status === 'pending_delivery' ? '<span class="badge bg-primary">Chờ giao hàng</span>' : ''}
-                                                ${orderItem.status === 'returned' ? '<span class="badge bg-danger">Trả hàng</span>' : ''}
-                                                ${orderItem.status === 'delivered' ? '<span class="badge bg-secondary">Đã giao</span>' : ''}
-                                        
-                                            </td>
+                                            ${orderItem.status === 'pending_confirmation' ? '<span class="badge bg-info">Chờ xác nhận</span>' : ''}
+                                            ${orderItem.status === 'pending_pickup' ? '<span class="badge bg-warning">Chờ lấy hàng</span>' : ''}
+                                            ${orderItem.status === 'pending_delivery' ? '<span class="badge bg-primary">Chờ giao hàng</span>' : ''}
+                                            ${orderItem.status === 'returned' ? '<span class="badge bg-danger">Trả hàng</span>' : ''}
+                                            ${orderItem.status === 'delivered' ? '<span class="badge bg-secondary">Đã giao</span>' : ''}
+                                    
+                                        </td>
 
-                                        </tr>
+                                    </tr>
 
-                                    `;
+                                `;
 
                                 document.querySelector(
                                         '#order-time-content')
@@ -852,102 +845,281 @@
     </script>
 
 
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if (@json($totals).length > 0 && @json($dates).length > 0) {
-                var options = {
-                    chart: {
-                        height: 317,
-                        type: 'area',
-                        toolbar: {
-                            show: false,
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
-                    },
-                    stroke: {
-                        curve: 'smooth', // Đường cong mượt
-                        width: 3
-                    },
-                    series: [{
-                        name: 'Doanh thu',
-                        data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
-                    }],
-                    grid: {
-                        borderColor: '#e0e6ed',
-                        strokeDashArray: 5,
-                        xaxis: {
-                            lines: {
-                                show: true // Hiển thị đường lưới trên trục X
-                            }
-                        },
-                        yaxis: {
-                            lines: {
-                                show: false, // Tắt đường lưới trên trục Y
-                            }
-                        },
-                        padding: {
-                            top: 0,
-                            right: 0,
-                            bottom: 10,
-                            left: 0
-                        },
-                    },
-                    xaxis: {
-                        categories: @json($dates), // Dữ liệu ngày tháng
-                        labels: {
-                            style: {
-                                fontSize: '12px',
-                                colors: ['#6c757d']
-                            }
-                        }
-                    },
-                    yaxis: {
-                        labels: {
-                            show: true, // Hiển thị nhãn trên trục Y
-                            style: {
-                                fontSize: '12px',
-                                colors: ['#6c757d']
-                            }
-                        },
-                    },
-                    colors: ['#4267cd'], // Màu sắc cho biểu đồ
-                    markers: {
-                        size: 4,
-                        colors: ['#4267cd'],
-                        strokeColor: "#ffffff",
-                        strokeWidth: 2,
-                        hover: {
-                            size: 7, // Kích thước khi di chuột qua
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                        x: {
-                            format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
-                        },
-                        y: {
-                            formatter: function(value) {
-                                return value.toLocaleString('vi-VN', {
-                                    style: 'currency',
-                                    currency: 'VND'
-                                });
-                            }
-                        }
-                    }
-                }
 
-                var chart = new ApexCharts(
-                    document.querySelector("#revenueGraph"),
-                    options
-                );
+            const periodChart = document.querySelectorAll('#period-chart a');
 
-                chart.render();
-            } else {
-                console.log("Không có dữ liệu.");
+            console.log(periodChart);
+            let chart; // Khai báo chart bên ngoài
+
+            function setActiveChart(buttonChart) {
+
+                timePeriodButtons.forEach(button => {
+
+                    button.classList.remove('btn-primary');
+
+                    button.classList.add('btn-outline-primary');
+
+                });
+
+                buttonChart.classList.add('btn-primary');
+                buttonChart.classList.remove('btn-outline-primary');
+
             }
-        });
+
+            function fetchDataChart(period) {
+
+                axios.get(`api/get-data-period-chart?period=${period}`)
+                    .then((response) => {
+
+                        // console.log(response.data);
+
+                        const totals = response.data.totals;
+                        const dates = response.data.dates;
+
+                        if (totals.length > 0 &&
+                            dates.length > 0) {
+                            var options = {
+                                chart: {
+                                    height: 317,
+                                    type: 'area',
+                                    toolbar: {
+                                        show: false,
+                                    },
+                                },
+                                dataLabels: {
+                                    enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+                                },
+                                stroke: {
+                                    curve: 'smooth', // Đường cong mượt
+                                    width: 3
+                                },
+                                series: [{
+                                    name: 'Doanh thu',
+                                    data: totals // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+                                }],
+                                grid: {
+                                    borderColor: '#e0e6ed',
+                                    strokeDashArray: 5,
+                                    xaxis: {
+                                        lines: {
+                                            show: true // Hiển thị đường lưới trên trục X
+                                        }
+                                    },
+                                    yaxis: {
+                                        lines: {
+                                            show: false, // Tắt đường lưới trên trục Y
+                                        }
+                                    },
+                                    padding: {
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 10,
+                                        left: 0
+                                    },
+                                },
+                                xaxis: {
+                                    categories: dates, // Dữ liệu ngày tháng
+                                    labels: {
+                                        style: {
+                                            fontSize: '12px',
+                                            colors: ['#6c757d']
+                                        }
+                                    }
+                                },
+                                yaxis: {
+                                    labels: {
+                                        show: true, // Hiển thị nhãn trên trục Y
+                                        style: {
+                                            fontSize: '12px',
+                                            colors: ['#6c757d']
+                                        }
+                                    },
+                                },
+                                colors: ['#4267cd'], // Màu sắc cho biểu đồ
+                                markers: {
+                                    size: 4,
+                                    colors: ['#4267cd'],
+                                    strokeColor: "#ffffff",
+                                    strokeWidth: 2,
+                                    hover: {
+                                        size: 7, // Kích thước khi di chuột qua
+                                    }
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    x: {
+                                        format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+                                    },
+                                    y: {
+                                        formatter: function(value) {
+                                            return value.toLocaleString('vi-VN', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Nếu biểu đồ đã tồn tại, hủy nó
+                            if (chart) {
+
+                                chart.destroy();
+                            }
+
+                            // Tạo mới biểu đồ
+                            chart = new ApexCharts(document.querySelector("#revenueGraph"),
+                                options);
+
+                            chart.render();
+
+                            // var chart = new ApexCharts(
+                            //     document.querySelector("#revenueGraph"),
+                            //     options
+                            // );
+
+                            // chart.render();
+                        } else {
+
+                            console.log("Không có dữ liệu.");
+                        }
+
+                    })
+                    .catch((error) => {
+
+                        console.log(error);
+
+                    })
+
+
+            }
+            // console.log(123);
+            periodChart.forEach((period) => {
+
+                period.addEventListener('click', function(e) {
+
+                    e.preventDefault();
+
+                    console.log(e.target.getAttribute('period'));
+
+                    fetchDataChart(e.target.getAttribute('period'))
+
+                    setActiveChart(this)
+
+                })
+            })
+
+            fetchDataChart('today');
+
+            // Set active mặc định cho nút "4 tháng"
+            const defaultButtonChart = document.querySelector('#period-chart a[ period="today"]');
+
+            if (defaultButtonChart) {
+
+                setActiveButton(defaultButtonChart);
+            }
+
+
+        })
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     if (@json($totals).length > 0 && @json($dates).length > 0) {
+        //         var options = {
+        //             chart: {
+        //                 height: 317,
+        //                 type: 'area',
+        //                 toolbar: {
+        //                     show: false,
+        //                 },
+        //             },
+        //             dataLabels: {
+        //                 enabled: false // Tắt hiển thị dữ liệu trên biểu đồ
+        //             },
+        //             stroke: {
+        //                 curve: 'smooth', // Đường cong mượt
+        //                 width: 3
+        //             },
+        //             series: [{
+        //                 name: 'Doanh thu',
+        //                 data: @json($totals) // Dữ liệu tổng doanh thu từ cơ sở dữ liệu
+        //             }],
+        //             grid: {
+        //                 borderColor: '#e0e6ed',
+        //                 strokeDashArray: 5,
+        //                 xaxis: {
+        //                     lines: {
+        //                         show: true // Hiển thị đường lưới trên trục X
+        //                     }
+        //                 },
+        //                 yaxis: {
+        //                     lines: {
+        //                         show: false, // Tắt đường lưới trên trục Y
+        //                     }
+        //                 },
+        //                 padding: {
+        //                     top: 0,
+        //                     right: 0,
+        //                     bottom: 10,
+        //                     left: 0
+        //                 },
+        //             },
+        //             xaxis: {
+        //                 categories: @json($dates), // Dữ liệu ngày tháng
+        //                 labels: {
+        //                     style: {
+        //                         fontSize: '12px',
+        //                         colors: ['#6c757d']
+        //                     }
+        //                 }
+        //             },
+        //             yaxis: {
+        //                 labels: {
+        //                     show: true, // Hiển thị nhãn trên trục Y
+        //                     style: {
+        //                         fontSize: '12px',
+        //                         colors: ['#6c757d']
+        //                     }
+        //                 },
+        //             },
+        //             colors: ['#4267cd'], // Màu sắc cho biểu đồ
+        //             markers: {
+        //                 size: 4,
+        //                 colors: ['#4267cd'],
+        //                 strokeColor: "#ffffff",
+        //                 strokeWidth: 2,
+        //                 hover: {
+        //                     size: 7, // Kích thước khi di chuột qua
+        //                 }
+        //             },
+        //             tooltip: {
+        //                 enabled: true,
+        //                 x: {
+        //                     format: 'dd-MM-yyyy' // Định dạng ngày tháng trong tooltip
+        //                 },
+        //                 y: {
+        //                     formatter: function(value) {
+        //                         return value.toLocaleString('vi-VN', {
+        //                             style: 'currency',
+        //                             currency: 'VND'
+        //                         });
+        //                     }
+        //                 }
+        //             }
+        //         }
+
+        //         var chart = new ApexCharts(
+        //             document.querySelector("#revenueGraph"),
+        //             options
+        //         );
+
+        //         chart.render();
+        //     } else {
+        //         console.log("Không có dữ liệu.");
+        //     }
+        // });
     </script>
 
 
@@ -1276,7 +1448,6 @@
             fetchAndRenderChart('today');
 
         });
-
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

@@ -33,4 +33,5 @@ Route::get('san-pham-ban-chay',[AdminController::class,'topBanChay']);
 Route::get('thong-ke-theo-trang-thai',[AdminController::class,'topStatus']);
 Route::get('get-transaction-time',[AdminController::class,'getTransactionTime']);
 Route::get('get-data-order-time',[AdminController::class,'getOrderTime']);
+Route::get('get-data-period-chart',[AdminController::class,'getperiodChart']);
 

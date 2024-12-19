@@ -552,9 +552,9 @@ class AdminController extends Controller
 
         // Khởi tạo các mốc thời gian
 
-        $filterStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $filterStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->startOfDay();
 
-        $filterEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $filterEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->endOfDay();
 
         // Xử lý khoảng thời gian dựa trên tham số filterPeriod
 
@@ -618,7 +618,7 @@ class AdminController extends Controller
 
         // Đảm bảo đủ tất cả các trạng thái cho biểu đồ
         $statusesForChart = [
-            'pending_confirmation', // Chờ xác nhận
+            'pending_confirmation',
             'pending_pickup',       // Chờ lấy hàng
             'pending_delivery',     // Chờ giao hàng
             'delivered',            // Đã giao hàng
@@ -641,7 +641,7 @@ class AdminController extends Controller
         $timeRange = $request->input('timeRange', '4months'); // Mặc định là '4months'
 
         // Khởi tạo mốc thời gian
-        $rangeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh'); // Chuyển đổi sang múi giờ Việt Nam
+        $rangeStart = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->startOfDay(); // Chuyển đổi sang múi giờ Việt Nam
 
         // Xử lý khoảng thời gian dựa trên tham số timeRange
         switch ($timeRange) {
@@ -675,10 +675,13 @@ class AdminController extends Controller
                 break;
         }
 
+        // dd($rangeStart);
         $paymentMethods = PaymentMethod::where('status', 'active')->get()->keyBy('id');
 
+        // dd($paymentMethods);
+
         // Lấy ngày kết thúc là ngày hiện tại
-        $rangeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $rangeEnd = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->endOfDay();
 
         $statistics = Order::where('status', 'delivered')
             ->where('payment_status', 'paid')
@@ -704,10 +707,11 @@ class AdminController extends Controller
 
         // Lấy tham số selectedOrderPeriod từ query string
         $selectedOrderPeriod = $request->input('selectedOrderPeriod', '1day'); // Mặc định là '1week'
-
+        // dd($selectedOrderPeriod);
         // Khởi tạo mốc thời gian
-        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
-        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh');
+        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->startOfDay();
+        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->endOfDay();
+
 
         // Xử lý khoảng thời gian dựa trên tham số selectedOrderPeriod
         switch ($selectedOrderPeriod) {
@@ -719,6 +723,7 @@ class AdminController extends Controller
             case '1week':
 
                 $startDate = Carbon::today()->subWeeks(1);
+
                 break;
 
             case '2weeks':
@@ -734,6 +739,7 @@ class AdminController extends Controller
             case '4weeks':
 
                 $startDate = Carbon::today()->subWeeks(4);
+
                 break;
 
             default:
@@ -742,13 +748,102 @@ class AdminController extends Controller
                 break;
         }
 
+
         // Truy vấn danh sách đơn hàng và các sản phẩm
         $orders = Order::with(['user', 'items.productVariant.product', 'items.product']) // Đảm bảo lấy đúng thông tin sản phẩm
             ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
             ->orderBy('created_at', 'desc')
-            ->take(8)
+            ->limit(8)
             ->get();
+        // dd($orders);
 
         return response()->json(['orders' => $orders]);
+    }
+
+    public function getperiodChart(Request $request)
+    {
+        // Lấy tham số period từ query string
+        $period = $request->input('period', 'today'); // Mặc định là 'today'
+
+        // Khởi tạo các mốc thời gian
+        $startDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->startOfDay(); // Chuyển đổi sang múi giờ Việt Nam
+        $endDate = Carbon::today()->timezone('Asia/Ho_Chi_Minh')->endOfDay(); // Chuyển đổi sang múi giờ Việt Nam
+
+        // Xử lý khoảng thời gian dựa trên tham số period
+        switch ($period) {
+
+            case 'yesterday':
+
+                $startDate = Carbon::yesterday();
+
+                $endDate = Carbon::yesterday();
+
+                break;
+
+            case '7days':
+
+                $startDate = Carbon::today()->subDays(6);
+
+                break;
+
+            case '15days':
+
+                $startDate = Carbon::today()->subDays(14);
+
+                break;
+
+            case '30days':
+
+                $startDate = Carbon::today()->subDays(29);
+
+                break;
+
+            case '1years':
+
+                $startDate = Carbon::today()->subDays(364);
+
+                break;
+
+            default:
+                // Mặc định là hôm nay
+
+                $startDate = Carbon::today();
+
+                break;
+        }
+
+        $dailyRevenue = Order::selectRaw('DATE(created_at) as date, SUM(total_amount) as total, SUM(discount_amount) as discount_amount')
+            ->whereDate('created_at', '>=', $startDate->toDateString())
+            ->whereDate('created_at', '<=', $endDate->toDateString())
+            ->whereIn('status', ['delivered', 'confirm_delivered'])
+            ->where('payment_status', 'paid')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // dd($dailyRevenue);
+
+        // Chuyển đổi dữ liệu thành mảng
+        $dates = $dailyRevenue->pluck('date')->map(function ($date) {
+
+            return Carbon::parse($date)->format('d-m-Y');
+        })->toArray();
+
+        $totals = $dailyRevenue->pluck('total')->toArray();
+
+        $discounts = $dailyRevenue->sum('discount_amount');
+
+        // Chuyển đổi dữ liệu thành mảng
+        $dates = $dailyRevenue->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->format('d-m-Y');
+        })->toArray();
+
+        $totals = $dailyRevenue->pluck('total')->toArray();
+
+        return response()->json([
+            'totals' => $totals,
+            'dates' => $dates,
+        ]);
+        
     }
 }
