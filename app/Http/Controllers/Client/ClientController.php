@@ -38,15 +38,15 @@ class ClientController extends Controller
             ->select('posts.*', 'users.name as author_name')
             ->where('is_featured', true)->get();
 
-            $topSellingProducts = OrderItem::select('product_variant_id', DB::raw('SUM(quantity) as total_quantity'))
-            ->groupBy('product_variant_id')
+            $topSellingProducts = OrderItem::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
             ->orderBy('total_quantity', 'desc')
             ->take(10)
             ->get()
             ->map(function ($item) {
-                $product = Product::find($item->product_variant_id);
+                $product = Product::find($item->product_id);
                 if (!$product) {
-                    \Log::warning("Product with ID {$item->product_variant_id} not found.");
+                    \Log::warning("Product with ID {$item->product_id} not found.");
                 }
                 return $product;
             })
