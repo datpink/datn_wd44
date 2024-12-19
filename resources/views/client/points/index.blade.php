@@ -60,11 +60,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Phân Trang -->
-                <div class="d-flex justify-content-center mt-4">
-                    {{ $transactions->links() }}
-                </div>
             </div>
         </div>
     </div>

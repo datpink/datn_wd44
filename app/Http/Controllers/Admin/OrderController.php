@@ -320,23 +320,25 @@ class OrderController extends Controller
 
         // Gửi email thông báo hủy đơn hàng
         Mail::to($order->user->email)->send(new OrderCanceledMail($order));
-
+        $userpoint = UserPoint::where('user_id', auth()->id())->first();
+        if($userpoint == ""){
+            $userpoint = UserPoint::create( [
+                'user_id' => Auth::user()->id(),
+                'total_points' => 0,
+            ]);
+        }
         $transactionpoint = UserPointTransaction::where('description', 'like', '%Thanh toán đơn hàng ' . $id )->first();
         // dd($transactionpoint);
-        $pointrefunde = $transactionpoint->points;
-        // dd($pointrefunde);
-        $userpoint = UserPoint::where('user_id', auth()->id())->first();
-        UserPointTransaction::create([
-            'type' => 'earn',
-            'user_point_id' => $userpoint->id,
-            'points' => $pointrefunde,
-            'description' => 'Hủy đơn hàng ' .$id,
-            'created_at' => now(),
-        ]);
-        $userpoint->update([
-            'total_points' => $userpoint->total_points + $pointrefunde,
-        ]);
-        $userpoint->save();
+        if($transactionpoint){
+
+            $userpoint = UserPoint::where('user_id', auth()->id())->first();
+            if($userpoint == ""){
+                $userpoint = UserPoint::create( [
+                    'user_id' => Auth::user()->id(),
+                    'total_points' => 0,
+                ]);
+            }
+        };
 
         // Quay lại trang lịch sử đơn hàng với thông báo thành công
         return redirect()->route('order.history', ['userId' => $order->user_id])->with('success', 'Đơn hàng đã được hủy thành công và số lượng sản phẩm đã được hoàn lại vào kho.');

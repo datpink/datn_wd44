@@ -63,11 +63,11 @@
                                         <th>ID</th>
                                         <th>Code</th>
                                         <th>Mức giảm giá</th>
-                                        <th>Min Order Value</th>  <!-- Thêm cột min_order_value -->
+                                        <th>giá trị đơn hàng tối thiểu</th>  <!-- Thêm cột min_order_value -->
                                         <th>Trạng thái</th>
                                         <th>Ngày bắt đầu</th>
                                         <th>Ngày kết thúc</th>
-                                        <th>Đơn hàng tối đa</th>
+                                        <th>giá trị tối đa</th>
                                         <th colspan="2">Hành động</th>
                                     </tr>
                                 </thead>
