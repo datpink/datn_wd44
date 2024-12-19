@@ -293,7 +293,7 @@
                                 title: 'Lỗi',
                                 text: data.message,
                                 toast: true,
-                                timer: 3000,
+                                timer: 5000,
                                 position: 'top-right',
                                 showConfirmButton: false,
                             });
@@ -366,7 +366,7 @@
                         text: "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
                         icon: 'warning',
                         toast: true,
-                        timer: 4000,
+                        timer: 5000,
                         position: 'top-right',
                         showCancelButton: true,
                         confirmButtonText: 'Có',
