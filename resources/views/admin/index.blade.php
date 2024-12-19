@@ -60,11 +60,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-yellow">
+                            <i class="bi bi-newspaper"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countPost }}</h3>
+                            <h3 class="text-yellow">{{ $countPost }}</h3>
                             <a href="{{ route('posts.index') }}">Tin Tức</a>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-red">
+                            <i class="bi bi-chat-dots"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $ProductComment }}</h3>
+                            <h3 class="text-red">{{ $ProductComment }}</h3>
                             <a href="{{ route('product-comments.index') }}">Bình Luận Sản Phẩm</a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
                         <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                            <i class="bi bi-chat"></i>
                         </div>
                         <div class="sale-details">
                             <h3 class="text-green">{{ $countComment }}</h3>
@@ -96,11 +96,11 @@
 
                 <div class="col-xxl-3 col-sm-6 col-12">
                     <div class="stats-tile">
-                        <div class="sale-icon shade-green">
-                            <i class="bi bi-handbag"></i>
+                        <div class="sale-icon shade-blue">
+                            <i class="bi bi-star"></i>
                         </div>
                         <div class="sale-details">
-                            <h3 class="text-green">{{ $countProductReview }}</h3>
+                            <h3 class="text-blue">{{ $countProductReview }}</h3>
                             <a href="{{ route('product-reviews.index') }}">Đánh Giá</a>
                         </div>
                     </div>
@@ -136,12 +136,12 @@
                                                 <div class="reports-summary-block mb-3">
                                                     <i class="bi bi-circle-fill text-success me-2"></i>
                                                     <div class="d-flex flex-column">
-                                                        <h6>Doanh Thu Tổng</h6>
+                                                        <h6>Doanh Thu Hôm Nay</h6>
                                                         <h5 class="text-success">
                                                             {{ number_format(array_sum($totals), 0, ',', '.') }} VNĐ</h5>
                                                     </div>
                                                 </div>
-                                                <div class="reports-summary-block mb-3">
+                                                {{-- <div class="reports-summary-block mb-3">
                                                     <i class="bi bi-circle-fill text-danger me-2"></i>
                                                     <div class="d-flex flex-column">
                                                         <h6>Doanh Thu Sau Giảm Giá</h6>
@@ -149,8 +149,8 @@
                                                             {{ number_format(array_sum($totals) - $discounts, 0, ',', '.') }}
                                                             VNĐ</h5>
                                                     </div>
-                                                </div>
-                                                <div class="reports-summary-block mb-3">
+                                                </div> --}}
+                                                {{-- <div class="reports-summary-block mb-3">
                                                     <i class="bi bi-circle-fill text-blue me-2"></i>
                                                     <div class="d-flex flex-column">
                                                         <h6>Lợi Nhuận</h6>
@@ -158,7 +158,7 @@
                                                             {{ number_format($netProfit, 0, ',', '.') }}
                                                             VNĐ</h5>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                                 {{-- <button class="btn btn-info w-100">Xem Báo Cáo</button> --}}
                                             </div>
                                         </div>
@@ -249,15 +249,17 @@
                         </div>
                         <div class="card-body">
                             <div id="transaction-time">
-                                <a href="?timeRange=4months" data-time-range = "4months"
-                                    class="btn btn-sm btn-outline-primary">4
-                                    tháng</a>
+                                <a href="?timeRange=4months" data-time-range = "day"
+                                    class="btn btn-sm btn-outline-primary">Hôm nay</a>
+                                    <a href="?timeRange=4months" data-time-range = "4months"
+                                    class="btn btn-sm btn-outline-primary">1
+                                    tuần</a>
                                 <a href="?timeRange=8months" data-time-range = "8months"
-                                    class="btn btn-sm btn-outline-primary">8
+                                    class="btn btn-sm btn-outline-primary">1
                                     tháng</a>
                                 <a href="?timeRange=1year" data-time-range = "1year"
-                                    class="btn btn-sm btn-outline-primary">1
-                                    năm</a>
+                                    class="btn btn-sm btn-outline-primary">4
+                                    tháng</a>
                             </div>
                             <div class="scroll370">
                                 <div class="transactions-container" id="transactions-container">
@@ -468,7 +470,7 @@
                             <div class="card-title">Người Mua Gần Đây</div>
                         </div>
                         <div class="card-body">
-                            <div>
+                            {{-- <div>
                                 <a href="?selectedPeriod=1day"
                                     class="btn btn-sm {{ $selectedPeriod == '1day' ? 'btn-primary' : 'btn-outline-primary' }}">
                                     Hôm nay</a>
@@ -478,7 +480,7 @@
                                 <a href="?selectedPeriod=1month"
                                     class="btn btn-sm {{ $selectedPeriod == '1month' ? 'btn-primary' : 'btn-outline-primary' }}">1
                                     Tháng</a>
-                            </div>
+                            </div> --}}
                             <div class="scroll370">
                                 <div class="activity-container">
                                     @foreach ($recentBuyers as $buyer)
