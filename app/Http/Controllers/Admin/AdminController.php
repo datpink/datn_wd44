@@ -646,30 +646,38 @@ class AdminController extends Controller
         // Xử lý khoảng thời gian dựa trên tham số timeRange
         switch ($timeRange) {
 
+            case 'day':
+
+                $rangeStart = Carbon::today();
+                // Lùi lại 4 tháng
+
+                break;
+
+
             case '4months':
 
-                $rangeStart = Carbon::today()->subMonths(4);
+                $rangeStart = Carbon::today()->subWeek(1);
                 // Lùi lại 4 tháng
 
                 break;
 
             case '8months':
 
-                $rangeStart = Carbon::today()->subMonths(8);
+                $rangeStart = Carbon::today()->subMonths(1);
                 // Lùi lại 8 tháng
 
                 break;
 
             case '1year':
 
-                $rangeStart = Carbon::today()->subYear();
+                $rangeStart = Carbon::today()->subMonths(4);
 
                 // Lùi lại 1 năm
                 break;
 
             default:
 
-                $rangeStart = Carbon::today()->subMonths(4);
+                $rangeStart = Carbon::today()->subWeek(1);
                 // Mặc định là 4 tháng
 
                 break;
@@ -844,6 +852,6 @@ class AdminController extends Controller
             'totals' => $totals,
             'dates' => $dates,
         ]);
-        
+
     }
 }
